@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const openSimDbBtn = document.getElementById('open-sim-db-btn');
   if (features.isNasEnabled) {
     try {
-      const simDbModule = await import('./panels/sim-db.js');
+      const simDbModule = await import('../../private/sim-db.js');
       getSimDbPanelHtml = simDbModule.getSimDbPanelHtml;
       initializeSimDbPanel = simDbModule.initializeSimDbPanel;
       panelModules['sim-db'] = { getHtml: getSimDbPanelHtml, initialize: initializeSimDbPanel };

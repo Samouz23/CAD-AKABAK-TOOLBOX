@@ -3,12 +3,15 @@
 node_modules
 dist
 package-lock.json
-.dsStore
+.DS_Store
 .env
 .vscode
 build
 
-# Données sensibles et confidentielles
+# Données sensibles et confidentielles - Dossier centralisé
+private/
+
+# Anciens chemins (conservés pour compatibilité)
 src/js/panels/config.js
 src/js/panels/sim-db.js
 src/ipc/orders/

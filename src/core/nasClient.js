@@ -11,7 +11,7 @@ let synologyClient = null;
 if (features.isNasEnabled) {
     try {
         // Le chemin est relatif à la racine du projet, car require résout à partir de l'emplacement du fichier
-        const nasConfig = require('../js/panels/config.js'); 
+        const nasConfig = require('../../private/config.js'); 
         
         if (nasConfig && nasConfig.nas_ip && nasConfig.nas_user) {
             synologyClient = createClient(
@@ -25,10 +25,10 @@ if (features.isNasEnabled) {
             );
             console.log("[INFO] Client WebDAV initialisé avec succès.");
         } else {
-            console.error("[ERREUR] La configuration dans './js/panels/config.js' est manquante ou invalide.");
+            console.error("[ERREUR] La configuration dans 'private/config.js' est manquante ou invalide.");
         }
     } catch (e) {
-        console.error("[ERREUR] Le fichier de configuration './js/panels/config.js' n'a pas pu être chargé. La fonctionnalité NAS est désactivée.");
+        console.error("[ERREUR] Le fichier de configuration 'private/config.js' n'a pas pu être chargé. La fonctionnalité NAS est désactivée.");
         synologyClient = null;
     }
 } else {
