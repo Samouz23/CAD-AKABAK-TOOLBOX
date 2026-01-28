@@ -1,0 +1,559 @@
+/* =========================
+   Tailwind layers
+   ========================= */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+   OVERLAY SCANLINES
+   - Actif par défaut (comme avant).
+   - Désactivable via .no-scanlines sur <body>.
+   ========================= */
+body::after{
+  content:'';
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:9999;
+  background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,.28) 50%);
+  background-size:100% 4px;
+  opacity:1;
+}
+body.no-scanlines::after{ display:none; }
+
+/* =========================
+   COMPONENTS — STYLES APP
+   ========================= */
+@layer components {
+
+  /* ---- TITRES/SECTIONS ---- */
+  .calc-section{ @apply border border-green-800 p-4 rounded-md; }
+  .calc-title{ @apply text-xl font-bold mb-3 text-white; }
+
+  /* ---- PANELS ---- */
+  .panel{
+    @apply relative flex flex-col items-start justify-start overflow-hidden
+           rounded-md border-2 border-green-700 bg-black p-4
+           transition-transform duration-150 ease-out;
+    transform: translateZ(0);
+  }
+  .panel:hover{ transform: translateZ(0) scale(1.02); }
+  body.reduced-motion .panel,
+  body.reduced-motion .panel:hover{ transition:none; transform:none; }
+
+  /* ---- INPUTS ---- */
+  .form-input{
+    @apply w-full rounded-md border border-pink-500 bg-black p-2 text-white
+           placeholder-gray-500 transition-colors
+           focus:border-pink-300 focus:ring-1 focus:ring-pink-400;
+    height:36px; line-height:1;
+  }
+  .form-input-sm{ @apply p-1; height:32px; }
+  .form-input:disabled{
+    @apply bg-gray-900 border-gray-700 text-gray-500 cursor-not-allowed;
+  }
+
+  /* champs de sortie (lecture seule) */
+  .form-output{
+    @apply w-full block bg-black border border-dashed border-gray-800 rounded-md
+           p-2 text-2xl font-bold text-pink-400 font-mono;
+  }
+
+  /* ---- BOUTONS (UNIFIÉS — OUTLINE, TEXTE BLANC) ---- */
+  .btn{
+    @apply inline-flex items-center justify-center select-none
+           rounded-md border px-4 py-2 text-sm font-semibold tracking-wide
+           transition-colors duration-150 ease-out;
+    height:36px; line-height:1;
+    background-color: transparent;
+    background-image: none;
+    color: #ffffff;                /* texte blanc */
+    border: 1px solid #ec4899;     /* bord rose */
+  }
+  .btn:hover{ color:#fff; border-color:#f472b6; }
+
+  /* Variantes sémantiques */
+  .btn--primary{  color:#ffffff; border-color:#ec4899; }
+  .btn--danger{   color:#ffffff; border-color:#ef4444; }
+  .btn--ghost{    color:#ffffff; border-color:#4b5563; }
+
+  .btn--lg{ height:40px; @apply px-5 text-base; }
+  .btn--sm{ height:32px; @apply px-3 text-xs; }
+
+  /* État “actif” (ex: Dims/Area/OS-SE) : liseré interne */
+  .btn--active{
+    box-shadow: inset 0 0 0 2px rgba(236,72,153,.65);
+  }
+
+  /* Compat : anciens alias utilisés dans l’app */
+  .action-btn{ @apply btn btn--primary; }
+
+  /* Anti-override global (neutralise tous les utilitaires bg-*) */
+  .btn--primary,
+  .btn--danger,
+  .btn--ghost{
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+  .btn[class*="bg-"],
+  .action-btn[class*="bg-"]{
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+  .btn[class*="hover:bg-"]:hover,
+  .action-btn[class*="hover:bg-"]:hover{
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+
+  /* Si d’anciens états mettaient un fond actif */
+  .action-btn.bg-pink-700,
+  .action-btn.bg-indigo-700,
+  .action-btn.bg-purple-700,
+  .btn.bg-pink-700,
+  .btn.bg-indigo-700,
+  .btn.bg-purple-700{
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: inset 0 0 0 2px rgba(236,72,153,.65) !important;
+  }
+
+  /* ---- ACCORDÉON ---- */
+  .control-group{
+    @apply bg-black border border-gray-700 rounded-lg overflow-hidden;
+  }
+  .control-label-toggle{
+    @apply flex justify-between items-center cursor-pointer text-lg font-bold
+           text-white bg-black px-4 py-2;
+  }
+  .rotate-180{ transform:rotate(180deg); }
+
+  .control-label-toggle + div{
+    max-height:0;
+    transition:max-height .35s ease, padding .35s ease;
+    padding-left:1rem; padding-right:1rem; padding-top:0; padding-bottom:0;
+    overflow:hidden;
+  }
+  .control-label-toggle + div.is-open{
+    max-height:1000px;
+    padding-top:1rem; padding-bottom:1rem;
+  }
+  body.reduced-motion .control-label-toggle + div{ transition:none; }
+
+  /* ---- LISTES / ARBORESCENCE ---- */
+  .tree-item{ @apply cursor-pointer rounded-md p-1; }
+  .tree-item:hover{ @apply bg-green-600 text-white; }
+  .tree-folder{ @apply font-bold text-white; }
+
+  /* ---- DRAG ELECTRON ---- */
+  .drag-region{ -webkit-app-region:drag; user-select:none; }
+  .no-drag{ -webkit-app-region:no-drag; }
+
+  /* ---- GRAPH / SELECTS ---- */
+  .graph-widget{ @apply flex-grow relative border border-gray-700 rounded-md p-2; }
+  .graph-expansion-select{
+    @apply bg-black border border-pink-500 text-white text-xs rounded-md p-1;
+    height:32px; line-height:1;
+  }
+
+  /* ---- HORN EXPANSION — grille alignée ---- */
+  .segments-grid{
+    display:grid;
+    grid-template-columns: 64px 150px 150px 150px 170px;
+    column-gap:16px; row-gap:10px; align-items:center;
+  }
+  .segments-grid--header{
+    display:grid;
+    grid-template-columns: 64px 150px 150px 150px 170px;
+    column-gap:16px; align-items:center; margin-bottom:8px;
+  }
+  .segments-grid input,
+  .segments-grid .form-input{ height:36px; line-height:1; @apply w-full font-mono; }
+
+  /* ---- Mapping ids existants → style unifié ---- */
+  #exportBtn, .export-btn, .btn-export { @apply btn btn--primary; }
+  #clearBtn,  .clear-btn,  .btn-clear  { @apply btn btn--ghost;   }
+  #resetBtn,  .reset-btn,  .btn-reset  { @apply btn btn--danger;  }
+}
+
+/* =========================
+   UTILITIES — responsive
+   ========================= */
+@layer utilities{
+  /* Grid positioning utilities */
+  .col-start-1 { grid-column-start: 1; }
+  .col-start-2 { grid-column-start: 2; }
+  .col-start-3 { grid-column-start: 3; }
+  
+  .row-start-1 { grid-row-start: 1; }
+  .row-start-2 { grid-row-start: 2; }
+  .row-start-3 { grid-row-start: 3; }
+  
+  .grid-rows-3 { grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  
+  @screen md{
+    .md\:col-span-1{ grid-column:span 1 / span 1; }
+    .md\:col-span-2{ grid-column:span 2 / span 2; }
+    .md\:grid-cols-2{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .md\:grid-cols-3{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+  }
+}
+
+/* =========================
+   ACCESSIBILITÉ / REDUCED MOTION
+   ========================= */
+@media (prefers-reduced-motion: reduce){
+  body::after{ opacity:.9; }
+  .panel, .btn, .control-label-toggle + div{ transition:none !important; }
+}
+
+#note-preview-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.preview-textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  background-color: #0f1117; /* même fond que le reste */
+  color: #00ffcc; /* texte vert clair comme le titre */
+  font-family: monospace;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-y: auto;
+}
+
+.preview-textarea.editing-active {
+  background-color: #111923;
+  border: 1px solid #ff00dd;
+}
+
+/* Correction pour l’image et PDF */
+#note-preview-container img,
+#note-preview-container iframe {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+#side-modules-container .form-input { margin-top: 0 !important; }
+#side-modules-container label { margin-bottom: 0 !important; }
+
+/* =========================================================
+   THEMES — COLOR-ONLY OVERRIDES (aucune modif de layout)
+   Appliqués via <body class="theme-..."> 
+   Valeurs par défaut = thème actuel (rose/gray) défini plus haut.
+   ========================================================= */
+
+/* Helper : si tu actives "solid skin" depuis les settings */
+body.btn-skin-solid .btn,
+body.btn-skin-solid .action-btn,
+body.btn-skin-solid #exportBtn,
+body.btn-skin-solid .export-btn,
+body.btn-skin-solid .btn-export,
+body.btn-skin-solid #clearBtn, 
+body.btn-skin-solid .clear-btn, 
+body.btn-skin-solid .btn-clear,
+body.btn-skin-solid #resetBtn, 
+body.btn-skin-solid .reset-btn, 
+body.btn-skin-solid .btn-reset {
+  background-color: rgba(255,255,255,0.03) !important;
+}
+body.btn-skin-solid .btn:hover,
+body.btn-skin-solid .action-btn:hover,
+body.btn-skin-solid #exportBtn:hover,
+body.btn-skin-solid .export-btn:hover,
+body.btn-skin-solid .btn-export:hover,
+body.btn-skin-solid #clearBtn:hover, 
+body.btn-skin-solid .clear-btn:hover, 
+body.btn-skin-solid .btn-clear:hover,
+body.btn-skin-solid #resetBtn:hover, 
+body.btn-skin-solid .reset-btn:hover, 
+body.btn-skin-solid .btn-reset:hover {
+  background-color: rgba(255,255,255,0.06) !important;
+}
+
+/* ---------- THEME: DARK BLUE ---------- */
+body.theme-dark-blue .panel,
+body.theme-dark-blue .control-group { border-color:#334155; background-color:#000000; }
+body.theme-dark-blue .control-label-toggle { background-color:#000000; }
+
+body.theme-dark-blue .form-input,
+body.theme-dark-blue .graph-expansion-select { border-color:#38bdf8; background-color:#000000; }         /* sky-400 */
+body.theme-dark-blue .form-input:focus { border-color:#93c5fd !important; box-shadow: inset 0 0 0 1px #60a5fa; background-color:#000000; }
+
+body.theme-dark-blue .btn,
+body.theme-dark-blue .action-btn,
+body.theme-dark-blue #exportBtn, 
+body.theme-dark-blue .export-btn, 
+body.theme-dark-blue .btn-export { border-color:#38bdf8; }
+body.theme-dark-blue .btn:hover,
+body.theme-dark-blue .action-btn:hover,
+body.theme-dark-blue #exportBtn:hover, 
+body.theme-dark-blue .export-btn:hover, 
+body.theme-dark-blue .btn-export:hover { border-color:#93c5fd; }
+
+body.theme-dark-blue #clearBtn, 
+body.theme-dark-blue .clear-btn, 
+body.theme-dark-blue .btn-clear { border-color:#475569; } /* slate-600 */
+body.theme-dark-blue #resetBtn, 
+body.theme-dark-blue .reset-btn, 
+body.theme-dark-blue .btn-reset { border-color:#ef4444; } /* danger inchangé */
+
+body.theme-dark-blue .form-output { color:#93c5fd; }
+body.theme-dark-blue .tree-item:hover { background-color:#0ea5e9; color:#fff; }
+
+/* ---------- THEME: AMBER MATRIX ---------- */
+body.theme-amber-matrix .panel,
+body.theme-amber-matrix .control-group { border-color:#525252; background-color:#000000; }
+body.theme-amber-matrix .control-label-toggle { background-color:#000000; }
+
+body.theme-amber-matrix .form-input,
+body.theme-amber-matrix .graph-expansion-select { border-color:#f59e0b; background-color:#000000; }
+body.theme-amber-matrix .form-input:focus { border-color:#fbbf24 !important; box-shadow: inset 0 0 0 1px #f59e0b; background-color:#000000; }
+
+body.theme-amber-matrix .btn,
+body.theme-amber-matrix .action-btn,
+body.theme-amber-matrix #exportBtn, 
+body.theme-amber-matrix .export-btn, 
+body.theme-amber-matrix .btn-export { border-color:#f59e0b; }
+body.theme-amber-matrix .btn:hover,
+body.theme-amber-matrix .action-btn:hover,
+body.theme-amber-matrix #exportBtn:hover, 
+body.theme-amber-matrix .export-btn:hover, 
+body.theme-amber-matrix .btn-export:hover { border-color:#fbbf24; }
+
+body.theme-amber-matrix #clearBtn, 
+body.theme-amber-matrix .clear-btn, 
+body.theme-amber-matrix .btn-clear { border-color:#6b7280; } /* gray-500 */
+body.theme-amber-matrix #resetBtn, 
+body.theme-amber-matrix .reset-btn, 
+body.theme-amber-matrix .btn-reset { border-color:#ef4444; }
+
+body.theme-amber-matrix .form-output { color:#f59e0b; }
+body.theme-amber-matrix .tree-item:hover { background-color:#d97706; color:#fff; }
+
+/* ---------- THEME: HIGH CONTRAST ---------- */
+body.theme-high-contrast .panel,
+body.theme-high-contrast .control-group { border-color:#ffffff; background-color:#000; }
+body.theme-high-contrast .control-label-toggle { background-color:#000000; }
+
+body.theme-high-contrast .form-input,
+body.theme-high-contrast .graph-expansion-select { border-color:#ffffff; background-color:#000; color:#fff; }
+body.theme-high-contrast .form-input:focus { border-color:#ffffff !important; box-shadow: inset 0 0 0 1px #fff; background-color:#000000; }
+
+body.theme-high-contrast .btn,
+body.theme-high-contrast .action-btn,
+body.theme-high-contrast #exportBtn, 
+body.theme-high-contrast .export-btn, 
+body.theme-high-contrast .btn-export { border-color:#ffffff; color:#fff; }
+body.theme-high-contrast .btn:hover,
+body.theme-high-contrast .action-btn:hover,
+body.theme-high-contrast #exportBtn:hover, 
+body.theme-high-contrast .export-btn:hover, 
+body.theme-high-contrast .btn-export:hover { border-color:#e5e5e5; }
+
+body.theme-high-contrast #clearBtn, 
+body.theme-high-contrast .clear-btn, 
+body.theme-high-contrast .btn-clear { border-color:#e5e5e5; }
+body.theme-high-contrast #resetBtn, 
+body.theme-high-contrast .reset-btn, 
+body.theme-high-contrast .btn-reset { border-color:#ff4d4f; }
+
+body.theme-high-contrast .form-output { color:#ffffff; }
+body.theme-high-contrast .tree-item:hover { background-color:#fff; color:#000; }
+
+/* ---------- THEME: ARCADE PURPLE ---------- */
+body.theme-arcade-purple .panel,
+body.theme-arcade-purple .control-group { border-color:#5b21b6; background-color:#000000; }
+body.theme-arcade-purple .control-label-toggle { background-color:#000000; }
+
+body.theme-arcade-purple .form-input,
+body.theme-arcade-purple .graph-expansion-select { border-color:#a78bfa; background-color:#000000; }
+body.theme-arcade-purple .form-input:focus { border-color:#c4b5fd !important; box-shadow: inset 0 0 0 1px #a78bfa; background-color:#000000; }
+
+body.theme-arcade-purple .btn,
+body.theme-arcade-purple .action-btn,
+body.theme-arcade-purple #exportBtn, 
+body.theme-arcade-purple .export-btn, 
+body.theme-arcade-purple .btn-export { border-color:#a78bfa; }
+body.theme-arcade-purple .btn:hover,
+body.theme-arcade-purple .action-btn:hover,
+body.theme-arcade-purple #exportBtn:hover, 
+body.theme-arcade-purple .export-btn:hover, 
+body.theme-arcade-purple .btn-export:hover { border-color:#c4b5fd; }
+
+body.theme-arcade-purple #clearBtn, 
+body.theme-arcade-purple .clear-btn, 
+body.theme-arcade-purple .btn-clear { border-color:#6b7280; }
+body.theme-arcade-purple #resetBtn, 
+body.theme-arcade-purple .reset-btn, 
+body.theme-arcade-purple .btn-reset { border-color:#ef4444; }
+
+body.theme-arcade-purple .form-output { color:#c4b5fd; }
+body.theme-arcade-purple .tree-item:hover { background-color:#8b5cf6; color:#fff; }
+
+/* --- Accent piloté par thème --- */
+:root{
+  --accent-700:#be185d; /* default */
+  --accent-600:#db2777;
+  --accent-500:#ec4899;
+  --accent-400:#f472b6;
+  --accent-300:rgba(236,72,153,.65);
+}
+
+/* Thèmes (exemples) */
+body.theme-dark-blue{
+  --accent-700:#0e7490; --accent-600:#0891b2; --accent-500:#06b6d4; --accent-400:#22d3ee; --accent-300:rgba(6,182,212,.65);
+}
+body.theme-amber-matrix{
+  --accent-700:#b45309; --accent-600:#d97706; --accent-500:#f59e0b; --accent-400:#fbbf24; --accent-300:rgba(245,158,11,.65);
+}
+body.theme-high-contrast{
+  --accent-700:#111827; --accent-600:#111827; --accent-500:#ffff00; --accent-400:#ffff66; --accent-300:rgba(255,255,0,.65);
+}
+body.theme-arcade-purple{
+  --accent-700:#6d28d9; --accent-600:#7c3aed; --accent-500:#a855f7; --accent-400:#c084fc; --accent-300:rgba(168,85,247,.65);
+}
+
+/* Branche les composants existants sur l’accent */
+.form-input,
+.graph-expansion-select,
+.btn,
+.action-btn{ border-color: var(--accent-500); }
+.form-input:focus{ border-color: var(--accent-400); box-shadow: 0 0 0 1px var(--accent-400); }
+.btn:hover,.action-btn:hover{ border-color: var(--accent-400); }
+.btn--primary{ border-color: var(--accent-500); }
+.btn--active{ box-shadow: inset 0 0 0 2px var(--accent-300); }
+
+/* Utilitaires pour remplacer les classes Tailwind figées */
+.themed-border{ border-color: var(--accent-500) !important; }
+.themed-hover-bg:hover{ background-color: var(--accent-700) !important; }
+.themed-bg{ background-color: var(--accent-600) !important; }
+.action-btn:focus-visible{ outline: none; box-shadow: inset 0 0 0 2px var(--accent-300); }
+.peer:checked + .toggle-track{ background-color: var(--accent-600); }
+
+:root { --accent-text:#2DD4BF; } /* valeur par défaut = celle de “Notes” */
+:root {
+  color-scheme: dark;}
+
+.text-green-400,
+.text-green-500,
+.text-emerald-400,
+.text-emerald-500,
+.text-teal-400,
+.text-teal-500,
+.text-accent { color: var(--accent-text) !important; }
+
+/* =========================
+   PHYSICS PANEL TABS
+   ========================= */
+.physics-tab {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.physics-tab.active {
+  color: #ec4899;
+  border-bottom-color: #ec4899 !important;
+}
+
+.physics-tab-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.physics-tab-content.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Crossover type buttons */
+.crossover-type-btn {
+  @apply px-4 py-2 rounded-md border border-gray-600 bg-transparent text-white
+         transition-all duration-200 hover:border-pink-600;
+}
+
+.crossover-type-btn.active {
+  @apply border-pink-600 bg-pink-600 bg-opacity-20 text-pink-600 font-semibold;
+}
+
+/* Filter topology buttons (Butterworth / Linkwitz-Riley) */
+.filter-topology-btn {
+  @apply px-4 py-2 rounded-md border border-gray-600 bg-transparent text-white text-sm
+         transition-all duration-200 hover:border-green-600;
+}
+
+.filter-topology-btn.active {
+  @apply border-green-600 bg-green-600 bg-opacity-20 text-green-600 font-semibold;
+}
+
+/* History items hover effects */
+.history-item {
+  transition: all 0.2s ease;
+}
+
+.history-item:hover {
+  background-color: rgba(55, 65, 81, 0.8) !important;
+  transform: translateX(4px);
+}
+
+/* Form toggle styling */
+.form-toggle {
+  @apply sr-only peer;
+}
+
+.toggle-switch-bg {
+  @apply w-11 h-6 bg-gray-700 rounded-full peer 
+         peer-checked:after:translate-x-full after:absolute after:top-0.5 
+         after:left-[2px] after:bg-white after:rounded-full after:h-5 
+         after:w-5 after:transition-all peer-checked:bg-pink-600;
+}
+
+/* Circuit diagram container */
+.circuit-diagram-container {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 24, 39, 0.5);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+/* Améliorer la lisibilité du texte dans les diagrammes SVG */
+.circuit-diagram-container svg text {
+  font-size: 22px;
+  font-weight: 700;
+  text-shadow: 
+    0 0 3px rgba(0, 0, 0, 0.9),
+    0 0 5px rgba(0, 0, 0, 0.8),
+    1px 1px 2px rgba(0, 0, 0, 1),
+    -1px -1px 2px rgba(0, 0, 0, 1);
+  letter-spacing: 0.5px;
+}
+
+.circuit-diagram-container svg {
+  max-width: 100%;
+  height: auto;
+}
+

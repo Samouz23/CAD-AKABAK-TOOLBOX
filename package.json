@@ -1,0 +1,61 @@
+{
+  "name": "cad-akabak-toolbox",
+  "version": "1.0.3",
+  "description": "Toolbox for CAD & AKBAk",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "watch:css": "tailwindcss -i ./src/css/input.css -o ./src/css/style.css --watch",
+    "build:css": "tailwindcss -i ./src/css/input.css -o ./src/css/style.css --minify",
+    "build": "electron-builder",
+    "version": "node docs/version-manager.js",
+    "version:update": "node docs/version-manager.js update",
+    "version:tag": "node docs/version-manager.js tag",
+    "version:changelog": "node docs/version-manager.js changelog",
+    "version:current": "node docs/version-manager.js current"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "electron": "^37.7.0",
+    "electron-builder": "^26.0.12",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "axios": "^1.12.2",
+    "chart.js": "^4.5.1",
+    "electron-store": "^8.2.0",
+    "glob": "^11.0.3",
+    "pdf-lib": "^1.17.1",
+    "tesseract.js": "^6.0.1",
+    "three": "^0.180.0",
+    "uuid": "^13.0.0",
+    "webdav": "^5.8.0"
+  },
+  "build": {
+    "appId": "com.SZSLAB.cad-akabak-toolbox",
+    "productName": "CAD-Akabak Toolbox",
+    "files": [
+      "src/**/*",
+      "node_modules/**/*"
+    ],
+    "asar": true,
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/icon/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png"
+    }
+  }
+}

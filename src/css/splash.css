@@ -1,0 +1,93 @@
+/* =======================================================
+// FICHIER :  src/css/splash.css
+// VERSION :  FINALE AVEC LOGO ANIMÉ ET TEXTE DE VERSION
+// ======================================================= */
+
+/* --- Styles de base --- */
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    /* Empêche la sélection accidentelle du contenu avec la souris */
+    user-select: none;
+}
+
+/* --- Conteneur principal --- */
+.splash-container {
+    display: flex;
+    flex-direction: column; /* Aligne les enfants verticalement (logo puis texte) */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000000;
+}
+
+/* --- Conteneur des logos pour la superposition --- */
+.logo-container {
+    position: relative; /* Indispensable pour positionner le logo rose par-dessus */
+    width: 180px; /* Ajustez cette taille pour correspondre à votre logo */
+}
+
+/* --- Styles communs aux deux images du logo --- */
+.logo-base, .logo-fill {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- Style spécifique pour l'image de remplissage (la rose) --- */
+.logo-fill {
+    /* Superpose parfaitement l'image rose sur la blanche */
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    /* On cache l'image au départ en la "coupant" depuis le bas */
+    clip-path: inset(100% 0 0 0);
+
+    /* On applique l'animation de remplissage.
+       La durée (2.5s) doit correspondre au délai défini dans main.js ! */
+    animation: fill-up 2.5s linear forwards;
+}
+
+/* --- NOUVEAU : Styles pour le texte de la version --- */
+.version-text {
+    /* Positionnement et espacement */
+    margin-top: 20px; /* Espace entre le logo et le texte */
+
+    /* Style de la police (similaire au thème de votre app) */
+    font-family: Consolas, 'Courier New', Courier, monospace;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5); /* Blanc semi-transparent pour un look discret */
+    letter-spacing: 1px; /* Espace entre les lettres */
+
+    /* On le cache au départ pour pouvoir le faire apparaître en fondu */
+    opacity: 0;
+
+    /* On applique l'animation d'apparition */
+    animation: fade-in-text 1.5s ease-in 0.5s forwards; /* Apparition après 0.5s */
+}
+
+/* --- Définition des animations (@keyframes) --- */
+
+/* Animation pour le remplissage du logo */
+@keyframes fill-up {
+    from {
+        /* L'image est 100% coupée par le haut (invisible) */
+        clip-path: inset(100% 0 0 0);
+    }
+    to {
+        /* L'image est 0% coupée (totalement visible) */
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+/* Animation pour l'apparition en fondu du texte */
+@keyframes fade-in-text {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

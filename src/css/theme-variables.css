@@ -1,0 +1,443 @@
+/* =======================================================
+   SYSTÈME DE THÈME MODERNE - REFONTE 2025
+   ======================================================= */
+
+/* 
+  Thèmes professionnels avec:
+  - Palettes cohérentes et harmonieuses
+  - Contraste optimisé pour la lisibilité
+  - Transitions et animations smooth
+  - Design moderne et épuré
+*/
+
+/* =========== VARIABLES GLOBALES (Partagées entre tous les thèmes) =========== */
+:root {
+  /* Transitions - Système unifié de timing */
+  --transition-instant: 50ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slower: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Spacing - Système d'espacement cohérent */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
+  
+  /* Border Radius - Coins arrondis modernes */
+  --radius-none: 0;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+  
+  /* Z-index layers */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-notification: 1080;
+}
+
+/* =========== THÈME PAR DÉFAUT (Magenta Pro) =========== */
+:root {
+  /* Base colors - Multi-nuances */
+  --bg-app: #000000;
+  --bg-elevated: #0f0514;
+  --bg-panel-dark: #1a0a1f;
+  --bg-panel-medium: #250f2e;
+  --bg-panel-light: #2f1438;
+  
+  /* Bordures - magenta moderne avec nuances */
+  --border-primary: #8b1355;
+  --border-secondary: #f472b6;
+  --border-tertiary: #db2777;
+  --border-hover: #f9a8d4;
+  --border-subtle: rgba(233, 30, 140, 0.3);
+  
+  /* Icônes - filtres SVG pour visibilité */
+  --icon-primary: #f9a8d4;
+  --icon-hover: #fbbf24;
+  --icon-filter-primary: brightness(0) saturate(100%) invert(88%) sepia(18%) saturate(1077%) hue-rotate(293deg) brightness(103%) contrast(96%);
+  --icon-filter-hover: brightness(0) saturate(100%) invert(77%) sepia(72%) saturate(452%) hue-rotate(358deg) brightness(103%) contrast(97%);
+  
+  /* Textes - hiérarchie claire */
+  --text-title: #ff9900;
+  --text-subtitle: #ffd2e9;
+  --text-heading: #ffffff;
+  --text-body: #ffffff;
+  --text-muted: #d1d5db;
+  --text-accent: #fcf80a;
+  --text-link: #fbbf24;
+  
+  /* Boutons - système cohérent */
+  --btn-primary-bg: linear-gradient(135deg, #e91e8c 0%, #db2777 100%);
+  --btn-primary-bg-hover: linear-gradient(135deg, #f472b6 0%, #e91e8c 100%);
+  --btn-primary-border: #e91e8c;
+  --btn-primary-text: #ffffff;
+  --btn-primary-shadow: 0 4px 12px rgba(233, 30, 140, 0.3);
+  
+  --btn-secondary-bg: rgba(233, 30, 140, 0.08);
+  --btn-secondary-bg-hover: rgba(233, 30, 140, 0.15);
+  --btn-secondary-border: rgba(233, 30, 140, 0.3);
+  --btn-secondary-text: #f9a8d4;
+  
+  --btn-ghost-bg: transparent;
+  --btn-ghost-bg-hover: rgba(233, 30, 140, 0.08);
+  --btn-ghost-border: rgba(156, 163, 175, 0.4);
+  --btn-ghost-text: #d1d5db;
+  
+  --btn-danger-bg: rgba(239, 68, 68, 0.08);
+  --btn-danger-bg-hover: rgba(239, 68, 68, 0.15);
+  --btn-danger-border: #ef4444;
+  --btn-danger-text: #fca5a5;
+  
+  /* Arrière-plans - profondeur moderne multi-nuances */
+  --bg-panel: #1a0a1f;
+  --bg-panel-solid: #0f0514;
+  --bg-control-group: #160a1a;
+  --bg-input: #0a0514;
+  --bg-input-focus: #1a0a28;
+  --bg-hover: rgba(233, 30, 140, 0.15);
+  --bg-active: rgba(233, 30, 140, 0.25);
+  
+  /* Cards & Modules - Multi-nuances */
+  --card-bg: #1a0a1f;
+  --card-bg-elevated: #250f2e;
+  --card-border: rgba(233, 30, 140, 0.5);
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 40px rgba(233, 30, 140, 0.15);
+  --card-hover-shadow: 0 12px 32px rgba(233, 30, 140, 0.4), 0 0 60px rgba(233, 30, 140, 0.2);
+  
+  /* States */
+  --state-success: #10b981;
+  --state-warning: #f59e0b;
+  --state-error: #ef4444;
+  --state-info: #3b82f6;
+  
+  /* Graphiques - Variables dynamiques */
+  --chart-primary: #ec4899;
+  --chart-primary-glow: rgba(236, 72, 153, 0.2);
+  --chart-secondary: #f472b6;
+  --chart-bg: #0f0f0f;
+  --chart-grid: rgba(233, 30, 140, 0.15);
+  --chart-text: #f9a8d4;
+  --chart-axis: #9ca3af;
+}
+
+/* =========== THÈME OCEAN (Cyan Pro) =========== */
+body.theme-dark-blue {
+  --bg-app: #000000;
+  --bg-elevated: #051419;
+  --bg-panel-dark: #0a1f2e;
+  --bg-panel-medium: #0f2a3d;
+  --bg-panel-light: #14354c;
+  
+  --border-primary: #22d3ee;
+  --border-secondary: #38bdf8;
+  --border-tertiary: #0891b2;
+  --border-hover: #7dd3fc;
+  --border-subtle: rgba(34, 211, 238, 0.3);
+  
+  /* Icônes */
+  --icon-primary: #7dd3fc;
+  --icon-hover: #fbbf24;
+  --icon-filter-primary: brightness(0) saturate(100%) invert(85%) sepia(18%) saturate(1077%) hue-rotate(169deg) brightness(103%) contrast(98%);
+  --icon-filter-hover: brightness(0) saturate(100%) invert(77%) sepia(72%) saturate(452%) hue-rotate(358deg) brightness(103%) contrast(97%);
+  
+  --text-title: #01ff6b;
+  --text-subtitle: #6da1dd;
+  --text-heading: #e6f2f8;
+  --text-body: #e0f2fe;
+  --text-muted: #d1d5db;
+  --text-accent: #a7e9f3;
+  --text-link: #7dd3fc;
+  
+  --btn-primary-bg: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
+  --btn-primary-bg-hover: linear-gradient(135deg, #67e8f9 0%, #22d3ee 100%);
+  --btn-primary-border: #22d3ee;
+  --btn-primary-text: #ffffff;
+  --btn-primary-shadow: 0 4px 12px rgba(34, 211, 238, 0.3);
+  
+  --btn-secondary-bg: rgba(34, 211, 238, 0.08);
+  --btn-secondary-bg-hover: rgba(34, 211, 238, 0.15);
+  --btn-secondary-border: rgba(34, 211, 238, 0.3);
+  --btn-secondary-text: #7dd3fc;
+  
+  --btn-ghost-bg: transparent;
+  --btn-ghost-bg-hover: rgba(34, 211, 238, 0.08);
+  --btn-ghost-border: rgba(148, 163, 184, 0.3);
+  --btn-ghost-text: #cbd5e1;
+  
+  --btn-danger-bg: rgba(239, 68, 68, 0.08);
+  --btn-danger-bg-hover: rgba(239, 68, 68, 0.15);
+  --btn-danger-border: #ef4444;
+  --btn-danger-text: #fca5a5;
+  
+  --bg-panel: #0a1f2e;
+  --bg-panel-solid: #051419;
+  --bg-control-group: #0a1a28;
+  --bg-input: #051419;
+  --bg-input-focus: #0a2838;
+  --bg-hover: rgba(34, 211, 238, 0.15);
+  --bg-active: rgba(34, 211, 238, 0.25);
+  
+  --card-bg: #0a1f2e;
+  --card-bg-elevated: #0f2a3d;
+  --card-border: rgba(34, 211, 238, 0.5);
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 40px rgba(34, 211, 238, 0.15);
+  --card-hover-shadow: 0 12px 32px rgba(34, 211, 238, 0.4), 0 0 60px rgba(34, 211, 238, 0.2);
+  
+  --state-success: #10b981;
+  --state-warning: #f59e0b;
+  --state-error: #ef4444;
+  --state-info: #3b82f6;
+  
+  /* Graphiques - Variables dynamiques */
+  --chart-primary: #22d3ee;
+  --chart-primary-glow: rgba(34, 211, 238, 0.2);
+  --chart-secondary: #38bdf8;
+  --chart-bg: #0a1420;
+  --chart-grid: rgba(34, 211, 238, 0.15);
+  --chart-text: #7dd3fc;
+  --chart-axis: #94a3b8;
+}
+
+/* =========== THÈME EMBER (Rouge/Orange Pro) =========== */
+body.theme-amber-matrix {
+  --bg-app: #000000;
+  --bg-elevated: #190a05;
+  --bg-panel-dark: #2e1409;
+  --bg-panel-medium: #3d1e0e;
+  --bg-panel-light: #4c2813;
+  
+  --border-primary: #ef4444;
+  --border-secondary: #f97316;
+  --border-tertiary: #dc2626;
+  --border-hover: #fb923c;
+  --border-subtle: rgba(239, 68, 68, 0.3);
+  
+  /* Icônes */
+  --icon-primary: #fed7aa;
+  --icon-hover: #fbbf24;
+  --icon-filter-primary: brightness(0) saturate(100%) invert(90%) sepia(19%) saturate(766%) hue-rotate(327deg) brightness(103%) contrast(98%);
+  --icon-filter-hover: brightness(0) saturate(100%) invert(77%) sepia(72%) saturate(452%) hue-rotate(358deg) brightness(103%) contrast(97%);
+  
+  --text-title: #ffffff;
+  --text-subtitle: #fef2f2;
+  --text-heading: #fb923c;
+  --text-body: #fed7aa;
+  --text-muted: #d1d5db;
+  --text-accent: #ef4444;
+  --text-link: #fdba74;
+  
+  --btn-primary-bg: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --btn-primary-bg-hover: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  --btn-primary-border: #ef4444;
+  --btn-primary-text: #ffffff;
+  --btn-primary-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  
+  --btn-secondary-bg: rgba(239, 68, 68, 0.08);
+  --btn-secondary-bg-hover: rgba(239, 68, 68, 0.15);
+  --btn-secondary-border: rgba(239, 68, 68, 0.3);
+  --btn-secondary-text: #fca5a5;
+  
+  --btn-ghost-bg: transparent;
+  --btn-ghost-bg-hover: rgba(239, 68, 68, 0.08);
+  --btn-ghost-border: rgba(161, 161, 170, 0.4);
+  --btn-ghost-text: #d1d5db;
+  
+  --btn-danger-bg: rgba(249, 115, 22, 0.08);
+  --btn-danger-bg-hover: rgba(249, 115, 22, 0.15);
+  --btn-danger-border: #f97316;
+  --btn-danger-text: #fdba74;
+  
+  --bg-panel: #2e1409;
+  --bg-panel-solid: #190a05;
+  --bg-control-group: #281409;
+  --bg-input: #190a05;
+  --bg-input-focus: #381814;
+  --bg-hover: rgba(239, 68, 68, 0.15);
+  --bg-active: rgba(239, 68, 68, 0.25);
+  
+  --card-bg: #2e1409;
+  --card-bg-elevated: #3d1e0e;
+  --card-border: rgba(239, 68, 68, 0.5);
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 40px rgba(239, 68, 68, 0.15);
+  --card-hover-shadow: 0 12px 32px rgba(239, 68, 68, 0.4), 0 0 60px rgba(239, 68, 68, 0.2);
+  
+  --state-success: #10b981;
+  --state-warning: #f59e0b;
+  --state-error: #ef4444;
+  --state-info: #3b82f6;
+  
+  /* Graphiques - Variables dynamiques */
+  --chart-primary: #ef4444;
+  --chart-primary-glow: rgba(239, 68, 68, 0.2);
+  --chart-secondary: #f97316;
+  --chart-bg: #1a0f0a;
+  --chart-grid: rgba(239, 68, 68, 0.15);
+  --chart-text: #fdba74;
+  --chart-axis: #a8a29e;
+}
+
+/* =========== THÈME HIGH CONTRAST (Blanc/Noir Pro) =========== */
+body.theme-high-contrast {
+  --bg-app: #000000;
+  --bg-elevated: #000000;
+  
+  --border-primary: #ffffff;
+  --border-secondary: #d4d4d8;
+  --border-hover: #e4e4e7;
+  --border-subtle: rgba(255, 255, 255, 0.2);
+  
+  /* Icônes */
+  --icon-primary: #ffffff;
+  --icon-hover: #fbbf24;
+  --icon-filter-primary: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+  --icon-filter-hover: brightness(0) saturate(100%) invert(77%) sepia(72%) saturate(452%) hue-rotate(358deg) brightness(103%) contrast(97%);
+  
+  --text-title: #ffffff;
+  --text-subtitle: #fafafa;
+  --text-heading: #f4f4f5;
+  --text-body: #ffffff;
+  --text-muted: #e5e7eb;
+  --text-accent: #ffffff;
+  --text-link: #e4e4e7;
+  
+  --btn-primary-bg: linear-gradient(135deg, #ffffff 0%, #f4f4f5 100%);
+  --btn-primary-bg-hover: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+  --btn-primary-border: #ffffff;
+  --btn-primary-text: #ffffff;
+  --btn-primary-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+  
+  --btn-secondary-bg: rgba(255, 255, 255, 0.08);
+  --btn-secondary-bg-hover: rgba(255, 255, 255, 0.15);
+  --btn-secondary-border: rgba(255, 255, 255, 0.3);
+  --btn-secondary-text: #ffffff;
+  
+  --btn-ghost-bg: transparent;
+  --btn-ghost-bg-hover: rgba(255, 255, 255, 0.08);
+  --btn-ghost-border: rgba(161, 161, 170, 0.5);
+  --btn-ghost-text: #e5e7eb;
+  
+  --btn-danger-bg: rgba(228, 228, 231, 0.08);
+  --btn-danger-bg-hover: rgba(228, 228, 231, 0.15);
+  --btn-danger-border: #e4e4e7;
+  --btn-danger-text: #f4f4f5;
+  
+  --bg-panel: #000000;
+  --bg-panel-solid: #000000;
+  --bg-control-group: #000000;
+  --bg-input: #000000;
+  --bg-input-focus: #000000;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --bg-active: rgba(255, 255, 255, 0.12);
+  
+  --card-bg: #0a0a0a;
+  --card-border: rgba(255, 255, 255, 0.5);
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.1);
+  --card-hover-shadow: 0 12px 32px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.15);
+  
+  --state-success: #22c55e;
+  --state-warning: #eab308;
+  --state-error: #ef4444;
+  --state-info: #3b82f6;
+  
+  /* Graphiques - Variables dynamiques */
+  --chart-primary: #ffffff;
+  --chart-primary-glow: rgba(255, 255, 255, 0.2);
+  --chart-secondary: #d4d4d8;
+  --chart-bg: #0f0f0f;
+  --chart-grid: rgba(255, 255, 255, 0.2);
+  --chart-text: #ffffff;
+  --chart-axis: #e5e7eb;
+}
+
+/* =========== THÈME MATRIX (Vert Classique) =========== */
+body.theme-arcade-purple {
+  --bg-app: #000000;
+  --bg-elevated: #051409;
+  --bg-panel-dark: #0a1f0a;
+  --bg-panel-medium: #0f2a0f;
+  --bg-panel-light: #143514;
+  
+  --border-primary: #00ff41;
+  --border-secondary: #39ff14;
+  --border-tertiary: #00cc33;
+  --border-hover: #6bff6b;
+  --border-subtle: rgba(0, 255, 65, 0.3);
+  
+  /* Icônes */
+  --icon-primary: #39ff14;
+  --icon-hover: #00ff41;
+  --icon-filter-primary: brightness(0) saturate(100%) invert(88%) sepia(58%) saturate(2395%) hue-rotate(45deg) brightness(104%) contrast(101%);
+  --icon-filter-hover: brightness(0) saturate(100%) invert(85%) sepia(100%) saturate(2000%) hue-rotate(60deg) brightness(105%) contrast(105%);
+  
+  --text-title: #ffffff;
+  --text-subtitle: #d4ffd4;
+  --text-heading: #39ff14;
+  --text-body: #9fff9f;
+  --text-muted: #5fb55f;
+  --text-accent: #00ff41;
+  --text-link: #6bff6b;
+  
+  --btn-primary-bg: linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
+  --btn-primary-bg-hover: linear-gradient(135deg, #39ff14 0%, #00ff41 100%);
+  --btn-primary-border: #00ff41;
+  --btn-primary-text: #ffffff;
+  --btn-primary-shadow: 0 4px 12px rgba(0, 255, 65, 0.4);
+  
+  --btn-secondary-bg: rgba(0, 255, 65, 0.08);
+  --btn-secondary-bg-hover: rgba(0, 255, 65, 0.15);
+  --btn-secondary-border: rgba(0, 255, 65, 0.3);
+  --btn-secondary-text: #39ff14;
+  
+  --btn-ghost-bg: transparent;
+  --btn-ghost-bg-hover: rgba(0, 255, 65, 0.08);
+  --btn-ghost-border: rgba(95, 181, 95, 0.4);
+  --btn-ghost-text: #9fff9f;
+  
+  --btn-danger-bg: rgba(255, 65, 65, 0.08);
+  --btn-danger-bg-hover: rgba(255, 65, 65, 0.15);
+  --btn-danger-border: #ff4141;
+  --btn-danger-text: #ffb3b3;
+  
+  --bg-panel: #0a1f0a;
+  --bg-panel-solid: #051409;
+  --bg-control-group: #0a1a0a;
+  --bg-input: #051409;
+  --bg-input-focus: #0a2814;
+  --bg-hover: rgba(0, 255, 65, 0.15);
+  --bg-active: rgba(0, 255, 65, 0.25);
+  
+  --card-bg: #0a1f0a;
+  --card-bg-elevated: #0f2a0f;
+  --card-border: rgba(0, 255, 65, 0.5);
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 255, 65, 0.15);
+  --card-hover-shadow: 0 12px 32px rgba(0, 255, 65, 0.4), 0 0 60px rgba(0, 255, 65, 0.2);
+  
+  --state-success: #00ff41;
+  --state-warning: #ffff00;
+  --state-error: #ff4141;
+  --state-info: #00ffff;
+  
+  /* Graphiques - Variables dynamiques */
+  --chart-primary: #00ff41;
+  --chart-primary-glow: rgba(0, 255, 65, 0.3);
+  --chart-secondary: #39ff14;
+  --chart-bg: #0a1a0a;
+  --chart-grid: rgba(0, 255, 65, 0.2);
+  --chart-text: #9fff9f;
+  --chart-axis: #5fb55f;
+}

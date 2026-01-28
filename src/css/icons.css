@@ -1,0 +1,141 @@
+/* =======================================================
+   STYLES POUR LES ICÔNES SVG
+   ======================================================= */
+
+/* 
+  Les icônes SVG utilisent stroke="currentColor" ce qui leur permet
+  d'hériter de la couleur du texte de leur parent.
+  
+  Pour changer la couleur des icônes, vous avez plusieurs options:
+*/
+
+/* Option 1: Changer la couleur via la classe CSS du parent */
+.icon-green {
+  color: var(--icon-primary);
+}
+
+.icon-green-dark {
+  color: var(--border-primary);
+}
+
+.icon-green-light {
+  color: var(--icon-hover);
+}
+
+.icon-cyan {
+  color: rgb(6, 182, 212); /* cyan-500 */
+}
+
+.icon-amber {
+  color: rgb(245, 158, 11); /* amber-500 */
+}
+
+.icon-red {
+  color: rgb(239, 68, 68); /* red-500 */
+}
+
+.icon-white {
+  color: rgb(255, 255, 255);
+}
+
+.icon-gray {
+  color: rgb(156, 163, 175); /* gray-400 */
+}
+
+/* Option 2: Styles spécifiques pour les icônes du dashboard */
+.panel img[src*="geometry.svg"],
+.panel img[src*="physics.svg"],
+.panel img[src*="mesh.svg"],
+.panel img[src*="speaker.svg"],
+.panel img[src*="goggles.svg"],
+.panel img[src*="pencil.svg"] {
+  /* Les icônes SVG héritent de la couleur du parent */
+  filter: var(--icon-filter-primary);
+}
+
+.panel:hover img[src*=".svg"] {
+  /* Couleur au survol */
+  filter: var(--icon-filter-hover);
+}
+
+/* Option 3: Styles pour les boutons d'action */
+#dashboard-actions button img {
+  display: block;
+  width: 24px;
+  height: 24px;
+  filter: var(--icon-filter-primary);
+  transition: filter 0.2s ease;
+  pointer-events: none; /* Évite les conflits d'événements */
+}
+
+#dashboard-actions button:hover img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(322deg) brightness(103%) contrast(103%);
+  /* Blanc au survol */
+}
+
+/* Option 4: Icônes dans les listes de fichiers */
+#nas-file-list img[src*="folder.svg"],
+#nas-file-list img[src*="file.svg"] {
+  filter: var(--icon-filter-primary);
+}
+
+/* Option 5: Icône de copie */
+.copy-btn img {
+  filter: brightness(0) saturate(100%) invert(63%) sepia(9%) saturate(435%) hue-rotate(176deg) brightness(92%) contrast(87%);
+  /* Gris par défaut */
+  transition: filter 0.2s ease;
+}
+
+.copy-btn:hover img {
+  filter: var(--icon-filter-hover);
+}
+
+/* =======================================================
+   GÉNÉRATEUR DE FILTRES CSS POUR COULEURS
+   =======================================================
+   
+   Pour convertir une couleur hexadécimale en filtre CSS:
+   https://codepen.io/sosuke/pen/Pjoqqp
+   
+   Exemples de couleurs communes:
+   
+   VERT CLAIR (rgb(134, 239, 172)):
+   filter: brightness(0) saturate(100%) invert(88%) sepia(26%) saturate(1679%) hue-rotate(66deg) brightness(98%) contrast(88%);
+   
+   VERT (rgb(34, 197, 94)):
+   filter: brightness(0) saturate(100%) invert(75%) sepia(26%) saturate(2044%) hue-rotate(66deg) brightness(104%) contrast(96%);
+   
+   VERT FONCÉ (rgb(21, 128, 61)):
+   filter: brightness(0) saturate(100%) invert(35%) sepia(97%) saturate(508%) hue-rotate(88deg) brightness(96%) contrast(91%);
+   
+   CYAN (rgb(6, 182, 212)):
+   filter: brightness(0) saturate(100%) invert(61%) sepia(93%) saturate(1173%) hue-rotate(147deg) brightness(95%) contrast(91%);
+   
+   AMBRE (rgb(245, 158, 11)):
+   filter: brightness(0) saturate(100%) invert(65%) sepia(87%) saturate(1736%) hue-rotate(359deg) brightness(99%) contrast(96%);
+   
+   BLANC (rgb(255, 255, 255)):
+   filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(322deg) brightness(103%) contrast(103%);
+   
+   GRIS (rgb(156, 163, 175)):
+   filter: brightness(0) saturate(100%) invert(63%) sepia(9%) saturate(435%) hue-rotate(176deg) brightness(92%) contrast(87%);
+   
+   ROUGE (rgb(239, 68, 68)):
+   filter: brightness(0) saturate(100%) invert(46%) sepia(98%) saturate(2621%) hue-rotate(336deg) brightness(99%) contrast(94%);
+   
+   ======================================================= */
+
+/* Classe utilitaire pour appliquer rapidement des couleurs */
+.svg-green { filter: var(--icon-filter-hover); }
+.svg-green-light { filter: var(--icon-filter-primary); }
+.svg-green-dark { filter: var(--icon-filter-primary); }
+.svg-cyan { filter: brightness(0) saturate(100%) invert(61%) sepia(93%) saturate(1173%) hue-rotate(147deg) brightness(95%) contrast(91%); }
+.svg-amber { filter: brightness(0) saturate(100%) invert(65%) sepia(87%) saturate(1736%) hue-rotate(359deg) brightness(99%) contrast(96%); }
+.svg-white { filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(322deg) brightness(103%) contrast(103%); }
+.svg-gray { filter: brightness(0) saturate(100%) invert(63%) sepia(9%) saturate(435%) hue-rotate(176deg) brightness(92%) contrast(87%); }
+.svg-red { filter: brightness(0) saturate(100%) invert(46%) sepia(98%) saturate(2621%) hue-rotate(336deg) brightness(99%) contrast(94%); }
+
+/* Transition smooth pour les changements de couleur */
+img[src*=".svg"] {
+  transition: filter 0.2s ease;
+}

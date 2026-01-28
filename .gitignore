@@ -1,0 +1,18 @@
+// tout est ignoré
+
+node_modules
+dist
+package-lock.json
+.dsStore
+.env
+.vscode
+build
+
+# Données sensibles et confidentielles
+src/js/panels/config.js
+src/js/panels/sim-db.js
+src/ipc/orders/
+src/js/panels/orders/
+docs/
+src/assets/pdf/
+Ignore.txt

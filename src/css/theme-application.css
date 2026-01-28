@@ -1,0 +1,498 @@
+/* =======================================================
+   APPLICATION DES VARIABLES DE THÈME - REFONTE 2025
+   Ce fichier applique les variables CSS modernes définies dans theme-variables.css
+   avec transitions smooth et effets professionnels
+   ======================================================= */
+
+/* Smooth scrolling global */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #000000 !important;
+}
+
+/* Scrollbars modernes et élégants */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-control-group);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* Selection avec couleurs thématiques */
+::selection {
+  background-color: var(--border-primary);
+  color: var(--text-title);
+}
+
+::-moz-selection {
+  background-color: var(--border-primary);
+  color: var(--text-title);
+}
+
+/* =========== BORDURES =========== */
+.panel,
+#dashboard .panel,
+.control-group,
+.border-primary {
+  border-color: var(--border-primary) !important;
+}
+
+.border-secondary {
+  border-color: var(--border-secondary) !important;
+}
+
+.panel:hover,
+#dashboard .panel:hover {
+  border-color: var(--border-hover) !important;
+}
+
+/* Inputs modernes avec états focus améliorés */
+.form-input,
+.graph-expansion-select,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  border: 1.5px solid var(--border-primary) !important;
+  background: var(--bg-input) !important;
+  color: var(--text-body) !important;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.form-input:hover,
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: var(--border-hover) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form-input:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--border-hover) !important;
+  border-width: 2px !important;
+  background: var(--bg-input-focus) !important;
+  box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* =========== ICÔNES =========== */
+
+/* Icônes du dashboard avec transitions smooth */
+.panel img[src*=".svg"],
+#dashboard img[src*=".svg"] {
+  filter: var(--icon-filter-primary);
+  transition: all var(--transition-fast);
+  transform: scale(1);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4)) var(--icon-filter-primary);
+}
+
+.panel:hover img[src*=".svg"],
+#dashboard .panel:hover img[src*=".svg"] {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)) var(--icon-filter-hover);
+  transform: scale(1.05);
+}
+
+/* Boutons de fermeture de fenêtre (window controls) */
+#window-controls button img[src*=".svg"] {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)) var(--icon-filter-primary);
+  transition: all var(--transition-fast);
+}
+
+#window-controls button:hover img[src*=".svg"] {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4)) var(--icon-filter-hover);
+  transform: rotate(90deg);
+}
+
+/* Boutons de fermeture avec croix (×) */
+#close-submenu-btn,
+#close-tool-btn,
+#close-help-modal {
+  color: var(--border-primary) !important;
+  transition: color 0.2s ease;
+}
+
+#close-submenu-btn:hover,
+#close-tool-btn:hover,
+#close-help-modal:hover {
+  color: var(--border-hover) !important;
+}
+
+/* Boutons d'action avec icônes */
+#dashboard-actions button img,
+button img[src*=".svg"] {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4)) var(--icon-filter-primary);
+  transition: filter var(--transition-fast);
+}
+
+#dashboard-actions button:hover img,
+button:hover img[src*=".svg"] {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)) var(--icon-filter-hover);
+}
+
+/* Icônes dans les listes de fichiers */
+#nas-file-list img[src*=".svg"],
+.file-list img[src*=".svg"] {
+  filter: var(--icon-filter-primary);
+}
+
+/* =========== TEXTES =========== */
+
+/* Titres principaux (h1) */
+h1,
+.text-title,
+.title {
+  color: var(--text-title) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Sous-titres (h2) */
+h2,
+.text-subtitle,
+.subtitle {
+  color: var(--text-subtitle) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Headings (h3, labels importants) */
+h3,
+.text-heading,
+label,
+.control-label,
+.form-label {
+  color: var(--text-heading) !important;
+  font-weight: 500;
+}
+
+/* Texte normal */
+body,
+p,
+.text-body,
+.form-output {
+  color: var(--text-body) !important;
+}
+
+/* Texte secondaire/grisé */
+.text-muted,
+.text-gray-400,
+.text-secondary {
+  color: var(--text-muted) !important;
+  opacity: 0.95;
+}
+
+/* Texte accentué */
+.text-accent,
+.text-green-400,
+.action-btn {
+  color: var(--text-accent) !important;
+}
+
+/* =========== BOUTONS PRIMAIRES (Gradients modernes) =========== */
+.btn,
+.btn--primary,
+.action-btn,
+#exportBtn,
+.export-btn,
+.btn-export,
+button[type="submit"] {
+  border-color: var(--btn-primary-border) !important;
+  background: var(--btn-primary-bg) !important;
+  color: var(--btn-primary-text) !important;
+  transition: all var(--transition-fast);
+  box-shadow: var(--btn-primary-shadow);
+}
+
+.btn:hover,
+.btn--primary:hover,
+.action-btn:hover,
+#exportBtn:hover,
+.export-btn:hover,
+.btn-export:hover,
+button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active,
+.btn--primary:active {
+  transform: translateY(0);
+}
+
+/* =========== BOUTONS SECONDAIRES =========== */
+.btn--secondary,
+.clear-btn,
+.btn-clear,
+#clearBtn,
+#back-btn,
+#back-to-list-btn,
+button[type="button"]:not(.btn--primary):not(.btn--danger) {
+  border-color: var(--btn-secondary-border) !important;
+  background: var(--btn-secondary-bg) !important;
+  color: var(--btn-secondary-text) !important;
+  transition: all var(--transition-fast);
+}
+
+.btn--secondary:hover,
+.clear-btn:hover,
+.btn-clear:hover,
+#clearBtn:hover,
+#back-btn:hover,
+#back-to-list-btn:hover {
+  background: var(--btn-secondary-bg-hover) !important;
+  border-color: var(--btn-secondary-border) !important;
+  transform: translateY(-1px);
+}
+
+/* =========== BOUTONS DANGER =========== */
+.btn--danger,
+.btn-danger,
+#resetBtn,
+.reset-btn,
+.btn-reset,
+#delete-client-btn,
+button.bg-red-800,
+button[class*="red"] {
+  border-color: var(--btn-danger-border) !important;
+  background: var(--btn-danger-bg) !important;
+  color: var(--btn-danger-text) !important;
+  transition: all var(--transition-fast);
+}
+
+.btn--danger:hover,
+.btn-danger:hover,
+#resetBtn:hover,
+.reset-btn:hover,
+.btn-reset:hover,
+#delete-client-btn:hover,
+button.bg-red-800:hover {
+  background: var(--btn-danger-bg-hover) !important;
+  border-color: var(--btn-danger-border) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* =========== ARRIÈRE-PLANS (Glass morphism moderne) =========== */
+.panel,
+#dashboard .panel,
+.bg-panel {
+  background: var(--card-bg) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  transition: all var(--transition-base);
+}
+
+/* Sections avec différentes nuances pour effet multicolor */
+.calc-section,
+section.calc-section {
+  background: var(--card-bg) !important;
+  border: 2px solid var(--border-primary) !important;
+  box-shadow: var(--card-shadow);
+}
+
+.control-group,
+.bg-gray-900,
+.bg-control {
+  background: var(--bg-panel-medium) !important;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+/* Alternance de couleurs pour les groupes de contrôles */
+.control-group:nth-child(odd) {
+  background: var(--bg-panel-dark) !important;
+}
+
+.control-group:nth-child(even) {
+  background: var(--bg-panel-medium) !important;
+}
+
+/* Cartes élevées avec nuance différente */
+.card-elevated,
+.bg-elevated,
+.modal-content {
+  background: var(--card-bg-elevated) !important;
+  border: 2px solid var(--border-secondary) !important;
+}
+
+.panel:hover,
+#dashboard .panel:hover {
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--border-primary);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.tree-item:hover,
+li:hover {
+  background-color: var(--bg-hover) !important;
+  transition: background-color var(--transition-fast);
+}
+
+/* =========== ÉLÉMENTS SPÉCIFIQUES =========== */
+
+/* Dashboard actions buttons */
+#dashboard-actions button {
+  border-color: var(--border-primary) !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.2s ease;
+}
+
+#dashboard-actions button:hover {
+  border-color: var(--border-hover) !important;
+  background-color: var(--bg-hover) !important;
+}
+
+/* Icônes des boutons d'action - s'assurer qu'elles sont visibles */
+#dashboard-actions button img,
+#dashboard-actions button img[src*=".svg"] {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5)) var(--icon-filter-primary) !important;
+  transition: filter var(--transition-fast);
+  display: block !important;
+  width: 24px !important;
+  height: 24px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#dashboard-actions button:hover img,
+#dashboard-actions button:hover img[src*=".svg"] {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6)) var(--icon-filter-hover) !important;
+}
+
+/* Copy buttons */
+.copy-btn,
+button[class*="copy"] {
+  border-color: var(--btn-secondary-border) !important;
+  color: var(--btn-secondary-text) !important;
+}
+
+.copy-btn:hover,
+button[class*="copy"]:hover {
+  border-color: var(--btn-primary-border) !important;
+  color: var(--btn-primary-text) !important;
+}
+
+.copy-btn img {
+  filter: var(--icon-filter-primary);
+  transition: filter 0.2s ease;
+}
+
+.copy-btn:hover img {
+  filter: var(--icon-filter-hover);
+}
+
+/* Tabs / Navigation avec états modernes */
+.tab,
+.nav-item {
+  border-color: var(--border-subtle) !important;
+  color: var(--text-body) !important;
+  transition: all var(--transition-fast);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.tab:hover,
+.nav-item:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover) !important;
+}
+
+.tab.active,
+.nav-item.active {
+  border-color: var(--border-primary) !important;
+  color: var(--text-accent) !important;
+  background: var(--bg-active);
+  box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.1);
+}
+
+/* Progress bars modernes */
+progress,
+.progress-bar {
+  background-color: var(--bg-control-group) !important;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  height: 8px;
+}
+
+progress::-webkit-progress-value,
+.progress-bar-fill {
+  background: var(--btn-primary-bg) !important;
+  transition: width var(--transition-base);
+  border-radius: var(--radius-full);
+}
+
+progress::-webkit-progress-bar {
+  background-color: var(--bg-control-group);
+  border-radius: var(--radius-full);
+}
+
+/* Tooltips */
+.tooltip,
+[title]:hover::after {
+  background-color: var(--bg-control-group) !important;
+  border-color: var(--border-primary) !important;
+  color: var(--text-body) !important;
+}
+
+/* Modals modernes avec overlay */
+.modal,
+.dialog {
+  background: var(--card-bg) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-primary) !important;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: modalFadeIn var(--transition-base) ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Overlay pour modals */
+.modal-overlay,
+.dialog-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: overlayFadeIn var(--transition-base) ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

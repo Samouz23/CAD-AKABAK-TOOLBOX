@@ -1,0 +1,84 @@
+================================================================================
+          DOCUMENTATION DE L'ARCHITECTURE DU PROJET - CAD-AKABAK TOOLBOX
+================================================================================
+
+Ce document explique la nouvelle structure du projet après le refactoring du
+fichier `main.js`. Son objectif est de vous aider à comprendre l'organisation
+du code, à savoir où trouver les choses pour les modifier, et comment ajouter
+de nouvelles fonctionnalités de manière propre et cohérente.
+
+---
+### 1. Ce qui a été fait : La nouvelle philosophie du projet
+---
+
+L'objectif principal était de résoudre le problème du fichier `main.js` qui
+agissait comme un "God Object" (un objet qui fait tout). Nous sommes passés
+d'une approche monolithique à une architecture modulaire basée sur le
+principe de **"Séparation des préoccupations" (Separation of Concerns)**.
+
+Chaque partie de votre application a maintenant un rôle bien défini et une
+place attitrée :
+
+#### a) `src/main.js` : Le Chef d'Orchestre
+
+*   **Rôle :** Il ne contient plus de logique métier complexe. Sa seule mission
+    est d'initialiser l'application, de créer les fenêtres et de "brancher"
+    les différents modules de fonctionnalités. C'est le point d'entrée qui
+    dit "qui fait quoi", mais il ne le fait pas lui-même.
+
+*   **Comment :** Il importe les fonctions de `src/core` pour créer les
+    fenêtres et il importe les fonctions `register...Handlers` de `src/ipc`
+    pour activer les canaux de communication avec votre interface.
+
+
+#### b) `src/core/` : Les Fondations
+
+*   **Rôle :** Ce dossier contient la logique de base, pure et réutilisable,
+    qui n'est pas directement liée à un événement de l'interface utilisateur.
+    C'est la "boîte à outils" de bas niveau de votre application.
+
+*   **Contenu :**
+    *   `settings.js` : Gère tout ce qui touche à la configuration
+        (lecture, écriture, réinitialisation avec `electron-store`).
+    *   `nasClient.js` : Sa seule responsabilité est de créer et configurer
+        le client WebDAV pour le NAS.
+    *   `windowManager.js` : Centralise toute la logique de création et de
+        gestion des fenêtres (`BrowserWindow`).
+
+
+#### c) `src/ipc/` : Les Murs et la Plomberie (La Logique Métier)
+
+*   **Rôle :** C'est le cœur de la logique de votre application. Ce dossier
+    contient les "ponts" entre votre interface utilisateur (le `renderer`)
+    et le processus principal (`main`). Chaque fichier ici regroupe des
+    fonctionnalités par domaine.
+
+*   **Contenu :**
+    *   `nasHandlers.js` : Contient toute la logique pour lister, envoyer,
+        télécharger des fichiers sur le NAS.
+    *   `ordersHandlers.js` : Gère la création des PDF, la sauvegarde des
+        clients, la gestion des projets, etc.
+    *   `fileSystemHandlers.js` : Gère les interactions avec les fichiers
+        locaux de l'utilisateur (ouvrir une boîte de dialogue, lire un
+        fichier `.txt`, etc.).
+    *   `meshHandlers.js` : Contient la logique spécifique au lancement du
+        processus de maillage GMSH.
+    *   `settingsHandlers.js` : Gère les demandes de l'interface pour lire
+        ou modifier les paramètres.
+
+
+---
+### 2. Comment retrouver vos petits ? Le guide de maintenance
+---
+
+Voici un guide pratique pour savoir où aller quand vous devez modifier quelque chose :
+
+| Si vous voulez...                                                                   | ...allez dans le fichier :              | Pourquoi ?                                                                                                       |
+|-------------------------------------------------------------------------------------|-----------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| Changer la taille par défaut de la fenêtre principale.                              | `src/core/windowManager.js`             | C'est le gestionnaire central de toutes les fenêtres.                                                            |
+| Ajouter un nouveau chemin par défaut dans les paramètres (ex: `paths.logs`).        | `src/core/settings.js`                  | C'est ici que la structure par défaut des paramètres est définie.                                                |
+| Corriger un bug dans la génération du PDF de commande.                              | `src/ipc/ordersHandlers.js`             | Toute la logique métier des commandes, y compris la manipulation du PDF, se trouve dans ce gestionnaire.       |
+| Modifier les arguments passés à `gmsh.exe` lors du maillage.                        | `src/ipc/meshHandlers.js`               | La fonction `run-mesh` qui construit et exécute la commande GMSH est dans ce fichier.                            |
+| Changer l'adresse du serveur NAS ou la méthode d'authentification.                  | `src/core/nasClient.js`                 | C'est le seul endroit où le client WebDAV est configuré et initialisé.                                           |
+| Ajouter un bouton qui sauvegarde un nouveau type de fichier dans un dossier local.  | `src/ipc/fileSystemHandlers.js`         | Ce fichier gère toutes les interactions génériques avec le système de fichiers local.                            |
+|

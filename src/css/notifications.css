@@ -1,0 +1,213 @@
+/* ========================================
+   Système de notifications toast
+   ======================================== */
+
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.notification {
+  min-width: 320px;
+  max-width: 480px;
+  padding: 16px;
+  border-radius: var(--radius-lg, 12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 0 0 1px rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  pointer-events: auto;
+  transform: translateX(400px);
+  opacity: 0;
+  transition: var(--transition-base, 200ms ease-in-out);
+}
+
+.notification--show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.notification--hide {
+  transform: translateX(400px);
+  opacity: 0;
+}
+
+/* Types de notifications */
+.notification--success {
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.2) 0%, 
+    rgba(22, 163, 74, 0.15) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.notification--error {
+  background: linear-gradient(135deg, 
+    rgba(239, 68, 68, 0.2) 0%, 
+    rgba(220, 38, 38, 0.15) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.notification--warning {
+  background: linear-gradient(135deg, 
+    rgba(251, 191, 36, 0.2) 0%, 
+    rgba(245, 158, 11, 0.15) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.notification--info {
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.2) 0%, 
+    rgba(37, 99, 235, 0.15) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Icône */
+.notification__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.notification--success .notification__icon {
+  background: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.notification--error .notification__icon {
+  background: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.notification--warning .notification__icon {
+  background: rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+.notification--info .notification__icon {
+  background: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
+/* Contenu */
+.notification__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification__message {
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+/* Bouton fermer */
+.notification__close {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast, 150ms ease-in-out);
+}
+
+.notification__close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* ========================================
+   Modal de confirmation
+   ======================================== */
+
+.notification-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-base, 200ms ease-in-out);
+}
+
+.notification-modal--show {
+  opacity: 1;
+}
+
+.notification-modal--closing {
+  opacity: 0;
+}
+
+.notification-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.notification-modal__content {
+  position: relative;
+  background: linear-gradient(135deg, 
+    rgba(30, 30, 40, 0.95) 0%, 
+    rgba(20, 20, 30, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl, 16px);
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  transform: scale(0.9);
+  transition: transform var(--transition-base, 200ms ease-in-out);
+}
+
+.notification-modal--show .notification-modal__content {
+  transform: scale(1);
+}
+
+.notification-modal__title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.notification-modal__message {
+  font-size: 16px;
+  color: #d1d5db;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.notification-modal__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.notification-modal__btn-cancel,
+.notification-modal__btn-confirm {
+  min-width: 100px;
+}

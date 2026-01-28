@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdn.jsdelivr.net; worker-src blob:; style-src 'self' 'unsafe-inline'">
+  <title>CAD-AKABAK TOOLBOX</title>
+  <script src="./js/lib/chart.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/theme-variables.css">
+  <link rel="stylesheet" href="./css/theme-application.css">
+  <link rel="stylesheet" href="./css/icons.css">
+  <link rel="stylesheet" href="./css/notifications.css">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    .drag-region { -webkit-app-region: drag; user-select: none; }
+    .no-drag { -webkit-app-region: no-drag; }
+    
+    /* Force l'affichage des icônes des boutons d'action */
+    /* Dashboard utilise le CSS de style.css - ne pas redéfinir ici */
+    
+    /* Actions buttons modernes */
+    #dashboard-actions button {
+      width: 48px;
+      height: 48px;
+      padding: var(--spacing-md, 12px);
+      border-radius: var(--radius-full, 9999px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast, 150ms ease);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    #dashboard-actions button:hover {
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    
+    #dashboard-actions button:active {
+      transform: scale(1.05);
+    }
+    
+    #dashboard-actions button img {
+      display: block !important;
+      width: 24px !important;
+      height: 24px !important;
+      opacity: 1 !important;
+    }
+    
+    /* Fade in animation pour l'app */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    body {
+      animation: fadeInUp var(--transition-base, 250ms ease) forwards;
+    }
+    
+    #dashboard .panel {
+      animation: fadeInUp var(--transition-base, 250ms ease) forwards;
+      opacity: 0;
+    }
+    
+    #dashboard .panel:nth-child(1) { animation-delay: 50ms; }
+    #dashboard .panel:nth-child(2) { animation-delay: 100ms; }
+    #dashboard .panel:nth-child(3) { animation-delay: 150ms; }
+    #dashboard .panel:nth-child(4) { animation-delay: 200ms; }
+    #dashboard .panel:nth-child(5) { animation-delay: 250ms; }
+    #dashboard .panel:nth-child(6) { animation-delay: 300ms; }
+    
+    /* Window controls hover effects */
+    #window-controls button:hover {
+      background: var(--bg-hover, rgba(233, 30, 140, 0.08));
+    }
+    
+    #close-btn:hover {
+      background: rgba(239, 68, 68, 0.15) !important;
+    }
+  </style>
+</head>
+<body class="bg-black text-green-400 font-mono antialiased">
+
+  <!-- Barre draggable moderne -->
+  <div class="drag-region" style="
+    height: 40px; 
+    background: var(--bg-elevated, #12121a); 
+    border-bottom: 1px solid var(--border-subtle, rgba(233, 30, 140, 0.2));
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 var(--spacing-md, 12px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  ">
+    <div style="
+      color: var(--text-subtitle, #fae8ff); 
+      font-size: 0.875rem; 
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    ">CAD-AKABAK Toolbox</div>
+    <div id="window-controls" class="no-drag" style="display: flex; gap: var(--spacing-sm, 8px);">
+      <button id="min-btn" title="Minimize" class="no-drag" style="
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-sm, 6px);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-fast, 150ms ease);
+      ">
+        <img src="./assets/icon/minimize.svg" alt="Minimize" style="width: 20px; height: 20px;">
+      </button>
+      <button id="max-btn" title="Maximize" class="no-drag" style="
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-sm, 6px);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-fast, 150ms ease);
+      ">
+        <img src="./assets/icon/maximize.svg" alt="Maximize" style="width: 20px; height: 20px;">
+      </button>
+      <button id="close-btn" title="Close" class="no-drag" style="
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-sm, 6px);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition-fast, 150ms ease);
+      ">
+        <img src="./assets/icon/x-circle.svg" alt="Close" style="width: 20px; height: 20px;">
+      </button>
+    </div>
+  </div>
+
+  <!-- Conteneur principal qui inclut le dashboard ET les boutons -->
+  <div id="app-container" style="position: relative; height: calc(100vh - 40px);">
+
+    <!-- Contenu principal du tableau de bord -->
+    <main id="dashboard">
+      <div class="panel" data-panel="geometry"><img src="./assets/icon/geometry.svg" alt="Geometry" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Geometry</h2></div>
+      <div class="panel" data-panel="power"><img src="./assets/icon/physics.svg" alt="Physics" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Physics</h2></div>
+      <div class="panel" data-panel="mesh"><img src="./assets/icon/mesh.svg" alt="Mesh" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Mesh & Frequency</h2></div>
+      <div class="panel" data-panel="drivers"><img src="./assets/icon/speaker.svg" alt="Speaker" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Driver DB</h2></div>
+      <div class="panel" data-panel="horn-submenu-trigger"><img src="./assets/icon/goggles.svg" alt="Advanced" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Advanced sim</h2></div>
+      <div class="panel" data-panel="notes"><img src="./assets/icon/pencil.svg" alt="Notes" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Notes</h2></div>
+    </main>
+
+    <!-- Conteneur pour les boutons, maintenant positionné par rapport à "app-container" -->
+    <div id="dashboard-actions" style="position: absolute; bottom: 2rem; right: 2rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: center; z-index: 10;">
+      <button id="open-orders-btn" class="p-3 bg-gray-800 border-2 border-green-700 rounded-full hover:bg-green-700 transition-colors" title="Gestionnaire de Commandes">
+        <img src="./assets/icon/calendar.svg" alt="Calendar" class="w-6 h-6">
+      </button>
+      
+      <button id="open-sim-db-btn" class="p-3 bg-gray-800 border-2 border-green-700 rounded-full hover:bg-green-700 transition-colors" title="SIM-DB Cloud" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+        <img src="./assets/icon/cloud.svg" alt="Cloud" class="w-6 h-6">
+      </button>
+      
+      <button id="open-settings-btn" class="p-3 bg-gray-800 border-2 border-green-700 rounded-full hover:bg-green-700 transition-colors" title="Configuration">
+        <img src="./assets/icon/settings.svg" alt="Settings" class="w-6 h-6">
+      </button>
+    </div>
+  </div>
+
+  <!-- Conteneur pour le sous-menu -->
+  <div id="horn-sub-menu" class="fixed inset-0 bg-black/90 backdrop-blur-sm p-8 z-40 flex-col items-center justify-center hidden">
+    <button id="close-submenu-btn" class="absolute top-4 right-6 text-5xl transition-colors" style="color: var(--border-primary);">×</button>
+    <div class="grid grid-cols-3 grid-rows-3 gap-8 w-full max-w-4xl" style="grid-template-columns: 1fr auto 1fr; place-items: center;">
+      <div class="col-start-1 row-start-1 panel sub-panel" data-panel="horn" style="width: 300px;"><h2 class="text-2xl font-bold">Horn Expansion</h2></div>
+      <div class="col-start-3 row-start-1 panel sub-panel" data-panel="directivity" style="width: 300px;"><h2 class="text-2xl font-bold">Directivity</h2></div>
+      <div class="col-start-2 row-start-2 panel sub-panel" data-panel="waveguide" style="width: 300px;"><h2 class="text-2xl font-bold">Waveguide Studio</h2></div>
+      <div class="col-start-1 row-start-3 panel sub-panel" data-panel="hornscript" style="width: 300px;"><h2 class="text-2xl font-bold">Script LEM-Horn</h2></div>
+      <div class="col-start-3 row-start-3 panel sub-panel" data-panel="ductscript" style="width: 300px;"><h2 class="text-2xl font-bold">Script LEM-Duct</h2></div>
+    </div>
+  </div>
+
+  <!-- Conteneur pour afficher les outils/modules -->
+  <div id="tool-view" class="fixed inset-0 bg-black/90 backdrop-blur-sm p-8 z-50 flex-col hidden">
+    <button id="close-tool-btn" class="absolute top-4 right-6 text-5xl transition-colors" style="color: var(--border-primary);">×</button>
+    <div id="tool-content" class="w-full h-full overflow-y-auto"></div>
+  </div>
+
+  <script src="./js/notifications.js"></script>
+  <script src="./js/keyboardShortcuts.js"></script>
+  <script type="module" src="./js/renderer.js"></script>
+
+</body>
+</html>
