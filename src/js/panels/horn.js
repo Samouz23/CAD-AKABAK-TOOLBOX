@@ -908,6 +908,33 @@ export function initializeHornPanel(rootElement) {
         mainChart.data.datasets[5].data = idealCurveS.map(p => ({ x: p.x * displayFactor, y: p.y / displaySurfFactor }));
         mainChart.data.datasets[6].data = idealCurveOsSe.map(p => ({ x: p.x * displayFactor, y: p.y / displaySurfFactor }));
 
+        const useProximityTooltip = true;
+        if (mainChart.options?.interaction) {
+            mainChart.options.interaction.intersect = useProximityTooltip;
+            mainChart.options.interaction.mode = 'nearest';
+        } else {
+            mainChart.options.interaction = { mode: 'nearest', intersect: useProximityTooltip };
+        }
+        if (mainChart.options?.plugins?.tooltip) {
+            mainChart.options.plugins.tooltip.intersect = useProximityTooltip;
+            mainChart.options.plugins.tooltip.mode = 'nearest';
+        }
+
+        const xScale = mainChart.scales?.x;
+        if (xScale) {
+            const oneCmInDisplayUnits = currentUnit === 'cm' ? 1 : 10;
+            const thresholdPx = Math.abs(xScale.getPixelForValue(oneCmInDisplayUnits) - xScale.getPixelForValue(0));
+            const hitRadiusPx = Math.max(6, Math.min(40, thresholdPx));
+            const targetDatasets = [0, 1, 2, 3, 4, 5, 6];
+            targetDatasets.forEach(idx => {
+                const ds = mainChart.data.datasets[idx];
+                if (!ds) return;
+                ds.pointHitRadius = hitRadiusPx;
+                ds.hitRadius = hitRadiusPx;
+                ds.hoverRadius = Math.max(6, Math.min(16, hitRadiusPx));
+            });
+        }
+
         const relevantDatasetsForMode = {
             'dim': [0, 1, 2, 3],
             'surf': [4, 5, 6],
@@ -953,6 +980,8 @@ export function initializeHornPanel(rootElement) {
         }
         const yDimUnitLabel = `Dimensions (${currentUnit})`; 
         const ySurfUnitLabel = `Area (${currentUnit}²)`;
+        const dimUnitLabel = currentUnit;
+        const surfUnitLabel = `${currentUnit}²`;
         const xUnitLabel = `Length (${currentUnit})`;
         const canvas = rootElement.querySelector('#main-chart');
 
@@ -966,12 +995,45 @@ export function initializeHornPanel(rootElement) {
                     { label: 'Ideal (H)', data: [], borderColor: chartColors.h, borderDash: [5, 5], pointRadius: 2, yAxisID: 'yDimensions' }, 
                     { label: 'Area', data: [], borderColor: chartColors.s, tension: 0, pointStyle: 'circle', radius: 4, yAxisID: 'ySurface' }, 
                     { label: 'Ideal (Area)', data: [], borderColor: chartColors.s, borderDash: [5, 5], pointRadius: 2, yAxisID: 'ySurface' },
-                    { label: 'OS-SE', data: [], borderColor: chartColors.os, tension: 0.1, pointStyle: 'line', radius: 0, yAxisID: 'ySurface'}
+                    { 
+                        label: 'OS-SE', 
+                        data: [], 
+                        borderColor: chartColors.os, 
+                        borderWidth: 2,
+                        tension: 0.1, 
+                        pointStyle: 'line', 
+                        radius: 0,
+                        pointHitRadius: 20,
+                        hitRadius: 20,
+                        hoverRadius: 6,
+                        yAxisID: 'ySurface'
+                    }
                 ]
             }, 
             options: { 
                 responsive: true, maintainAspectRatio: false, 
-                plugins: { legend: { position: 'top', labels: { color: '#a0aec0' }, onClick: customLegendClickHandler } }, 
+                interaction: { mode: 'nearest', intersect: false },
+                plugins: { 
+                    legend: { position: 'top', labels: { color: '#a0aec0' }, onClick: customLegendClickHandler },
+                    tooltip: {
+                        mode: 'nearest',
+                        intersect: false,
+                        callbacks: {
+                            label: (ctx) => {
+                                const yVal = ctx.parsed?.y;
+                                const unit = ctx.dataset?.yAxisID === 'ySurface' ? surfUnitLabel : dimUnitLabel;
+                                if (!isFinite(yVal)) return ctx.dataset.label || '';
+
+                                const xScale = ctx.chart?.scales?.x;
+                                const caretX = ctx.chart?.tooltip?.caretX;
+                                const xFromCursor = (xScale && isFinite(caretX)) ? xScale.getValueForPixel(caretX) : ctx.parsed?.x;
+                                if (!isFinite(xFromCursor)) return ctx.dataset.label || '';
+
+                                return `${ctx.dataset.label}: ${Math.round(yVal)} ${unit} @ ${Math.round(xFromCursor)} ${currentUnit}`;
+                            }
+                        }
+                    }
+                }, 
                 scales: { 
                     x: { type: 'linear', title: { display: true, text: xUnitLabel, color: '#a0aec0' }, ticks: { color: '#a0aec0' }, grid: { color: '#2D3748' } }, 
                     yDimensions: { 
