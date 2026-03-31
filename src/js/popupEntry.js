@@ -26,6 +26,10 @@ import {
   initializeMeshPopup
 } from './popup/mesh/meshWindows.js';
 import {
+  getMeshPreviewPopupHtml,
+  initializeMeshPreviewPopup
+} from './popup/mesh/meshPreviewPopup.js';
+import {
   getDriversDatabaseHtml,
   initializeDriversPopup
 } from './popup/drivers/driversWindows.js';
@@ -76,7 +80,7 @@ const popupModules = {
     initialize: initializeMeshMiniPopup
   },
   'mesh-meshing': {
-    title: 'Meshing (Gmsh)',
+    title: 'Physical (Gmsh)',
     getHtml: getMeshMeshingHtml,
     initialize: initializeMeshPopup
   },
@@ -84,6 +88,11 @@ const popupModules = {
     title: 'Frequency List',
     getHtml: getMeshFrequencyListHtml,
     initialize: initializeMeshPopup
+  },
+  'mesh-preview': {
+    title: 'Physical Preview',
+    getHtml: getMeshPreviewPopupHtml,
+    initialize: initializeMeshPreviewPopup
   },
   'drivers-database': {
     title: 'Driver Clipboard',
@@ -112,8 +121,10 @@ function renderTool(toolName) {
 
   const shellBg = toolName.startsWith('basic') ? 'var(--bg-primary, #050505)' : 'var(--bg-main, #000)';
 
+  const shellPaddingClass = toolName === 'mesh-preview' ? 'p-0' : 'p-6';
+
   root.innerHTML = `
-    <div class="p-6 h-full flex flex-col" style="background-color: ${shellBg};">
+    <div class="${shellPaddingClass} h-full flex flex-col" style="background-color: ${shellBg};">
       ${module.getHtml()}
     </div>
   `;

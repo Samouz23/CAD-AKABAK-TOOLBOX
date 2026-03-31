@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Ra=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Ra=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Ra=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">Pas/m3</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Acoustic resistance</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/AcouResistance.html">AcouResistance</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>Constant value of acoustic resistance of component
+  <a href="../Sections/AcouResistance.html">AcouResistance</a>.</p>
+
+  <p>The unit is [Ra] = Pa&middot;s/m<sup>3</sup>. In the script the unit is specified
+  as "Pas/m3", for example</p>
+
+  <pre>
+    Ra=10Pas/m3</pre>
+
+  <h3>Viscosity and Thermal Exchange [<a href="../../Appendix/Literature.html">15</a>]</h3>
+
+  <p><img src="../../../_Images/LE-AcouResistance%20Viscosity.jpg" align=right />
+  In many cases the resistance is caused by viscosity where adjacent layers of
+  gas molecules with different velocity are rubbing against one another.
+  Directly at the walls, the molecules are at rest with the wall. Maximum movement
+  occurs in the center. In between molecule-layers are moving differently and causing
+  friction, which is greatest close to the walls and decreases rapidly towards the
+  center.</p>
+
+  <p>The above scenario yields viscosity and thermal exchange. Approximately, the
+  frequency dependency of the resistance increases with Ra &prop; &radic;f:</p>
+
+  <br />
+  <p class=formula><img src="../../../_Formulae/LE-AcouResistance%20Ra.jpg" /></p>
+
+  <p>with</p>
+  <table><tr>
+  <td align=left width=300><p>&rho;	Density [&rho;] = kg/m3</p></td>
+  <td align=left width=300><p>c	Sound velocity [c] = m/s</p></td>
+  </tr><tr>
+  <td align=left width=300><p>L	Length of duct [L] = m</p></td>
+  <td align=left width=300><p>D	Perimeter of cross-section [D] = m</p></td>
+  </tr><tr>
+  <td align=left width=300><p>S	Area of cross-section [S] = m<sup>2</sup></p></td>
+  <td align=left width=300><p>k	= &omega;/c Wave-number [k] = 1/m</p></td>
+  </tr></table>
+
+  <br />
+  <p>&gamma; Ratio of specific heat &gamma; = c<sub>p</sub>/c<sub>v</sub> (&gamma;=1.402 with air T = 20°C, p<sub>0</sub> = 101.325 kPa)</p>
+
+  <p>c<sub>p</sub>, c<sub>v</sub> Specific heat-capacity at constant pressure/volume [c<sub>p</sub>], [c<sub>v</sub>] = J/(kg&middot;K)</p>
+
+  <p>d<sub>v</sub> Viscosity boundary layer
+  d<sub>v</sub> = &radic;(2&middot;&eta;/(&rho;&middot;&omega;)), [d<sub>v</sub>] = m,
+  d<sub>v</sub> = 2.2&middot;10<sup>-6</sup>/&radic;f   (air @ T = 20°C)</p>
+
+  <p>&eta; dyn. viscosity [&eta;] = Pa&middot;s, &eta; = 18.2&middot;10<sup>-6</sup>
+  Pa&middot;s   (air @ T = 20°C)</p>
+
+  <p>d<sub>h</sub> Thermal boundary layer
+  d<sub>h</sub> = &radic;(2&middot;K/(&rho;&middot;&omega;&middot;c<sub>p</sub>)),
+  [d<sub>h</sub>] = m</p>
+
+  <p>K thermal conductivity [K] = W/(m&middot;K),
+  because K &asymp; 5/3&middot;&eta;&middot;c<sub>v</sub>,
+  d<sub>h</sub> = &radic;(10&middot;&eta;/(3&middot;&gamma;&middot;&rho;&middot;&omega;)),
+  d<sub>h</sub> =  2.4&middot;10<sup>-6</sup>/&radic;f (air @ T = 20° C).</p>
+
+  <br />
+  <p>Because the thickness of the boundary layers of viscosity and of thermal
+  exchange are often similar, the formula of viscosity for the resistance may be
+  simplified to:</p>
+
+  <p class=formula><img src="../../../_Formulae/LE-AcouResistance%20Ra%20approx.jpg" /></p>
+
+  <br />
+  <p>Whenever the space in which the sound-wave propagates is in the range or even
+  smaller than 2&middot;d<sub>v</sub>, the acoustic resistance will increase
+  dramatically. As can be seen in the formula of d<sub>v</sub>, the thickness
+  of the viscosity layer decreases with frequency.</p>
+
+  <p>If the wave-guide is curved the effect is similar. In this case, too, local
+  air-layers of different motion increase the acoustic resistance due to friction.</p>
+
+
+  <h3>Acoustic Resistance of Meshes [<a href="../../Appendix/Literature.html">16</a>]</h3>
+
+  <br />
+  <table width=70% align=center>
+  <tr>
+  <td>Number of Wires<br/>per Inch</td>  <td>Mesh-Wire<br/>Diameter</td>  <td>Specific Acoustic<br/>Resistance</td>
+  </tr><tr>
+  <td>&nbsp;</td>                    <td>[d] = mm</td>            <td>[Rs] = Pa&middot;s/m</td>
+  </tr><tr>
+  <td>30</td><td>0.33</td><td>5.67</td>
+  </tr><tr>
+  <td>50</td><td>0.22</td><td>5.88</td>
+  </tr><tr>
+  <td>100</td><td>0.115</td><td>9.1</td>
+  </tr><tr>
+  <td>120</td><td>0.092</td><td>13.5</td>
+  </tr><tr>
+  <td>200</td><td>0.057</td><td>24.6</td>
+  </tr>
+  </table>
+
+  <p>The specific resistance Rs has to be divided by the effective area S,
+  in order to obtain the acoustic resistance:  Ra = Rs/S.</p>
+
+  <p>For example, the wire-mesh, which may cover the tunnel of a vented
+  loudspeaker cabinet provides an acoustic resistance. For a mesh-density of
+  120 wires per inch and 0.092 mm gauge the table above gives a
+  specific resistance of Rs = 13.5 Pa&middot;s/m. The vent
+  diameter shall be dD = 100mm then the cross-sectional area is thus:
+  SD = &pi;&middot;dD<sup>2</sup>/4. The acoustic resistance is then:</p>
+
+  <p class=formula>Ra = Rs/SD = 13.5 Pa&middot;s/m /0.00785 m<sup>2</sup> = 1719 Pa&middot;s/m<sup>3</sup></p>
+
+  <p>On the other hand, the acoustic resistance due to the viscosity in this vent is
+  approximately Ra = 120Pa&middot;s/m<sup>3</sup> (assuming a length of L = 200 mm
+  and a frequency of 100Hz).</p>
+  <p>Thus the resistance of the wire-mesh is more than ten times higher than
+  the resistance caused by viscosity inside the tunnel.</p>
+
+  <pre>
+  <b>AcouResistance</b>  'Ra1'
+    Node=5=6
+    Ra=1719Pas/m3
+  </pre>
+
+
+  <h3>Acoustic Resistance of Capillary Ducts [<a href="../../Appendix/Literature.html">16</a>]</h3>
+
+  <p>In the frequency range in which the radius of the capillary is smaller
+  than R &lt; 0.002/&radic;f, the acoustic impedance is approximately:</p>
+
+  <p class=formula><img src="../../../_Formulae/LE-AcouResistance%20Za%20Capillary%20Duct.jpg"  /></p>
+
+  <p>with</p>
+  <p>L length of the capillary [L] = m, R radius of the capillary [R] = m,
+  Ma acoustical mass [Ma] = kg/m<sup>4</sup>, as described at <a href="../Sections/AcouMass.html">AcouMass</a>.</p>
+
+  <p>The real component of Za is the acoustic resistance Ra.</p>
+
+
+  <h3>Acoustic Resistance of a Thin Slit [<a href="../../Appendix/Literature.html">16</a>]</h3>
+
+  <p>For the frequency range in which the height of the slit is less
+  than H &lt; 0.003/&radic;f, the acoustic impedance is:
+
+  <p class=formula><img src="../../../_Formulae/LE-AcouResistance%20Za%20Thin%20Slit.jpg" /></p>
+
+  <p>with</p>
+
+  <p>L	depth of slit [L] = m</p>
+  <p>W	width of the slit [W] = m</p>
+  <p>H	height of the slit with H &lt;&lt; W [H] = m</p>
+
+  <p>The real component of Za is the acoustic resistance Ra.</p>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

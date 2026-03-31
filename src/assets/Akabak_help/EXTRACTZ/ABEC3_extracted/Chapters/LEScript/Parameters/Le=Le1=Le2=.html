@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Le= Le1= Le2=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Le= Le1= Le2=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Le= Le1= Le2=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">H</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Voice coil inductance.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Def_Driver.html">Def_Driver</a>,
+                                                        <a href="../Sections/Def_TwoCoilsDriver.html">Def_TwoCoilsDriver</a>,
+                                                        <a href="../Sections/Def_Speaker.html">Def_Speaker</a>
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1>
+                                        <a href="Le2=Le21=Le22=.html">Le2=, Le21=, Le22=</a>,
+                                        <a href="ExpoLe=ExpoLe1=ExpoLe2=.html">ExpoLe=, ExpoLe1=, ExpoLe2=</a>
+                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Le</i> is the inductance of the voice-coil of the electro-dynamic transducer
+  as used in the
+  <a href="../../Appendix/Electro-Dyn-Standard-Model.html">standard model of a loudspeaker</a>.</p>
+
+  <p>At higher frequencies the
+  <a href="../../Appendix/Electro-Dyn-Model-VC.html">voice coil model</a> should be extended.</p>
+
+  <p><i>Le=</i> is used for transducers with a single voice-coil, such as
+  <a href="../Sections/Def_Driver.html">Def_Driver</a> and
+  <a href="../Sections/Def_Speaker.html">Def_Speaker</a>.</p>
+
+  <p><i>Le1=</i> and <i>Le2=</i> are used for transducers with two voice-coils, such as
+  <a href="../Sections/Def_TwoCoilsDriver.html">Def_TwoCoilsDriver</a>.</p>
+
+  <br>
+  <p>Example of a driver with one voice-coil</p>
+
+  <pre>
+  <b>Def_Driver</b>  'P1'
+    Re=6.74ohm   <span style="color: #800000">Le=1.102mH</span>
+    Le2=0.780mH  Re2=1.57ohm  // Klippel VC-model
+    fs=25.2Hz   Qms=1.567
+    Mms=28g                   // special Rohacel diaphragm
+    BL=11.2Tm</pre>
+
+
+
+
+  <br>
+  <br>
+</body>
+</html>

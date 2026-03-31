@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Simple=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Simple=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Simple=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Boolean.html">Boolean</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>If true then a simplified meshing is applied</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a>,
+                                                        <a href="../Sections/Shell.html">Shell</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Simple=</i> is used for
+  <a href="../Sections/Diaphragm.html">Diaphragm</a> and
+  <a href="../Sections/Shell.html">Shell</a> element generators.
+  By default <i>Simple=false</i>, otherwise ABEC creates a simplified version
+  of the device, which might be sufficient for low-frequency analysis.</p>
+
+  <h4>Simple=true</h4>
+
+  <p>If <i>Simple=true</i> is specified then a simpler shape is produced by
+  the <i>Diaphragm</i>- or <i>Shell</i>-factory, which often is sufficient, especially at
+  low frequencies.</p>
+
+  <table width=30% align=right><tr>
+  <td width=200><img src="../../../_Images/Diaphragm%20Mesh%20Simple=false.jpg" /></td>
+  </tr><tr>
+  <td width=200><img src="../../../_Images/Diaphragm%20Mesh%20Simple=true.jpg" /></td>
+  </tr>
+  </table>
+
+  <p>If in low-resolution-mode (<i>Simple=true</i>)
+  then only <a href="../Parameters/Meshing=.html">Meshing=Bifu</a> is possible.
+  Also only circular shapes will be meshed.</p>
+
+  <p>If in low-resolution-mode (<i>Simple=true</i>)
+  suspension specification of the <i>Diaphragm</i>,
+  <a href="ws=.html">ws=</a> is ignored and assumed to be part of the
+  outer dimension of the diaphragm. It is common practice to add
+  half of the suspension-width on both sides, or in other words
+  dD&nbsp;=&nbsp;dD<sub>0</sub> + ws</p>
+
+  <p>If in low-resolution-mode (<i>Simple=true</i>) a <i>Diaphragm</i> would not
+  render the magnet-details for <a href="Side=.html">Side=Rear</a>.</p>
+
+  <h4>Simple=false</h4>
+
+  <p>If in high resolution-mode (<i>Simple=false</i>)
+  and if the width of the outer suspension, <a href="../Parameters/ws=.html">ws=</a>
+  is specified in the <i>Diaphragm</i>-section then a suspension is modeled.
+  In this case the exact modeling also depends on the type of
+  <a href="../Parameters/Meshing=.html">Meshing=</a>.
+  With <i>Meshing=Delaunay</i> the velocity distribution is linearly deceasing.
+  With <i>Meshing=BiFu</i> the velocity profile of the suspension is
+  mimicked with the help of two rings. The inner ring vibrates with the given
+  value and the outer is not moving at all. The outer becomes an extension of
+  the baffle, which is also indicated by the color.</p>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

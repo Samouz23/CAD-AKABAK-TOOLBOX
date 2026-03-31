@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Filter Examples</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Filter Examples</h1>
+  <p class=navi><a href="../Index.html">Home</a> &raquo;
+                <a href="../LEScript/Sections/Filter.html">Filter</a></p>
+  <hr>
+
+
+  <table>
+  <tr>
+  <!-- --------------------------------------------- -->
+  <td width=50%>
+  <p>1) The rational transfer function forms a second order low-pass.
+  Its result is used in the following formula system with the help of
+  the reserved identifier "TF". Here TF is subtracted from a pure
+  time delay as used for special cross-over designs.</p>
+
+  <pre>
+  <b>Filter</b>  'F1'
+    f0=1kHz
+    {  <span style="color: #800000">b0</span>=1;
+       <span style="color: #800000">a2</span>=1;  <span style="color: #800000">a1</span>=sqrt(2);  <span style="color: #800000">a0</span>=1; }  // BU lowpass 2nd order
+    {  exp(-j<span style="color: #800000">f</span>/500) - <span style="color: #800000">TF</span> }          // Formula-system</pre>
+
+  <p>Here, the red markers are reserved identifiers.</p>
+
+  <br />
+  <p>Alternatively and in this case, you can specify the rational transfer function
+  with the help of specifiers of a standard alignment.
+  Note, that we need to include a dummy { b0=1 } here.</p>
+  <pre>
+  <b>Filter</b>  'F1'
+    f0=1kHz
+    Order=2  BU  Lowpass           // Butterworth 2rd order
+    {  <span style="color: #800000">b0</span>=1; }                     // Dummy
+    {  exp(-j<span style="color: #800000">f</span>/500) - <span style="color: #800000">TF</span> }         // Formula-system</pre>
+  </td>
+  <!-- Curve picture in Export As Picture Width=50 -->
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F1.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>2) Second order Butterworth low pass. The filter frequency is f0 = 1000Hz.
+  The value of the denominator coefficient a1 is being calculated.</p>
+
+  <pre>
+  <b>Filter</b>  'F2'
+    f0=1kHz
+    { b0=1;
+      a2=1;  a1=sqrt(2);  a0=1; }
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F2.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>3) The same function as above. In this case a constant is established,
+  with the aid of which the filter can be scaled along the abscissa.
+  With the entered value of sn=1.5, the filter frequency
+  (in the case of Butterworth, the -3dB-Frequency, too) has been scaled to 1500Hz.</p>
+
+  <pre>
+  <b>Filter</b>  'F3'
+    f0=1kHz
+    { sn=1.5;  // Frequency scaling factor
+      b0=1;
+      a2=1/sn^2;  a1=sqrt(2)/sn;  a0=1; }
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F3.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>4) The same as above, except that the rational transfer function is the
+  associated high-pass. Note, the denominator coefficient a2 is assigned the value
+  of the numerator coefficient b2.</p>
+
+  <pre>
+  <b>Filter</b>  'F4'
+    f0=1kHz
+    { sn=1.5;      // Frequency scaling factor
+      b2=1/sn^2;
+      a2=b2;  a1=sqrt(2)/sn;  a0=1; }
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F4.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>5) Example of an integrator H(s) = 1/s</p>
+
+  <pre>
+  <b>Filter</b>  'F5'
+    f0=1kHz
+    { b0=1;  a1=1 }
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F5.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>6) Example of a 1ms delay element.</p>
+
+  <pre>
+  <b>Filter</b>  'F6'
+    t0=1ms
+  </pre>
+
+  <br>
+  <p>Example of a delay element corresponding to an acoustic distance of 10ft.</p>
+
+  <pre>
+  <b>Filter</b>  'F6'
+    z0=10ft
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F6.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>7) Example of an inverting amplifier with a gain of 3.</p>
+
+  <pre>
+  <b>Filter</b>  'F7'
+    { b0=-3 }
+  </pre>
+  </td>
+  <td valign=top><!-- no diagram for constant amplification --></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>8) Example of the use of the additional formula-system.
+  Simple digital IIR-lowpass-filter. f is the abscissa frequency normalized to
+  10kHz.
+  { b0=1 } is the residuum of the rational transfer function which always
+  has to be entered if you want to make use of the general formula system. </p>
+
+  <pre>
+  <b>Filter</b>  'F8'
+    { b0=1 }
+    { z = exp(jf/10e3);  z1 = 0.6;
+      G = (1 - abs(z1))/(z - z1); }
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F8.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>9) Example of the use of the additional formula-system. Same as before but
+  with an (analog) anti-aliasing filter expressed by the rational transfer
+  function. TF is a runtime variable, which carries the result of the
+  rational transfer function into the formula system.</p>
+
+  <pre>
+  <b>Filter</b>  'F9'
+    f0=5kHz
+    { b0=1;  a8=1;  a7=5.125831;  a6=13.137071;  a5=21.846151;
+      a4=25.688356;  a3=21.846151; a2=13.137071; a1=5.125831; a0=1; }
+    { z = exp(jf/10e3);  z1 = 0.6;
+      G = TF*(1 - abs(z1))/(z - z1); }
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F9.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>10) Example of using standard filter alignment (Chebychev with 3dB ripple
+  in passband, highpass)</p>
+  <pre>
+  Filter 'F10'
+    f0=1kHz
+    Order=6  CH  Highpass  Ripple=3.0dB
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F10.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>11) Example of using standard filter alignment (Linkwitz-Riley
+  highpass) </p>
+  <pre>
+  Filter 'F11'
+    f0=1kHz
+    Order=6  LR  Highpass
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F11.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>12) Example of using standard filter alignment
+  (Butterworth-Thomson alignment family. Param=0.5
+  creates an alignment with poles half-way between
+  Butterworth and Bessel poles).</p>
+  <pre>
+  Filter 'F12'
+    f0=1kHz
+    Order=6  BT  Highpass   Param=0.5
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F12.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>13) Example of using standard filter alignment
+  (2nd order block with damping factor d=2).</p>
+  <pre>
+  Filter 'F13'
+    f0=1kHz
+    Order=2     Block   Highpass   d=2.0
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F13.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  <tr>
+  <td width=50%>
+  <p>14) Example of using standard filter alignment
+  (Butterworth low-pass transformed to band-pass with relative
+  bandwidth (f2 - f1)/f0).</p>
+  <pre>
+  Filter 'F14'
+    f0=1kHz
+    Order=6  BU   Bandpass   Bandwidth=1
+  </pre>
+  </td>
+  <td valign=top><img src="../../_Images/LE-Filter-Example%20F14.jpg"></td>
+  </tr>
+  <!-- --------------------------------------------- -->
+  </table>
+  <br>
+  <br>
+</body>
+</html>

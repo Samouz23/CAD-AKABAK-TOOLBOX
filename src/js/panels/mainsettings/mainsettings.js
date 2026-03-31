@@ -6,6 +6,7 @@
 import { getManualHtml, initializeManualPanel} from './text_content/manual.js';
 import { applyUiSettings } from '../../../ui.js';
 import { getUpdatesHtml } from './text_content/updates.js';
+import { defaultTemplates, templateMeta, parseTemplateToLines, serializeLines, getPreview } from '../../utils/formulaTemplates.js';
 
 export const getSettings = () => window.electronAPI.getSettings();
 
@@ -40,18 +41,6 @@ export function getSettingsPanelHtml() {
           <div class="control-label-toggle"><span>Access Paths</span>${arrowSVG}</div>
           <div class="p-4 pb-6 overflow-hidden space-y-4">
             
-            <div id="orders-paths-group" class="hidden space-y-3 p-4 border border-gray-700 rounded-md">
-              <h3 class="text-md font-bold text-white mb-2">Orders Manager Module</h3>
-              <p class="text-xs text-gray-400 mb-3">Select a root folder for all Orders, Clients, and Accounting data.</p>
-              <div><label class="block mb-2">Clients Root Folder</label><div class="flex space-x-2"><input type="text" id="setting-clientFolder" class="form-input flex-grow"><button data-path-for="setting-clientFolder" data-dialog="directory" class="path-select-btn action-btn">Browse...</button></div></div>
-            </div>
-
-            <div id="sim-db-paths-group" class="hidden space-y-3 p-4 border border-gray-700 rounded-md">
-              <h3 class="text-md font-bold text-white mb-2">SIM-DB Module</h3>
-              <p class="text-xs text-gray-400 mb-3">Path to the SIM-DB database folder.</p>
-              <div><label class="block mb-2">SIM-DB Path</label><div class="flex space-x-2"><input type="text" id="setting-simDbPath" class="form-input flex-grow"><button data-path-for="setting-simDbPath" data-dialog="directory" class="path-select-btn action-btn">Browse...</button></div></div>
-            </div>
-
             <div class="space-y-3 p-4 border border-gray-700 rounded-md">
                 <h3 class="text-md font-bold text-white mb-2">General Data</h3>
                 <p class="text-xs text-gray-400 mb-3">Root folder for app data (Mesh-out, STL-out, CSV-out will be auto-created).</p>
@@ -119,16 +108,8 @@ export function getSettingsPanelHtml() {
 
         <div id="templates-panel" class="control-group">
           <div class="control-label-toggle"><span>Formula Templates</span>${arrowSVG}</div>
-          <div class="p-4 overflow-hidden space-y-4">
-            <h3 class="text-lg font-semibold text-white">Duct-Script</h3>
-            <div class="space-y-2"><label>Duct Formula</label><textarea id="setting-template-duct" class="form-input font-mono w-full" rows="2"></textarea><p class="text-xs text-gray-400">Variables: <code>{i+1}</code> for duct index.</p></div>
-            <div class="space-y-2"><label>Waveguide Transition Formula</label><textarea id="setting-template-duct-transition-w" class="form-input font-mono w-full" rows="2"></textarea><p class="text-xs text-gray-400">Variables: <code>{i+1}</code>, <code>{i+2}</code>.</p></div>
-            <div class="space-y-2"><label>Mass Transition Formula</label><textarea id="setting-template-duct-transition-m" class="form-input font-mono w-full" rows="2"></textarea><p class="text-xs text-gray-400">Variables: <code>{i+1}</code>, <code>{i+2}</code>.</p></div>
-            <hr class="border-gray-700 my-4">
-            <h3 class="text-lg font-semibold text-white">Horn-Script</h3>
-            <div class="space-y-2"><label>Segment Formula (Constant Height)</label><textarea id="setting-template-horn-segment-const-h" class="form-input font-mono w-full" rows="2"></textarea><p class="text-xs text-gray-400">Variables: <code>{i}</code>, <code>{i+1}</code>.</p></div>
-            <div class="space-y-2"><label>Segment Formula (Variable Height)</label><textarea id="setting-template-horn-segment-var-h" class="form-input font-mono w-full" rows="2"></textarea><p class="text-xs text-gray-400">Variables: <code>{i}</code>, <code>{i+1}</code>.</p></div>
-            <div class="space-y-2"><label>TL Starter Formula</label><textarea id="setting-template-horn-tl-amorce" class="form-input font-mono w-full" rows="2"></textarea><p class="text-xs text-gray-400">Variables: <code>{type}</code> ('O' or 'D').</p></div>
+          <div class="p-4 pb-6 overflow-hidden">
+            <div id="template-editors" class="space-y-2"></div>
           </div>
         </div>
 
@@ -148,6 +129,20 @@ export function getSettingsPanelHtml() {
                   <div><label>Export Window</label><input type="text" id="setting-hotkey-export" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                   <div><label>Open/Close Panels</label><input type="text" id="setting-hotkey-togglePanels" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                   <div><label>Build Interface</label><input type="text" id="setting-hotkey-buildInterface" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Horn Studio Shortcuts Sub-Panel -->
+            <div class="control-group mb-4">
+              <div class="control-label-toggle bg-gray-800 p-2 rounded"><span>Horn Studio</span>${arrowSVG}</div>
+              <div class="p-4 pb-6 overflow-hidden">
+                <p class="text-xs text-gray-400 mb-3">Shortcuts for Horn Studio operations.</p>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-3 mb-4">
+                  <div><label>Open/Close Panels</label><input type="text" id="setting-hotkey-hsTogglePanels" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
+                  <div><label>Export Menu</label><input type="text" id="setting-hotkey-hsExport" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
+                  <div><label>Reset Parameters</label><input type="text" id="setting-hotkey-hsReset" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
+                  <div><label>Generate</label><input type="text" id="setting-hotkey-hsGenerate" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                 </div>
               </div>
             </div>
@@ -183,14 +178,6 @@ export function initializeSettingsPanel(rootElement) {
 
   async function applyFeatureVisibility() {
     const features = await window.electronAPI.getFeatures();
-    const simDbPathsGroup = get('#sim-db-paths-group');
-    const ordersPathsGroup = get('#orders-paths-group');
-    if (simDbPathsGroup) {
-      simDbPathsGroup.classList.toggle('hidden', !features.isNasEnabled);
-    }
-    if (ordersPathsGroup) {
-      ordersPathsGroup.classList.toggle('hidden', !features.isOrdersManagerEnabled);
-    }
   }
 
   function adjustTextareaHeight(textarea) {
@@ -244,11 +231,9 @@ export function initializeSettingsPanel(rootElement) {
   const pathInputs = {
     gmsh: get('#setting-gmsh'),
     downloads: get('#setting-downloads'),
-    dataRoot: get('#setting-dataRoot'),
-    simDbPath: get('#setting-simDbPath'),
-    clientFolder: get('#setting-clientFolder')
+    dataRoot: get('#setting-dataRoot')
   };
-  const hotkeyInputs = { split: get('#setting-hotkey-split'), surface: get('#setting-hotkey-surface'), points: get('#setting-hotkey-points'), export: get('#setting-hotkey-export'), togglePanels: get('#setting-hotkey-togglePanels'), buildInterface: get('#setting-hotkey-buildInterface'), escape: get('#setting-hotkey-escape'), minimize: get('#setting-hotkey-minimize') };
+  const hotkeyInputs = { split: get('#setting-hotkey-split'), surface: get('#setting-hotkey-surface'), points: get('#setting-hotkey-points'), export: get('#setting-hotkey-export'), togglePanels: get('#setting-hotkey-togglePanels'), buildInterface: get('#setting-hotkey-buildInterface'), hsTogglePanels: get('#setting-hotkey-hsTogglePanels'), hsExport: get('#setting-hotkey-hsExport'), hsReset: get('#setting-hotkey-hsReset'), hsGenerate: get('#setting-hotkey-hsGenerate'), escape: get('#setting-hotkey-escape'), minimize: get('#setting-hotkey-minimize') };
   const saveBtn = get('#save-settings-btn');
   const resetBtn = get('#reset-settings-btn');
   const helpBtn = get('#show-help-btn');
@@ -259,9 +244,170 @@ export function initializeSettingsPanel(rootElement) {
   const scanlinesToggle = get('#setting-ui-scanlines');
   const reducedMotionToggle = get('#setting-ui-reduced-motion');
   const buttonSkinSelect = get('#setting-ui-button-skin');
-  const templateInputs = { duct: get('#setting-template-duct'), ductTransitionW: get('#setting-template-duct-transition-w'), ductTransitionM: get('#setting-template-duct-transition-m'), hornSegmentConstH: get('#setting-template-horn-segment-const-h'), hornSegmentVarH: get('#setting-template-horn-segment-var-h'), hornTlAmorce: get('#setting-template-horn-tl-amorce') };
-  
-  Object.values(templateInputs).forEach(textarea => { if(textarea) textarea.addEventListener('input', () => adjustTextareaHeight(textarea)); });
+  // --- Template Editor System ---
+  function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function createGridLine(param, value, container) {
+    const div = document.createElement('div');
+    div.className = 'template-line';
+    div.style.cssText = 'display:grid; grid-template-columns:minmax(60px,auto) 16px 1fr 28px; align-items:center; gap:8px; padding:4px 0;';
+    div.innerHTML = `
+      <input type="text" class="template-param form-input font-mono" style="height:30px; font-size:13px; text-align:center; padding:4px 8px;" value="${escAttr(param)}" spellcheck="false" placeholder="param">
+      <span style="color:var(--border-subtle); font-family:monospace; text-align:center; user-select:none;">=</span>
+      <input type="text" class="template-value form-input font-mono" style="height:30px; font-size:13px; padding:4px 8px;" value="${escAttr(value)}" spellcheck="false" placeholder="value">
+      <button class="template-remove-line" style="width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:var(--radius-md); border:1px solid transparent; color:var(--text-muted); opacity:0; cursor:pointer; transition:all 150ms; background:transparent; font-size:16px;" title="Remove line">&times;</button>`;
+    div.addEventListener('mouseenter', () => { div.querySelector('.template-remove-line').style.opacity = '1'; });
+    div.addEventListener('mouseleave', () => { div.querySelector('.template-remove-line').style.opacity = '0'; });
+    container.appendChild(div);
+  }
+
+  function buildTemplateEditors() {
+    const container = get('#template-editors');
+    if (!container) return;
+    container.innerHTML = '';
+    let currentGroup = null;
+    Object.entries(templateMeta).forEach(([key, meta]) => {
+      if (meta.group !== currentGroup) {
+        if (currentGroup) {
+          const sep = document.createElement('div');
+          sep.style.cssText = 'height:1px; background:var(--border-subtle); margin:16px 0; opacity:0.4;';
+          container.appendChild(sep);
+        }
+        currentGroup = meta.group;
+        const heading = document.createElement('h3');
+        heading.textContent = meta.group;
+        heading.style.cssText = 'font-size:15px; font-weight:600; color:var(--text-body); margin:0 0 8px 0; letter-spacing:0.02em;';
+        container.appendChild(heading);
+      }
+      const card = document.createElement('div');
+      card.dataset.templateKey = key;
+      card.style.cssText = 'margin-bottom:12px; border-radius:var(--radius-lg); border:1px solid var(--border-subtle); background:var(--card-bg); overflow:hidden; transition:border-color 150ms;';
+      card.addEventListener('mouseenter', () => { card.style.borderColor = 'var(--border-primary)'; });
+      card.addEventListener('mouseleave', () => { card.style.borderColor = 'var(--border-subtle)'; });
+
+      // Header
+      const header = document.createElement('div');
+      header.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid var(--border-subtle); background:rgba(0,0,0,0.15);';
+      header.innerHTML = `
+        <span style="font-size:13px; font-weight:500; color:var(--text-body); letter-spacing:0.01em;">${meta.label}</span>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button class="template-preview-btn" style="font-size:11px; padding:3px 10px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); color:var(--text-muted); background:transparent; cursor:pointer; transition:all 150ms; letter-spacing:0.02em;">Preview</button>
+          <button class="template-reset-btn" style="font-size:11px; padding:3px 10px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); color:var(--text-muted); background:transparent; cursor:pointer; transition:all 150ms; letter-spacing:0.02em;">Reset</button>
+        </div>`;
+      card.appendChild(header);
+
+      // Body
+      const body = document.createElement('div');
+      body.style.cssText = 'padding:12px 16px;';
+      if (meta.mode === 'grid') {
+        body.innerHTML = '<div class="template-lines" style="display:flex; flex-direction:column; gap:2px;"></div>';
+      } else {
+        body.innerHTML = '<textarea class="template-code-editor form-input font-mono" style="width:100%; min-height:120px; font-size:13px; line-height:1.6; padding:10px 12px; resize:vertical; height:auto;" spellcheck="false" rows="6"></textarea>';
+      }
+      card.appendChild(body);
+
+      // Preview area (hidden by default)
+      const previewArea = document.createElement('div');
+      previewArea.className = 'template-preview-area hidden';
+      previewArea.style.cssText = 'padding:0 16px 12px;';
+      previewArea.innerHTML = `
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.02em;">Output preview (segment #3) :</div>
+        <pre style="background:var(--bg-input); border-radius:var(--radius-md); border:1px solid var(--border-subtle); padding:10px 12px; font-family:monospace; font-size:12px; color:var(--border-primary); white-space:pre; overflow-x:auto; line-height:1.6; margin:0;"></pre>`;
+      card.appendChild(previewArea);
+
+      // Footer
+      const footer = document.createElement('div');
+      footer.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:8px 16px 10px; border-top:1px solid rgba(255,255,255,0.03);';
+      const varBadgesHtml = meta.vars.map(v => `<span style="font-size:10px; padding:2px 8px; border-radius:var(--radius-md); background:var(--bg-input); color:var(--text-muted); font-family:monospace; border:1px solid var(--border-subtle); letter-spacing:0.03em;">${v}</span>`).join('');
+      footer.innerHTML = `
+        ${meta.mode === 'grid' ? '<button class="template-add-line-btn" style="font-size:12px; color:var(--text-muted); background:transparent; border:none; cursor:pointer; padding:2px 4px; transition:color 150ms; letter-spacing:0.01em;">+ Add line</button>' : '<span></span>'}
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">${varBadgesHtml}</div>`;
+      card.appendChild(footer);
+
+      container.appendChild(card);
+
+      const ta = card.querySelector('.template-code-editor');
+      if (ta) ta.addEventListener('input', () => adjustTextareaHeight(ta));
+    });
+
+    // Hover effects for small buttons
+    container.addEventListener('mouseover', (e) => {
+      if (e.target.classList.contains('template-preview-btn')) { e.target.style.color = 'var(--border-primary)'; e.target.style.borderColor = 'var(--border-primary)'; }
+      if (e.target.classList.contains('template-reset-btn')) { e.target.style.color = '#f87171'; e.target.style.borderColor = '#f87171'; }
+      if (e.target.classList.contains('template-add-line-btn')) { e.target.style.color = 'var(--border-primary)'; }
+      if (e.target.classList.contains('template-remove-line')) { e.target.style.color = '#f87171'; e.target.style.borderColor = '#f87171'; }
+    });
+    container.addEventListener('mouseout', (e) => {
+      if (e.target.classList.contains('template-preview-btn') || e.target.classList.contains('template-reset-btn')) { e.target.style.color = 'var(--text-muted)'; e.target.style.borderColor = 'var(--border-subtle)'; }
+      if (e.target.classList.contains('template-add-line-btn')) { e.target.style.color = 'var(--text-muted)'; }
+      if (e.target.classList.contains('template-remove-line')) { e.target.style.color = 'var(--text-muted)'; e.target.style.borderColor = 'transparent'; }
+    });
+
+    container.addEventListener('click', (e) => {
+      const target = e.target;
+      const card = target.closest('[data-template-key]');
+      if (!card) return;
+      const key = card.dataset.templateKey;
+      const meta = templateMeta[key];
+      if (target.classList.contains('template-preview-btn')) {
+        const area = card.querySelector('.template-preview-area');
+        const pre = area.querySelector('pre');
+        if (!area.classList.contains('hidden')) { area.classList.add('hidden'); target.textContent = 'Preview'; }
+        else {
+          let str;
+          if (meta.mode === 'grid') {
+            const lines = []; card.querySelectorAll('.template-line').forEach(el => { const p = el.querySelector('.template-param').value.trim(); const v = el.querySelector('.template-value').value.trim(); if (p) lines.push({param:p, value:v}); });
+            str = serializeLines(lines);
+          } else { str = card.querySelector('.template-code-editor').value; }
+          pre.textContent = getPreview(str, 3);
+          area.classList.remove('hidden');
+          target.textContent = 'Hide';
+        }
+        updateParentHeights(card);
+      } else if (target.classList.contains('template-reset-btn')) {
+        const def = defaultTemplates[key];
+        if (meta.mode === 'grid') {
+          const lc = card.querySelector('.template-lines'); lc.innerHTML = '';
+          parseTemplateToLines(def).forEach(l => createGridLine(l.param, l.value, lc));
+        } else { const ta = card.querySelector('.template-code-editor'); ta.value = def; adjustTextareaHeight(ta); }
+        updateParentHeights(card);
+      } else if (target.classList.contains('template-add-line-btn')) {
+        const lc = card.querySelector('.template-lines');
+        createGridLine('', '', lc);
+        lc.lastElementChild.querySelector('.template-param').focus();
+        updateParentHeights(card);
+      } else if (target.classList.contains('template-remove-line')) {
+        const line = target.closest('.template-line');
+        const lc = line.parentElement;
+        if (lc.querySelectorAll('.template-line').length > 1) { line.remove(); updateParentHeights(card); }
+      }
+    });
+  }
+
+  function loadTemplateValues(templates) {
+    Object.entries(templateMeta).forEach(([key, meta]) => {
+      const card = rootElement.querySelector(`[data-template-key="${key}"]`);
+      if (!card) return;
+      const val = templates?.[key] || defaultTemplates[key];
+      if (meta.mode === 'grid') {
+        const lc = card.querySelector('.template-lines'); lc.innerHTML = '';
+        parseTemplateToLines(val).forEach(l => createGridLine(l.param, l.value, lc));
+      } else { const ta = card.querySelector('.template-code-editor'); if (ta) { ta.value = val; adjustTextareaHeight(ta); } }
+    });
+  }
+
+  function collectTemplateValues() {
+    const result = {};
+    Object.entries(templateMeta).forEach(([key, meta]) => {
+      const card = rootElement.querySelector(`[data-template-key="${key}"]`);
+      if (!card) return;
+      if (meta.mode === 'grid') {
+        const lines = []; card.querySelectorAll('.template-line').forEach(el => { const p = el.querySelector('.template-param').value.trim(); const v = el.querySelector('.template-value').value.trim(); if (p) lines.push({param:p, value:v}); });
+        result[key] = serializeLines(lines);
+      } else { result[key] = card.querySelector('.template-code-editor')?.value || defaultTemplates[key]; }
+    });
+    return result;
+  }
 
   const normalizeShortcut = (event) => {
     const parts = [];
@@ -308,8 +454,6 @@ export function initializeSettingsPanel(rootElement) {
     });
   });
 
-  const defaultTemplates = { duct: 'WD  = @D{i+1}\nHD  = @H\nLen = @DL{i+1}\neta = @WOOD', ductTransitionW: 'HTh = @H\nHMo = @H\nWTh = @D{i+1}\nWMo = @D{i+2}\nLen = @L{i+1}{i+2}\nT   = 10', ductTransitionM: 'd1 = @D{i+1}\nd2 = @D{i+2}\n\n// hack qui nous permet de toujours obtenir w1 > w2\nk = Sign(d2 - d1)\nw1 = if(k + 1, d1, d2)\nw2 = if(k + 1, d2, d1)\n\n// formule issue du fichier excel de plans.systeme\n// adaptée pour l\'utilisation dans Akabak\npre_m = (Density / (pi * @H)) * ((((w1-w2) ^ 2) / (2*w1*w2)) * Ln((w1+w2)/(w1-w2)) + Ln(((w1+w2) ^ 2)/(4*w1*w2))) * 1000\n\nM = if(k, 0, pre_m)', hornSegmentConstH: 'HTh = @H\nHMo = @H\nWTh = @S{i}\nWMo = @S{i+1}\nLen = @L{i}\nT   = @T{i}', hornSegmentVarH: 'HTh = @H{i}\nHMo = @H{i+1}\nWTh = @S{i}\nWMo = @S{i+1}\nLen = @L{i}\nT   = @T{i}', hornTlAmorce: 'WD  = @S1\nHD  = @H\nLen = @L{type}\neta = @WOOD' };
-  
   let currentSettings = {};
 
   async function loadCurrentSettings() {
@@ -330,9 +474,8 @@ export function initializeSettingsPanel(rootElement) {
     if (scanlinesToggle) scanlinesToggle.checked = ui.scanlines === true;
     if (reducedMotionToggle) reducedMotionToggle.checked = !!ui.reducedMotion;
     if (buttonSkinSelect) buttonSkinSelect.value = ui.buttonSkin || 'striped';
-    Object.entries(templateInputs).forEach(([key, element]) => { if (element) element.value = currentSettings.templates?.[key] || defaultTemplates[key]; });
+    loadTemplateValues(currentSettings.templates);
     applyUiSettings(ui);
-    setTimeout(() => { Object.values(templateInputs).forEach(adjustTextareaHeight); }, 50);
   }
 
   // Appliquer le thème en temps réel quand on change le sélecteur
@@ -384,7 +527,7 @@ export function initializeSettingsPanel(rootElement) {
     currentSettings.popupsAlwaysOnTop = !!alwaysOnTopToggle?.checked;
     currentSettings.showStartupInfo = !!showStartupInfoToggle?.checked;
     currentSettings.ui = { theme: themeSelect?.value || 'default', scanlines: !!scanlinesToggle?.checked, reducedMotion: !!reducedMotionToggle?.checked, buttonSkin: buttonSkinSelect?.value || 'striped' };
-    currentSettings.templates = Object.fromEntries( Object.entries(templateInputs).map(([key, element]) => [key, element.value]) );
+    currentSettings.templates = collectTemplateValues();
     
     applyUiSettings(currentSettings.ui);
     await window.electronAPI.setSettings(currentSettings);
@@ -440,6 +583,7 @@ export function initializeSettingsPanel(rootElement) {
   });
 
   applyFeatureVisibility();
+  buildTemplateEditors();
   loadCurrentSettings();
   setTimeout(() => { const firstPanelContent = rootElement.querySelector('#updates-panel .control-label-toggle')?.nextElementSibling; if (firstPanelContent) firstPanelContent.style.maxHeight = firstPanelContent.scrollHeight + 'px'; }, 150);
 }

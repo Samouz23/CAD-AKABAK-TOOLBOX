@@ -16,15 +16,15 @@ export function showMeshToolSelector() {
 
   dialog.innerHTML = `
     <h2 class="text-2xl font-bold mb-6 text-center" style="color: var(--theme-accent)">
-      Choose Mesh Tool
+      Choose Physical Tool
     </h2>
     <div class="space-y-3 mb-6">
       <label class="flex items-center p-4 rounded-lg cursor-pointer transition-all hover:bg-gray-700/50" 
              style="border: 2px solid transparent;">
         <input type="radio" name="mesh-tool" value="meshing" class="form-radio mr-3" checked>
         <div>
-          <div class="font-bold text-white">Meshing (Gmsh)</div>
-          <div class="text-sm text-gray-400">Generate mesh with Gmsh parameters</div>
+          <div class="font-bold text-white">Physical (Gmsh)</div>
+          <div class="text-sm text-gray-400">Build physical groups with preview and export controls</div>
         </div>
       </label>
       <label class="flex items-center p-4 rounded-lg cursor-pointer transition-all hover:bg-gray-700/50"

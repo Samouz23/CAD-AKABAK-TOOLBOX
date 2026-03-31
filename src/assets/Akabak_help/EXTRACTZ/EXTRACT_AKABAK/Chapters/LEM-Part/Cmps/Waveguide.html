@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Waveguide</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Waveguide</h1>
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  <td class="header">Acoustic</td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=150><td width=250><center><img src="../../../_Images/LE-Waveguide.jpg"  /></center></td></tr>
+    <tr height=220><td width=250><center><img src="../../../_Images/LE-Waveguide%20Dim.jpg"  /></center></td></tr>
+    <tr height=200><td width=350><center><img src="../../../_Images/LE-Waveguide%20Vf.jpg"></center></td></tr>
+    <tr height=270><td width=350><center><img src="../../../_Images/LE-Waveguide%20T=%20Hornfunctions.jpg"></center></td></tr>
+    <tr height=270><td width=350><center><img src="../../../_Images/LE-Waveguide%20T=%20Hornfunctions%20(2).jpg"></center><br><center>Slope of horn-wall</center></td></tr>
+    <tr height=300><td width=350><center><img src="../../../_Images/LE-Waveguide%20T=%20RadImp.jpg"></center><br><center>Radiation impedance (normalized)</center></td></tr>
+    <tr height=200><td width=350><center><img src="../../../_Images/LE-Waveguide%20Transition.jpg"></center></td></tr>
+    <tr height=300><td width=250><center><img src="../../../_Images/LE-Waveguide%20Field.jpg"  /></center></td></tr>
+  </table>
+
+  <p>The <i>Waveguide</i> component is similar to the <a href="Duct%20(LE).html">Duct</a>-component
+  however the Waveguide features a slowly varying cross-section area.
+  The Waveguide can be wired forward and in reverse. The model does not include any losses.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Parameters</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p class=indent><table>
+    <tr height=23><td width=100><a href="../Parameters/LE%20Params%20Editors.html">Caption</a></td>            <td width=100>String</td>      <td>Name of component</td></tr>
+    <tr height=23><td width=100><a href="../Parameters/LE%20Params%20Editors.html">Formula</a></td>            <td width=100>String</td>      <td>Formula of parameters</td></tr>
+    <tr height=00><td width=100><a href="../Parameters/LE%20Diaphragm%20Parameters.html">Throat</a></td>       <td width=100>Ref or size</td> <td>Cross section size of throat</td></tr>
+    <tr height=00><td width=100><a href="../Parameters/LE%20Diaphragm%20Parameters.html">Mouth</a></td>        <td width=100>Ref or size</td> <td>Cross section size of mouth</td></tr>
+    <tr height=00><td width=100>Len</td>          <td width=100>m</td>          <td>Length of waveguide</td></tr>
+    <tr height=00><td width=100>Vf</td>           <td width=100>m^3</td>        <td>Volume of compression chamber</td></tr>
+    <tr height=00><td width=100>T</td>            <td width=100></td>           <td>Salmon factor</td></tr>
+  </table>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Throat and Mouth</h4>
+
+  <p>Parameters <i>Throat</i> and <i>Mouth</i> specify the cross-sectional area
+  at the small and large parts, respectively. Regarding the cross-section
+  only the fundamental mode is used, and, hence, the shape of the cross-section is ignored.
+  However, for convenience, the input-form provides shape parameters such as the diameter
+  or a reference to a BEM-component. Details are given at chapter
+  <a href="../Parameters/LE%20Diaphragm%20Parameters.html">Diaphragm Parameters</a>.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Len</h4>
+
+  <p>Parameter <i>Len</i> specifies the effective length of the waveguide. If not coupled
+  to the <a href="../../BEM-Part/_Index.html">BEM-Part</a> end-correction can be applied
+  in order to take into account radiation effects at the apertures. See at parameter Len
+  of component <a href="Duct%20(LE).html">Duct</a>.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Vf</h4>
+
+  <p>Often the Waveguide component is used for modeling the phase-plug channels
+  or the horn of a compression driver. For convenience, the parameter
+  <i>Vf</i> creates an acoustic compliance Ca = V<sub>f</sub>/&rho;c<sup>2</sup>) of
+  volume V<sub>f</sub> at the throat.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>T</h4>
+
+  <p><i>T</i> is the <i>Salmon Factor</i>, which controls the opening of the
+  cross section area of the Waveguide:</p>
+
+  <p><table>
+    <tr><td width=70>T = 0 &nbsp;&nbsp;</td>       <td>Catenoidal</td></tr>
+    <tr><td width=70>T = 1 &nbsp;&nbsp;</td>       <td>Exponential</td></tr>
+    <tr><td width=70>T &rarr; &infin;</td>         <td>Conical</td></tr>
+  </table></p>
+
+  <p>Horn Functions or Salmon Functions generate geometry for the one-dimensional
+  waveguide model, as described at [<a href="../../Appendix/Literature.html#22">22-24</a>, <a href="../../Appendix/Literature.html#35">35</a>].
+  The Horn Function provides the cross section area at a distance from the horn throat.
+  It is assumed that the shape of the cross-section varies smoothly. The Horn Function
+  is a combination of exponential functions:
+  S(z) = S<sub>th</sub>&middot;(cosh(k<sub>0</sub>&middot;z) + T&middot;sinh(k<sub>0</sub>&middot;z))<sup>2</sup>
+  with z coordinate along the axis of the horn.
+  S(z) is the cross section area at position z. S<sub>th</sub> is the
+  cross-section area at the throat S<sub>th</sub> = S(0).
+  k<sub>0</sub> is the horn-wave-number, which corresponds to the
+  Horn Frequency (k<sub>0</sub> = 2&pi;f<sub>0</sub>/c).
+  T is the Salmon Factor. The above equation can also be written as:
+  S(z) = S<sub>th</sub>&middot;(t<sub>1</sub>&middot;exp(k<sub>0</sub>&middot;z) + t<sub>2</sub>&middot;exp(-k<sub>0</sub>&middot;z))<sup>2</sup>
+  with t<sub>1</sub> = (1 + T)/2 &nbsp;and&nbsp; t<sub>2</sub> = (1 - T)/2</p>
+
+  <p>The Horn Frequency f<sub>0</sub> is a convenient parameter in the design process of horns.
+  As can be seen from the curves of the radiation resistance, for
+  exponential horns, the resistance rapidly becomes zero below f<sub>0</sub>.
+  In an infinitely long horn, no more sound would be radiated below f<sub>0</sub>.
+  In this case all the energy is used to move the air mass in the horn.
+  f<sub>0</sub> = c/(2&pi;&middot;L)&middot;ln(&gamma;) with
+  &gamma; = 1/(2&middot;t<sub>1</sub>)&middot;&eta;&middot;(1 + sqrt(1 - 4&middot;t<sub>1</sub>&middot;t<sub>2</sub>&middot;&eta;<sup>2</sup>)) and
+  &eta; = sqrt(S<sub>mo</sub>/S<sub>th</sub>).
+  with L length of horn, S<sub>th</sub> and S<sub>mo</sub> cross section area of throat and mouth.</p>
+
+  <p><i>Catenoid (T=0)</i> shapes are characterized by an extremely high
+  radiation resistance slightly above the Horn Frequency f0. They are typically used for
+  signal horns or sirens, whose fundamental tone is matched to the maximum of the
+  radiation resistance. Many wind instruments, for example trumpets, also have this
+  shape or are similar to it.<br>
+  With T=0 the slope is zero at the throat and increases only slowly with progressing
+  axial distance. Eventually the cross section opens exponentially. At the mouth the
+  flare is identical to the horn with T=1.<br>
+  If T=0 the horn formula simplifies to
+  S(z) = S<sub>th</sub>&middot;cosh<sup>2</sup>(k<sub>0</sub>&middot;z) with
+  t<sub>1</sub> = t<sub>2</sub> = 1/2.</p>
+
+
+  <p><i>Exponential (T=1)</i> shapes are most widely used for loudspeaker systems.
+  Not only because of the simple horn function, but also because of good radiation
+  loading and at the same time, smaller dimensions compared with other shapes.
+  If T=1, the radiation resistance curve would be maximally flat in the ideal case of an
+  infinite long horn.<br>
+  With T=1 the horn function simplifies to
+  S(z) = S<sub>th</sub>&middot;exp(2&middot;k<sub>0</sub>&middot;z)
+  with t<sub>1</sub> = t<sub>2</sub> = 0.<br>
+  The Horn Frequency is f<sub>0</sub> = c/(2&pi;&middot;L)&middot;ln(&eta;) with
+  &eta; = sqrt(S<sub>mo</sub>/S<sub>th</sub>).<br>
+  Note, that only the exponential horn with T=1 is "continuous" or "extendable".
+  You can attach adaptors at either end without changing the horn-function.
+  The attachments should have same k<sub>0</sub> and T.</p>
+
+
+  <p><i>Conical (T &rarr; &infin;)</i> shapes are the simplest ones. The cross-section
+  area increases linearly. The horn function simplifies to:
+  S(z) = S<sub>th</sub>&middot;(z/z<sub>0</sub> + 1)<sup>2</sup> with
+  z<sub>0</sub> distance from cone tip to horn throat.<br>
+  The transition from the general horn equation to this shape is achieved by setting
+  k<sub>0</sub> = 0. This means, conical horns have no Horn Frequency.<br>
+  For a radiating waveguide, the radiation impedance is similar to the
+  direct radiating diaphragm. Because a horn cannot be infinitely long there
+  is usually a sharp step of slope at the mouth, which often yields undesirable
+  reflections.<br>
+  Waveguides with the conical profile are practical in modeling transitions
+  between ducts, or can be used to approximate phase-plugs in the
+  compression driver and so on.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

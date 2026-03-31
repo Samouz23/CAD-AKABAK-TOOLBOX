@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Table of LEM-BEM Links</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1><img src="../../../_Images/LE-RefTable-Icon.jpg" >
+  Table of LEM-BEM Links</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+  <tr><td><img src="../../../_Images/LE-RefTable.jpg" ></td></tr>
+  </table>
+
+  <p>If you use a <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Network</a>
+  for driving boundary elements or pressure sources then we need links between
+  components.</p>
+
+  <p>For example, if a transducer shall receive the value of the area of the membrane
+  then we can use parameters <i>Diaph Front</i> or <i>Diaph Rear</i>. This
+  means that the LE-component takes reference to a BE-component.<br>
+  <img src="../../../_Images/LE-RefTable-Example1.jpg" ></p>
+
+  <p>Each LE-component which has a <a href="LE%20Diaphragm%20Parameters.html">parameter of diaphragm</a>
+  can be linked to boundary elements or pressure sources.</p>
+
+  <br>
+  <p>For a larger model with plenty of diaphragms it can be more convenient to
+  edit these links with the help of a dedicated table.
+  This table opens with menu <i>Schematic/Reference Table</i>.</p>
+
+  <p>To the left we see all available lumped elements with a possible diaphragm link
+  or a link to a pressure source. Make sure the mode of parameter <i>Diaph</i>
+  is set to <i>Reference</i>.</p>
+
+  <p>At the right hand side of the table we see linked boundary elements or
+  pressure sources. If it is blank then the link is missing. If marked red then
+  the link is invalid. A link would be invalid if the component does not exist,
+  or the link is not unique.</p>
+
+  <p>The last column to the right can be edited. A look-up table opens if clicked
+  or F2-key is pressed. The look-up-table displays only valid links. If you miss
+  a particular BE-element then it might be already assigned to another LE-component.</p>
+
+  <p>Sorting works by clicking on the header of the table. Another click would
+  toggle the sorting direction.</p>
+
+  <p><i>Apply</i> would assign all links at once.</p>
+
+  <br />
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

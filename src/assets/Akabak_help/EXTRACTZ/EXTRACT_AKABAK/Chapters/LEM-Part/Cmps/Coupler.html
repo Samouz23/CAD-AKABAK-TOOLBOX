@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Coupler</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Coupler</h1>
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  <td class="header">Electric</td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=150><td width=200><center><img src="../../../_Images/LE-Coupler.jpg"  /></center></td></tr>
+    <tr height=250><td width=200><center><img src="../../../_Images/LE-Coupler%20Example1.jpg"  /><br>Serial</center></td></tr>
+    <tr height=300><td width=200><center><img src="../../../_Images/LE-Coupler%20Example2.jpg"  /><br>Parallel</center></td></tr>
+    <tr height=200><td width=200><center><img src="../../../_Images/LE-Coupler%20Curve%20Example1.jpg"  /></center></td></tr>
+    <tr height=80><td width=200><center><img src="../../../_Images/Desktop%20-%20LEM%20Coupler%20Formula.jpg"  /></center></td></tr>
+  </table>
+
+  <h4>Parameters</h4>
+
+  <p class=indent><table>
+    <tr height=23><td width=100><a href="../Parameters/LE%20Params%20Editors.html">Caption</a></td>            <td width=100>String</td>    <td>Name of component</td></tr>
+    <tr height=23><td width=100><a href="../Parameters/LE%20Params%20Editors.html">Formula</a></td>            <td width=100>String</td>    <td>Formula of parameters</td></tr>
+    <tr height=23><td width=100>Mode</td>             <td colspan=2>[General, Diaphragm, Run-time Formula]</td></tr>
+    <tr height=23><td width=100>Ratio</td>            <td width=100></td>          <td>Ratio = Vuv/Vst = -Is/Iu</td></tr>
+    <tr height=23><td width=100><a href="../Parameters/LE%20Diaphragm%20Parameters.html">Diaph</a></td>  <td width=100>Ref or size</td> <td>Diaphragm size</td></tr>
+  </table>
+
+
+  <p>The <i>Coupler</i> is a special component, which implements an
+  ideal transformer into the network. For example ideal transformers can be used for
+  modeling the coupling between the mechanical-impedance-domain and the acoustical domain
+  by means of a diaphragm.</p>
+
+
+  <h5>Mode</h5>
+
+  <p>Mode selects the input mode of the single parameter <i>Ratio</i>.<br>
+  <i>General</i> : you would specify a value for Ratio.<br>
+  <i>Diaphragm</i> : a <a href="../Parameters/LE%20Diaphragm%20Parameters.html">form</a> is available
+  where you can specify a reference to a vibrating boundary of the <a href="../../BEM-Part/_Index.html">BEM-Part</a>
+  or a value for the diaphragm size. Internally the effective radiating area S<sub>D</sub> is calculated.
+  The sound pressure is p = F/S<sub>D</sub> and the volume velocity is q = v&middot;S<sub>D</sub>.
+  Combined this yields the mechano-acoustic transduction of impedance: Za = Zm/S<sub>D</sub><sup>2</sup>.<br>
+  <i>Run-time Formula</i> : See below at chapter <a href="#F">Formula</a>. </p>
+
+
+  <h5>Notes on Wiring</h5>
+
+  <p>The Coupler has no inductivity and there is no loss. Further there
+  is no mutual-inductance as in the <a href="Transformer.html">Transformer</a>-model.
+  Because of the latter you can not connect Couplers in any arbitrary way
+  in AKABAK. There are some restrictions in connecting multiple Coupler-elements directly.
+  There are no restrictions with other elements.</p>
+
+  <ul>
+    <li>The poles of the primary side of different Couplers can be connected,
+    in series or in parallel, respectively.</li>
+
+    <li>One of the secondary poles has to be grounded.</li>
+
+    <li>A secondary pole must not be directly connected with any other pole of a Coupler
+    and should not be connected with the <a href="Source.html">Source</a> of the network.</li>
+  </ul>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3 ID=F>Formula</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <h4>Run-time Formula</h4>
+
+  <p>If <i>Mode = Run-time Formula</i> Ratio is specified in form of a
+  <a href="../../Formula/Formula%20Complex.html">run-time formula</a>. The formula can be entered
+  at parameter <i>Formula</i>. Note, that in this case the result of the last formula
+  gets assigned to parameter Ratio. </p>
+
+  <p>Run-time variables are :</p>
+  <p class=indent>  <table>
+    <tr> <td width=50>f</td>         <td>Frequency</td>                </tr>
+    <tr> <td width=50>w</td>         <td>&omega; = 2&pi;&middot;f</td> </tr>
+  </table> </p>
+
+
+  <h4>Constant Formula</h4>
+
+  <p>If <i>Mode = General</i> or <i>Mode = Diaphragm</i>
+  the name of the parameters are equal to the <a href="../../Formula/_Index.html">formula-identifiers</a>:</p>
+
+  <p class=indent>  <table> <tr>
+  <td width=300><table >
+    <!-- Ratio -->
+    <tr height=22px> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Parameter</b></span></td> </tr>
+    <tr> <td>Ratio </td>         <td>Ratio = Vuv/Vst = -Is/Iu</td></td>       </tr>
+    <tr height=22px> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Diaphragm</b></span></td> </tr>
+    <tr> <td colspan=3>See at <a href="../Parameters/LE%20Diaphragm%20Parameters.html#F">LE Diaphragm Parameters</a></td>           </tr>
+  </table></td>
+  </tr> </table> </p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Example</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>The example is available at <i>AKABAK Examples/LEM/Coupler2.akp</i></p>
+  <p>This project contains two independent networks. Couplers are wired as shown to the right.
+  As noted one terminal should always be grounded. If you need to concatenate
+  Couplers then a small Resistor can help because the secondary terminal of a Coupler can
+  be wired to any component but another Coupler.</p>
+
+  <p>This example also demonstrates the use of run-time formula.</p>
+
+  <br />
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

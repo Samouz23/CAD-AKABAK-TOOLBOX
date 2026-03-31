@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Pressure_Points</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Pressure_Points</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Pressure points driving the field.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../BEScript.html">Boundary Element Script</a>,
+                                       <a href="../Direct%20Sound.html">Direct Sound Script</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1><a href="Pressure_Box.html">Pressure_Box</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table width=50% align=right><tr>
+  <td class=c width=200><img src="../../../_Images/Pressure_Points%20SPL.jpg"></td>
+  </tr></table>
+
+  <pre>
+  <b>Pressure_Points</b>   "Any Name"
+    <a href="../Parameters/Subdomain=.html">Subdomain=</a>
+    <a href="../Parameters/DrvGroup=.html">DrvGroup=</a>
+    <a href="../Parameters/DrvWeight=.html">DrvWeight=</a>
+    <a href="../Parameters/DrvDelay=.html">DrvDelay=</a>
+    <a href="../Parameters/RefNodes=.html">RefNodes=</a>
+    <a href="../Parameters/MeshFileAlias=.html">MeshFileAlias=</a>
+    <a href="../Parameters/MeshMode=.html">MeshMode=</a>
+    <a href="../Parameters/MeshMinDistance=.html">MeshMinDistance=</a>
+    <a href="../Parameters/Color=.html">Color=</a>
+    <a href="../Parameters/Set=.html">Set=</a>
+    <a href="../Parameters/List%20of%20Pressure%20Points.html"><b>List of Pressure Points</b></a>
+    <a href="../Parameters/List%20of%20Pressure%20Points%20by%20Mesh-File.html"><b>List of Pressure Points by Mesh-File</b></a>
+   </pre>
+
+  <p>Alternatively to driving from a boundary-surface
+  (see chapter <a href="Driving.html">Driving</a>)
+  a domain can also be driven by ideal pressure points. This is of course most
+  useful for scattering problems such as the sound field distribution in a room
+  etc. </p>
+
+  <p>There can be as many <i>Pressure_Points</i>-sections as you need.</p>
+
+  <p>Component <a href="Pressure_Box.html">Pressure_Box</a> is similar to <i>Pressure_Points</i>,
+  but allows for directivity.</p>
+
+
+  <h4>Symmetry</h4>
+
+  <p>In case of <a href="../Parameters/Sym=.html">symmetry</a> or the use of an
+  <a href="../../Appendix/Infinite%20Baffle.html">Infinite Baffle</a> mirror pressure points
+  will be installed automatically by the use of a special Green-Function.</p>
+
+
+  <h4>Dimensions</h4>
+
+  <p>In <a href="../Parameters/Dim=.html">Dim=3D</a> <i>Pressure_Points</i> resemble
+  ideal point sources, which radiate radial. The sound pressure is</p>
+
+  <p class=formula>p(d) = p<sub>0</sub>&middot;exp(-jkd)/d</p>
+
+  <p>with d distance between source-point and observation point, k = &omega;/c wavenumber,
+  c <a href="../Parameters/c=.html">speed of sound</a> and j imaginary unit and p<sub>0</sub> some
+  constant.</p>
+
+  <br>
+  <p>In <a href="../Parameters/Dim=.html">Dim=2D</a> we have ideal pressure-lines, which
+  radiate radially in the 2D-plane. The sound pressure is</p>
+
+  <p class=formula>p(d) = p<sub>0</sub>&middot;(Y<sub>0</sub>(kd) + j&middot;J<sub>0</sub>(kd))</p>
+
+  <p>with Y<sub>0</sub> Neumann-function and and J<sub>0</sub> Bessel-function of zero order.</p>
+
+
+  <br>
+  <p>In <a href="../Parameters/Dim=.html">Dim=CircSym</a> <i>Pressure_Points</i> resemble
+  concentric rings of constant pressure. The sound-pressure-distribution followes
+  the Bessel-function of zero order.</p>
+
+
+  <h4>Driving</h4>
+
+  <p>At solving stage of the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Method</a> or
+  in <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>
+  the driving of <i>Pressure_Points</i> is only marked, so to say,
+  with the help of parameter <a href="../Parameters/DrvGroup=.html">DrvGroup=</a>.
+  There are no driving-values yet. The actual values are bound later at observation-stage
+  with the help of the section <a href="Driving_Values.html">Driving_Values</a>
+  or with the help of a <a href="../../LEScript/LEScripts.html">Lumped-Element</a>
+  script. In this way a structure can be driven with a range of driving values
+  without the need of re-solving. See also chapter
+  <a href="../../Appendix/Driving%20Groups.html">Driving Groups</a>.</p>
+
+
+  <h3>Example - BEM</h3>
+
+  <p><img src="../../../_Images/Pressure_Points%20Room.jpg" align=right />
+  The <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Analysis</a>
+  can be useful for the acoustic analysis of small rooms. In this case
+  <i>Pressure_Points</i> may serve as idealized sources. A straightforward example
+  is "Damped Walls", where we find following specification for the source:</p>
+
+  <pre>
+  <b>Pressure_Points</b>
+    RefNodes="PressurePoints"
+    DrvGroup=1001
+    // Name   Node    Weight
+       100    1000    1.0</pre>
+
+  <p>In this example we specified only a single point (Index=100) at Node=1000.
+  However, because this model exploits symmetry in y
+  (<a href="../Parameters/Sym=.html">Sym=y</a>), ABEC will install two
+  <i>Pressure_Points</i> at mirror positions. Note, symmetry assumes identical
+  pressure distribution in the symmetric parts of the model. Conversely, if you
+  want to excite with only a single source at this position or plan to have
+  different driving-values for each point then you would need to model
+  the whole structure.</p>
+
+  <p>The <i>Pressure_Point</i> section of this example is linked to the
+  driving group <i>DrvGroup=1001</i>, which, after solving, can be excited with the
+  help of section <a href="Driving_Values.html">Driving_Values</a> of an
+  <a href="../Observation.html">Observation Script</a>. For example</p>
+
+  <pre>
+  <b>Driving_Values</b>
+    DrvType=Pressure
+    Value=1
+      101  DrvGroup=1001    Weight=0.1 </pre>
+
+
+  <h3>Example - BEM - Mesh-Files</h3>
+
+  <p>You can also control the position and distribution of <i>Pressure_Points</i>
+  with the help of <a href="../../Appendix/Mesh-Files.html">Mesh-Files</a>.
+  See <i>ABEC3 Examples\BEM\Rooms\Room-Hex</i>.</p>
+
+  <p>This example demonstrates the link to <i>Sketchup</i> using Mesh-Files of format
+  <i>Collada</i>. The CAD-file is organized in groups, which names can be used as Tags in
+  ABEC-scripts (see <a href="../../Appendix/Mesh-File-Tags.html">Mesh-File-Tags</a>).
+  For example there is one group called "Hall" for the boundaries of the hexagonal room
+  and one called "Stage" for the side-room.</p>
+
+  <p>For the purpose of demonstration the CAD containes two little spheres and a rectangle,
+  which are used to position a <i>Pressure_Box</i> and <i>Pressure_Points</i>.
+  Because of providing group-names we can access these mesh-file-triangles for positioning.</p>
+
+  <table width=30% align=right><tr>
+  <td class=c width=200><img src="../../../_Images/Pressure_Points%20Sketchup%20Groups.jpg"></td>
+  </tr></table>
+
+  <pre>
+  ...
+  <b>Pressure_Points</b>  "PP1"
+    DrvGroup=1002
+    MeshFileAlias=M
+    MeshMode=Center
+    MeshMinDistance=0.2m
+    101   Mesh  Include  <span style="color: #800000">"Right"</span>
+
+  <b>Pressure_Box</b>  "PB1"
+    DrvGroup=1001
+    CabDim=1m,1.60m,0.60m
+    MeshFileAlias=M
+    Position= Mesh  Include <span style="color: #800000">"Speaker"</span></pre>
+
+  <br>
+  <p>There is a single pressure-point assigned to the center of the sphere called "Right".
+  The <i>Pressure_Box</i> is oriented with the help of the rectangle with group-name
+  "Speaker".</p>
+
+
+  <h3>Example - Direct Sound</h3>
+
+  <p><i>Pressure_Points</i> are also used for
+  <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>,
+  where these points resemble idealized point sources. This type of
+  analysis consists of a
+  <a href="../Direct%20Sound.html">Direct Sound Script</a> and one or more
+  <a href="../Observation.html">Observation Scripts</a>.</p>
+
+  <p><img src="../../../_Images/Pressure_Points.jpg" align=right />
+  The following <i>Direct Sound</i> script is taken from example
+  "Direct Sound - Stage":</p>
+
+  <pre>
+  <b>Formula</b>
+    tau=1e-3
+
+  <b>Nodes</b>  "PressurePoints"
+    1000  16.0   40.0    0.5
+    1001  15.0   30.0    0.5
+    1002  16.0   20.0    0.5
+    1003  16.0   10.0    0.5
+    1004  16.0    0.0    0.5
+    1005  16.0  -10.0    0.5
+    1006  16.0  -20.0    0.5
+    1007  15.0  -30.0    0.5
+    1008  16.0  -40.0    0.5
+
+  <b>Pressure_Points</b>  "PressurePoints"
+    RefNodes="PressurePoints"
+    DrvGroup=1001
+    100  1000    Weight=1.0   Delay={tau}
+    101  1001    Weight=1.0   Delay={tau}
+    102  1002    Weight=1.0
+    103  1003    Weight=1.0
+    104  1004    Weight=1.0
+    105  1005    Weight=1.0
+    106  1006    Weight=1.0
+    107  1007    Weight=1.0   Delay={tau}
+    108  1008    Weight=1.0   Delay={tau}
+  </pre>
+
+  <p>There are 9 <i>Pressure_Points</i> distributed along the stage. They all
+  share the same <a href="../Parameters/DrvGroup=.html">DrvGroup=1001</a>,
+  hence will receive the same driving value at observation stage. However,
+  <i>Pressure_Point</i> #100, #101, #107, #108 are assigned a
+  <a href="../Parameters/Delay=.html">Delay=</a>. The value of this delay
+  is specified with the help of a formula in section
+  <a href="Formula.html">Formula</a>.</p>
+
+  <p>The <i>Direct Sound Script</i> specifies only sources. There are no
+  boundaries as in the <i>Boundary Element Analysis</i>.</p>
+
+  <p>Observation planes for field analysis or receiving points for spectral
+  analysis are specified in <a href="../Observation.html">Observation Scripts</a>.
+  Most importantly the actual driving values are specified in section
+  <a href="Driving_Values.html">Driving_Values</a> of any
+  observation script. For example:</p>
+
+  <pre>
+  <b>Driving_Values</b>
+    DrvType=Pressure;
+    Value=1.0
+    101  DrvGroup=1001  Weight=1.0
+  </pre>
+
+  <br>
+  <br>
+</body>
+</html>

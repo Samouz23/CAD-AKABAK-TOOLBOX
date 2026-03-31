@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>WD= HD=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>WD= HD=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>WD= HD=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">m</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Width and Height of diaphragm or cross-section.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Def_Driver.html">Def_Driver</a>,
+                                                        <a href="../Sections/Def_TwoCoilsDriver.html">Def_TwoCoilsDriver</a>,
+                                                        <a href="../Sections/Def_PiezoDriver.html">Def_PiezoDriver</a>,
+                                                        <a href="../Sections/Coupler.html">Coupler</a>,
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a>,
+                                                        <a href="../Sections/Duct.html">Duct</a>,
+                                                        <a href="../Sections/Enclosure.html">Enclosure</a> (vented)
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="dD=.html">dD=</a>, <a href="SD=.html">SD=</a>, <a href="dD1=.html">dD1=</a>, <a href="SD1=.html">SD1=</a></td>
+  </tr>
+  <tr>
+    <td class=param0></td>              <td class=param1><a href="../../Appendix/Lumped%20Element%20Diaphragms.html">Lumped Element Diaphragms</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table align=right>
+  <tr><td><img src="../../../_Images/LE-WD=HD=.jpg"></td></tr>
+  <tr><td><img src="../../../_Images/LE-WD=HD=%20Ellipse.jpg"></td></tr>
+  <tr><td><img src="../../../_Images/LE-WD=HD=SD1=.jpg"></td></tr>
+  <tr><td><img src="../../../_Images/LE-WD=HD=SD1=%20Ellipse.jpg"></td></tr>
+  </table>
+
+  <p><i>WD=</i> and <i>HD=</i> are the width and height of a rectangular or elliptical
+  membrane or duct cross-section.</p>
+
+  <p>For example a driver with rectangular membrane</p>
+
+  <pre>
+  <b>Def_Driver</b>   "Drv1"
+    <font color="#800000">WD=100mm   HD=50mm</font>
+    Mms=25g
+    ....
+  </pre>
+
+  <p>For example a duct with elliptical cross-section:</p>
+
+  <pre>
+  <b>Duct</b>   "D1"
+    Node=10=20
+    <font color="#800000">WD=100mm   HD=50mm  Ellipse</font>
+    Len=100mm
+  </pre>
+
+  <p>Note, that membranes typically are supported and have a gradient of
+  motion towards the suspension, which may yield the effective area of
+  the membrane to be smaller than it appears geometrically.</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

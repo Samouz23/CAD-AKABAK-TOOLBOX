@@ -1,6 +1,6 @@
 {
   "name": "cad-akabak-toolbox",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Toolbox for CAD & AKBAk",
   "main": "src/main.js",
   "scripts": {
@@ -22,16 +22,12 @@
     "tailwindcss": "^3.4.18"
   },
   "dependencies": {
-    "archiver": "^7.0.1",
     "axios": "^1.12.2",
     "chart.js": "^4.5.1",
     "electron-store": "^8.2.0",
     "glob": "^11.0.3",
-    "pdf-lib": "^1.17.1",
     "tesseract.js": "^6.0.1",
-    "three": "^0.180.0",
-    "uuid": "^13.0.0",
-    "webdav": "^5.8.0"
+    "three": "^0.180.0"
   },
   "build": {
     "appId": "com.SZSLAB.cad-akabak-toolbox",

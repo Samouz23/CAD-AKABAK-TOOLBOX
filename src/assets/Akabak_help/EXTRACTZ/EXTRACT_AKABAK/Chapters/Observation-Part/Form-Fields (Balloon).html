@@ -1,0 +1,288 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Fields (Shell) (4300)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Fields (Shell)</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Observation</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=300><td><img src="../../_Images/Desktop%20-%20Fields%20(Shell).jpg" /></td></tr>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20Fields%20(Shell)%20Params.jpg" /></td></tr>
+    <tr height=220><td><center><img src="../../_Images/Fields%20-%20Quad.jpg" /></center></td></tr>
+    <tr height=420><td><img src="../../_Images/Desktop%20-%20Fields%20(Shell)%20Quad.jpg" /></td></tr>
+    <tr height=220><td><center><img src="../../_Images/Fields%20-%20Cylinder.jpg" /></center></td></tr>
+    <tr height=420><td><img src="../../_Images/Desktop%20-%20Fields%20(Shell)%20Cylinder.jpg" /></td></tr>
+    <tr height=240><td><center><img src="../../_Images/Fields%20-%20Sphere.jpg" /></center></td></tr>
+    <tr height=150><td><img src="../../_Images/Fields%20-%20Spheres.jpg" /><br>
+                   <center>Polar Lines &nbsp;&nbsp;&nbsp;&nbsp; Polar Planes &nbsp;&nbsp;&nbsp; Cube &nbsp;&nbsp;&nbsp;&nbsp; Octaeder</center></td></tr>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20Fields%20(Shell)%20Sphere.jpg" /></td></tr>
+  </table>
+
+  <p>Fields (shell) generates regular spaced observation points on a plane,
+  cylinder- or sphere-surface.</p>
+
+  <p>Create a new <i>Field</i>-component with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  The home of the component is page <i>Observation</i>.
+  Edit an existing component by dbl-click its entry on page <i>Observation</i>
+  or issue menu <i>Edit/Parameters</i> or press CTRL+E.</p>
+
+  <p>The result of the Field calculation is the frequency response of the sound pressure.
+  It will be displayed as a contour-plot in the 3D-viewer.</p>
+
+  <p>The frequency range is specified at menu
+  <a href="../Desktop/Form-Frequencies.html">Global/Frequencies</a>.
+  After calculation select the frequency or frequency-range to plot at
+  <a href="../Desktop/Page-Frequencies.html">Desktop-Page - Frequencies.</a></p>
+
+  <p>The check-boxes in the <a href="../Desktop/Treelist%20Controls.html">list</a> at the side
+  of the desktop lets you show or hide the field. Un-checked Field-records will be
+  skipped at next round of calculation.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - General</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>Provide the name of the component in form of a <a href="../Appendix/Strings.html">string</a>.</p>
+  <p>There is also space for annotations.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Parameter</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Analysis Type</h4>
+
+  <p><i>Pressure</i> means the type of analysis is set to sound pressure response.</p>
+
+
+  <h4>Far-Field</h4>
+
+  <p>If checked then the simulation is carried out at a large distance.
+  Eventually the amplitude is scaled to specified Radius and the phase to zero-distance.</p>
+
+  <p><i>Far-Field Distance</i>: here you can specify the "large" distance
+  for approximating far-field conditions.
+  If left empty 100 times the size of the radiator is used as far-field distance.</p>
+
+  <p>Note, the Far-Field option is only available for the Sphere and the Cylinder.<br>
+  Note, that the presence of an Infinite Baffle may contradict the Far-Field idea.</p>
+
+
+  <h4>View</h4>
+
+  <h5>Planes</h5>
+
+  <p><i>View Symmetry</i> yields the output of symmetric fields for planes.
+  The symmetric fields are available only if the model has a symmetric property
+  which can be set at menu <a href="../Desktop/Form-BEM-Parameters.html">Global/BEM Parameters</a>.<br>
+  If View Symmetry is un-checked then only the original field gets plotted.</p>
+
+
+  <h5>Sphere, Cylinder</h5>
+
+  <p><i>Only Parts</i> allows to render only part of the sphere or cylinder.
+  Enter numbers where "1" stands for the first octant, "2" for the second and so on.
+  If left blank the whole sphere or cylinder is plotted.
+  In case the model features <a href="../Desktop/Form-BEM-Parameters.html">global symmetry</a>
+  then symmetry is taken into account.</p>
+
+  <h5>Axis</h5>
+
+  <p>Select here annotation-options on the shell.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Shell</h3>
+  <!-- ----------------------------------------------- -->
+
+  <!-- ----------------------------------------------- -->
+  <h4>Plane</h4>
+
+  <p>Creates a rectangular plane with a regular distribution of observation points.</p>
+
+
+  <h5>Width, Height</h5>
+
+  <p>Size of the plane.</p>
+
+
+  <h5>Delta</h5>
+
+  <p>Sampling distance on the plane. Hence, Delta is the distance between
+  adjoined "microphones".</p>
+
+
+  <h5>Direction</h5>
+
+  <p>Principal orientation of plane. x, y, z are the normal of the plane.</p>
+
+
+  <h5>Anchor</h5>
+
+  <p>Mounting point of plane.</p>
+
+
+  <h5>Quads Four Triangles</h5>
+
+  <p>If checked then quadrilaterals are meshed by four triangles otherwise by two.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h4>Cylinder</h4>
+
+  <p>Creates an open cylinder and a regular pattern of observation points.</p>
+
+
+  <h5>Radius</h5>
+
+  <p>Distance of observation points from the axis of the cylinder.</p>
+
+
+  <h5>Height</h5>
+
+  <p>Size of cylinder measured along its axis.</p>
+
+
+  <h5>Delta Height</h5>
+
+  <p>Distance of spatial sampling points along its axis.</p>
+
+
+  <h5>Delta Phi</h5>
+
+  <p>Angular sampling distance on perimeter.</p>
+
+
+  <h5>Pole</h5>
+
+  <p>Provides the basic orientation of the cylinder. Select the position of the top-lid of the duct.
+  Further positioning can be specified at <i>Scaling</i> (see below).</p>
+
+
+  <h5>Quads Four Triangles</h5>
+
+  <p>If checked then quadrilaterals are meshed by four triangles otherwise by two.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h4>Sphere</h4>
+
+  <p>Creates a sphere with a regular pattern of observation points.</p>
+
+
+  <h5>Radius</h5>
+
+  <p>Distance of observation points from origin of sphere.</p>
+
+
+  <h5>Delta Theta, Delta Phi</h5>
+
+  <p>Angular sampling distance on sphere. These values are nominal
+  and depend on the selection of <i>Mesh</i>. If <i>Mesh=Polar...</i>
+  these angles are exact otherwise approximate.</p>
+
+
+  <h5>Mesh</h5>
+
+  <p>The surface of the sphere or cylinder is tesselated into sub-planes.
+  At the vertices of these sub-planes there placed observation points (microphones).<br>
+  <i>Polar Lines</i> creates a regular angular grid of circles passing through the poles (longitudes).
+  Orthogonal to it there is a regular angular grid of latitude circles.
+  Delta Theta controls the angular spacing of the latitude circles.
+  Delta Phi controls the angular spacing of the longitude circles.<br>
+  <i>Polar Planes</i> creates a regular angular grid of latitude circles controlled by
+  Delta Theta. On it are distributed planes of approximately same size, which is derived from
+  Delta Phi at the equator.<br>
+  <i>Cube</i> creates a mesh on a cube, which is then projected on the sphere.
+  The number of planes are:
+  N = 6&middot;sqr(360/(4&middot;&Delta;) - 1) with &Delta; = 1/2&middot;(&Delta;&theta; + &Delta;&phi;)<br>
+  <i>Octaeder</i> creates triangles based on recursive bifurcation. The edge length of the triangles are
+  smaller than 1.6&middot;&Delta;&middot;Radius </p>
+
+
+  <h5>Pole</h5>
+
+  <p>Provides the basic orientation of the sphere. Select the position of the north-pole
+  of the sphere. Further positioning can be specified at <i>Scaling</i>
+  on <i>Page Parameter</i> (see below).</p>
+
+
+  <h5>Quads Four Triangles</h5>
+
+  <p>If checked then quadrilaterals are meshed by four triangles otherwise by two.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h4>Scaling Position</h4>
+
+  <p>Opens the <a href="../Desktop/Form-Scaling.html">Scaling-Form</a> where direction
+  and position can be specified. Mounting point is the center of the sphere or
+  the center mid point of the cylinder.</p>
+
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Range</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>On this page you find controls for the range of output as
+  the ranging directly controls the contouring.
+  Also sources can be selected which shall take part in the simulation.
+  More see chapter <a href="Form-Range%20(frame).html">Frame - Range</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers are:</p>
+
+  <p class=formula><table >
+    <!-- Shell -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;" width=150><span style="color: #800000"><b>Shell</b></span></td> </tr>
+    <tr> <td>Radius</td>         <td>Distance from center</td>        </tr>
+    <tr> <td>Width</td>          <td>Width of plane</td>              </tr>
+    <tr> <td>Height</td>         <td>Height of plane or cylinder</td> </tr>
+    <tr> <td>DeltaTheta</td>     <td>Delta along polar circles</td>   </tr>
+    <tr> <td>DeltaPhi</td>       <td>Delta along circumference</td>   </tr>
+    <tr> <td>DeltaHeight</td>    <td>Delta cylinder</td>              </tr>
+    <tr> <td>EdgeLength</td>     <td>Delta plane</td>                 </tr>
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Parameter</b></span></td> </tr>
+    <tr> <td>FarFieldDistance</td>   <td>Distance of far-field calculation</td>     </tr>
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Scaling</b></span></td> </tr>
+    <tr> <td>RotateVert</td>     <td>Local rotation vertical</td>       </tr>
+    <tr> <td>RotateHoriz</td>    <td>Local rotation horizontally</td>   </tr>
+    <tr> <td>RotateAxial</td>    <td>Local rotation axially</td>        </tr>
+    <tr> <td>OffsetAxial</td>    <td>Shift on-axis</td>                 </tr>
+    <tr> <td>RotateX</td>        <td>Rotation about x-axis</td>         </tr>
+    <tr> <td>RotateY</td>        <td>Rotation about y-axis</td>         </tr>
+    <tr> <td>RotateZ</td>        <td>Rotation about z-axis</td>         </tr>
+    <tr> <td>ShiftX</td>         <td>Shift in x-direction</td>          </tr>
+    <tr> <td>ShiftY</td>         <td>Shift in y-direction</td>          </tr>
+    <tr> <td>ShiftZ</td>         <td>Shift in z-direction</td>          </tr>
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Range</b></span></td> </tr>
+    <tr> <td>Range</td>          <td>Max-Min of output</td>             </tr>
+    <tr> <td>RangeMax</td>       <td>Upper bound of output range</td>   </tr>
+    <tr> <td>RangeMin</td>       <td>Lower bound of output range</td>   </tr>
+    <tr> <td>StepSize</td>       <td>Contouring step</td>               </tr>
+  </table></p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

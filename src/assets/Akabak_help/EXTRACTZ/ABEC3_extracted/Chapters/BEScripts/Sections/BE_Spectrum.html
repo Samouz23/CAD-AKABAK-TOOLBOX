@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>BE_Spectrum</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>BE_Spectrum</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Spectrum at field points.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1> <a href="../ObSpectrum.html">Spectral observation scripts</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>BE_Spectrum</b>  "Any Name"
+    <a href="../Parameters/PlotType=.html">PlotType=</a>
+    <a href="../Parameters/AnalysisType=.html">AnalysisType=</a>
+    <a href="../Parameters/DrvGroups=.html">DrvGroups=</a>
+    <a href="../Parameters/BodeType=.html">BodeType=</a>
+    <a href="../Parameters/Range=.html">Range=</a>
+    <a href="../Parameters/GraphHeader=.html">GraphHeader=</a>
+    <a href="../Parameters/PolarRange=.html">PolarRange=</a>
+    <a href="../Parameters/Distance=.html">Distance=</a>
+    <a href="../Parameters/RefNodes=.html">RefNodes=</a>
+    <a href="../Parameters/BasePlane=.html">BasePlane=</a>
+    <a href="../Parameters/Offset=.html">Offset=</a>
+    <a href="../Parameters/List%20of%20BE_Spectrum%20Items.html"><b>List of BE spectrum items</b></a>
+  </pre>
+
+  <p>Section <i>BE_Spectrum</i> yields the calculation of sound-pressure
+  response at various spatial points.</p>
+
+  <p>For the <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Analysis</a> and
+  if <a href="Control_Spectrum.html">Control_Spectrum</a> has been specified then
+  <i>BE_Spectrum</i> can render more abscissa points then was actually solved
+  for at the <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Analysis</a>.
+  See also chapter on <a href="../../Appendix/Interpolation.html">Interpolation</a>.</p>
+
+  <p>For <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>
+  section <i>Control_Spectrum</i> should define a valid frequency abscissa.</p>
+
+  <p><a href="../Parameters/PlotType=.html">PlotType=</a>
+  controls mainly the graphical rendering, for example whether you want a curve- or
+  a contour-plot. It also controls the distribution of field-points.</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

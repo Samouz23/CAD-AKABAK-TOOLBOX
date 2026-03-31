@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Ma=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Ma=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Ma=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">kg/m4</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Acoustic mass</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/AcouMass.html">AcouMass</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>Constant value of acoustic mass of component
+  <a href="../Sections/AcouMass.html">AcouMass</a>.</p>
+
+  <p>The value of Ma is a constant with the dimension [Ma] = kg/m<sup>4</sup>.
+  In the script the unit is specified as "kg/m4", for example</p>
+  <pre>
+    Ma=0.5kg/m4</pre>
+
+
+  <h3>Derivation</h3>
+
+  <p>The acoustic mass is derived from an open duct (p = 0). Its dimensions are
+  assumed to be significantly smaller than the wavelength. In the frequency
+  range in which the diameter of the duct is in the
+  range 0.1/&radic;f &lt; dD &lt; 20/f, the acoustic impedance of
+  an open duct is:</p>
+
+  <p class=formula>Z<sub>a</sub> = j&rho;c/SD&middot;tan(k&middot;L)</p>
+
+  <p>with air-density &rho;, speed of sound c, cross-sectional area of
+  the duct SD = &pi;&middot;dD<sup>2</sup>/4, wave-number k = &omega;/c and
+  length of the duct L.
+
+  <p>At very low frequencies, only the first term of the Taylor-expansion of the
+  tan-function may be used and Za becomes Za = j&omega;&middot;Ma,
+  where Ma is the acoustic mass:</p>
+
+  <p class=formula>Ma = M/SD<sup>2</sup> = &rho;&middot;L/SD</p>
+
+  <p>with air-mass M in the duct.</p>
+
+
+  <h4>End Correction</h4>
+
+  <p>In many cases, the acoustic mass of the duct
+  is somewhat greater because of the radiation-impedance at both ends of the duct.
+  The imaginary part forms an air-load, which equivalent acoustic mass Ma'
+  should be added to Ma. At very low frequencies below
+  f<sub>D</sub> = c/(&pi;&middot;dD) the air-load for one side is approximately:</p>
+
+  <table>
+  <tr>
+  <td width=300><p class=formula>Ma' = 0.54&middot;&rho;/dD = 0.65/dD</p></td>	<td>The duct terminates at a large baffle.</td>
+  </tr><tr>
+  <td width=300><p class=formula>Ma' = 0.39&middot;&rho;/dD = 0.5/dD</p></td>	<td>The duct terminates freely.</td>
+  </tr>
+  </table>
+
+  <p>Ma' should then be included for each side. The procedure is called
+  end-correction. In extreme cases the acoustic mass may consist only, or
+  predominantly, of the end-correction, for example in the case of a simple hole
+  in a thin wall. A good value for Ma' can also be obtained by measuring the
+  radiation impedance provided by the Boundary Element Simulation.</p>
+
+  <br />
+  <p>With increasing frequency, the wavelength gets smaller and the given
+  equations for Ma yield a large error. In this case it is better to replace
+  the <i>AcouMass</i> by the
+  <a href="../Sections/Duct.html">Duct</a> element or by a Boundary Element Model.</p>
+
+  <p>Acoustic masses occur not only in passages and ducts, but also in duct
+  systems if the cross-section changes or obstructions are present. Also holes
+  of a mesh and of damping material induces acoustic mass. Finally any
+  vibrating material may be expressed as an equivalent acoustic mass.
+
+  <br />
+  <p>The following formulae are approximations for the frequency range in
+  which the wavelength is large. If, for example, you need a value of the
+  effect of a constriction, a bend, etc. These examples may form a suitable
+  base for an estimation.</p>
+
+
+  <br />
+  <h3>Duct with Constriction</h3>
+
+  <p>Two ducts with identical cross-section have between them a thin wall with a
+  hole of diameter dL. Let the area of the hole be much smaller than the
+  cross-sectional area of the duct. The dimensions of the duct are also much
+  smaller than the wavelength.</p>
+
+  <br />
+  <table align=center>
+  <td width=300><img src="../../../_Images/LE-AcouMass%20Constriction%20Ducts%20Drawing.jpg" /></td>
+  <td width=300><img src="../../../_Images/LE-AcouMass%20Constriction%20Ducts.jpg"  /></td>
+  </table>
+  <br />
+
+  <p>According to
+  [<a href="../../Appendix/Literature.html">15</a>]
+  the acoustic mass is given by</p>
+
+  <p class=formula>Ma = &rho;/dL</p>
+
+  <p>with air-density &rho;. Thus, with &rho;=1.2kg/m<sup>3</sup> and dL=20mm this results
+  in Ma=60kg/m<sup>4</sup>. In the equivalent circuit-diagram, Ma is in
+  series with the output of the first duct and the input of the second.</p>
+
+  <pre>
+  <b>AcouMass</b>  'Ma1'
+    Node=4=5
+    Ma=60kg/m4
+  </pre>
+
+
+  <h3>Duct with Step</h3>
+
+  <p>Two rectangular ducts with different cross-section are connected. The ducts
+  have different heights but should share the width W. The smaller duct has the
+  height H1 and the greater duct has the height H2.</p>
+
+  <br />
+  <table align=center>
+  <td width=300><img src="../../../_Images/LE-AcouMass%20Constriction%20Ducts%20Drawing%202.jpg" /></td>
+  <td width=300><img src="../../../_Images/LE-AcouMass%20Constriction%20Ducts.jpg"  /></td>
+  </table>
+  <br />
+
+
+  <p>The acoustic mass between the ducts is
+  approximately [<a href="../../Appendix/Literature.html">15</a>]:</p>
+
+  <p class=formula><img src="../../../_Formulae/LE-AcouMass%20Example%20Step.jpg" /></p>
+
+  <p>Thus, with &rho;=1.2kg/m<sup>3</sup>, W=50mm, H1=50mm and H2=30mm this
+  results in Ma=1.9kg/m<sup>4</sup>. In the equivalent circuit diagram,
+  Ma is in series with the output of the first duct and the
+  input of the second duct.</p>
+
+  <pre>
+  <b>AcouMass</b>   'Ma2'
+    Node=4=5
+    Ma=1.9kg/m4
+  </pre>
+
+
+  <br />
+  <h3>Duct with 90°-Bent</h3>
+
+  <table align=center>
+  <td width=200><img src="../../../_Images/LE-AcouMass%20Bend%20Ducts%20Drawing.jpg" /></td>
+  <td width=200><img src="../../../_Images/LE-AcouMass%20Constriction%20Ducts.jpg"  /></td>
+  </table>
+  <br />
+
+  <p>The above figure shows a 90° bend in the duct-path. If the cross-section of
+  the ducts do not change, then an approximate value for the acoustic mass
+  is given by [<a href="../../Appendix/Literature.html">15</a>]:</p>
+
+  <p class=formula>Ma &asymp; 1.85/HD</p>
+
+  <p>Where HD is the height of the rectangular duct in meters. The mass is
+  dependent only on the cross-section in the plane of the bend. The acoustic mass
+  increases with the sharpness of the bend. In addition there is an acoustic
+  resistance and a compliance.</p>
+
+  <pre>
+  ...
+  <b>Duct</b>  'Du1'
+    Node=5=6
+    WD=20cm  HD=5cm  Len=30cm
+
+  <b>AcouMass</b>  'Bent'              
+    Node=6=7
+    Ma={  1.85/0.05  }
+
+  <b>Duct</b>  'Du1'
+    Node=7=8
+    WD=20cm  HD=5cm  Len=30cm
+  ...</pre>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

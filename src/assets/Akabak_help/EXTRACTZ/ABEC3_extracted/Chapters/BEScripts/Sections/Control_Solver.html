@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Control_Solver</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Control_Solver</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Global control of <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Solver</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../BEScript.html">BE Solving Script</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table>
+  <tr>
+  <td width=300 valign=top><pre>
+  <b>Control_Solver</b>
+    <a href="../Parameters/Dim=.html">Dim=</a>
+    <a href="../Parameters/Sym=.html">Sym=</a>
+    <a href="../Parameters/MeshFrequ=.html">MeshFrequency=</a>
+    <a href="../Parameters/EdgeLength=.html">EdgeLength=</a>
+    <a href="../Parameters/Meshing=.html">Meshing=</a>
+    <a href="../Parameters/f1=f2=.html">f1=</a>
+    <a href="../Parameters/f1=f2=.html">f2=</a>
+    <a href="../Parameters/NumFrequs=.html">NumFrequencies=</a>
+    <a href="../Parameters/Absc=.html">Abscissa=</a>
+    <a href="../Parameters/Frequs=.html">Frequencies=</a>
+    <a href="../Parameters/ImpedanceNumFrequs=.html">ImpedanceNumFrequencies=</a>
+  </pre></td>
+  <td width=200 valign=top><pre>
+
+    <a href="../Parameters/rho=.html">rho=</a>
+    <a href="../Parameters/c=.html">c=</a>
+    <a href="../Parameters/Altitude=.html">Altitude=</a>
+    <a href="../Parameters/StaticPressure=.html">StaticPressure=</a>
+    <a href="../Parameters/Temperature=.html">Temperature=</a>
+    <a href="../Parameters/Set=.html">Set=</a>
+    <a href="../Parameters/NUC=.html">NUC=</a>
+    </pre>
+  </tr>
+  </table>
+
+  <p><i>Control_Solver</i> is a special section for controlling the
+  Boundary Element solver. Preferably it is placed in the main solving-file.
+  Specifications in <i>Control_Solver</i> are global for the solving stage.
+  For example, the main solving-script could look like this:
+  <pre>
+  <b>File</b>="Solving-Throat-Bottom-Elements.txt"
+  ...
+  <b>Control_Solver</b>
+    f1=200Hz;  f2=5kHz;  NumFrequencies=10;  Abscissa=log
+    MeshFrequency=5kHz
+    Meshing=Delaunay
+    Sym=x
+    Dim=3D
+    </pre>
+
+
+  <h4>Meshing</h4>
+
+  <p><a href="../../Appendix/Meshing.html">Meshing</a>
+  is the means by which the underlying Integral Equation is solved.
+  Most important is the specification of the size of the finite elements,
+  which can be specified directly with the help of
+  <a href="../Parameters/EdgeLength=.html">EdgeLength=</a> or indirectly
+  with <a href="../Parameters/MeshFrequ=.html">MeshFrequency=</a>.
+  The parameter <a href="../Parameters/Meshing=.html">Meshing=</a>
+  controls the type of mesh-generator used.</p>
+  <p>Meshing parameters of <i>Control_Solver</i> form default values and
+  can be over-written in sections
+  <a href="SubDomain_Properties.html">Subdomain_Properties</a>,
+  <a href="Elements.html">Elements</a>,
+  <a href="Diaphragm.html">Diaphragm</a> and
+  <a href="Shell.html">Shell</a>.</p>
+
+
+  <h4>Frequency Abscissa</h4>
+
+  <p>The acoustic field is solved for a range of frequencies, which needs to
+  be specified by parameters:
+  <a href="../Parameters/f1=f2=.html">f1=</a>,
+  <a href="../Parameters/f1=f2=.html">f2=</a>,
+  <a href="../Parameters/NumFrequs=.html">NumFrequencies=</a>,
+  <a href="../Parameters/Absc=.html">Abscissa=</a>
+  or alternatively by a list of frequencies:
+  <a href="../Parameters/Frequs=.html">Frequencies=</a>.</p>
+
+  <p>See also discussion in chapter
+  <a href="../../Appendix/Interpolation.html">Interpolation</a>.</p>
+
+
+  <h4>Dimension and Symmetry</h4>
+
+  <p>ABEC performs by default the Boundary Element Method in
+  <a href="../Parameters/Dim=.html">Dim=3D</a>.
+  However, certain special cases are also supported.</p>
+
+  <p>If the structure exhibits symmetry then calculation can be quicken
+  by specifying the coordinate of symmetry, see parameters
+  <a href="../Parameters/Sym=.html">Sym=</a>.</p>
+
+
+  <h4>Non-Uniqueness Compensation (NUC)</h4>
+
+  <p>Optional</p>
+  <p>The
+  <a href="../../Appendix/Non-Uniqueness-Problem.html">Non-Uniqueness Problem</a>
+  is tackled by a special treatment in order to avoid arte-facts in the exterior domain at
+  high frequencies. The parameter <a href="../Parameters/NUC=.html">NUC=</a> can be used
+  to control this application. If <i>NUC=</i> is not specified then the treatment is
+  applied by default as set at the
+  <a href="../../GUI/Options/Preferences.html">Preferences</a>.</p>
+
+
+  <h4>Coupling to Lumped Element Network</h4>
+
+  <p>Optional</p>
+  <p>The parameter <a href="../Parameters/ImpedanceNumFrequs=.html">ImpedanceNumFrequencies=</a>
+  can be useful to improve spectral response curves for coupled Boundary and
+  <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Methods</a>.</p>
+
+
+   <h4>Physical Parameters</h4>
+
+  <p>Optional</p>
+   <p><a href="../Parameters/rho=.html">rho=</a>,
+    <a href="../Parameters/c=.html">c=</a>,
+    <a href="../Parameters/Altitude=.html">Altitude=</a>,
+    <a href="../Parameters/StaticPressure=.html">StaticPressure=</a>,
+    <a href="../Parameters/Temperature=.html">Temperature=</a>
+    allow to specify basic
+    <a href="../../Appendix/Acoustic%20Parameters.html">acoustical parameters</a>.</p>
+
+  <br>
+  <br>
+</body>
+</html>

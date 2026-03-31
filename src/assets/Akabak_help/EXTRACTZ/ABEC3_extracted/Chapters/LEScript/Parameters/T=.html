@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>T=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>T=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>T=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Salmon-factor of exponential horn.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Waveguide.html">Waveguide</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>T=</i> is the <i>Salmon Factor</i>, which controls the opening of the
+  cross section area of the <a href="../Sections/Waveguide.html">Waveguide</a>:</p>
+
+  <p class=indent>T = 0 &nbsp;&nbsp; Catenoidal</p>
+  <p class=indent>T = 1 &nbsp;&nbsp; Exponential</p>
+  <p class=indent>T &rarr; &infin; &nbsp; Conical</p>
+
+
+  <h3>Horn Functions</h3>
+
+  <table align=right><tr>
+  <td width=350><center><img src="../../../_Images/LE-Waveguide%20T=%20Hornfunctions.jpg"></center></td>
+  </tr><tr height=270>
+  <td width=350><center><img src="../../../_Images/LE-Waveguide%20T=%20Hornfunctions%20(2).jpg"></center></td>
+  </tr><tr height=270>
+  <td width=350><center><img src="../../../_Images/LE-Waveguide%20T=%20RadImp.jpg"></center></td>
+  </tr></table>
+
+
+  <p>Horn Functions or Salmon Functions generate geometry for the
+  one-dimensional waveguide model, as described at
+  [<a href="../../Appendix/Literature.html#22">22-24</a>].
+  The Horn Function provides the cross section
+  area at a distance from the horn throat. It is assumed that the shape
+  of the cross-section varies smoothly.
+  The Horn Function is a combination of exponential functions:</p>
+
+  <p class=formula> S(z) = S<sub>th</sub>&middot;(cosh(k<sub>0</sub>&middot;z) + T&middot;sinh(k<sub>0</sub>&middot;z))<sup>2</sup></p>
+
+  <p>with z coordinate along the axis of the horn.
+  S(z) is the cross section area at position z. S<sub>th</sub> is the
+  cross-section area at the throat S<sub>th</sub> = S(0).
+  k<sub>0</sub> is the horn-wave-number, which corresponds to the
+  Horn Frequency (k<sub>0</sub> = 2&pi;f<sub>0</sub>/c).
+  T is the Salmon Factor (range see above). The above equation can also be written as:</p>
+
+  <p class=formula>S(z) = S<sub>th</sub>&middot;(t<sub>1</sub>&middot;exp(k<sub>0</sub>&middot;z) + t<sub>2</sub>&middot;exp(-k<sub>0</sub>&middot;z))<sup>2</sup></p>
+
+  <p>with</p>
+
+  <p class=formula>t<sub>1</sub> = (1 + T)/2 &nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;&nbsp;&nbsp;&nbsp;
+                   t<sub>2</sub> = (1 - T)/2</p>
+
+
+  <h4>Horn Frequency</h4>
+
+  <p>f<sub>0</sub> is a convenient parameter in the design process of horns.</p>
+
+  <p>As can be seen from the curves of the radiation resistance, for
+  exponential horns, the resistance rapidly becomes zero below f<sub>0</sub>.
+  In an infinitely long horn, no more sound would be radiated below f<sub>0</sub>.
+  In this case all the energy is used to move the air mass in the horn.</p>
+
+  <p class=formula1>f<sub>0</sub> = c/(2&pi;&middot;L)&middot;ln(&gamma;)</p>
+
+  <p class=formula2>&gamma; = 1/(2&middot;t<sub>1</sub>)&middot;&eta;&middot;(1 + sqrt(1 - 4&middot;t<sub>1</sub>&middot;t<sub>2</sub>&middot;&eta;<sup>2</sup>))</p>
+
+  <p class=formula>&eta; = sqrt(S<sub>mo</sub>/S<sub>th</sub>)</p>
+
+  <p>with L length of horn (<a href="Len=.html">Len=</a>),
+  S<sub>th</sub> and <sub>Smo</sub> cross section area of throat and mouth
+  (<a href="STh=.html">STh=</a>; <a href="SMo=.html">SMo=</a>).</p>
+
+  <p>For the example-horn shown above T=0.5 and the Horn Frequency results
+  in f<sub>0</sub> = 825 Hz.</p>
+
+
+  <h4>Catenoid (T=0)</h4>
+
+  <p>Catenoid horn shapes are characterised by an extremely high
+  radiation resistance slightly above the Horn Frequency f0. They are
+  typically used for signal horns or sirens, whose fundamental tone
+  is matched to the maximum of the radiation resistance.
+  Many wind instruments, for example trumpets, also have this shape or are
+  similar to it.</p>
+
+  <p>With T=0 the slope is zero at the throat and
+  increases only slowly with progressing axial distance.
+  Eventually the cross section opens exponentially. At the mouth the
+  flare is identical to the horn with T=1.</p>
+
+  <p>If T = 0 the horn formula simplifies to</p>
+
+  <p class=formula1> S(z) = S<sub>th</sub>&middot;cosh<sup>2</sup>(k<sub>0</sub>&middot;z)</p>
+
+  <p class=formula2>with t<sub>1</sub> = t<sub>2</sub> = 1/2 </p>
+
+
+  <h4>Exponential (T=1)</h4>
+
+  <p>The Salmon Factor T=1 yields the horn shape most widely used for
+  loudspeaker systems. Not only because of the simple horn function,
+  but also because of good radiation loading and at the same time,
+  smaller dimensions compared with other shapes. If T=1, the radiation
+  resistance curve is maximally flat in the ideal case of an infinite long horn.</p>
+
+  <p>The horn function simplifies to</p>
+
+  <p class=formula1> S(z) = S<sub>th</sub>&middot;exp(2&middot;k<sub>0</sub>&middot;z)</p>
+
+  <p class=formula2>with t<sub>1</sub> = t<sub>2</sub> = 0 </p>
+
+  <p>The Horn Frequency f<sub>0</sub> is:</p>
+
+  <p class=formula1>f<sub>0</sub> = c/(2&pi;&middot;L)&middot;ln(&eta;)</p>
+
+  <p>Note, that only the exponential horn is "continuous" or "extendable".
+  You can attach adaptors at either end without changing the horn-function.
+  The attachments should have same k<sub>0</sub> and T.</p>
+
+
+  <h4>Conical (T &rarr; &infin;)</h4>
+
+  <p>The conical horn is the simplest horn shape. The cross-section increases
+  linearly. The horn function simplifies to:</p>
+
+  <p class=formula>S(z) = S<sub>th</sub>&middot;(z/z<sub>0</sub> + 1)<sup>2</sup></p>
+
+  <p>with z<sub>0</sub> distance from cone tip to horn mouth.</p>
+
+  <p>The transition from the general horn equation to this shape is achieved
+  by setting k<sub>0</sub> = 0. This means, conical horns have no
+  Horn Frequency.</p>
+
+  <p>For a radiating waveguide, the radiation impedance is similar to the
+  direct radiating diaphragm. Because a horn cannot be infinitely long there
+  is usually a sharp step of slope at the mouth, which often yields undesirable
+  reflections.</p>
+
+  <p>Waveguides with the conical profile are practical in modeling transitions
+  between ducts, or can be used to approximate phase-plugs in the
+  compression driver and so on.</p>
+
+  <p>In the script you can type the keyword Conical instead of T=,
+  for example for a phase-plug:</p>
+
+<pre>
+  <b>Waveguide</b>  'W1'
+    Node=100=300
+    STh={ dD=35e-3; SD=pi*sqr(dD/2);  r=0.8;  STh=(1 - r)*SD }
+    dMo=1in
+    Len=45mm
+    <span style="color: #800000">Conical</span></pre>
+
+
+
+  <h4>Cosh (0 &lt; T &lt; 1)</h4>
+
+  <p>This shape is called the hyperbolic cosine horn. Depending on the
+  value of the factor T, a horn is obtained with the characteristics of a
+  catenoid horn (T=0) or with that of the pure exponential (T=1).</p>
+
+
+  <h4>Sinh (1 &lt; T)</h4>
+
+  <p>If the factor T is greater than 1, the horn is known as
+  hyperbolic sine. Its characteristics are between those of the
+  purely exponential (T = 1) and those of the conical horn
+  (T -> &infin;). The horn function intersects the horn axis at a
+  distance z0 from the horn throat at:
+
+
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Node=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Node=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Node=s=t=u=v=...</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>List of <a href="../../Appendix/Integer%20values.html">integer numbers</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Node numbers for wiring components</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        All network-components
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <h3>Node Numbers</h3>
+
+  <p>Node number entries in the lumped-element-networks have the form:</p>
+
+  <pre>
+    Node=s=t=u=v=w=x
+    </pre>
+
+  <p>with s to x are the connection poles of the network element.</p>
+
+  <p>The number of connection poles depends on the type of the element. If the
+  last pole is not entered, it is assumed to be zero.</p>
+
+  <p>You can enter any number in the range of 0... 32000. The node numbers need
+  not to be ordered.</p>
+
+  <table align=right>
+  <tr><td align=center><img src="../../../_Images/LE-Nodes%20Twopole.jpg"/></td></tr>
+  <tr><td align=center>&nbsp;</td></tr>
+  <tr><td align=center>&nbsp;</td></tr>
+  <tr><td align=center><img src="../../../_Images/LE-Nodes%20Fourpole.jpg"/></td></tr>
+  </table>
+
+  <p>The node-number of smallest index is reserved for the network driving
+  point.</p>
+
+  <p>Node number zero is the ground.</p>
+
+  <p>The specified sequence of node numbers determines the polarity of
+  the potential difference between the nodes, and therefore the direction of
+  the current arrow. If Us, Ut, Uv, Uu, Uw and Ux are the potentials at
+  poles s, t, u, v, w and x, the potential differences across the poles of
+  the element are then: Ust = Us - Ut, Uuv = Uu - Uv, Uwx = Uw - Ux etc.</p>
+
+  <p>The flow-arrow points in the direction of the alphabetic sequence of s,
+  t, u, v, w and x. If the element is a two-pole the flow points from the
+  first to the second node. If the element has more then two poles the
+  simulated flow-direction points always into the element.
+  The polarity results from the comparison with the potentials determined by
+  the node numbers.</p>
+
+
+  <h3>Example</h3>
+
+  <table align=right>
+  <tr><img src="../../../_Images/LE-Nodes%20TwoCoilsDriver%20RadImp%20Enclosure.jpg"/></tr>
+  </table>
+
+  <p>For example: An electro-acoustic transducer with two voice-coils has six
+  poles. Poles s and t are the terminals of the first voice-coil and poles u
+  and v are those of the second voice-coil. Pole w represents the front-side
+  of the diaphragm and pole x the rear of the diaphragm. Pole s is at
+  node 1, and thus is the input of the network. The voltage U12 across the
+  first voice-coil is the difference of the potentials U1 and U2.
+  U20 = U2 - U0, where U0 = 0 is ground.
+  The current-arrow of I1 points pole from node 1 to node 2.
+  The current arrow of I2 points from from node 2 to ground.
+  At the acoustic side, the potential is the sound pressure,
+  p. The potential-difference is p1020 = p10 - p20. The flow-arrow of the
+  volume-velocity V3 points from pole 10 to pole 20. Pole 10 represents the
+  front side of the diaphragm and pole 20 the rear. The parameter of
+  this network element is thus: Node=1=2=2=0=10=20</p>
+
+  <p>If the sequence of the node numbers is exchanged, for example:
+  Node=2=1=2=0=10=20, then the voltage at poles of the first
+  voice-coil would be U21 = U2 - U1= -U12.
+  The polarity of the first voice-coil is thus reversed.</p>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

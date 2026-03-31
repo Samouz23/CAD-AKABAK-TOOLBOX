@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Formula Complex</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Formula Complex</h1>
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <p class=navi>See also <a href="Formula%20Real%20-%20Standard%20Functions.html">Standard Functions</a>,
+  <a href="Formula%20Real.html">Formula (Real)</a></p>
+  <hr>
+
+  <p>At certain places formulae can be entered in complex form, for example
+  at runtime formula for lumped elements, such as
+  <a href="../LEScript/Sections/Filter.html">Filter</a> or
+  <a href="../LEScript/Sections/Impedance.html">Impedance</a>.</p>
+
+
+  <h4>Imaginary unit</h4>
+
+  <p>The imaginary unit is identified by the letter j, with</p>
+
+  <p class=formula>j&middot;j = -1.</p>
+
+  <p>If j comes before a number (for example between the minus sign
+  and the value) or before the name of a constant or function
+  or before a bracket, this is equal to multiplying the
+  following value by the imaginary unit. The syntax is thus
+  similar to that of a minus sign. For example:</p>
+  <pre class="fixed">
+    h = -<b>j</b>Sin(<b>j</b> - -<b>j</b>5);  k = -<b>j</b>(5 + <b>j</b>^(Sin(3)) + h
+  </pre>
+
+
+  <h4>Functions</h4>
+
+  <p>Most functions accept a complex valued argument, which is indicated by
+  "z" in the following
+  <a href="Formula%20Real%20-%20Standard%20Functions.html">list of functions</a>.</p>
+
+
+  <h4>Results</h4>
+
+  <p>The <i>Formula</i>-system of ABEC always calculates in complex mode.
+  However, most of the time results are likely to be real.
+  Results can be complex if you specify the imaginary unit or
+  provide out of range arguments (for example &radic;(-5)). Or,
+  if imported data are complex valued.</p>
+
+  <br>
+  <br>
+</body>
+</html>

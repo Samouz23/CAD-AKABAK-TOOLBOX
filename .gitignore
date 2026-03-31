@@ -8,14 +8,12 @@ package-lock.json
 .vscode
 build
 
-# Données sensibles et confidentielles - Dossier centralisé
+      # Données sensibles et confidentielles - Dossier centralisé
 private/
 
 # Anciens chemins (conservés pour compatibilité)
 src/js/panels/config.js
-src/js/panels/sim-db.js
-src/ipc/orders/
-src/js/panels/orders/
 docs/
-src/assets/pdf/
 Ignore.txt
+bak
+repository

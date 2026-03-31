@@ -13,7 +13,6 @@ const defaultSettings = {
     gmsh: "",
     downloads: "",
     dataRoot: "",
-    simDbPath: "",
     driversFolder: ""
   },
   hotkeys: {
@@ -27,7 +26,17 @@ const defaultSettings = {
     minimize: ""
   },
   popupsAlwaysOnTop: false,
-  showStartupInfo: true
+  showStartupInfo: true,
+  abec: {
+    lem: { eta: 0.001, etab: 0.001, etaD: 0.001, Rg: 0.1 },
+    bem: {
+      f1: 100, f2: 5000, numFreq: 24, abscissa: 'log',
+      meshFreq: 3000, edgeLength: 10, sym: 'none',
+      distance: 1, polarStart: -180, polarEnd: 180, polarPoints: 72,
+      basePlane: 'xz', normalized: true, normType: 'PosPolar',
+      bodeType: 'LeveldB', rho: 1.21, c: 344
+    }
+  }
 };
 
 // --- INITIALISATION DU STORE ---
@@ -45,6 +54,10 @@ store.set('settings', {
     hotkeys: {
         ...defaultSettings.hotkeys,
         ...(appSettings.hotkeys || {})
+    },
+    abec: {
+        lem: { ...defaultSettings.abec.lem, ...(appSettings.abec?.lem || {}) },
+        bem: { ...defaultSettings.abec.bem, ...(appSettings.abec?.bem || {}) }
     }
 });
 
@@ -57,7 +70,7 @@ if (appSettings.paths?.dataRoot) {
 function ensureDataRootSubfolders(dataRootPath) {
   if (!dataRootPath || dataRootPath.trim() === '') return;
   
-  const subfolders = ['Mesh-out', 'STL-out', 'CSV-out'];
+  const subfolders = ['Mesh-out', 'STL-out', 'CSV-out', 'ABEC-out'];
   
   try {
     // Vérifier que le dataRoot existe d'abord

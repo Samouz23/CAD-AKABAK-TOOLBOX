@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Fields (Mesh File) (4300)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Fields (Mesh File)</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Observation</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=300><td><center><img src="../../_Images/Field%20(MeshFile).jpg" /></center></td></tr>
+    <tr height=400><td><center><img src="../../_Images/Desktop%20-%20Fields%20(Mesh%20File)%20-%20Parameter.jpg" /></center></td></tr>
+    <tr height=200><td><center><img src="../../_Images/Desktop%20-%20Fields%20(Mesh%20File).jpg" /></center></td></tr>
+  </table>
+
+  <p>Fields (Mesh File) calculates the field at the planes given by a
+  <a href="../General-Part/Form-MeshFile.html">Mesh File object</a>. Most often
+  the planes of observation are part of the CAD and sub-sequent external meshing.
+  Hence, often we may want to make use only of a sub-set. Use
+  <a href="../Appendix/Mesh-File-Tags2.html">Tags</a> in order to extract wanted
+  observation planes.</p>
+
+  <p>Create a new <i>Field</i>-component with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  The home of the component is page <i>Observation</i>.
+  Edit an existing component by dbl-click its entry on page <i>Observation</i>
+  or issue menu <i>Edit/Parameters</i> or press CTRL+E.</p>
+
+  <p>The result of the Field calculation is the frequency response of the sound pressure.
+  It will be displayed as a contour-plot in the 3D-viewer.</p>
+
+  <p>The frequency range is specified at menu
+  <a href="../Desktop/Form-Frequencies.html">Global/Frequencies</a>.
+  After calculation select the frequency or frequency-range to plot at
+  <a href="../Desktop/Page-Frequencies.html">Desktop-Page - Frequencies.</a></p>
+
+  <p>The check-boxes in the <a href="../Desktop/Treelist%20Controls.html">list</a> at the side
+  of the desktop lets you show or hide the field. Un-checked Field-records will be
+  skipped at next round of calculation.</p>
+
+  <p>The example to the right displays the
+  <a href="../Appendix/Direct%20Sound%20Analysis.html">direct sound response</a> of an array
+  of subs in an arena. The mesh-file of the venue was using the mesh-file format COLLADA (*.dae).</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - General</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Name and Annotation</h4>
+
+  <p>Provide the name of the component in form of a <a href="../Appendix/Strings.html">string</a>.</p>
+  <p>There is also space for annotations.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Parameter</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Analysis Type</h4>
+
+  <p><i>Pressure</i> means the type of analysis is set to sound pressure response.</p>
+
+  <p>(Note, currently Pressure is the only Analysis Type available.
+  In the future there will be also a field of acoustic motion)</p>
+
+
+  <h4>Meshing</h4>
+
+  <p><b>Mesh File</b> is a reference to the associated
+  <a href="../General-Part/Form-MeshFile.html">Mesh File object</a>.</p>
+
+
+  <p><b>View Symmetry</b>. This setting applies only in connection with
+  <a href="../Desktop/Form-BEM-Parameters.html">BEM-Parameters of symmetry</a>.
+  If View Symmetry is checked then the Field is rendered also with symmetric parts
+  if available. Otherwise the field is rendered always only at the positive octant(s).  </p>
+
+  <p><b>Edge Length</b> controls the distance between the observation points (microphones).
+  Edge Length also controls the meshing algorithm which is used to display the contours and
+  its colors.</p>
+
+  <p>Please note that Edge Length should to be smaller than spatial variations of the
+  physical Field in order to avoid aliasing effects. Below the input-box of Edge Length
+  is displayed a value of <i>Mesh Frequency</i>. The acoustical wave-length of this frequency
+  corresponds to half the value of Edge Length. Hence, we get a hint up to which frequency
+  the field plot would work in the worst case. Beyond this frequency the plot may miss out
+  certain variations of the field.</p>
+
+
+  <p><b>Meshing of Quads</b> can be used to fine tune the way quadrilaterals (rectangles, squares, etc)
+  are subdivided. <i>Grid</i> produces a regular pattern by dividing the edges in to
+  sections of length Edge Length. <i>Bifu</i> performs directly a triangulization by bifurcation
+  until the longest side of a triangle is smaller than Edge Length.
+  <i>None</i> does not do a sub-division into smaller planes. The quadrilateral will be
+  divided into two triangles only.</p>
+
+  <p><b>Quad Ratio</b>: Quadrilaturals of large aspect ratio are cut into two new and smaller
+  quadrilaturals until L<sub>max</sub>/L<sub>min</sub> &lt; Quad Ratio.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Range</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>On this page you find controls for the range of output as
+  the ranging directly controls the contouring.
+  Also sources can be selected which shall take part in the simulation.
+  More see chapter <a href="Form-Range%20(frame).html">Frame - Range</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Drawing</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>The page <i>Drawing</i> displays the currently used set of planes for observation.
+  The number of planes depends first on what is available from the
+  associated <a href="../General-Part/Form-MeshFile.html">Mesh File object</a>.
+  Secondly it depends on the selection made in the Tag-list.</p>
+
+  <p>The operation is identical to
+  <a href="../General-Part/Form-MeshFile.html#Drawing">Mesh File object - Page Drawing</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Scaling</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>Page <i>Scaling</i> alters size, position and orientation
+  of all coordinates. For details see
+  <a href="../Desktop/Form-Scaling%20(frame).html">sub-form Scaling</a>.</p>
+
+  <p>On editing, a marker appears at page <i>Drawing</i>. This indicates modification.
+  On switching to page <i>Drawing</i> scaling parameter get applied and displayed.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <a name="Formula"></a>
+  <h3>Page - Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format
+  <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter
+  <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers for Elements are:</p>
+
+  <p class=formula><table >
+    <!-- Meshing -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Meshing</b></span></td> </tr>
+    <tr> <td>EdgeLength</td>     <td>Distance of observation points</td>        </tr>
+    <tr> <td>QuadRatio</td>      <td>Aspect ratio of quads</td>         </tr>
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Range</b></span></td> </tr>
+    <tr> <td width=100>Range</td>          <td>Max-Min of output</td>             </tr>
+    <tr> <td width=100>RangeMax</td>       <td>Upper bound of output range</td>   </tr>
+    <tr> <td width=100>RangeMin</td>       <td>Lower bound of output range</td>   </tr>
+    <tr> <td width=100>StepSize</td>       <td>Contouring step</td>               </tr>
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Scaling</b></span></td> </tr>
+    <tr> <td width=100>Scale</td>          <td>Isotropic scaling</td>             </tr>
+    <tr> <td>ScaleX</td>         <td>Scaling in x-direction</td>        </tr>
+    <tr> <td>ScaleY</td>         <td>Scaling in y-direction</td>        </tr>
+    <tr> <td>ScaleZ</td>         <td>Scaling in z-direction</td>        </tr>
+    <tr> <td>RotateX</td>        <td>Rotation about x-axis</td>         </tr>
+    <tr> <td>RotateY</td>        <td>Rotation about y-axis</td>         </tr>
+    <tr> <td>RotateZ</td>        <td>Rotation about z-axis</td>         </tr>
+    <tr> <td>ShiftX</td>         <td>Shift in x-direction</td>          </tr>
+    <tr> <td>ShiftY</td>         <td>Shift in y-direction</td>          </tr>
+    <tr> <td>ShiftZ</td>         <td>Shift in z-direction</td>          </tr>
+  </table></p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

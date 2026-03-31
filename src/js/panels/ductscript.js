@@ -2,6 +2,8 @@
 // FICHIER :  src/js/panels/ductscript.js (VERSION AVEC MISE À JOUR EN TEMPS RÉEL)
 // ====================================================================================================
 
+import { defaultTemplates } from '../utils/formulaTemplates.js';
+
 // --- HTML DU PANNEAU ---
 export function getDuctscriptPanelHtml() {
     return `
@@ -297,13 +299,7 @@ export function initializeDuctscriptPanel(rootElement) {
     }
 
     const refreshSettings = (newSettings) => {
-        const defaultTemplates = {
-            duct: 'WD  = @D{i+1}\nHD  = @H\nLen = @DL{i+1}\neta = @WOOD',
-            ductTransitionW: 'HTh = @H\nHMo = @H\nWTh = @D{i+1}\nWMo = @D{i+2}\nLen = @L{i+1}{i+2}\nT   = 10',
-            ductTransitionM: 'd1 = @D{i+1}\nd2 = @D{i+2}\n\n// hack qui nous permet de toujours obtenir w1 > w2\nk = Sign(d2 - d1)\nw1 = if(k + 1, d1, d2)\nw2 = if(k + 1, d2, d1)\n\n// formule issue du fichier excel de plans.systeme\n// adaptée pour l\'utilisation dans Akabak\npre_m = (Density / (pi * @H)) * ((((w1-w2) ^ 2) / (2*w1*w2)) * Ln((w1+w2)/(w1-w2)) + Ln(((w1+w2) ^ 2)/(4*w1*w2))) * 1000\n\nM = if(k, 0, pre_m)',
-        };
         templates = { ...defaultTemplates, ...newSettings?.templates };
-        console.log("Duct-Script templates have been updated.");
     };
 
     ductCountInput.addEventListener('input', () => {

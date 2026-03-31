@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>DataFileAlias=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>DataFileAlias=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>DataFileAlias=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Strings.html">String</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Data-file with frequency-spectrum.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/WallImpedance.html">WallImpedance</a>,
+                                                        <a href="../Sections/Driving_Values.html">Driving_Values</a>,
+                                                        <a href="../../LEScript/Sections/Def_MeasRadiator.html">Def_MeasRadiator</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1><a href="ImpType=.html">ImpType=</a>,
+                                                        <a href="Normalized=.html">Normalized=</a>, (WallImpedance)
+                                                        <br />
+                                                        <a href="DrvType=.html">DrvType=</a> (Driving_Values)</td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>DataFileAlias=</i> expects an alias to a data-file, which has been
+  registered with the project, see
+  <a href="../../GUI/Project/Add%20Data%20File.html">Add Data-File</a>.</p>
+
+  <p>The expected format of the data-file is explained in
+  <a href="../../Appendix/Data%20Files%20-%20Spectrum.html">Data Files-Spectrum</a>.</p>
+
+  <h4>WallImpedance and Driving_Values</h4>
+
+  <p>The actual meaning of the data is resolved with the help of further
+  parameters of sections <i>WallImpedance</i> and <i>Driving_Values</i>.</p>
+
+  <pre>
+  WallImpedance:    <a href="ImpType=.html">ImpType=</a>   <a href="Normalized=.html">Normalized=</a>
+  Driving_Values:   <a href="DrvType=.html">DrvType=</a></pre>
+
+  <p>In general each value of a linked data-files is processed very much
+  like the single value of the parameter <a href="Value=.html">Value=</a>.</p>
+
+
+  <h4>Def_MeasRadiator</h4>
+
+  <p>The <a href="../../LEScript/Sections/Def_MeasRadiator.html">Def_MeasRadiator</a>
+  defines a radiating lumped element based on measurements. Here we have
+  two specifications of <i>DataFileAlias=</i> because <i>Def_MeasRadiator</i>
+  needs an impedance-file and a sound pressure-file. The distinction is made
+  by <i>Import Control Settings</i>. These settings are part of the file as exported
+  by <a href="../../Appendix/VacsViewer.html">VACS</a> and are documented
+  in the help-system of VACS at <i>Import Control Settings</i>.
+  Examples see at chapter
+  <a href="../../Appendix/Data%20Files%20-%20Spectrum.html">Data Files-Spectrum</a>.</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

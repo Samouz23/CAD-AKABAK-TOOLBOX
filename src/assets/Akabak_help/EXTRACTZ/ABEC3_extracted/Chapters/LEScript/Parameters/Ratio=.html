@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Ratio=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Ratio=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Ratio=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Coupling-factor</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Coupler.html">Coupler</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><img src="../../../_Images/LE-Coupler.jpg"  align=right>
+  The <a href="../Sections/Coupler.html">Coupler</a>
+  sets in relation the potentials and flows of the
+  primary side to that of the secondary side:</p>
+
+  <p class=formula>Uvu/Uts = Ratio</p>
+  <p class=formula>Is/Iu = -1/Ratio</p>
+
+  <p>The potential and the flow, can be substituted by the
+  voltage U and the current I, the force F and the velocity v or
+  by the pressure p and the volume velocity V,
+  respectively. The primary and the secondary side need not to be of the same domain.</p>
+
+
+  <h4>Specifications</h4>
+
+  <p><i>Coupler</i> allows a variety of ways to specify <i>Ratio</i>.</p>
+
+  <br>
+  <p><i>1) Directly</i>: There is not unit. For example</p>
+
+  <pre>
+  <b>Coupler</b>
+    Node=1=2=3
+    Ratio=127.33</pre>
+
+  <br>
+  <p><i>2) Formula</i>: You can specify a
+  <a href="../../Appendix/Formula%20Complex.html">complex runtime formula</a> instead of a number.
+  There are two variables available:</p>
+
+  <pre>
+  f
+  w</pre>
+
+  <p>with f abscissa frequency in [f] = Hz and w = &omega; = 2&pi;f</p>
+
+  <p>The formula-system should be encapsulated in { }.
+  The result of the last formula is assigned to <i>Ratio=</i>.
+  The result can be real- or complex-valued. For example</p>
+
+  <pre>
+  <b>Coupler</b>
+    Node=1=2=3
+    Ratio={ fp = 5e-3;  dD=100e-3;
+            SD = pi*sqr(dD/2);
+            SD_f = SD/(1 + (f/fp)^2);
+            Result = 1/SD_f }</pre>
+
+
+  <br>
+  <p>3) Diaphragm: For convenience, it is possible to specify <i>Ratio</i>
+  via a value for the diaphragm-area. Internally following calculation is
+  performed: Ratio = 1/SD.</p>
+
+  <pre>
+  <b>Coupler</b>
+    Node=1=2=3
+    SD=7.854e-3m2</pre>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

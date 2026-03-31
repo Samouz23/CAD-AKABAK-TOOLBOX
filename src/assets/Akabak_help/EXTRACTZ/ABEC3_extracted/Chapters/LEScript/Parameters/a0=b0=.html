@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Filter Coefficients a0=, a1=, ...</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Filter Coefficients a0=, a1=, ...</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>{ b0 ;  ... a0= ;   a1= ; ... }</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>{ <a href="../../Appendix/Formula%20Real.html">Formula</a> }</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Coefficients of Laplace Transfer Function</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Filter.html">Filter</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../../Appendix/Filter%20Examples.html">Examples</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+
+  <p>b<sub>i</sub> and a<sub>i</sub> are real valued coefficients
+  of the
+  <a href="../../Appendix/Filter%20Transfer%20Function.html">transfer-function</a> of the
+  <a href="../Sections/Filter.html">Filter</a>-element.</p>
+
+  <p>The coefficients are embedded in a
+  <a href="../../Appendix/Formula%20Real.html">Formula</a>-system,
+  which allows for arithmetic.</p>
+
+  <p>b<sub>i</sub>= are the coefficients or the numerator and
+  a<sub>i</sub> are the coefficients of the denominator of the
+  <a href="../../Appendix/Filter%20Transfer%20Function.html">transfer-function</a>.</p>
+
+  <p class=formula>
+  <table>
+    <tr>
+      <td width=50>b<sub>i</sub></td> <td width=100>Numerator</td> <td>any real valued number</td>
+    </tr><tr>
+      <td width=50>a<sub>i</sub></td> <td width=100>Denominator</td> <td>real valued number &gt; 0</td>
+    </tr>
+  </table>
+  </p>
+
+  <p>i is the index of the power of the frequency variable.
+  The range of i = 0 ... n with n the maximum power of the polynomial.
+  In ABEC n &lt;= 30 because of numerical limitations of the computer.</p>
+
+
+  <h4>Specification</h4>
+
+  <p>Coefficients are entered with the help of a
+  <a href="../../Appendix/Formula%20Real.html">formula-system</a>.
+  The formula-system is written in curly brackets and can go over several lines.
+  There is no identifier.</p>
+
+  <p>The coefficients of the numerator are called b0=, b1=, b2=,...
+  and those of the denominator a0=, a1=, a2=,.... These function names are
+  reserved here. Their values are entered in the usual way, e.g.: b0=1.
+  However, each entry has to be separated by a semicolon.
+  A space is permitted before and after the equal sign.</p>
+
+  <p>Any coefficients not entered are set to zero by default.
+  They may be entered in any order. In addition to entering numerical values,
+  you may also assign expressions, symbolic constants or previously defined
+  coefficients.</p>
+
+  <p>Comments inside the curly brackets are also permitted. Comments commence
+  with // and end at the end of the line.
+  Constants that have previously been computed in the definition
+  <a href="../Sections/Def_Const.html">Def_Const</a>
+  can also be assigned. The values of several filters can thus be changed
+  from a central point. </p>
+
+  <p>The values calculated for the coefficients have to be real values.
+  However, the formula system allows for
+  <a href="../../Appendix/Formula%20Complex.html">complex calculation</a>,
+  which means you can calculate coefficients from complex zeros, for example.</p>
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>ElType=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>ElType=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>ElType=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>[Interior, Exterior]</td>
+  </tr>
+  <tr>
+    <td class=param0>Default</td>      <td class=param1>ElType=Interior</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Element type</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Subdomain_Properties.html">Subdomain_Properties</a>,
+                                                        <a href="../Sections/Elements.html">Elements</a>,
+                                                        <a href="../Sections/Baffle.html">Baffle</a>,
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a>,
+                                                        <a href="../Sections/Shell.html">Shell</a>,
+                                                        <a href="../Sections/Duct.html">Duct</a>,
+                                                        <a href="../Sections/Transition.html">Transition</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="../../Appendix/Normals%20and%20Volumes.html">Normals and Volumes</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>ElType=</i> is used within <a href="../BEScript.html">Boundary Element Scripts</a>.
+  It specifies the type of a Boundary Element, which can be:</p>
+
+  <ul>
+  <li>Interior  (default value)</li>
+  <li>Exterior</li>
+  </ul>
+
+  <p>A Boundary Element with <i>ElType=Interior</i> belongs to a group, which enclosures a volume.
+  Its normal should point into this volume as explained in chapter
+  <a href="../../Appendix/Normals%20and%20Volumes.html">Normals and Volumes</a>.</p>
+
+  <p>A Boundary Element with <i>ElType=Exterior</i> points into a special volume,
+  namely the space between the surface and a hypothetical sphere, which is infinitely
+  far away.<p></p>
+
+  <p>Typically, <i>ElType=</i> is specified at section
+  <a href="../Sections/Subdomain_Properties.html">Subdomain_Properties</a>.
+  This makes sense because <i>ElType</i> is a property of a subdomain.
+  In this case all <i>Elements</i> of a subdomain
+  (see <a href="Subdomain=.html">Subdomain=</a>) share the same type of
+  <i>ElType=</i>. However, it is also possible to declare <i>ElType=</i>
+  at <i>Element-Level</i>.</p>
+
+  <p><a href="../../Appendix/Normals%20and%20Volumes%20-%20Interface%20Elements.html">Interface-Elements</a>
+  belong to two subdomains and, hence, would not have parameter <i>ElType=</i>
+  specified.</p>
+
+  <br>
+  <br>
+</body>
+</html>

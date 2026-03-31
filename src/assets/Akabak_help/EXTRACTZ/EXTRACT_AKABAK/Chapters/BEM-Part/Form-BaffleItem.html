@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Baffle-Item (2500)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Baffle-Item</h1>
+
+  <table class=header><tr>
+  <td class="header">Sub-form</td>
+  <td class="header"><a href="_Index.html">BEM-Part</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+  <tr><td><img src="../../_Images/Desktop%20-%20BaffleItem-Ref.jpg"></td></tr>
+  <tr><td><img src="../../_Images/Desktop%20-%20BaffleItem-Hole.jpg"></td></tr>
+  <tr><td><img src="../../_Images/Baffle-Items%20Org.jpg">&nbsp;&nbsp;&nbsp;&nbsp;
+          <img src="../../_Images/Baffle-Items%20Mesh.jpg"></td></tr>
+  <tr><td><img src="../../_Images/Baffle-Item%20Ellipse%20EdgeLength=0.jpg">EdgeLength=25mm</td></tr>
+  <tr><td><img src="../../_Images/Baffle-Item%20Ellipse%20EdgeLength=2mm.jpg">EdgeLength=2mm</td></tr>
+  <tr><td><img src="../../_Images/Baffle-Item%20z=.jpg"></td></tr>
+  <tr><td><img src="../../_Images/Desktop%20-%20Baffle-Item%20Form%20Ellipse%20Extruded.jpg"></td></tr>
+  <tr><td><img src="../../_Images/Baffle-Item%20Ellipse%20Extruded.jpg"></td></tr>
+  </table>
+
+
+  <p>A <i>Baffle-Item</i> describes a geometric feature within the plane of the
+  <a href="Form-Baffle.html">Baffle component</a>, such as a hole
+  or an aperture for another component.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Annotations</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p><i>Index</i> can be any number. It becomes the "name" of the Baffle-Item.</p>
+
+  <p>Comment provides room for an annotation.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Way of Specification</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>A Baffle-Item can be either defined by referencing a component, or
+  by the dimension of a hole.</p>
+
+
+  <h4>Component</h4>
+
+  <p><i>Reference to Component</i> means that an existing component shall be
+  positioned on the baffle. Currently, following components can be referenced:
+  <a href="Form-Diaphragm.html">Diaphragm</a>,
+  <a href="Form-VibFile.html">VibFile</a>,
+  <a href="Form-Shell.html">Shell</a> and
+  <a href="Form-Duct.html">Duct</a>.</p>
+
+  <p>The Baffle receives information about the aperture from the referenced component.
+  The number of line-segments which form the hole is derived from the referenced component.
+  You can fine-tune the edge. Go to page <a href="../Desktop/Form-Meshing.html">Meshing</a>
+  of the referenced component and enter a value at <i>Inner Shapes</i>.</p>
+
+
+  <h4>Hole</h4>
+
+  <p><i>Shape of hole</i> creates a hole of the selected shape.
+  The size of the hole needs to be specified. The hole can be extruded with the help of
+  parameter <i>z</i> at <i>Position on the Baffle</i>.<br>
+  <i>Edge Length</i> controls the meshing of the hole. The value is the length of
+  line-segments along the shape used for mesh-generation.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Position on the Baffle</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All Baffle-Items are position with the help of the local coordinate system.
+  The origin is either measured from the bottom-left vertex or from the center of the baffle.
+  If <i>Shape=Vertices</i> then the first Node represents the origin of the
+  local coordinate system.</p>
+
+
+  <h4>x, y</h4>
+
+  <p><i>x</i> is the horizontal coordinate and <i>y</i> the vertical.</p>
+
+  <h4>z</h4>
+
+  <p><i>z</i> is used as extrusion parameter. A positive value extrudes to the front.
+  A negative makes a tunnel.</p>
+
+
+  <h4>x- and y- Centered</h4>
+
+  <p>If checked then coordinates are measured from center.</p>
+
+
+  <h4>Axial Rotation</h4>
+
+  <p>Each Baffle-Item can be rotated about its axis.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers for Baffle-Items parameters are:</p>
+
+  <p class=formula><table >
+    <!-- Outer Edge -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Dimension of Exclusion</b></span></td> </tr>
+    <tr> <td>dHole<span style="color: #808080"><span style="color: #808080">&lt;Index&gt;</span></span></td>             <td>Diameter</td>       </tr>
+    <tr> <td>WHole<span style="color: #808080">&lt;Index&gt;</span></td>             <td>Width</td>          </tr>
+    <tr> <td>HHole<span style="color: #808080">&lt;Index&gt;</span></td>             <td>Height</td>         </tr>
+    <tr> <td>LenHole<span style="color: #808080">&lt;Index&gt;</span></td>           <td>(not available, see ShiftZ&lt;Index&gt below)</td>         </tr>
+    <!-- Meshing -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Meshing</b></span></td> </tr>
+    <tr> <td>EdgeLength<span style="color: #808080">&lt;Index&gt;</span></td>        <td>Segmenting of exclusion</td>  </tr>
+    <!-- Position on the Baffle -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Position on the Baffle</b></span></td> </tr>
+    <tr> <td>RotateAxial <span style="color: #808080">&lt;Index&gt;</span></td>      <td>Rotation axially</td>        </tr>
+    <tr> <td>ShiftX<span style="color: #808080">&lt;Index&gt;</span></td>            <td>Position x-direction</td>    </tr>
+    <tr> <td>ShiftY<span style="color: #808080">&lt;Index&gt;</span></td>            <td>Position y-direction</td>    </tr>
+    <tr> <td>ShiftZ<span style="color: #808080">&lt;Index&gt;</span></td>            <td>Extrusion</td>               </tr>
+  </table></p>
+
+
+  <h4>Example</h4>
+
+  <p>Each identifier needs to be concatenated with the index of the Baffle-Item.
+  For example</p>
+
+  <pre>
+    dHole<b>1</b> = 10 + @GlobalDiameter
+    dHole<b>2</b> = 10 + @GlobalDiameter
+  </pre>
+
+  <p>The diameter of the exclusion of Baffle-Item is 10 + the value of the global variable
+  GlobalDiameter.
+  Note, prefix "@" means that we access a <a href="../Formula/Formula%20Dialog%20Global.html">global-formula</a>.</p>
+
+
+  <h4>Example</h4>
+
+  <p>In another example, if we want the hole to be extruded specify in section Formula:</p>
+
+  <pre>
+    // Dimension of hole
+    WHole1=0.2
+    HHole1=0.1
+
+    // Local position
+    ShiftX1=0.05
+    ShiftY1=0.05
+    RotateAxial1=30
+
+    // Extrusion
+    ShiftZ1=-0.03  </pre>
+
+  <p>Note, the extrusion of the Baffle-Item is controled by the shifting parameter "ShiftZ1=" (and not
+  by "LenHole1="). </p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

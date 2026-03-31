@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Kms=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Kms=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Kms=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>        <td class=param1>N/m</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating-point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Mechanic stiffness of suspensions</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Sections/Def_Driver.html">Def_Driver</a>,
+                                                        <a href="../Sections/Def_TwoCoilsDriver.html">Def_TwoCoilsDriver</a>,
+                                                        <a href="../Sections/Def_Speaker.html">Def_Speaker</a>,
+                                                        <a href="../Sections/Def_PiezoDriver.html">Def_PiezoDriver</a>,
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a>
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="../../Appendix/Mechanics%20of%20Driver.html">Mechanics of Driver</a>,
+                                                         <a href="Cms=.html">Cms=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><img src="../../../_Images/Electro-Dyn-Model-Standard2.jpg" align=right>
+  <i>Kms</i> is the total stiffness of all suspensions as used in the
+  <a href="../../Appendix/Electro-Dyn-Standard-Model.html">Standard Model of the Electro-Dyn-Model</a>.
+  The total stiffness is usually the sum of the stiffness of the outer
+  suspension of the diaphragm, Kms2 and of the spider, Kms1.</p>
+
+  <p class=formula>Kms = Kms1 + Kms2</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Def_Driver</b> 'SP38'
+    Re=5.82ohm   Le=2.9mH   fre=1.1kHz  ExpoRe=0.824  ExpoLe=0.756
+    BL=21Tm
+    Mms=70g  <span style="color: #800000">Kms=12345.67N/m</span>  Rms=1Ns/m</pre>
+
+  <br>
+  <h4>Cms</h4>
+
+  <p>The stiffness Kms is the inverse of the compliance,
+  <a href="Cms=.html">Cms=</a>,
+  which can be specified alternatively.</p>
+
+  <p class=formula>Kms = 1/Cms</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Def_Driver</b> 'SP38'
+    Re=5.82ohm   Le=2.9mH   fre=1.1kHz  ExpoRe=0.824  ExpoLe=0.756
+    BL=21Tm
+    Mms=70g  <span style="color: #800000">Cms=81e-6m/N</span>  Rms=1Ns/m</pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>List of Driving Values</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>List of Driving Values</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>List of driving values.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Driving_Values.html">Driving_Values</a>
+                                       </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>The list of driven elements follows the parameter part of the <i>Driving_Values</i>-section.
+  Each line represents an <a href="DrvGroup=.html">DrvGroup=</a> which is driven.
+  Each index should be separated by a blank, tab or comma. The format is</p>
+  <pre>
+    &lt;Index&gt;    DrvGroup=          Weight=  Delay=  DataFileAlias=</pre>
+
+  <p>or</p>
+
+  <pre>
+    &lt;Index&gt;    &lt;DrvGroup-index&gt;   Weight=  Delay=  DataFileAlias=</pre>
+
+
+  <h4>Index</h4>
+
+  <p>The first entry is an index, which becomes the "name" of a driving-value-item.</p>
+
+
+  <h4>DrvGroup=</h4>
+
+  <p>The second entry is the <a href="DrvGroup=.html">DrvGroup=</a> of the solving-script,
+  to which the value shall be assigned, see <a href="../../Appendix/Driving%20Groups.html">Driving Groups</a>.
+  Alternatively, you can omit "DrvGroup" and simply specify the DrvGroup-index.</p>
+
+
+  <h4>Weight=</h4>
+
+  <p><a href="Weight=.html">Weight=</a> allows for weighing the amplitude
+  of <a href="Value=.html">Value=</a> of the parameter part. </p>
+
+
+  <h4>Delay=</h4>
+
+  <p><a href="Delay=.html">Delay=</a> allows for adding delay to
+  <i>Delay=</i> of the parameter part. </p>
+
+
+  <h4>DataFileAlias=</h4>
+
+  <p><a href="DataFileAlias=.html">DataFileAlias=</a> allows
+  to link an individual data-file to this driving-value item.</p>
+
+
+  <br />
+  <br />
+
+  <h4>Example</h4>
+
+  <br />
+
+  <pre>
+  <b>Driving_Values</b>
+    DrvType=Pressure
+    Value=0.707
+    101    DrvGroup=1001   Weight=+1.0
+    102    DrvGroup=1002   Weight=-1.0</pre>
+
+  <br />
+  <p>Alternatively you can omit "DrvGroup="</p>
+
+  <pre>
+  <b>Driving_Values</b>
+    DrvType=Pressure
+    Value=0.707
+    101    1001   Weight=+1.0
+    102    1002   Weight=-1.0</pre>
+
+  <br>
+  <br>
+</body>
+</html>

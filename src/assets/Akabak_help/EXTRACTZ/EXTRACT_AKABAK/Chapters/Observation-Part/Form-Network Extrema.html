@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Network Extrema and Integrals (4402)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Network Extrema and Integrals</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Observation</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=450><td><center><img src="../../_Images/Desktop%20-%20Network%20Extrema.jpg" /></center></td></tr>
+    <tr height=100><td><center><img src="../../_Images/Extrema-Circuit.jpg" /></center></td></tr>
+  </table>
+
+  <p>This observation calculates maximum values and integrals of certain component-parameters of the
+  <a href="../Appendix/Lumped%20Element%20Analysis.html">lumped element network</a>.</p>
+
+  <p>Create a new <i>LE (extrema & integrals)</i> observation with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a> at page <i>Observation</i>.
+  Alternatively, select the schematic editor and issue <i>Add Extrema</i> from popup-menu.
+  <br>
+  For editing double-click its entry on page <i>Observation</i> or
+  issue menu <i>Edit/Parameters</i>.
+  <br>
+  Note, there can be only a single observation-component of this kind.</p>
+
+  <p>The result of the calculation is rendered by the table which is also used
+  as input-medium.</p>
+
+  <p>The frequency range is specified at menu <a href="../Desktop/Form-Frequencies.html">Global/Frequencies</a>.</p>
+
+  <p>The results can be scaled by the <a href="../Desktop/Form-LevelOfDriving.html">Global/Level of Driving</a>.</p>
+
+  <p>Note, for quick access you can double-click the legends.
+  Shift+click of an table item yields mutual expanding.</p>
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - General</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Name and Annotation</h4>
+
+  <p>Provide the name of the component in form of a <a href="../Appendix/Strings.html">string</a>.
+  There is also space for annotations.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Output</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Analysis</h4>
+
+  <p>Check which analysis shall take part in the processing.</p>
+
+
+  <p><i>Network</i>, <i>Cmp-Type</i> and <i>Cmp-Name</i> report properties of the component.
+  which are the network hosting the component, its type and its name.</p>
+
+
+  <h4>Values</h4>
+
+  <p>The results of Extrema calculations are the maximum amplitude-values within
+  the given frequency range as specified at
+  <a href="../Desktop/Form-Frequencies.html">Global Frequencies</a>.</p>
+
+  <p>The Integral calculations are taken over the frequency band of
+  the real-part of the power-response of the resistive part of the component.</p>
+
+
+  <h4>Frequency</h4>
+
+  <p>For extrema calculations the column <i>Frequency</i> reports at which frequency the maximum has been found.</p>
+
+
+  <h4>Noise Type</h4>
+
+  <p>For the integration of the power spectrum the response can be weighted by a power density function.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Extrema</h3>
+  <!-- ----------------------------------------------- -->
+
+  <table class=pic>
+    <tr height=230><td><center><img src="../../_Images/Extrema-Excursion.jpg" /></center></td></tr>
+    <tr height=230><td><center><img src="../../_Images/Extrema-Current-L2.jpg" /></center></td></tr>
+    <tr height=230><td><center><img src="../../_Images/Extrema-Voltage-C3.jpg" /></center></td></tr>
+    <tr height=250><td><center><img src="../../_Images/Extrema-Power-Woofer.jpg" /></center></td></tr>
+    <tr height=100><td><center><img src="../../_Images/Extrema-NoisePower.jpg" /></center></td></tr>
+  </table>
+
+  <p>The processor performs a search for maxima of certain parameters, selected from the engineering
+  point of view. Taken into account are always all components which feature
+  these particular parameters. </p>
+
+  <p><b>Max Excursion</b> finds the maximum amplitude of the excursion-response of
+  the loudspeaker or membrane. The amplitude of excursion is measured from rest-position
+  to peak displacement, for example, at the driving point of the membrane.
+  The excursion is the dominant cause for distortion of a transducer.
+  A detailed and in-depth discussion you can find for example at
+  <a href="https://www.klippel.de/know-how/literature/papers.html" title="External">https://www.klippel.de/know-how/literature/papers.html</a>.<br>
+  For example for the woofer in the above circuit the maximum of excursion is
+  2.153mm at low frequencies. The curve is displayed by the blue trace.
+  The red curve shows the amplitude of excursion of the tweeter. Here the maximum
+  is 0.026mm at f=2861Hz. The input voltage is set to 10V (peak).</p>
+
+
+  <p><b>Max Current</b> finds the maximum of amplitude of the current through an inductor.
+  The current can be a "trouble maker" in coils, especially if there is a core with
+  permeability. In audio we assume small signal-amplitude which yields a linear relation between
+  current and voltage: <i>v(t)</i> = d<i>i</i>/d<i>t</i>&middot;L. This relation can be transformed
+  into the frequency domain: V/I = j&omega;&middot;L. However, if the inductance depends
+  on the level of current then we have a non-linear relation:
+  <i>v(t)</i> = L(<i>i</i>)&middot;d<i>i</i>/d<i>t</i> which causes distortion.
+  The table provides an overview of all components which feature
+  an inductance, such as Coil, LCR or Transformer.</p>
+
+  <p><b>Max Voltage</b> finds the maximum of amplitude of the voltage drop at
+  a capacitor. The electric field inside a capacitor should not be too high
+  otherwise sparks could damage the component. It is interesting to note
+  that the voltage at the component can be higher than the driving voltage.
+  For example at C3 of the above circuit the maximum voltage is 16.18V
+  at f = 2.713kHz for a driving value of 10V. To the right is shown its
+  curve. The increase is generated by resonance poles inside the network.</p>
+
+  <p><b>Max Power</b> finds the point of maximum power in a resistor or
+  resistive part of a component. Also the voice coil resistance Re is taken into account.
+  The value is the real part of the power response with respect to sinoidal
+  driving. For example, the power curve of the voice-coil-resistance Re of
+  the woofer has a maximum of 6.268W at f = 282Hz. </p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Integrals</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p><i>Power Density</i> is the result of a broad-band analysis.
+  With the help of it we get an estimation about the heat a resistor
+  would produce if driven by a signal which has a similar power distribution
+  as specified by the <i>Noise Power Density</i> function.</p>
+
+  <p>We would like to have a single value which tells us how much power
+  the device transforms into heat. In the lumped element network such a device
+  is a resistor, a voice-coil-resistance or any other component with a resistive part.<br>
+  The simulator gives us the power spectrum. Its real part is output in unit Watts.
+  The equivalent experiment would be a setup where we have a sine-generator at the input
+  and a power meter at the component.<br>
+  However, such a sine-test would be perfect for a siren. The signal, which a music-loudspeaker
+  transmits, would not be stationary, it typically resembles noise.
+  With a random type signal a resistor sees more time without a signal
+  during which it can cool down. Hence, we can assume a higher capacity of power-handling.</p>
+
+  <p><b>White Noise</b> means that there is no weighing. We assume a constant
+  driving voltage for all frequencies as specified. The result can be regarded as
+  a power density or a mean-value of the real-part of the power response.
+  We integrate from f<sub>1</sub> to f<sub>2</sub> and divide by bandwidth:</p>
+
+  <p class=formula>D = 1/(f<sub>2</sub> - f<sub>1</sub>)&middot;&int;P(f)df</p>
+
+  <p><b>Pink Noise</b> weights the input signal by a filter with an amplitude
+  which is proportional to 1/f. This is equivalent to the spectrum of
+  Pink Noise. One would use this estimation with the argument that
+  a typical speech or music signal would provide more energy at low frequencies
+  than at high frequencies. Pink Noise distributes power evenly on a logarithmic grid. </p>
+
+  <p class=formula>D = 1/(f<sub>2</sub> - f<sub>1</sub>)&middot;&int;(f<sub>1</sub>/f)<sup>2</sup>&middot;P(f)df</p>
+
+
+  <p><b>IEC 268</b> [<a href="../Appendix/Literature.html#41">41</a>] weights the input signal by the spectrum of Pink Noise (1/f)
+  and additionally by a curve which is shelved at low and high frequencies.
+  The shelving curve is shown in the graph to the right.
+  The argumentation is the same as at the Pink Noise case.</p>
+
+  <p class=formula>D = 1/(f<sub>2</sub> - f<sub>1</sub>)&middot;&int;(f<sub>1</sub>/f)<sup>2</sup>&middot;w<sub>iec</sub><sup>2</sup>&middot;P(f)df</p>
+
+  <p><b>RS 426</b> [<a href="../Appendix/Literature.html#41">42</a>] weights the input signal only by a shelving curve
+  as shown in the graph on the right.</p>
+
+  <p class=formula>D = 1/(f<sub>2</sub> - f<sub>1</sub>)&middot;&int;w<sub>rs</sub><sup>2</sup>&middot;P(f)df
+  &nbsp;&nbsp;&nbsp;with w<sub>rs</sub> = 1.13&middot;350&middot;f/sqrt((45<sup>2</sup> + f<sup>2</sup>)&middot;(350<sup>2</sup> + f<sup>2</sup>))
+</p>
+
+  <br>
+  <p>For comparison the table below compares the Power Density of the voice coil resistance
+  of the woofer of above example: </p>
+
+  <table>
+    <tr> <td width=60>White</td>  <td width=60>Pink</td>  <td width=60>IEC286</td>  <td width=60>RS426</td> </tr>
+    <tr> <td>0.894</td>           <td>0.015</td>          <td>0.012</td>            <td>0.232</td> </tr>
+  </table>
+
+  <p>with frequency range 50 Hz ... 10 kHz and V<sub>in</sub> = 10V (peak).
+  The unit of values are Watt/Hz.<br>
+  <i>White Noise</i> and <i>RS426</i> report a higher value of power density than the other
+  weights. This is so because white noise provides constant power on a linear frequency
+  grid. <i>Pink</i> and <i>IEC286</i> on the other hand are driven both by pink noise
+  which provides constant power measured on a logarithmic grid.</p>
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

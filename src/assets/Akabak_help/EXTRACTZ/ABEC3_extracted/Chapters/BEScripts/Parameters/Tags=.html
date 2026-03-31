@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Tags=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Tags=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Tags=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Mesh-File-Tags.html">Mesh-File-Tags</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Filtering mesh-file elements</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/MeshFile_Properties.html">MeshFile_Properties</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>Tags= allow to include/exclude a specified set of triangles of the
+  <a href="../../Appendix/Mesh-Files.html">mesh-file</a>.</p>
+
+  <p><i>Tags=</i> can be specified with a range of parameters, which should all
+  be in a single line and separated by spaces or tabs. The format is</p>
+
+  <pre>
+    Tags = Include &lt;tags&gt;   Exclude &lt;tags&gt;   SwapNormals</pre>
+
+
+
+  <h4>Include &lt;tags&gt;  Exclude &lt;tags&gt;</h4>
+
+  <p>With <i>Include</i> and <i>Exclude</i> you can filter triangles of
+  the mesh-file as explained in <a href="../../Appendix/Mesh-File-Tags.html">Mesh-File-Tags</a>.</p>
+
+
+  <h4>SwapNormals</h4>
+
+  <p><i>SwapNormals</i> inverts all triangles of the mesh-file so that
+  its normals point opposite, see also chapter on
+  <a href="../../Appendix/Normals%20and%20Volumes.html">Normals and Volumes</a>.</p>
+
+  <h4>Example</h4>
+
+  <p>For this script and mesh-file with alias M
+  we exclude all triangles with tags of index 13 and 20-28.
+  Note, "include all" could be omitted here.</p>
+
+  <pre>
+  <b>Meshfile_Properties</b>
+    Meshfilealias=M
+    Scale= 1mm
+    Shift= -100mm ,0 ,0
+    <font color="#800000">Tags= include all exclude 13 20...28</font>
+    MinAngle=5
+
+
+  </pre>
+
+  <br>
+  <br>
+</body>
+</html>

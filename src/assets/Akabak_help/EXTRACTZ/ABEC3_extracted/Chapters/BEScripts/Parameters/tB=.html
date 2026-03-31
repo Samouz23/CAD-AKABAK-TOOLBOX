@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>tB=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>tB=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>tB=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>        <td class=param1><a href="../../Appendix/Units.html">m</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Baffle-extrusion or recess of local-baffle.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Baffle.html">Baffle</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a>,
+                                                        <a href="../Sections/Shell.html">Shell</a>,
+                                                        <a href="../Sections/VibFile.html">VibFile</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="HasBaffle=.html">HasBaffle=</a>,
+                                                         <a href="t1=.html">t1=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <h3>Baffle</h3>
+
+  <table width=30% align=right><tr>
+  <th width=200><img src="../../../_Images/Baffle-Oval%20tB=.jpg"></th>
+  </tr></table>
+
+  <p>For component <a href="../Sections/Baffle.html">Baffle</a>
+  parameter <i>tB=</i> controls the size on an extrusion of the outer edge.</p>
+
+  <p>For example, one can use <i>tB=</i> for creating a band and then
+  use section Transition for connecting it to another component.</p>
+
+
+
+  <h3>Diaphragm, Shell and VibFile</h3>
+
+  <p align=center>
+  <img src="../../../_Images/VibFile%20HasBaffle%20tB=-10mm.jpg" /> &nbsp; &nbsp; &nbsp;
+  <img src="../../../_Images/VibFile%20HasBaffle.jpg" /> &nbsp; &nbsp; &nbsp;
+  <img src="../../../_Images/VibFile%20HasBaffle%20tB=10mm.jpg" />
+  </p>
+  <p><i>tB=</i> allows to create a tunnel or a step at the outer edge of following
+  elements:
+  <a href="../Sections/Diaphragm.html">Diaphragm</a>,
+  <a href="../Sections/Shell.html">Shell</a> or
+  <a href="../Sections/VibFile.html">VibFile</a>.
+  If <a href="HasBaffle=.html">HasBaffle=false</a> then still a tunnel or step is
+  extruded but without the attached baffle.</p>
+
+
+  <h4>Side=Front</h4>
+
+  <table width=30% align=right><tr>
+  <th width=200><img src="../../../_Images/Diaphragm%20front%20tB=10.jpg"></th>
+  </tr><tr>
+  <th width=200 height=150><img src="../../../_Images/Diaphragm%20rear%20tB=10.jpg"></th>
+  </tr></table>
+
+  <p>If tB &gt; 0 then the baffle is displaced forward, which creates a tunnel in
+  front of the device. If tB &lt; 0 then the baffle is displaced backwards, which
+  creates a step with respect to the baffle.</p>
+
+  <h4>Side=Rear</h4>
+
+  <p>For the rear of a diaphragm it is the same from the view-point of the whole
+  device. If tB &gt; 0 then the baffle is displaced in direction of the front
+  diaphragm, which creates a step for the rear. If tB &lt; 0 then the
+  baffle is displaced in direction of the rear-side, which
+  creates a tunnel for the rear diaphragm.</p>
+
+  <h4>Front and Rear</h4>
+
+  <table width=30% align=right><tr>
+  <th width=200><img src="../../../_Images/Diaphragm%20front%20tB=10%20(side%20view).jpg"></th>
+  </tr><tr>
+  <th width=200><img src="../../../_Images/Diaphragm%20rear%20tB=10%20(side%20view).jpg"></th>
+  </tr><tr>
+  <th width=200 height=200><img src="../../../_Images/Diaphragm%20front%20rear%20tB=10%20t1=-10.jpg"></th>
+  </tr></table>
+
+  <p>Often we have the case where a diaphragm is within a wall with a certain
+  thickness. There are two <i>Diaphragm</i>-elements, one with <i>Side=Front</i>
+  and one with <i>Side=Rear</i>. In this case we use tB= in combination
+  with <a href="t1=.html">t1=</a> (see also remarks there).</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Diaphragm</b>  "Front"
+    DrvGroup=1001
+    SubDomain=1
+    EdgeLength=20mm
+    Position=1001,1002,1003
+    NoBaffle=false
+    Simple=false
+    Side=front
+    dD=120mm;  tD1=20mm;  dD1=20mm; hD1=5mm
+    Ws=5mm
+    hD2=40mm;  dVC=20mm;  hVC=0mm;
+    dM=80mm;   hM=20mm
+    <font color="#800000">tB=10mm; t1=-10mm</font>
+
+  <b>Diaphragm</b> "Rear"
+    RefDiaphragm="Front"
+    SubDomain=2
+    DrvGroup=1002
+    Side=Rear</pre>
+
+  <p>In the above example tB=10mm displaces the baffle 10mm upwards for both
+  sides. However, in order that the baffle is in plane with the front wall of the
+  cabinet, we displace both diaphragms down (in this view) by t1=-10mm.
+  Note, that the second <i>Diaphragm</i> inherits parameters from
+  <i>Diaphragm</i> "Front".</p>
+
+  <br>
+  <br>
+</body>
+</html>

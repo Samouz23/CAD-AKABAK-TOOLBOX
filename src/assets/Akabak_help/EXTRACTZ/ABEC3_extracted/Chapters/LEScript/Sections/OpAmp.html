@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>OpAmp</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>OpAmp</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-OpAmp.jpg"  />
+  </td></tr></table>
+
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Operation amplifier</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Network element (2-3 pole)</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Electric</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Systems.html">System</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1><a href="Def_OpAmp.html">Def_OpAmp</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table width=300 align=right><tr><td height=300>
+  <img src="../../../_Images/LE-OpAmp%20Details.jpg" align=right>
+  </td></tr></table>
+
+  <br>
+  <pre>
+  <b>OpAmp</b> 'Any name'
+    <a href="../Parameters/Def=.html">Def=</a>
+    <a href="../Parameters/Node=.html">Node=s=t=u</a>
+    <a href="../Parameters/v0=.html">v0=</a>
+    <a href="../Parameters/Rg=.html">Rg=</a>
+    <a href="../Parameters/ft=.html">ft=</a>
+    <a href="../Parameters/Rdiff=.html">Rdiff=</a>
+    <a href="../Parameters/Rin=.html">Rin=</a>
+  </pre>
+
+  <p>The <i>OpAmp</i>-element creates an operational-amplifier in the network.
+  An OpAmp amplifies the sum of the voltage of the non-inverting (+) and inverting (-) inputs.</p>
+
+  <p>The OpAmp model takes into account some technical parameters such as
+  input-resistances, frequency range limitation and generator-resistance.</p>
+
+
+  <h4>Generator Resistance Rg</h4>
+
+  <p>The calculation requires the presence of the generator-resistance Rg of
+  the output-stage. Rg usually has a very low value (1 ... 500&Omega;).
+  If the data-sheet does not quote Rg directly, you can usually obtain it
+  from the diagrams or you may measure Rg: While retaining a fixed input voltage,
+  first measure the output-voltage U0 without any load attached.
+  Then connect a resistance of, say, RL = 1k ... 2k&Omega;.
+  Measure the new voltage UL. You can then obtain the generator resistance
+  from the two voltages according to the formula: Rg = RL&middot(U0/UL - 1)</p>
+
+
+  <p>If you do not specify Rg the application defaults to the value of
+  Rg = 1&Omega;.</p>
+
+
+  <h4>Open-Loop-Gain v0 and Transition Frequency ft</h4>
+
+  <p>The open-loop gain v0= is frequency dependent and has a low-pass character F(s):</p>
+
+  <p class=formula>F(j&omega;) = 1/(1 + j&omega;/&omega;<sub>t</sub>&middot;v<sub>0</sub>)</p>
+
+  <p>The -3dB cut-off frequency is usually at approximately 10Hz.
+  Below the OpAmps’ amplification is equal to v0=.
+  The amplitude-attenuation is at first 6dB/octave and at very high frequencies
+  12dB/octave. The OpAmp operates reliably in the frequency-range at which the
+  total gain is greater than one and the phase rotation is less than 180°.
+  This frequency-range is called Unity-Gain-Bandwidth or transition-frequency ft.
+  If the transition-frequency ft= is specified, the model used here takes
+  into account a singe pole of the low-pass filter inherent in the OpAmp.</p>
+
+  <p>The default value for v0 = 10<sup>6</sup>. The specification of the
+  transition-frequency ft is optional.</p>
+
+
+  <h4>Input Resistance</h4>
+
+  <p>There are two types of input-resistances. The first is between the
+  inverting and non-inverting inputs (Rdiff). The second is the resistance
+  of each input to ground (Rin). Rin is usually much larger than Rdiff.
+  Data-sheets usually only give the input resistance Re which is
+  measurable if one of the inputs is connected to ground:</p>
+
+  <p class="formula">1/R<sub>e</sub> = 1/R<sub>diff</sub> + 1/R<sub>in</sub></p>
+
+  <p>At high frequencies, the input-resistances usually become complex.
+  You can simulate this by introducing appropriate capacitances.
+  The specification of the input-resistances is optional.</p>
+
+
+  <h4>Def_OpAmp</h4>
+
+  <p>If you use a lot of OpAmp's of the same type, it may be convenient
+  to enter the OpAmp-parameters only once at the definition
+  <a href="Def_OpAmp.html">Def_OpAmp</a> and refer to it with the help of
+  the <a href="../Parameters/Def=.html">Def=</a> parameter.
+
+
+  <h4>No Parameter Given</h4>
+
+  <p>In many cases you may want to use only a generic type of
+  OpAmp (or Def_OpAmp). Then, if only the name and the node numbers are
+  specified, the application uses default values for the amplification and
+  for the generator resistance: v0=1e6 and Rg=1ohm. For example:</p>
+
+  <pre>
+  <b>OpAmp</b>  'Op11'
+    Node=100=101=101
+  </pre>
+
+
+  <h4>Examples</h4>
+
+  <p>1) Example. FET-OpAmp (TL071) with open-loop gain of
+  v0 = 200&middot;10<sup>3</sup>,
+  a generator resistance of Rg = 250&Omega;.
+  The transition frequency is ft = 3MHz (at ft the modulus of the
+  open-loop gain v0 = 1). The resistance between the inverting and
+  non-inverting input Rdiff and the resistance of the two inputs
+  with respect to ground Rin is 1T&Omega; (=10<sup>12</sup>&Omega;).</p>
+
+  <pre>
+  <b>OpAmp</b>  'Op1'
+    Node=3=4=5  v0=200e3  Rg=250ohm
+    ft=3.0MHz  Rdiff=1Tohm  Rin=1Tohm
+  </pre>
+
+
+  <p>2) Example. Transistor-OpAmp (NE5532) with open-loop gain of
+  v0 = 50&middot;10<sup>3</sup>, a generator resistance of
+  Rg=0.5&Omega;. The transition frequency is ft = 10MHz.
+  The differential driving-point resistance is 300k&Omega;.</p>
+
+  <pre>
+  <b>OpAmp</b>  'Op1'
+    Node=3=4=5  v0=50e3  Rg=0.5ohm
+    ft=10MHz  Rdiff=300kohm
+  </pre>
+
+
+  <p>3) Example. In this example, a normal power-amplifier is specified
+  with the help of the OpAmp-element. Since such amplifiers have internal
+  feedback, you cannot use the transition frequency in this case.
+  For power-amplifiers, the so-called Damping-Factor is often given,
+  from which you can derive Rg: Damping-Factor = RL/Rg,
+  where RL is the load resistance at measurement,
+  Rg is the OpAmp generator-resistance.</p>
+
+  <pre>
+  <b>OpAmp</b>  'Op1'
+    Node=3=4=5  v0=10  Rg=0.1ohm
+    Rdiff=10kohm
+  </pre>
+
+
+  <p>4) Example. Circuit of an integrator with the integration
+  elements R1, C1 at the inverting OpAmp input (t=2).
+  The non-inverting input (+) is connected to ground via the resistor R2.
+  R2 = R1 to minimize the offset-voltage.</p>
+
+  <pre>
+  <b>Resistor</b>   'R1'  Node=1=2    R=10kohm
+  <b>Capacitor</b>  'C1'  Node=2=4    C=16nF
+  <b>OpAmp</b>      'Op1' Node=3=2=4  v0=100e3  Rg=10ohm
+  <b>Resistor</b>   'R2'  Node=3=0    R=10kohm
+  </pre>
+
+
+  <p>5) Example. Circuit of a non-inverting amplifier-stage with unit-gain.
+  The inverting input (-) (t=2) is connected to the output stage (u=2).
+
+  <pre>
+  <b>OpAmp</b>  'Op1'
+    Node=1=2=2
+    v0=100e3  Rg=10ohm
+  </pre>
+
+
+  <h4>Slew-Rate</h4>
+
+  <p>The slew-rate is the maximum rate of rise of the output-voltage.
+  Since the internal capacities of the OpAmp can only be recharged with
+  limited currents, the output-voltage cannot change at an arbitrarily fast rate.
+  The OpAmp responds to a discontinuous input-voltage of any magnitude
+  with a ramp-shaped output-voltage, whose gradient is the
+  slew-rate SR. The same effect limits the linear gain of sinusoidal signals
+  with maximum amplitude Umax towards high frequencies.</p>
+
+  <p>The frequency fp at which a sinusoidal signal with Umax can just be
+  transmitted without distortion is called the large-signal bandwidth or
+  power-bandwidth:</p>
+
+  <p class=formula>fp = SR/(2&pi;&middot;Umax)</p>
+
+  <p>If the frequency f exceeds the power-bandwidth fp, the amplitude U has to
+  be reduced according to the relationship so that the slew-rate is not exceeded.
+  Note, in the simulation, you can easily observe the output-voltage of the OpAmp.
+  In filter-circuits, in particular, considerable increase in voltage occur
+  in the vicinity of the pole-frequencies of the filter-blocks.
+  The voltage has to be smaller than Umax.</p>
+
+  <br>
+  <br>
+</body>
+</html>

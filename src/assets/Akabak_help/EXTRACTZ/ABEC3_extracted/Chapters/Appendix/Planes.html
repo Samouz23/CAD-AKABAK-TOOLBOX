@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Planes</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Planes</h1>
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <hr>
+
+
+  <table width=30% align=right><tr>
+  <td class=c width=200><img src="../../_Images/Normals%20-%203D%20Quad.jpg"></td>
+  </tr></table>
+
+  <p>Planes are the major building components of the
+  3D-<a href="Boundary%20Element%20Analysis.html">Boundary Element Method</a>.</p>
+
+  <p>Planes are also used to position components in 3D,
+  such as the <a href="../BEScripts/Sections/Diaphragm.html">Diaphragm</a>,
+  <a href="../BEScripts/Sections/Shell.html">Shell</a>,
+  <a href="../BEScripts/Sections/Duct.html">Duct</a>,
+  <a href="../BEScripts/Sections/VibFile.html">VibFile</a>,
+  <a href="../BEScripts/Sections/Baffle.html">Baffle</a> and the
+  <a href="../BEScripts/Sections/Infinite_Baffle.html">Infinite Baffle</a>.
+
+  <p>Planes are also used at generating observation points, for example
+  at section <a href="../BEScripts/Sections/Field.html">Field</a>
+  and at section <a href="../BEScripts/Sections/BE_Spectrum.html">BE_Spectrum</a>.</p>
+
+  <p>There are two ways of inputting planes</p>
+  <ol>
+  <li><a href="#NE">Nodes and Elements</a></li>
+  <li><a href="#MF">CAD and Mesh-Files</a></li>
+  </ol>
+
+
+  <h3 ID=NE>Nodes and Elements</h3>
+
+  <p>See also chapter <a href="Nodes%20and%20Elements.html">Nodes and Elements</a>.</p>
+
+  <p><img src="../../_Images/Normals%20-%20Thumb.jpg" align=right>
+  Here we specify a plane with the help of an ordered list of points, which form
+  the vertices of the plane. These points are called <i>Nodes</i>.
+  The order should be such that the normal points according to the
+  <i>right hand rule</i>. For example the above plane should be specified
+  by node-indices in the following order:</p>
+
+  <p class=formula>1001&nbsp;&nbsp;1002&nbsp;&nbsp;1003&nbsp;&nbsp;1004</p>
+
+  <p>For BEM-Elements the normal should point into the domain as explained in
+  chapter <a href="Normals%20and%20Volumes.html">Normals and Volumes</a>.</p>
+
+  <br>
+  <p>Planes are also used to give position and direction. In this case the
+  first point of the list is the position and the other two form a triangle
+  of any size. The normal of this triangle yields the direction of the
+  component. See also at parameter <a href="../BEScripts/Parameters/Position=.html">Position=</a>.</p>
+
+  <br>
+  <p>Before we can construct a plane, we need a list of coordinates, which are
+  specified in sections named
+  <a href="../BEScripts/Sections/Nodes.html">Nodes</a>.
+  Each node of a section should have a unique name,
+  which is simply an index-number.</p>
+
+  <p>Finally we can assemble a plane, simply by listing the node
+  index-numbers. For a triangle there are three such indices and
+  for a quadrilateral there are four.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Nodes</b> "N"
+    //       x       y       z
+    <font color="#800000">1001</font>     0.0     0.0     0.0
+    <font color="#800000">1002</font>    10.0mm   0.0     0.0
+    <font color="#800000">1003</font>     0.0    10.0mm   0.0
+    ...</pre>
+
+  <p>We can use these nodes to form a boundary element in form of a triangle</p>
+
+  <pre>
+  <b>Elements</b> "E1"
+     Subdomain=1
+     RefNodes=N
+     //     Node   Node   Node
+     101    <font color="#800000">1001   1002   1003</font>
+     ...</pre>
+
+  <br />
+  <p>or to position, for example, a
+  <a href="../BEScripts/Sections/Diaphragm.html">Diaphragm</a> component</p>
+
+  <pre>
+  <b>Diaphragm</b>  "D1"
+     Subdomain=1
+     RefNodes=N
+     Position=<font color="#800000">1001  1002  1003</font>
+     ...</pre>
+
+
+  <h3 ID=MF>CAD and Mesh-Files</h3>
+
+  <p>See also chapter <a href="Mesh-Files.html">Mesh-files</a>.</p>
+
+  <table width=30% align=right><tr>
+  <td class=c width=200><img src="../../_Images/Mesh-Files%20-%20ABEC21%20Horn%20Tag.jpg"></td>
+  </tr><tr>
+  <td class=c width=200><img src="../../_Images/Mesh-Files%20-%20ABEC21%20Horn%20102.jpg"></td>
+  </tr><tr>
+  <td class=c width=200><img src="../../_Images/Mesh-Files%20-%20ABEC21%20Horn%20Desktop.jpg"></td>
+  </tr><tr>
+  <td class=c width=200><img src="../../_Images/Mesh-Files%20-%20ABEC21%20Horn%20Solidworks.jpg"></td>
+  </tr><tr>
+  <td class=c width=200><img src="../../_Images/Mesh-Files%20-%20ABEC21%20Horn%20Pos.jpg"></td>
+  </tr><tr>
+  <td class=c width=200><img src="../../_Images/Mesh-Files%20-%20ABEC21%20Horn%20Pos2.jpg"></td>
+  </tr></table>
+
+  <p>Planes for BEM, positioning and for fields can be imported from
+  3D-CAD-applications.
+  Best results are obtained if an intermediate meshing-tool is
+  used. A meshing-tool can read typical CAD-files, performs meshing
+  and eventually exports so-called mesh-files. The content and structure
+  of these mesh-files are similar to the above Nodes & Element approach.</p>
+
+  <p>The CAD drawing should be as simple as possible. It should contain only
+  faces relevant to the acoustic problem.</p>
+
+  <p>The meshing-tool should create a mesh as coarse as possible.
+  Just complex enough that the boundaries are represented.
+  Note, that ABEC will mesh further based on the imported mesh and according
+  to the frequency criterion, see chapter
+  <a href="Meshing.html">Meshing</a>.
+  In general, ABEC can refine the mesh but cannot simplify the mesh.</p>
+
+  <p>The meshing-tool generates so called Tags, which are names of planes
+  in form of simple integer-numbers. With the help of these Tags we can
+  organize mesh-file-elements in our script. See chapter
+  <a href="Mesh-File-Tags.html">Mesh-File-Tags</a>.</p>
+
+
+  <h4>Example Boundary Elements</h4>
+
+  <pre>
+  <b>Elements</b> "Horn-Baffle"
+    SubDomain=3
+    <span style="color: #800000">MeshfileAlias=Mb</span>
+    101 <span style="color: #800000">Mesh include 11 13 14 17 18 20</span>
+    102  2001 2002 2003 2004 RefNodes=N</pre>
+
+  <p>The above shows a section from Solving.txt of example
+  <i>\BEM\Loudspeakers\ABEC21 Sealed Mesh-Files</i>.</p>
+
+  <p>Line starting with 101 creates boundary elements
+  from a mesh-file with alias=Mb. Only planes with Tag numbers from the set
+  [11 13 14 17 18 20] are used. The actual mesh-file is assumed to be registered
+  with the project at "Mesh-Files".</p>
+
+  <p>Line starting with 102 defines a plane, which is not part of the mesh-file
+  but specified by Nodes & Elements.</p>
+
+  <p>The mesh-file with alias=Mb has been derived from a STEP-file, which
+  originally was drafted in a CAD-program. Here we used the meshing-tool
+  GMESH.</p>
+
+
+  <h4>Example Positioning</h4>
+
+  <p>Planes are also used to provide positioning and direction for
+  components, such as used at
+  <a href="../BEScripts/Sections/Diaphragm.html">Diaphragm</a>.</p>
+
+  <p>In the CAD-program we provide these planes as part of the drawing. These
+  planes are typically little boxes as shown in the draft on the right hand side.
+  Eventually one of the planes of the box will form the control-plane.</p>
+
+  <pre>
+  <b>Diaphragm</b>  "Drv1 cone front"
+    ...
+    <span style="color: #800000">Position= MeshFileAlias=Mb Include 28  Rot=-22.5</span>
+    ...</pre>
+
+  <p>Here the <a href="../BEScripts/Parameters/Position=.html">Position=</a>
+  parameter takes reference to a mesh-file with alias=Mb. The control-plane
+  will be assembled from all mesh-file elements with Tag=28.
+  The mounting point P1 is the center-point of this plane.
+  The first triangle of this set will provide P2 and P3. In this example, we had
+  to manually adjust axial rotation by -22.5 deg.</p>
+
+  <br>
+  <br>
+</body>
+</html>

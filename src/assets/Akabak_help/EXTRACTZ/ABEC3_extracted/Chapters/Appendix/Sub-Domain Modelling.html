@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Sub-Domain Modeling</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Sub-Domain Modeling</h1>
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <hr>
+
+  <p>ABEC supports sub-domain modeling. In this mode the
+  total structure is split into several sub-domains. The solving happens in two
+  stages. First, each sub-domain and subsequently, the total system will be solved.
+  Sub-domain modeling is powerful for larger acoustic systems, such as vented
+  loudspeaker enclosures or horns, for example. In BEM it is the only way to deal
+  with certain cases of radiation from an
+  <a href="Infinite%20Baffle.html">Infinite Baffle</a>.</p>
+
+  <br />
+  <center><table><tr>
+  <td width=250><img src="../../_Images/Subdomain%20Modeling%201.jpg"></td>
+  <td width=250><img src="../../_Images/Subdomain%20Modeling%202.jpg"></td>
+  </tr></table></center>
+  <br />
+
+  <p>To give an example, the above figure shows a cut through a typical vented
+  enclosure. The red structure is the loudspeaker diaphragm, and below the vent
+  couples the interior to the exterior space.</p>
+
+  <p>If we would assemble all boundary conditions into one big matrix, it then follows that any
+  element of the exterior domain would be directly linked to any element of the
+  interior. Hence, we would need increased accuracy during calculation in order to
+  balance resulting coefficients. In this example, the reason for difficulties
+  lies in the fact that the interior and exterior are only loosely coupled via the
+  vent (note also, that we would then need also some wall thickness for this
+  example).</p>
+
+  <p><img src="../../_Images/Subdomain%20Modeling%205.jpg" align=right>
+  It is far easier to apply multiple BE-sub-domains, for example, one for the interior,
+  one for the vent and one for the exterior. In a second step these sub-domains are
+  coupled with the help of <a href="Normals%20and%20Volumes%20-%20Interface%20Elements.html">interfaces</a>
+  (blue areas). In this case no element of the exterior is
+  directly coupled to any interior element and vice versa. As a result there are
+  three system-matrices, which needs to be solved and one additional for all
+  interfaces. However, each of this sub-matrices is relative small, and because of
+  this calculation is stable and quick.</p>
+
+
+  <h4>Interfaces</h4>
+
+  <p>The coupling between the sub-domains is done through special
+  <a href="Normals%20and%20Volumes%20-%20Interface%20Elements.html">Interface Elements</a>.
+  An Interface is a virtual boundary with conditions of equal
+  sound pressure and normal velocity on both sides.</p>
+
+  <p>Interface-elements need to be manually placed as if they were
+  Boundary Elements. Interfaces can be of any shape, sometimes it is of advantage
+  to curve or extrude the surface. For the elements of an interface the same
+  recommendations apply as for normal elements. However, experience shows
+  that the sensitivity of the result is somewhat higher to the mesh-density
+  of the interface, ie it is recommended to mesh the interfaces with a higher
+  density. It is difficult to give a rule of thumb here. Say, if you notice that
+  the interface consists only of two triangles after meshing and you want to
+  analyse higher frequencies then it is recommended to provide
+  either <a href="../BEScripts/Parameters/MeshFrequ=.html">MeshFrequency=</a> or
+  <a href="../BEScripts/Parameters/EdgeLength=.html">EdgeLength=</a> at the
+  <i>Elements</i>-section of the interface in order to increase the number
+  of finite-elements.</p>
+
+
+  <h4>Notes</h4>
+
+  <p>The sub-domain technique is as exact as the classic method, there are no approximations involved.</p>
+
+  <center><table><tr>
+  <td width=250><img src="../../_Images/Loop-Subdomains=1-26Hz.jpg"></td>
+  <td width=250><img src="../../_Images/Loop-Subdomains=4-26Hz.jpg"></td>
+  </tr><tr>
+  <td width=250><img src="../../_Images/Loop-Subdomains=1-67Hz.jpg"></td>
+  <td width=250><img src="../../_Images/Loop-Subdomains=4-67Hz.jpg"></td>
+  </tr><tr>
+  <td width=250>Standard BEM</td>
+  <td width=250>Subdomain BEM (4)</td>
+  </tr></table></center>
+  <br />
+
+  <p>The above simulations demonstrate the equivalence between the standard approach
+  of the boundary element method and the sub-domain technique. There is a ring-fom
+  structure. Its interior field is calculated with pressure point driving
+  (dot at the bottom left). The four gray vertical lines are interfaces where
+  the field is contrained to be continuous and compatible.</p>
+
+  <center><table><tr>
+  <td width=250><img src="../../_Images/Subdomains%20Horn%202D.jpg"></td>
+  </tr></table></center>
+  <br />
+
+  <p>Further examples, which can benefit from sub-domain-modelling, are elongated
+  systems of chambers, wave-guides with fins and the radiation of concave shapes from
+  the <a href="Infinite%20Baffle.html">infinite baffle</a>.</p>
+
+  <br />
+  <center><table><tr>
+  <td width=250><img src="../../_Images/Subdomain%20Modeling%204.jpg"></td>
+  <td width=250><img src="../../_Images/Subdomain%20Modeling%206.jpg"></td>
+  <td width=250><img src="../../_Images/Subdomain%20Modeling%207.jpg"></td>
+  </tr></table></center>
+  <br />
+
+  <br>
+  <br>
+</body>
+</html>

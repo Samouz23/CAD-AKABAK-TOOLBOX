@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Project Page</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Project Page</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+    <a href="Desktop.html">Desktop</a></p>
+  <hr>
+
+  <p>At the top of the Project Page the folder and project-name is reported.
+  Note, if the project-name is "Project.abec" then ABEC shows the
+  the name of the hosting folder instead.</p>
+
+  <br />
+  <p>The list of the <i>Project Page</i> lets you register files,
+  which are used in the Project.</p>
+
+  <p>Note, embedded files should not be registered here, see parameter
+  <a href="../../BEScripts/Parameters/File=.html">File=</a>.</p>
+
+
+  <h4>Boundary Element Script</h4>
+
+  <p>Provide the so-called
+  <a href="../../BEScripts/BEScript.html">Solving Script</a> if
+  in <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Mode</a>.
+  See <a href="../Project/Add%20Solving%20Script.html">Add Solving Script</a>.</p>
+
+
+  <h4>Direct Sound Script</h4>
+
+  <p>For <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>
+  add the <a href="../Project/Add%20Direct%20Sound%20Script.html">Direct Sound Script</a>.</p>
+
+  <p>Currently, the Boundary Element and the Direct Sound modes are mutual
+  exclusive.</p>
+
+
+  <h4>Lumped Element Script</h4>
+
+  <p>If observations are driven (coupled) to a Lumped Element Network
+  then <a href="../Project/Add%20LE%20Script.html">add the LE-Script</a> here.</p>
+
+  <p>It is also possible to perform only
+  <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Analysis</a>.
+  In this case there would be no BE-Script and no Direct Sound Script.
+  For LE-Analysis only, you need only the LE-Script and an Observation Script
+  with spectral definitions. See <a href="../../BEScripts/ObSpectrum.html">Spectral Observation Scripts</a>.</p>
+
+
+  <h4>Observation Scripts</h4>
+
+  <p><a href="../../BEScripts/Observation.html">Observation Scripts</a>
+  declare what, where and how you want to view
+  results. Typically Observation Scripts are organized so that
+  <a href="../../BEScripts/ObField.html">Field</a> and
+  <a href="../../BEScripts/ObSpectrum.html">Spectral</a> specifications are in
+  dedicated scripts.</p>
+
+  <p>There can be multiple observation scripts. Each may have one or more
+  embedded files, see
+  <a href="../../BEScripts/Parameters/File=.html">File=</a>.</p>
+
+  <p>In the presence of a Lumped Element Script (see above)...</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

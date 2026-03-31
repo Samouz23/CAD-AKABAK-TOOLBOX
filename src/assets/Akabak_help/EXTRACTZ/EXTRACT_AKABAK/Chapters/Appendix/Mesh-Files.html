@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Mesh-Files</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Mesh-Files</h1>
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  </tr></table>
+  <hr>
+
+  <h4>See also</h4>
+
+  <p class=indent><table  width=900>
+    <tr height=20><td width=150><a href="Mesh-File-Tags2.html">Mesh-File-Tags</a></td>                   <td>A Tag is used to refer to a group of mesh-elements.</td>   </tr>
+    <tr height=20><td width=150><a href="Mesh-File-GMSH.html">Mesh-File-GMSH</a></td>                    <td>Details on the use of external FE meshing tool.</td>   </tr>
+    <tr height=20><td width=150><a href="Mesh-File-Simple.html">Mesh-File-Simple</a></td>                <td>Details on the use of external meshes.</td>   </tr>
+    <tr height=20><td width=150><a href="../General-Part/Form-MeshFile.html">Mesh-File object</a></td>   <td>Object hosting all mesh-elements of a file (see <a href="../General-Part/_Index.html">General</a>).</td>   </tr>
+    <tr height=20><td width=150><a href="../BEM-Part/Form-Elements%20(Mesh-File).html">Elements (Mesh-File)</a></td>       <td>BEM-component using mesh-file elements (see <a href="../BEM-Part/_Index.html">BEM-Part</a>).</td>   </tr>
+    <tr height=20><td width=150><a href="../Observation-Part/Form-Fields%20(Mesh-Files).html">Fields (Mesh-File)</a></td>  <td>Field using mesh-file elements (see <a href="../Observation-Part/_Index.html">Observation-Part</a>).</td>   </tr>
+    <tr height=20><td width=150><a href="../Desktop/Form-Position%20(frame).html">Positioning</a></td>  <td>Mesh-file elements can specify position of a component.</td>   </tr>
+  </table>
+
+  <br>
+  <p>In <a href="../Desktop/Form-BEM-Parameters.html">Dim = 3D and 2D</a>
+  mesh-files are a list of <a href="Planes.html">planes</a>,
+  typically triangles and quadrilaterals.
+  In <i>Dim=CircSym</i> mesh-files are typically line-segments which gets
+  extruded by rotation inside AKABAK.
+  Mesh-files can be used alternatively to or in combination with the
+  <a href="Nodes%20and%20Elements.html">Nodes & Elements</a> approach.</p>
+
+  <p>Inside AKABAK the handling of mesh-files is a two stage process:</p>
+
+  <ol>
+    <li><i>General</i>: <a href="../General-Part/Form-MeshFile.html">Mesh-File object</a> loads and holds data.</li>
+    <li><i>BEM</i>: <a href="../BEM-Part/Form-Elements%20(Mesh-File).html">Elements (Mesh-File)</a> and
+        <i>Observation</i>: <a href="../Observation-Part/Form-Fields%20(Mesh-Files).html">Fields (Mesh-File)</a>
+         take reference to General and uses a subset.</li>
+  </ol>
+
+  <p>At page <i>General</i> we load a mesh-file object as a first step. In sub-sequent steps
+  we create boundaries for the BEM or create observation Fields. These make use
+  of the elements inside a mesh-file object. Each Element or Field section
+  may use only a sub-set of mesh-elements of the referenced mesh-file object.<br>
+  All forms, which are related to mesh-files, allow a convenient selection of mesh-elements.
+  The coordination is done with the help of <a href="Mesh-File-Tags2.html">Mesh-File-Tags</a>.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Link To CAD</h4>
+  <!-- ------------------------------------------------------------------ -->
+
+  <table class=pic><tr>
+  <td class=c width=170 colspan="2"><img src="../../_Images/Mesh-Files.jpg" /></td>
+  </tr><tr>
+  <td class=c width=170><img src="../../_Images/Mesh-Files%20-%2045Tower%20-%20SW.jpg"></td>
+  <td class=c width=170><img src="../../_Images/Mesh-Files%20-%2045Tower%20-%20GMSH%20STEP.jpg"></td>
+  </tr><tr>
+  <td class=c width=170><img src="../../_Images/Mesh-Files%20-%2045Tower%20-%20GMSH%20MSH.jpg"></td>
+  <td class=c width=170><img src="../../_Images/Mesh-Files%20-%2045Tower%20-%20Desktop.jpg"></td>
+  </tr><tr>
+  <td class=c width=170><img src="../../_Images/Mesh-Files%20-%2045Tower%20-%20Element.jpg"></td>
+  <td class=c width=170><img src="../../_Images/Mesh-Files%20-%2045Tower%20-%20AKABAK.jpg"></td>
+  </tr></table>
+
+  <p>Most interestingly, mesh-files can be used to link AKABAK to external CAD software tools.
+  It may not be always the best solution to go directly from CAD to AKABAK.
+  Instead we often prefer to use an intermediate application for meshing, such as
+  GMSH. AKABAK can link to a range of mesh-file formats. Currently supported are</p>
+  <ul>
+    <li>GMSH (*.msh, version 2.2, text)</li>
+    <li>GID (*.msh, text)</li>
+    <li>Wavefront (*.obj)</li>
+    <li>STL (*.stl, text + binary )</li>
+    <li>Collada (*.dae)</li>
+    <li>SVG (*.svg, Dim= 2D, CircSym)</li>
+    <li>DXF (*.dxf, Dim= 2D, CircSym)</li>
+  </ul>
+
+  <p>GMSH and GID typically stem from dedicated <a href="Mesh-File-GMSH.html">BEM mesh-generators</a>.
+  The other file-formats stem from <a href="Mesh-File-Simple.html">simple mesh-generators</a>.</p>
+
+  <p>The idea is to draw a structure in a 3D-CAD application and then to use
+  a meshing-tool to create high quality meshes, which eventually can be used by AKABAK.</p>
+
+  <p>The CAD drawing is the starting point. For BEM the CAD-drawing should contain only
+  acoustic boundaries and should be as simple as possible. If used for Fields
+  it is best if only planes where the sound pressure is going to be calculated
+  are part of the file - however, this is not mandatory.</p>
+
+  <p>Your CAD-application allows to export your draft as STEP or IGES
+  formatted file. You may consider to export groups or layers into
+  individual files.</p>
+
+  <p>In the meshing-tool application, such as GMESH, GID or FEMAP,
+  open the STEP or IGES-file, or whatever format you have used during export.
+  Here you create the primary mesh. This mesh should be as coarse as possible.
+  Note, that eventually AKABAK will provide its own meshing on top of the primary
+  mesh. AKABAK can refine the mesh but can not simplify it. See at
+  chapter <a href="Meshing.html">Meshing</a>.</p>
+
+  <p>In your meshing tool, for example GMESH, save the mesh as a mesh-file.
+  Use one of the above listed formats.</p>
+
+  <p>In AKABAK create for each mesh-file a data-object of type
+  <a href="../General-Part/Form-MeshFile.html">General/Mesh-File</a>.
+  Open the Mesh-File-form and load the associate mesh-file.</p>
+
+  <p>In AKABAK further create sections of type
+  <a href="../BEM-Part/Form-Elements%20(Mesh-File).html">Elements (Mesh-File)</a> and
+  <a href="../Observation-Part/Form-Fields%20(Mesh-Files).html">Fields (Mesh-File)</a> as needed.
+  The associate forms let you select the sub-set of elements you want to apply for
+  this component with the help of <a href="Mesh-File-Tags2.html">Tags</a>.
+  For example: The mesh-file object contains planes for the whole loudspeaker. However,
+  one of the Elements-sections may select only the elements of the interior wall.</p>
+
+  <p>Mesh-Files can also be referenced for the purpose of the positioning of components.</p>
+
+  <p>In short, using an external meshing tool:</p>
+  <ol>
+    <li>In CAD-application draw your geometry.</li>
+    <li>In CAD export structure to a <a href="http://en.wikipedia.org/wiki/ISO_10303" title="External">STEP-file</a> (*.stp, ISO 10303).</li>
+    <li>In meshing-application import *.stp file</li>
+    <li>In meshing-application perform meshing</li>
+    <li>In meshing-application export to mesh-file</li>
+    <li>In AKABAK create object of type <a href="../General-Part/Form-MeshFile.html">Mesh-File</a> at page General
+        and load the mesh-file.</li>
+    <li>In AKABAK sections use the mesh-file selectively.</li>
+  </ol>
+
+
+  <h4>Meshing Tools</h4>
+
+  <p>There are many excellent mesh-tools available. These applications are typically
+  used for preparing for the volume finite element method. For FEM meshing is most
+  important because in FEM the finite elements and its associated field parameters
+  are concatenated. Any missing link or connection would yield large calculation errors.<br>
+  On the other hand is AKABAKs BEM a holistic approach which makes the requests
+  on the quality of meshing more relaxed.<br>
+  AKABAK needs only the 2D-surface mesh.</p>
+
+  <p><a href="http://geuz.org/gmsh/" title="External">GMESH</a>:
+  a three-dimensional finite element mesh generator with built-in
+  pre- and post-processing facilities. GMESH is open-source
+  provided by C. Geuzaine and J.-F. Remacle.<br>
+  Note, export mesh-version 2.2 of text format.</p>
+
+  <p><a href="https://www.gidhome.com/" title="External">GiD</a>
+  is a universal, adaptive and user-friendly pre and postprocessor
+  for numerical simulations in science and engineering.
+  GiD is commercial and provided by
+  CIMNE International Center for Numerical Methods in Engineering.</p>
+
+  <p><a href="http://meshlab.sourceforge.net/" title="External">MeshLab</a>
+  is an open source, portable, and extensible system for the processing and
+  editing of unstructured 3D triangular meshes.</p>
+
+  <p>CAD meshes. Many CAD software tools allow to export a mesh. These type of
+  mesh yields often elongated or distorted triangles instead of a compact shape
+  as explained in chapter <a href="Mesh-File-Simple.html">Mesh-File-Simple</a>.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

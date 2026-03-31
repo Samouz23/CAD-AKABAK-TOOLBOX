@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>List of Radiation_Impedance Items</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>List of Radiation_Impedance Items</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a> &raquo;
+                <a href="../Sections/Radiation_Impedance.html">Radiation_Impedance</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>List of radiation impedance observation points.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                       <a href="../Sections/Radiation_Impedance.html">Radiation_Impedance</a>
+                                       </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>The list of observation points follows the parameter part of the
+  <a href="../Sections/Radiation_Impedance.html">Radiation_Impedance</a>-section.
+  Each line represents the frequency response of the radiation impedance
+  of certain <a href="../../Appendix/Driving%20Groups.html">Driving Groups</a>.</p>
+
+  <p>Each item of the line should be separated by a blank or tab.</p>
+
+  <pre>
+    &lt;Index&gt;    &lt;DrvGroup1&gt;   &lt;DrvGroup2&gt;      ID=</pre>
+
+
+  <h4>Index</h4>
+
+  <p>The first entry is an index, which becomes the "name" of the spectrum.</p>
+
+
+  <h4>DrvGroup1 and DrvGroup2</h4>
+
+  <p>The second and third parameter are <i>Driving Groups</i>.
+  For self-radiation-impedance both parameters are identical.
+  For mutual-radiation-impedance they are different, indicating power transfer
+  between <i>DrvGroup1</i> and <i>DrvGroup2</i>.</p>
+
+
+  <h4>ID=</h4>
+
+  <p><a href="VacsID=.html">ID=</a> is an arbitrary and unique string which links an
+  ABEC-data-set to a VACS curve.</p>
+
+  <br />
+  <h4>Example</h4>
+  <br />
+
+  <pre>
+  <b>Radiation_Impedance</b>
+    GraphHeader="Radiation Impedance"
+    BodeType=Complex
+    RadImpType=Normalized
+    <font color="#800000">101   1001  1001   ID=101</font>
+    <font color="#800000">102   1001  1002   ID=102</font>
+    <font color="#800000">103   1002  1002   ID=103</font>
+  </pre>
+
+  <p>Curve #101 is the self-radiation impedance of a <i>driving group</i> with index
+  <i>DrvGroup=1001</i>. This can be the front side of a <i>Diaphragm</i>, for example.</p>
+
+  <p>Curve #103 is the self-radiation-impedance of <i>DrvGroup=1002</i>, say, the rear of
+  the <i>Diaphragm</i>.</p>
+
+  <p>Curve #102 is then the mutual-radiation-impedance from
+  the front to the rear side. The mutual radiation impedance is a measure of the energy
+  exchange between two radiators.</p>
+
+  <br>
+  <br>
+</body>
+</html>

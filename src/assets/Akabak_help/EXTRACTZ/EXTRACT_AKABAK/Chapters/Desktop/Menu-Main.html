@@ -1,0 +1,382 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Main Menu</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Main Menu</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Desktop</a></td>
+  </tr></table>
+  <hr>
+
+  <p><img src="../../_Images/Desktop%20-%20Menu.jpg"></p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>File</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+
+  <h4>New project</h4>
+
+  <p>Resets the application. All data will be deleted. The filename will be reset.
+  Default values will be assigned as specified in
+  <a href="Form-Preferences.html">Preferences</a>.</p>
+
+
+  <h4>Open project...</h4>
+
+  <p>Opens an existing AKABAK-project, which is contained in a file with extension *.akp.
+  Typically the file gets selected with the help of the
+  <a href="../Appendix/File%20-%20Dialogs.html">Filename-Form</a>.
+  Prior to loading all data will be reset.</p>
+
+  <p>A quick way to open a project is via the Recent File list, which is accessible
+  at the speed-button below the main-menu.</p>
+
+  <p>A project file can also be drag and dropped from Windows file-manager
+  into the desktop of AKABAK.</p>
+
+  <p>Also AKABAK can be started with an application-parameter, which is the filename of the project.</p>
+
+
+  <h4>Save project as...</h4>
+
+  <p>Saves the current project into an AKABAK-file of extension *.akp.
+  A filename needs to be provided at the
+  <a href="../Appendix/File%20-%20Dialogs.html">Filename-Form</a>.</p>
+
+
+  <h4>Save project...</h4>
+
+  <p>Saves the project by using current filename.</p>
+
+
+  <h4>Printing...</h4>
+
+  <p>Prints the current view on paper.</p>
+
+
+  <h4>File Explorer...</h4>
+
+  <p>Opens Windows file-manager at the folder of the current project.</p>
+
+
+  <h4>Exit</h4>
+
+  <p>Terminates the application. Alternatively press the keys ALT+F4 or click the cross
+  at the top of AKABAKS main-window.</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Edit</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <p>Delete, undo, use of clipboard, create new components and edit existing ones.</p>
+
+  <h4>Undo</h4>
+
+  <p>Undoes recent deletions. Undo depends whether the focus is on the
+  LE-schematic or on one of the component lists.</p>
+
+
+  <h4>Cut</h4>
+
+  <p>Copies selected item(s) to the clipboard. Then the selected item(s) gets deleted.</p>
+
+
+  <h4>Copy</h4>
+
+  <p>Copies selected item(s) to the clipboard.</p>
+
+
+  <h4>Paste</h4>
+
+  <p>Inserts item(s) from the clipboard.</p>
+
+
+  <h4>Delete</h4>
+
+  <p>Deletes selected item(s) by moving these to the undo-list.</p>
+
+
+  <h4>Select all</h4>
+
+  <p>Selects all items.</p>
+
+
+  <h4>Duplicate</h4>
+
+  <p>Creates and inserts a clone of selected item.</p>
+
+
+  <h4>New component...</h4>
+
+  <p>Opens <a href="Form-NewComponent.html">New Component Form</a>
+  where you can select the new component from various lists.</p>
+
+
+  <h4>Edit Parameters...</h4>
+
+  <p>Opens a form for editing parameters of the selected component.</p>
+
+
+  <h4>Edit Name...</h4>
+
+  <p>Lets you <a href="Form-EditName.html">modify the caption string</a>
+  of a component without resetting calculations.</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Venue</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <p>Specific commands for manipulating components of the <a href="../BEM-Part/_Index.html">BE-part</a>.</p>
+
+  <p>See <a href="Drawing%20Controls.html">Drawing Controls</a> for navigating the 3D-viewer.</p>
+
+  <p>See <a href="Treelist%20Controls.html">Treelist Controls</a> for navigating the
+  component-tables at the side of the desktop.</p>
+
+
+  <h4>Change Inheritance...</h4>
+
+  <p>Selects the ancestor for selected component. If a component has an ancestor
+  then all its parameters are inherited from this related component.
+  in the forms inherited parameters are indicated by blank edit-fields of orange background.
+  You can over-write these values. For default values leave the edit-field blank.</p>
+
+
+  <h4>Change Subdomain...</h4>
+
+  <p>Select the <a href="../BEM-Part/Form-Subdomain.html">Subdomain</a> or
+  <a href="../BEM-Part/Form-Interface.html">Interface</a> of the component of the
+  <a href="../BEM-Part/_Index.html">BEM-Part</a>.</p>
+
+
+  <h4>Repository (to/from)</h4>
+
+  <p>The table
+  <a href="Page-Repository.html">Repository</a> is there for temporary storage of components.
+  Components which are in the Repository are disabled, this means they are not
+  taking part in the calculations.</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Schematic</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <p>Specific commands for manipulating components of the <a href="../LEM-Part/_Index.html">LE-part</a>.</p>
+
+  <h4>Rotate</h4>
+
+  <p>Rotates component of schematic-designer by 90 deg.</p>
+
+
+  <h4>Flip</h4>
+
+  <p>Flips component of schematic-designer (available only for some components).</p>
+
+
+  <h4>Group</h4>
+
+  <p>Compiles selected components of schematic-designer to a group. All components
+  of a group translate in common.</p>
+
+
+  <h4>Ungroup</h4>
+
+  <p>Un-groups selected group in schematic-designer.</p>
+
+
+  <h4>Show in Label</h4>
+
+  <p>Selected parameter of lumped element is displayed in the schematic.
+  See <a href="../LEM-Part/Parameters/LE%20Params%20Editors.html">Parameter Editor</a>.</p>
+
+
+  <h4>Reference Table</h4>
+
+  <p>Opens a table for editing links between LE- and BE-components.
+  See at <a href="../LEM-Part/Parameters/LE%20RefTable.html">Table of LEM-BEM Links</a>.</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Global</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+
+  <h4>Acoustic Parameters</h4>
+
+  <p>Means to adjust the speed of sound and the density of air.
+  See chapter <a href="Form-Acoustic-Parameters.html">Form - Acoustic Parameters</a>.</p>
+
+
+  <h4>BEM Parameters</h4>
+
+  <p>Setting of the spatial dimension, symmetry and Non-Uniqueness-Compensator.
+  See at <a href="Form-BEM-Parameters.html">Form - BEM Parameters</a>.</p>
+
+
+  <h4>Frequencies</h4>
+
+  <p>Opens the <a href="Form-Frequencies.html">Frequency Form</a> for adjusting
+  the frequency range and resolution.</p>
+
+
+  <h4>Meshing</h4>
+
+  <p>Opens the <a href="Form-Meshing.html">Meshing Form</a> for controlling
+  global parameters of the mesh-generator.</p>
+
+
+  <h4>Formula</h4>
+
+  <p>Opens the global <a href="../Formula/Formula%20Dialog%20Global.html">Formula-Form</a>
+  for parameterization of the model. </p>
+
+
+  <h4>Fixed Driving</h4>
+
+  <p>Default driving values at observation stage. See <a href="Form-FixedDriving.html">Form-Fixed Driving</a>.</p>
+
+
+  <h4>Level of Driving</h4>
+
+  <p>Scaling of the driving-value of the <a href="../LEM-Part/Cmps/Source.html">LE-Sources</a>.
+  Actually only the output level gets scaled, which is feasible because of the assumption of
+  linearity. See <a href="Form-LevelOfDriving.html">Form-Level of Driving</a>.</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Processing</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+
+  <h4>Calculate All/Individually</h4>
+
+  <p>Processing means to calculate the total system response. Please, refer to chapter
+  <a href="../Appendix/Processing.html">Processing</a> for details.</p>
+
+
+  <h4>Field Show</h4>
+
+  <p>Renders results of Field calculations in the 3D-Viewer at selected frequency.
+  See chapter <a href="Page-Frequencies.html">Page - Frequencies</a> for selecting the frequency.</p>
+
+
+  <h4>Output Spectra</h4>
+
+  <p>Sends results of spectra calculations to
+  <a href="../Appendix/VacsViewer.html">VACS, Clipboard or File</a>.</p>
+
+
+  <h4>Abort Calculations</h4>
+
+  <p>Call for stopping any pending calculations. Note, that because of asynchronous
+  processing, there might be a delay before the process is actually terminated.</p>
+
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Tools</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <h4>Import ABEC Project</h4>
+
+  <p>Importing an existing ABEC-project. See chapter
+  <a href="Form-ImportABEC.html">Importing ABEC-Projects</a>.</p>
+
+
+  <h4>Export Mesh</h4>
+
+  <p>Exports a BE-mesh to file(s). See chapter
+  <a href="Form-ExportMesh.html">Form - Export Mesh</a>.</p>
+
+
+  <h4>Info Editor</h4>
+
+  <p>The <a href="Page-Info.html">information file</a> can be used to annotate your
+  project with text and bitmaps.</p>
+
+
+  <h4>Copy/Save as Picture</h4>
+
+  <p>Copy to clipboard or save to file the current view of the 3D-Viewer or
+  of the Schematic Designer. The file-format can be chosen at
+  menu <a href="Form-Preferences.html#Graphics">Options/Preference-Graphics</a>.</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Options</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <h4>Result File</h4>
+
+  <p>Manually save, load or delete the result file. The result-file does not contain
+  essential project information. On file-transfers you can omit it. Also, it can be deleted.</p>
+
+
+  <h4>Open VACS</h4>
+
+  <p>Manually send the command to open the sibling application
+  called <a href="../Appendix/VacsViewer.html">VACS or VacsViewer</a>.</p>
+
+
+  <h4>Open ini-File</h4>
+
+  <p>Opens the in-file of AKABAK, which is saved at
+  "C:\Users\&lt;user&gt;\AppData\Local\RDTeam\Akabak.ini"</p>
+
+
+  <h4>Units</h4>
+
+  <p>Opens the <a href="Form-Units.html">Units-Form</a>
+  for changing the units of the input-fields of
+  <a href="../Appendix/Floating%20point%20values.html">floating-point parameters</a>.</p>
+
+
+  <h4>Preferences</h4>
+
+  <p>Opens the <a href="Form-Preferences.html">Form - Preferences</a>
+  which controls default parameters and other global settings.</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Help</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <h4>Help</h4>
+
+  <p><i>Help</i> invokes the user-manual. Pressing F1-Key in one of the dialogs
+  calls for context-help.</p>
+
+
+  <h4>Bug Reporter</h4>
+
+  <p>Complex machinery such as AKABAK may have still bugs here and there.
+  Please do not hesitate to make a report, see <a href="Form-Bugs-Wishes.html">Bugs and Wishes</a>.</p>
+
+
+  <h4>Release Code</h4>
+
+  <p>Here you provide/create the <a href="../Appendix/Release%20Code.html">Release Code</a> for
+  the professional version of AKABAK.</p>
+
+
+  <h4>Check for Updates</h4>
+
+  <p>Opens a <a href="Form-Check-Updates.html">dialog</a>
+  for checking for new versions of the application.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form-Frequencies (6400)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Frequencies</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=600><td><img src="../../_Images/Desktop%20-%20Frequencies.jpg" /></td></tr>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20Global%20Frequencies.jpg" /></td></tr>
+  </table>
+
+  <p>The model is calculated in the frequency domain. The range of frequencies is specified
+  with the help of this form.</p>
+
+  <p>The Frequency - Form can be opened at menu <i>Global/Frequencies</i>.</p>
+
+  <p>The list of frequencies is displayed on the desktop at
+  <a href="Page-Frequencies.html">Page - Frequencies</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Range of Values</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Frequency Band</h4>
+
+  <p>The frequency-range goes from f1 to f2 and includes both values.</p>
+
+
+  <h4>Abscissa</h4>
+
+  <p>Abscissa specifies the distribution-type of frequency points.
+  For details, see AES-paper [<a href="../Appendix/Literature.html#30">30</a>].
+
+  <p>With <i>Abscissa=<b>lin</b></i> calculation points are distributed linearly
+  with a constant spacing of df = (f<sub>2</sub> - f<sub>1</sub>)/(N - 1).
+  The generating formula is f<sub>i</sub> = i&middot;df + f<sub>1</sub>
+  with i running from i = 0 ... N-1</p>
+
+  <p>With <i>Abscissa=<b>log</b></i> a logarithmic distribution is generated.
+  This grid has a high density at low frequencies  and a low density at high frequencies.
+  On a log-paper the spacing of points appears constant with ratio of neighboring frequencies
+  r = exp((ln(f<sub>2</sub>) - ln(f<sub>1</sub>))/(N - 1))
+  The generating formula is f<sub>i</sub> = r<sup>i</sup>&middot;f<sub>1</sub>
+  with i running from i = 0 ... N-1
+
+  <p>With <i>Abscissa=<b>lig</b></i> the area hyperbolic function or
+  ArSinh-function combines the properties of the linear and logarithmic mapping.
+  It behaves linearly for arguments close to zero and logarithmically further away.
+  The generating formula is f<sub>i</sub> = 0.5&middot;(r - 1/r) with
+  r = R<sub>1</sub>&middot;exp(i/(N-1)&middot;ln(R<sub>2</sub>/R<sub>1</sub>)) and
+  R<sub>1</sub> = f<sub>1</sub> + &radic;(f<sub>1</sub><sup>2</sup> + 1) and
+  R<sub>2</sub> = f<sub>2</sub> + &radic;(f<sub>2</sub><sup>2</sup> + 1)
+  with i running from i = 0 ... N-1</p>
+
+
+  <h4>Number of Frequency Points</h4>
+
+  <p><i>Points total</i> specify the number of frequencies, which gets generated
+  in the range between f1 and f2.</p>
+
+  <p><i>Points per octave</i> specify the number of points based on
+  an octave. The relation is:
+  f<sub>2</sub>/f<sub>1</sub> = 2<sup>(N/ppo)</sup>
+
+  <p>You can specify N or ppo, respectively, whith mutual calulation.
+  On entering f1 and f2 the mutual calulation depends on which parameter
+  has had focus recently.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>List of Values</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>
+  The list is an alternative way of specifying the frequency-abscissa.
+  You can type frequency values in any order separated by a blank or new line.
+  <a href="../Appendix/Floating%20point%20values.html">Engineering format</a>
+  can be used, for example 10k for 1000.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Miscellaneous</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Display list</h4>
+
+  <p>Controls the list of frequencies on the desktop, see
+  also chapter <a href="Page-Frequencies.html">Page-Frequencies</a>.</p>
+
+
+  <h4>List of frequencies - Copy</h4>
+
+  <p>Copies the list of frequencies to the clipboad.</p>
+
+
+  <h4>For new projects - Save</h4>
+
+  <p>The current settings will be used as default-values for new projects.</p>
+
+
+  <h3>Notes</h3>
+
+  <p>Note, for Boundary Element Analysis it is possible to include f1=0. In this case
+  <i>Abscissa=lin</i>. For f > 0 the Helmholtz Equation and
+  for f1=0 the Poisson Equation is solved.</p>
+
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

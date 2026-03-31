@@ -1,0 +1,642 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="generator" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</head>
+<body>
+<OBJECT type="text/site properties">
+	<param name="FrameName" value="right">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Acoustic Parameters">
+		<param name="Local" value="Chapters/Desktop/Form-Acoustic-Parameters.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Annotation">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Annotation.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Arrow">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Arrow.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Baffle">
+		<param name="Local" value="Chapters/BEM-Part/Form-Baffle.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Bassunit">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Bassunit.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Bassunit Tool">
+		<param name="Local" value="Chapters/LEM-Part/Tools/Form%20-%20LE%20Tools%20BuAlign.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="BEM - Boundary Element Method">
+		<param name="Local" value="Chapters/BEM-Part/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="BEM - Part">
+		<param name="Local" value="Chapters/BEM-Part/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="BEM Forms">
+		<param name="Local" value="Chapters/Formula/Formula%20Dialog%20Geo.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="BEM Parameters">
+		<param name="Local" value="Chapters/Desktop/Form-BEM-Parameters.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Boolean Values">
+		<param name="Local" value="Chapters/Appendix/Boolean.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Boundary Element Analysis">
+		<param name="Local" value="Chapters/Appendix/Boundary%20Element%20Analysis.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Capacitor">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Capacitor.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Coil">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Inductor.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Connection-Points">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Connection-Points.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Compliance">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/AcouCompliance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Contour File">
+		<param name="Local" value="Chapters/General-Part/Form-ContourFile.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Coupler">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Coupler.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Curve File">
+		<param name="Local" value="Chapters/General-Part/Form-CurveFile.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Desktop">
+		<param name="Local" value="Chapters/Desktop/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Dialog">
+		<param name="Local" value="Chapters/Formula/Formula%20Dialog%20Operation.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Diaphragm - Baffle">
+		<param name="Local" value="Chapters/Appendix/Diaphragm%20-%20SubBaffle.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Diaphragm - Modeling">
+		<param name="Local" value="Chapters/Appendix/Diaphragm%20-%20Modeling.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Diaphragm (BE)">
+		<param name="Local" value="Chapters/BEM-Part/Form-Diaphragm.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Diaphragm (LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Diaphragm%20(LE).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Diaphragms Derivation (LE)">
+		<param name="Local" value="Chapters/Appendix/LE%20Diaphragms%20Derivation.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Direct Sound Analysis">
+		<param name="Local" value="Chapters/Appendix/Direct%20Sound%20Analysis.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Drawing Controls">
+		<param name="Local" value="Chapters/Desktop/Drawing%20Controls.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Duct (BE)">
+		<param name="Local" value="Chapters/BEM-Part/Form-Duct.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Duct (LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Duct%20(LE).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Editing of a List">
+		<param name="Local" value="Chapters/Appendix/List%20Editors.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Elec Dyn Driver">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Elec-Dyn-Driver.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Elec Dyn Driver 2 VCs">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Elec-Dyn-Driver%20(2VC).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Elec Dyn Motor">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Elec-Dyn-Motor.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Electro-Dyn-Model">
+		<param name="Local" value="Chapters/Appendix/LE%20Electro-Dyn-Model.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Element (LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Element.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Elements (Mesh-File)">
+		<param name="Local" value="Chapters/BEM-Part/Form-Elements%20(Mesh-File).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Elements (Nodes)">
+		<param name="Local" value="Chapters/BEM-Part/Form-Elements%20(Nodes).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Enclosure">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Enclosure.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Enclosure vented">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/EnclosureVented.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Export of Fields">
+		<param name="Local" value="Chapters/Desktop/Form-FieldOutput.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Extrusions">
+		<param name="Local" value="Chapters/Appendix/Extrusions.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="FET">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/FET.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Fields (BE ref)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Fields%20(BE-Ref).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Fields (mesh files)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Fields%20(Mesh-Files).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Fields (nodes)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Fields%20(Nodes).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Fields (Shell)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Fields%20(Balloon).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="File - Dialogs">
+		<param name="Local" value="Chapters/Appendix/File%20-%20Dialogs.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Filter">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Filter.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Filter Tool">
+		<param name="Local" value="Chapters/LEM-Part/Tools/Form%20-%20LE%20Tools%20Filter.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Fixed Driving">
+		<param name="Local" value="Chapters/Desktop/Form-FixedDriving.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Floating Point Values">
+		<param name="Local" value="Chapters/Appendix/Floating%20point%20values.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Formula Functions">
+		<param name="Local" value="Chapters/Formula/Formula%20Real%20-%20Standard%20Functions.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Formula Global">
+		<param name="Local" value="Chapters/Formula/Formula%20Dialog%20Global.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Formula Run-time">
+		<param name="Local" value="Chapters/Formula/Formula%20Complex.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Frequencies">
+		<param name="Local" value="Chapters/Desktop/Form-Frequencies.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GND">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/GND.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Gyrator">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Gyrator.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Helmholtz">
+		<param name="Local" value="Chapters/Appendix/LE%20Helmholtz.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="IDs">
+		<param name="Local" value="Chapters/Formula/Formula%20Parameter%20IDs.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Impedance component (formula LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Impedance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Impedance component (mech imp LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/MechImpedance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Infinite Baffle component (BE)">
+		<param name="Local" value="Chapters/BEM-Part/Form-Infinite-Baffle.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Infinite Baffle in general">
+		<param name="Local" value="Chapters/Appendix/Infinite%20Baffle.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Initialization-files (ini-file)">
+		<param name="Local" value="Chapters/Appendix/Initialization-files%20(ini-file).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="LE-Network (potential, flow)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Network%20Inspection%20(Pot).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="LE-Network (powers)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Network%20Inspection%20(Power).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="LE-Network (scripts)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Network%20Inspection%20(Script).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="LE-Network (extrema and integrals)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Network%20Extrema.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Integer Values">
+		<param name="Local" value="Chapters/Appendix/Integer%20values.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Interface">
+		<param name="Local" value="Chapters/BEM-Part/Form-Interface.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="Chapters/Introduction.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="LCR-Parallel">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/LCR-Parallel.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="LCR-Series">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/LCR-Series.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="LEM - Part">
+		<param name="Local" value="Chapters/LEM-Part/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="LEM Editor">
+		<param name="Local" value="Chapters/LEM-Part/Parameters/LE%20Params%20Editors.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Level of Driving">
+		<param name="Local" value="Chapters/Desktop/Form-LevelOfDriving.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Literature">
+		<param name="Local" value="Chapters/Appendix/Literature.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Lumped Element Analysis">
+		<param name="Local" value="Chapters/Appendix/Lumped%20Element%20Analysis.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Mass (acou LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/AcouMass.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Mass (mech imp LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/MechMass.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Mass (mech mob LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/MobMass.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="MeasRadiator">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/MeasRadiator.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Membrane">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Membrane.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Menu">
+		<param name="Local" value="Chapters/Desktop/Menu-Main.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Mesh File">
+		<param name="Local" value="Chapters/General-Part/Form-MeshFile.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Mesh-Files">
+		<param name="Local" value="Chapters/Appendix/Mesh-Files.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Mesh-File-Tags">
+		<param name="Local" value="Chapters/Appendix/Mesh-File-Tags2.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Meshing Form">
+		<param name="Local" value="Chapters/Desktop/Form-Meshing.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Mesh-File-GMSH">
+		<param name="Local" value="Chapters/Appendix/Mesh-File-GMSH.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Mesh-File-Simple">
+		<param name="Local" value="Chapters/Appendix/Mesh-File-Simple.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Meshing in general">
+		<param name="Local" value="Chapters/Appendix/Meshing.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="New Component Form">
+		<param name="Local" value="Chapters/Desktop/Form-NewComponent.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="New Node Numbers">
+		<param name="Local" value="Chapters/Desktop/Form-NodeNames.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Nodes">
+		<param name="Local" value="Chapters/General-Part/Form-Nodes.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Nodes and Elements">
+		<param name="Local" value="Chapters/Appendix/Nodes%20and%20Elements.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Non-Uniqueness-Problem">
+		<param name="Local" value="Chapters/Appendix/Non-Uniqueness-Problem.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Normals and Volumes">
+		<param name="Local" value="Chapters/Appendix/Normals%20and%20Volumes.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Normals and Volumes - 3D-Elements">
+		<param name="Local" value="Chapters/Appendix/Normals%20and%20Volumes%20-%203D-Elements.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Normals and Volumes - Circular Symmetric Elements">
+		<param name="Local" value="Chapters/Appendix/Normals%20and%20Volumes%20-%20Circular%20Symmetric%20Elements.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Normals and Volumes - Interface Elements">
+		<param name="Local" value="Chapters/Appendix/Normals%20and%20Volumes%20-%20Interface%20Elements.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Observation">
+		<param name="Local" value="Chapters/Observation-Part/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Observation Part">
+		<param name="Local" value="Chapters/Observation-Part/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OpAmp">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/OpAmp.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Operation Modes">
+		<param name="Local" value="Chapters/Appendix/Operation%20Modes.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Overview Desktop">
+		<param name="Local" value="Chapters/Desktop/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Overview Formula">
+		<param name="Local" value="Chapters/Formula/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Overview Formula">
+		<param name="Local" value="Chapters/Formula/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Overview General">
+		<param name="Local" value="Chapters/General-Part/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Overview General">
+		<param name="Local" value="Chapters/General-Part/_Index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Piezo Driver">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Piezo-Driver.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Planes">
+		<param name="Local" value="Chapters/Appendix/Planes.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Preferences">
+		<param name="Local" value="Chapters/Desktop/Form-Preferences.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Pressure Box">
+		<param name="Local" value="Chapters/BEM-Part/Form-Pressure-Box.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Pressure Points">
+		<param name="Local" value="Chapters/BEM-Part/Form-Pressure-Points.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Processing">
+		<param name="Local" value="Chapters/Appendix/Processing.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Professional vs Demo Version">
+		<param name="Local" value="Chapters/Appendix/Pro%20vs%20Demo%20Version.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Qts">
+		<param name="Local" value="Chapters/Appendix/LE%20Electro-Dyn-Qts.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Radiation Conditions">
+		<param name="Local" value="Chapters/Appendix/Radiation%20Conditions.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Radiation Impedance - General">
+		<param name="Local" value="Chapters/Appendix/Radiation%20Impedance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Radiation Impedance (observation)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Radiation%20Impedance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Radiation Impedance (observation)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Radiation%20Impedance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Radiator">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Radiator.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Release Code">
+		<param name="Local" value="Chapters/Appendix/Release%20Code.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Resistance (acou LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/AcouResistance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Resistance (mech imp LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/MechResistance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Resistance (mech mob LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/MobResistance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Resistor">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Resistor.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Script">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Script%20(LE).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Shell">
+		<param name="Local" value="Chapters/BEM-Part/Form-Shell.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Software Licence Agreement">
+		<param name="Local" value="Chapters/Appendix/SoftwareAgreement_License_En.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Source">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Source.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Speaker">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Speaker.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Spectrum (line)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Spectrum%20(Line).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Spectrum (points)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Spectrum%20(Points).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Spectrum (polar)">
+		<param name="Local" value="Chapters/Observation-Part/Form-Spectrum%20(Polar).html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Stiffness (mech imp LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/MechStiffness.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Stiffness (mech mob LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/MobStiffness.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="String Values">
+		<param name="Local" value="Chapters/Appendix/Strings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Subdomain">
+		<param name="Local" value="Chapters/BEM-Part/Form-Subdomain.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Subdomain Modelling">
+		<param name="Local" value="Chapters/Appendix/Sub-Domain%20Modelling.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Switch">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Switch.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Syntax">
+		<param name="Local" value="Chapters/Formula/Formula%20Syntax.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Table of LEM-BEM Links">
+		<param name="Local" value="Chapters/LEM-Part/Parameters/LE%20RefTable.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Technical Specifications">
+		<param name="Local" value="Chapters/Appendix/Technical%20Specifications.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Transformer">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Transformer.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Transistor">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Transistor.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Transition component (BE)">
+		<param name="Local" value="Chapters/BEM-Part/Form-Transition.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Units">
+		<param name="Local" value="Chapters/Desktop/Form-Units.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="VacsViewer">
+		<param name="Local" value="Chapters/Appendix/VacsViewer.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Valve">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Valve.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Vib File component (BE)">
+		<param name="Local" value="Chapters/BEM-Part/Form-VibFile.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Vib File object (General)">
+		<param name="Local" value="Chapters/General-Part/Form-VibFile.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Wall Impedance object (General)">
+		<param name="Local" value="Chapters/General-Part/Form-WallImpedance.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Waveguide component (LE)">
+		<param name="Local" value="Chapters/LEM-Part/Cmps/Waveguide.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Waves and Motion">
+		<param name="Local" value="Chapters/Appendix/Waves%20and%20Motion.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="What is new?">
+		<param name="Local" value="Chapters/What%20is%20new.html">
+		</OBJECT>
+</UL>
+</BODY>
+</HTML>

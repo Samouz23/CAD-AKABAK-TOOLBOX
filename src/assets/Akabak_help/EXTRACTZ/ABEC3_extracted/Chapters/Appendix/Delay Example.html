@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Delay Example</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Delay Example</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <p><a href="../BEScripts/Parameters/Delay=.html">Delay=</a> or
+  <a href="../BEScripts/Parameters/DrvDelay=.html">DrvDelay=</a>
+  allows to add time-delay to the driving-value according to</p>
+
+  <p class=formula>z2 = z1&middot;exp(-j&omega;&middot;Delay)</p>
+
+  <p>assuming positive temporal time convention z(t) = z&middot;exp(j&omega;t)</p>
+
+  <h4>Example</h4>
+
+  <table align=right>
+  <tr><td align=center><img src="../../_Images/Delay%20Point%20Source.jpg" /></td></tr>
+  <tr><td align=center><img src="../../_Images/Delay%20Point%20Source%20Impulse%20Response.jpg"  /></td></tr>
+  </table>
+
+  <p>A most simple example is to investigate the response of a
+  point source defined in section
+  <a href="../BEScripts/Sections/Pressure_Points.html">Pressure_Points</a>
+  at an observation point at 1m distance.</p>
+
+  <p>The time-impulse response of the
+  <a href="Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>
+  of the pressure response can be obtained with the help of
+  <a href="VacsViewer.html">VACS</a>
+  using its <i>Processing/Fourier Response</i> feature.</p>
+
+  <p>The blue impulse is without additional delay. The approx 3ms delay
+  stems from the traveling time of the sound of 1m distance.
+  t&nbsp;=&nbsp;d/c with d distance between microphone and point source
+  and c speed of sound.</p>
+
+  <p>The red curve features additional <i>Delay=2ms</i>.</p>
+
+  <p>The associated observation script is</p>
+
+  <br />
+  <pre>
+  <b>Driving_Values</b>
+    DrvType=Pressure
+    Value=1.0
+    101   DrvGroup=1001   Weight=1.0   <font color="#800000">Delay=2ms</font>
+
+
+  <b>Nodes</b> "PPoint"
+    Scale=1mm
+    1001     0     0    0
+
+  <b>Nodes</b> "Spectrum"
+    Scale=1mm
+    1001     1000     0    0
+
+
+  <b>Pressure_Points</b>
+    DrvGroup=1001
+    RefNodes=PPoint
+    101  1001  Weight=1.0
+
+  <b>Control_Spectrum</b>
+    Name="Point Source"
+    f1=0;  f2=20kHz;
+    NumFrequencies=1024;  Abscissa=lin;
+
+
+  <b>BE_Spectrum</b>
+    PlotType=Curves
+    GraphHeader="SPL"
+    BodeType=LeveldB;  Range=50
+    RefNodes="Spectrum"
+    101   1001        ID=101</pre>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>RefNodes=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>RefNodes=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>RefNodes=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Strings.html">String</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Reference to a <a href="../Sections/Nodes.html">Nodes</a>-section</td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="../Sections/Nodes.html">Nodes</a>,
+                                                         <a href="../../Appendix/Nodes%20and%20Elements.html">Nodes and Elements</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>RefNodes=</i> specifies a string, which is the name of a
+  <a href="../Sections/Nodes.html">Nodes</a>-section. If the name has blanks
+  then the string should be placed in quotes.</p>
+
+  <p><i>RefNodes=</i> is used to assign coordinates to sections
+  such as <i>Elements</i> as explained in chapter
+  <a href="../../Appendix/Nodes%20and%20Elements.html">Nodes and Elements</a>.
+  It is also used to provide coordinates at places where
+  positions are required, see at parameter
+  <a href="Position=.html">Position=</a>.</p>
+
+  <br />
+  <p>For example</p>
+
+  <pre>
+  <b>Nodes</b> <font color="#800000">"N"</font>
+    1001    0.0   0.0    0.0
+    1002    1.0   0.0    0.0
+    1003    0.0   1.0    0.0
+
+  <b>Subdomain_Properties</b>
+    Subdomain=1
+    ElType=Exterior
+
+  <b>Infinite_Baffle</b>
+    Subdomain=1
+    Position= 1001, 1002, 1003  <font color="#800000">RefNodes=N</font>
+
+  <b>Diaphragm</b>  "Disk front"
+    Subdomain=1
+    DrvGroup=1001
+    <font color="#800000">RefNodes="N"</font>
+    Position= 1001, 1002, 1003
+    NoBaffle
+    dD=100mm</pre>
+
+  <br>
+  <br>
+</body>
+</html>

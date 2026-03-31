@@ -19,7 +19,6 @@ export const ICONS = {
   
   // Icônes d'interface
   CALENDAR: 'calendar.svg',
-  CLOUD: 'cloud.svg',
   SETTINGS: 'settings.svg',
   
   // Icônes de fichiers

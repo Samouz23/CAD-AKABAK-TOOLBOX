@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Capacitor</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Capacitor</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-Capacitor.jpg"  />
+  </td></tr></table>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Technical capacitance</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Network element (2 pole)</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Electric</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1> <a href="../Systems.html">System</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <br>
+  <table align=right width=300>
+  <tr height=150>
+    <td><img src="../../../_Images/LE-Capacitor%20Rp.jpg"  /></td>
+  </tr>
+  <tr height=150>
+    <td><img src="../../../_Images/LE-Capacitor%20Rp%20Ls%20Rs.jpg"  /></td>
+  </tr>
+  </table>
+
+  <pre>
+  <b>Capacitor</b> 'Any name'
+    <a href="../Parameters/Node=.html">Node=s=t</a>
+    <a href="../Parameters/C=.html">C=</a>
+    <a href="../Parameters/Rp=.html">Rp=</a>
+    <a href="../Parameters/Ls=.html">Ls=</a>
+    <a href="../Parameters/Rs=.html">Rs=</a>
+  </pre>
+
+  <p><i>Capacitor</i> implements the model of a technical capacitor in the
+  network. <a href="../Parameters/C=.html">C=</a> is the capacitance of the capacitor.
+  You can optionally specify <a href="../Parameters/Rp=.html">Rp=</a>,
+  <a href="../Parameters/Rs=.html">Rs=</a> and
+  <a href="../Parameters/Ls=.html">Ls=</a>.
+  Although Rs and Ls are connected in series with the capacitance C, you would
+  not require any additional network nodes.</p>
+
+  <p>Note, since C, Rp, Rs and Ls are combined to one
+  component, the internal currents and voltages cannot be observed.
+  If you need to inspect these, you would need to specify Rp, Rs and Ls as individual elements.</p>
+
+  <h4>Examples</h4>
+
+  <p>1) No losses</p>
+  <pre>
+  <b>Capacitor</b> 'C1'
+    Node=1=2  C=10uF
+  </pre>
+
+  <p>2) With dielectric losses</p>
+  <pre>
+  <b>Capacitor</b> 'C1'
+    Node=1=2  C=10uF
+    Rp=50Mohm
+  </pre>
+
+  <p>3) Similar to the second example, but additionally with
+  an inductance.</p>
+  <pre>
+  <b>Capacitor</b> 'C1'
+    Node=1=2  C=10uF
+    Rp=50Mohm  Rs=0.5ohm  Ls=4uH
+  </pre>
+
+  <p>4) Same as example 3 but with individual elements.</p>
+  <pre>
+  <b>Capacitor</b> 'C1'  Node=1=2  C=10uF
+  <b>Resistor</b>  'Rp'  Node=1=2  R=50Mohm
+  <b>Resistor</b>  'Rs'  Node=2=3  R=0.5ohm
+  <b>Resistor</b>  'Ls'  Node=3=4  L=4uH
+  </pre>
+
+  <br>
+  <br>
+</body>
+</html>

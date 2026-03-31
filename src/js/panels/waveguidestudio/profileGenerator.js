@@ -76,9 +76,11 @@ export function createProfileData(config) {
     const totalLength = config.segments.reduce((acc, seg) => acc + seg.length, 0);
     if (totalLength <= 0) return [];
     
-    const THROAT_MESH_DISTANCE = 20, MOUTH_MESH_DISTANCE = 20;
-    const throatMultiplier = (config.throatMeshFactor > 0) ? (config.throatMeshFactor * 2) : 1;
-    const mouthMultiplier = (config.mouthMeshFactor > 0) ? (config.mouthMeshFactor * 2) : 1;
+    // Zones de raffinement proportionnelles (pas fixes à 20 mm)
+    const throatZone = Math.min(totalLength * 0.15, 50);
+    const mouthZone  = Math.min(totalLength * 0.25, 80);
+    const throatFactor = (config.throatMeshFactor > 0) ? (config.throatMeshFactor * 2) : 1;
+    const mouthFactor  = (config.mouthMeshFactor > 0) ? (config.mouthMeshFactor * 2) : 1;
     const baseZStep = totalLength / (config.pointsPerSegment * config.segmentCount);
 
     let currentAbsoluteZ = 0, currentSegmentIndex = 0, currentSegmentLocalZ = 0;
@@ -93,8 +95,17 @@ export function createProfileData(config) {
         if (!formula) break;
         
         let effectiveZStep = baseZStep;
-        if (currentAbsoluteZ < THROAT_MESH_DISTANCE) effectiveZStep /= throatMultiplier;
-        if (currentAbsoluteZ > totalLength - MOUTH_MESH_DISTANCE) effectiveZStep /= mouthMultiplier;
+        // Raffinement progressif — transition cosinus lisse sur toute la zone
+        let densityMultiplier = 1;
+        if (currentAbsoluteZ < throatZone && throatFactor > 1) {
+            const t = currentAbsoluteZ / throatZone;
+            densityMultiplier *= 1 + (throatFactor - 1) * 0.5 * (1 + Math.cos(Math.PI * t));
+        }
+        if (currentAbsoluteZ > totalLength - mouthZone && mouthFactor > 1) {
+            const t = (totalLength - currentAbsoluteZ) / mouthZone;
+            densityMultiplier *= 1 + (mouthFactor - 1) * 0.5 * (1 + Math.cos(Math.PI * t));
+        }
+        effectiveZStep /= densityMultiplier;
         
         const remainingInCurrentSegment = currentSegment.length - currentSegmentLocalZ;
         const remainingInTotalLength = totalLength - currentAbsoluteZ;

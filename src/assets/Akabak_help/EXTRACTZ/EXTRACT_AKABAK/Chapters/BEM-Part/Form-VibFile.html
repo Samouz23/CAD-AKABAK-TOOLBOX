@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Vib File (5600)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Vib File</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">BEM-Part</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=450><td><img src="../../_Images/Desktop%20-%20VibFile%20Params.jpg" /></td></tr>
+    <tr height=500><td><img src="../../_Images/Desktop%20-%20VibFile.jpg" /></td></tr>
+    <tr height=130><td><center><img src="../../_Images/VibFile%20NormType.jpg" /></center></td></tr>
+    <tr height=80> <td><center><img src="../../_Images/VibFile%20NormType=PosCartesian.jpg" />&nbsp;&nbsp;&nbsp;
+                       <img src="../../_Images/VibFile%20NormType=PosPolar.jpg" /></center> </td></tr>
+  </table>
+
+  <p><i>VibFile</i> creates vibrating boundary elements from a
+  <a href="../General-Part/Form-VibFile.html">Vib File object</a>.</p>
+
+  <p>Create a new <i>VibFile</i>-component with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  The home of a <i>VibFile</i>-component is page <i>BEM</i>.
+  Edit an existing component by dbl-click its entry on page <i>BEM</i>
+  or issue menu <i>Edit/Parameters</i> or press CTRL+E.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - General</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Name of Component</h4>
+
+  <p>The name of the component in form of a <a href="../Appendix/Strings.html">string</a>.
+  Further there is space for annotations.</p>
+
+
+  <h4>Vib File</h4>
+
+  <p>Reference to the associated
+  <a href="../General-Part/Form-VibFile.html">Vib File object</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Parameter</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>At solving stage the driving velocity is v = 1 m/s and modified by following
+  parameters. <br>
+  At observation stage this value will be multiplied by
+  the corresponding parameter of the <a href="../LEM-Part/_Index.html">lumped element network</a>
+  or of the <a href="../Desktop/Form-FixedDriving.html">fixed driving table</a>.</p>
+
+
+  <h4>Weight</h4>
+
+  <p>Value of amplification.</p>
+
+
+  <h4>Delay</h4>
+
+  <p>Value of signal delay &tau; in seconds: v<sub>2</sub> = v<sub>1</sub>&middot;exp(-j&middot;&omega;&middot;&tau;)</p>
+
+
+  <h4>Weight(f)</h4>
+
+  <p><i>Unchanged</i> : This means the spectrum is constant.</p>
+
+  <p><i>Multiply by j&omega;</i> : in this case the driving spectrum is raising with frequency:
+  v<sub>2</sub> = v<sub>1</sub>&middot;j&omega;</p>
+
+  <p><i>Divide by j&omega;</i> : in this case the driving spectrum is falling with frequency:
+  v<sub>2</sub> = v<sub>1</sub>/j&omega;. This case is often used to mimic the
+  response of a direct radiating loudspeaker which is roughly proportional to the acceleration. </p>
+
+
+  <h4>Normalization</h4>
+
+  <p>If you want to couple the Vib File-diaphragm to a Lumped Element Network
+  the vibrational distribution should be normalized to the rigid body motion of
+  the diaphragm because the lumped velocity shall be controlled by
+  the lumped element network.<br>
+  The point for normalization is typically where the driving force is attached.
+  For an electro-dynamic speaker this is the connection of the voice coil.
+  After normalization the measured frequency response of the velocity at the reference
+  point is one for all frequencies.
+  At any other point the frequency response of vibration relates to this
+  reference point.</p>
+
+  <p><i>Lowest</i> normalizes the vibration-data to the vibration
+  at the lowest point, i.e. the point with coordinates most recessed. This
+  setting is particular helpful for scans of conical loudspeaker membranes
+  with a convex dust cap. Here we assume that the lowest point coincides with
+  the connection of the voice-coil.</p>
+
+  <p><i>Mean</i> normalizes the data-set to the mean-value at each
+  frequency. This setting makes that the frequency response of the mean-value is
+  one for all frequencies.</p>
+
+  <p><i>Original</i> does not perform a normalization. Hence, the
+  vibrational-data are used as is. This means that the frequency response
+  at any point may include the response of the measured driver. Obviously this setting
+  makes only sense, if we observe with
+  <a href="../Desktop/Form-FixedDriving.html">fixed driving</a> (no coupling to a Lumped Element Network).</p>
+
+  <p><i>Pos Polar</i> normalizes the data-set of vibration to a
+  certain point, which needs to be specified additionally by Radius and Angle.</p>
+
+  <p><i>Pos Cartesian</i> is similar to the previous setting only that
+  in this case the coordinates of the reference point is specified in
+  Cartesian coordinates.</p>
+
+
+  <h4>Side</h4>
+
+  <p>Optional parameter, which allows to specify the direction of vibration to be at
+   the rear of the component.</p>
+
+
+  <h4>Use Line Scan</h4>
+
+  <p>If checked the line-scan mode is enforced even if Dim=3D.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Drawing</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>The page <i>Drawing</i> displays the available set of boundaries
+  from the associated <a href="../General-Part/Form-VibFile.html">Vib File object</a>.</p>
+
+  <p>The operation is identical to the global
+  <a href="../Desktop/Drawing%20Controls.html">3D-Viewer</a>.</p>
+
+
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Scaling</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>Page <i>Scaling</i> alters size, position and orientation
+  of all coordinates. For details see
+  <a href="../Desktop/Form-Scaling%20(frame).html">sub-form Scaling</a>.</p>
+
+  <p>On editing, a marker appears at page <i>Drawing</i>. This indicates modification.
+  On switching to page <i>Drawing</i> scaling parameter get applied and displayed.</p>
+
+
+
+  <!-- ---------------------------------------------------------------- -->
+  <h3>Page - Meshing</h3>
+  <!-- ---------------------------------------------------------------- -->
+
+  <p>On this page you can control the way the finite element mesh is generated
+  for the Elements. If not specified Elements uses Meshing parameters
+  of its Parent, which can be a
+  <a href="Form-Subdomain.html">Subdomain</a> or an
+  <a href="Form-Interface.html">Interface</a>. These in turn
+  default to global settings (see menu <i>Global/Meshing...</i>).</p>
+
+
+  <p><b>Edge Length</b> and further parameters are described in
+  chapter <a href="../Desktop/Form-Meshing.html">Form - Meshing</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format
+  <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter
+  <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers for Elements are:</p>
+
+  <p class=formula><table >
+    <!-- Parameter -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Parameter</b></span></td> </tr>
+    <tr> <td>tB</td>             <td>Recess of local baffle</td>           </tr>
+    <tr> <td>NormPosX</td>       <td>Distance of normalization point (radius or x-coordinate)</td>  </tr>
+    <tr> <td>NormPosY</td>       <td>Distance of normalization point (y-coordinate)</td>       </tr>
+    <tr> <td>NormPosPhi</td>     <td>Angle of normalization point</td>       </tr>
+    <!-- Driving -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Driving</b></span></td> </tr>
+    <tr> <td>Weight</td>         <td>Signal amplification</td>         </tr>
+    <tr> <td>Delay</td>          <td>Signal delay</td>                 </tr>
+    <!-- Meshing -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Meshing</b></span></td> </tr>
+    <tr> <td>EdgeLength</td>     <td>Length of largest edge</td>        </tr>
+    <tr> <td>EdgeLengthMin</td>  <td>At which to stop meshing</td>      </tr>
+    <tr> <td>PointDistance</td>  <td>Steiner points of Delaunay</td>    </tr>
+    <tr> <td>SkinnyAngle</td>    <td>Min angle at Delaunay</td>         </tr>
+    <tr> <td>QuadRatio</td>      <td>Aspect ratio of quads</td>         </tr>
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Scaling</b></span></td> </tr>
+    <tr> <td width=100>Scale</td>          <td>Isotropic scaling</td>             </tr>
+    <tr> <td>ScaleX</td>         <td>Scaling in x-direction</td>        </tr>
+    <tr> <td>ScaleY</td>         <td>Scaling in y-direction</td>        </tr>
+    <tr> <td>ScaleZ</td>         <td>Scaling in z-direction</td>        </tr>
+    <tr> <td>RotateX</td>        <td>Rotation about x-axis</td>         </tr>
+    <tr> <td>RotateY</td>        <td>Rotation about y-axis</td>         </tr>
+    <tr> <td>RotateZ</td>        <td>Rotation about z-axis</td>         </tr>
+    <tr> <td>ShiftX</td>         <td>Shift in x-direction</td>          </tr>
+    <tr> <td>ShiftY</td>         <td>Shift in y-direction</td>          </tr>
+    <tr> <td>ShiftZ</td>         <td>Shift in z-direction</td>          </tr>
+  </table></p>
+  <br>
+  <br>
+</td></tr></table></body>
+</html>
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

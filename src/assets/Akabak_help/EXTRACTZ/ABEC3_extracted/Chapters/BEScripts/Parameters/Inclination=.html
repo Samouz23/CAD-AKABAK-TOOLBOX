@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<title>Inclination=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Inclination=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Inclination=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>Deg</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Tilting of arc of <a href="../Sections/BE_Spectrum.html">BE_Spectrum</a> points</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/BE_Spectrum.html">BE_Spectrum</a>, <br />
+                                                        <a href="List%20of%20BE_Spectrum%20Items.html">List of BE_Spectrum Items</a>
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1>
+                                          <a href="BasePlane=.html">BasePlane=</a>,
+                                          <a href="PolarRange=.html">PolarRange=</a>
+                                       </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table align=right>
+  <tr><img src="../../../_Images/Inclination%20Angles.jpg" /></tr>
+  <br />
+  <tr><img src="../../../_Images/Inclination%20Horn.jpg" /></tr>
+  </table>
+
+  <p><i>Inclination=</i> is the tilting of the arc of points versus the
+  <a href="BasePlane=.html">BasePlane=</a>. The axis of rotation
+  is the on-axis direction.</p>
+
+
+  <p>The range of <i>Inclination=</i> is 0 ... 360 deg.</p>
+
+  <h4>Example</h4>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    PlotType=Directivity
+    GraphHeader="Directivity"
+    BodeType=LeveldB;  Range=50
+    PolarRange=-90, 90, 37
+    BasePlane=zx
+    Distance=100m
+    101    <font color="#800000">Inclination=0.0</font>    ID=5002
+    102    <font color="#800000">Inclination=30.0</font>   ID=5003 </pre>
+
+  <p>In this example two frequency-directivity-plots are calculated.
+  One has no inclination and the other is tilted by 30deg. </p>
+
+  <br>
+  <br>
+</body>
+</html>

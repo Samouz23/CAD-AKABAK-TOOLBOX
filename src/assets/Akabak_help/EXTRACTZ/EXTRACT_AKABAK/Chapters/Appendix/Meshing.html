@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Boundary Meshing</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Boundary Meshing</h1>
+
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <hr>
+
+  <table class=pic>
+  <tr><td><img src="../../_Images/Meshing%20-%20Integration%20Points.jpg"  /><br>
+          Integration points and receiving point</td></tr>
+  </table>
+
+  <p>For applying the <a href="Boundary%20Element%20Analysis.html">Boundary Element Method</a>
+  (BEM) the surface surrounding the field needs to be divided
+  into finite elements. In AKABAK constant pressure elements of triangular shape are used
+  for solving the Helmholtz Integral. Any other shape specified is transformed into
+  triangular patches. During solving-stage the receiving point is the point of gravity
+  of a triangle. The solver calculates unknown surface-velocities and
+  pressures according to the standard way of solving Integral Equations.
+  Hence, for the solver the structure "looks" like a cloud of points, each
+  a center of a triangle.</p>
+
+  <p>At the subsequent observation stage, i.e. when the sound field is calculated, the
+  Green-function of each triangle is integrated again and then weighted by the
+  normal surface-velocity and pressure as calculated at the solving stage.</p>
+
+  <p>AKABAK mesh-generator starts with a given polygon by sub-dividing its flat plane
+  into triangular shapes. If you use an external mesh-generator, such as GMSH, you
+  would firstly import the mesh with the help of the
+  <a href="../General-Part/Form-MeshFile.html">Mesh-File Object</a>. Secondly
+  use the component <a href="../BEM-Part/Form-Elements%20(Mesh-File).html">Elements (mesh-file)</a>
+  in order to create the acoustic boundaries.</p>
+
+  <!-- ----------------------------------------------- -->
+  <h3>Type of Mesh</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>AKABAK offers two types of mesh-generation: <i>Bifurcation</i> and <i>Delaunay</i>.
+  Bifurcation is a technique where each specified quadrilateral and triangle is split
+  into two new  items in an attempt to yield a regular shape and simultaneously
+  satisfy the specified mesh-criteria. Delaunay is an advanced schema [<a href="Literature.html">8</a>],
+  which triangulizes any shape directly in a most regular way. For most elements in
+  AKABAK the mesh-type can be selected and there are optional control parameters,
+  as explained at dialog
+  <a href="../Desktop/Form-Meshing.html">Meshing</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Mesh Density</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>Before solving, AKABAK investigates the boundary-planes as specified and will
+  cut these planes until specified criteria are met. Main criterion is the side-length
+  of the mesh-triangle, which can be specified with the help of
+  parameter <i>Edge Length</i> of dialog
+  <a href="../Desktop/Form-Meshing.html">Meshing</a>.</p>
+
+
+  <h4>High Frequencies</h4>
+
+  <p>At high temporal frequencies the wave-field is typically formed more
+  complex due to interferences. For example, the acoustic field may show
+  stronger variations at diffraction edges or at high modal density, whereas
+  the field may be more regular across larger flat structures.</p>
+  <p>Basically each finite element should be small enough so that
+  pressure-variations across the element can be regarded small.
+  Here, we are in a dilemma because there is no reliable measure a priory.</p>
+
+  <br />
+  <table align=center>
+  <tr align=center>
+  <td><img src="../../_Images/Meshing%20-%20Chamber%20MeshFrequ=100Hz%20at%20100Hz.jpg" /></td>
+  <td><img src="../../_Images/Meshing%20-%20Chamber%20MeshFrequ=200Hz%20at%20100Hz.jpg" /></td>
+  <td><img src="../../_Images/Meshing%20-%20Chamber%20MeshFrequ=250Hz%20at%20100Hz.jpg" /></td>
+  </tr>
+  <tr align=center>
+  <td>Edge Length=1700 mm<br> Mesh Frequency=100Hz<br> N=352</td>
+  <td>Edge Length=850 mm<br>  Mesh Frequency=200Hz<br> N=1408</td>
+  <td>Edge Length=685 mm<br>  Mesh Frequency=250Hz<br> N=2960</td>
+  </table>
+
+  <p>For example, the above field-plots are created with the help of example
+  <i>Chamber with Damped Walls</i> and picture the field of a rectangular room
+  at 100Hz close to the wall. No damping is applied.
+  From left to right the mesh-density of the boundary mesh
+  increases. We are looking through the boundary onto an observation-plane.
+  The observation grid is identical for all three cases.
+  Obviously the sharpness of the result is best for the right diagram.
+  However, with number of mesh-elements N the calculation takes longer.
+  This example demonstrates well how difficult it can be to give a rule of thumb.
+  This example shows the field close to a room-mode with its typical distinct pattern.
+  After all, it is surprising to get such good results even for low mesh-density
+  although the pressure-field seems anything but constant for many elements.</p>
+
+
+  <table class=pic>
+    <tr height=200><td><p style="text-align: center"><img src="../../_Images/Meshing%20-%20Halos.jpg"/></p></td></tr>
+    <tr height=250><td><img src="../../_Images/Meshing%20-%20Halos-Duct.jpg"  /></td></tr>
+    <tr height=200><td><img src="../../_Images/Meshing%20-%20Overlap1.jpg"  /></td></tr>
+    <tr height=180><td><img src="../../_Images/Meshing%20-%20Overlap2.jpg"  /></td></tr>
+  </table>
+
+  <h4>Low Frequencies</h4>
+
+  <p>For low frequency analysis the frequency-criterion may yield too a coarse mesh.
+  The BE-mesh should sufficiently represent the acoustic boundary.</p>
+
+  <p>For checking whether the mesh is reliably representing the acoustic boundary
+  there is this "FE-wisdom":</p>
+  <ol>
+    <li>Run a simulation with given mesh-density.</li>
+    <li>Repeat simulation with increased mesh-density.</li>
+    <li>If result is different repeat check with increased density.</li>
+  </ol>
+
+
+  <h3>Opposite Walls and Thin Shapes</h3>
+
+  <p>Close to the surface of a boundary element the sound field can be only approximate
+  because of finite number of integration points.
+  Picture a small halo over each triangle having a radius of the inscribed circle.
+  In general, the model can be considered good if there is little intersection of
+  these semi-spheres.</p>
+
+  <p>BEM works best if the acoustic boundaries enclose a compact volume as
+  demonstrated in paper [<a href="Literature.html#37">37</a>].
+  Thin shapes and narrow ducts need to be meshed with a higher resolution.
+  For example, elements of opposite walls of a duct should have a size which
+  ensures that its halos do not intersect. Halos in the left sketch intersect.
+  This means the size of the finite element is too large. After adjusting parameter
+  <i>EdgeLength</i> the mesh generator yields triangles of smaller size and
+  the halos appear apart as shown in the right drawing.
+  Similar problems occur with thin plates or elongated triangles where the distance
+  of the center points is much smaller then the length of the sides.</p>
+
+
+  <h3>Overlapping Elements</h3>
+
+  <p>One of the most encountered pitfalls is the overlapping of elements. If two
+  elements occupy the same spot in space and belong to the same sub-domain
+  then the solver cannot yield exact results because of ambiguity.</p>
+
+  <p>The mesh generator performs a simple test on whether there are boundary
+  elements which center points are close. A warning will be issued and
+  close triangles will be rendered colored as demonstrated by the mesh on the right.
+  There are two rectangles of width 200mm and height 120mm apart only by 10mm.
+  If meshed with EdgeLength 50mm AKABAK issues a warning and renders close triangles
+  violet. Setting EdgeLength to 25mm removes the warning because the gap
+  is modeled by sufficient small boundary elements as described in the last chapter.</p>
+
+  <p>There is one exception where boundary elements are allowed to be very close or to overlap.
+  This case is if the two boundary planes belong to different
+  <a href="Sub-Domain%20Modelling.html">subdomains</a>.</p>
+
+
+  <h3>Holes and Gaps</h3>
+
+  <p>The Boundary Element Method assumes a complete boundary, and the
+  subdomain should enclose a valid volume. The exterior domain
+  forms only an apparent exception because here the domain is "closed"
+  analytically by assuming <i>Sommerfeld</i> radiation condition at infinity.</p>
+
+  <p>However, one of the advantages of the Boundary Element Method is that
+  the boundary-mesh does not need to be "water-tight". The BEM, as implemented
+  in AKABAK, can still give satisfactory results if the mesh shows small holes
+  and gaps. The reason for this is that for a subdomain all elements are
+  inter-connected by integrated Green-functions, i.e. the method can be
+  regarded a holistic approach.</p>
+
+
+  <h3>Subdomains</h3>
+
+  <p>AKABAK allows <a href="Sub-Domain%20Modelling.html">subdomain modeling</a>.
+  With respect to meshing, each subdomain should be regarded independently,
+  i.e. it should form a volume surrounded by the boundary. Any triangle
+  generated should be uniquely belong to a single subdomain. Here, the only
+  exception are the interfaces, which triangles belong to exactly two
+  subdomains.</p>
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

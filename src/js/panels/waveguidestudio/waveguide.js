@@ -40,6 +40,7 @@ export function initializeWaveguidePanel(rootElement) {
     
     EventHandlers.initEventListeners(rootElement, dom, callbacks);
     EventHandlers.loadAndApplyHotkeys(state, dom, hotkeyHandler);
+    initPresetListeners(rootElement);
     updateUI();
     
     setTimeout(() => {
@@ -160,4 +161,115 @@ function generateAndRenderWaveguide() {
 
     Renderer.updateVisibility(dom.wgShowSurface.checked, dom.wgShowPoints.checked);
     if (vertices.length > 0) dom.wgExportBtn.disabled = false;
+}
+
+// ====================================================================================================
+// PRESETS : Save / Load / Delete waveguide configurations
+// ====================================================================================================
+
+function collectFormValues(root) {
+    const values = {};
+    root.querySelectorAll('input[type="text"], select, input[type="checkbox"]').forEach(el => {
+        if (!el.id) return;
+        if (el.type === 'checkbox') values[el.id] = el.checked;
+        else values[el.id] = el.value;
+    });
+    return values;
+}
+
+function applyFormValues(root, values) {
+    if (!values) return;
+    for (const [id, val] of Object.entries(values)) {
+        const el = root.querySelector(`#${CSS.escape(id)}`);
+        if (!el) continue;
+        if (el.type === 'checkbox') el.checked = val;
+        else el.value = val;
+    }
+}
+
+function initPresetListeners(rootElement) {
+    const presetsBtn = rootElement.querySelector('#wg-presets-btn');
+    const modalOverlay = rootElement.querySelector('#wg-presets-modal-overlay');
+    const closeBtn = rootElement.querySelector('#wg-presets-panel-close');
+    const saveBtn = rootElement.querySelector('#wg-preset-save-btn');
+    const nameInput = rootElement.querySelector('#wg-preset-name-input');
+
+    // Disable waveguide hotkeys while typing in the preset name input
+    nameInput.addEventListener('focus', () => { state.presetsInputFocused = true; });
+    nameInput.addEventListener('blur', () => { state.presetsInputFocused = false; });
+
+    presetsBtn.addEventListener('click', () => {
+        const isHidden = modalOverlay.classList.contains('hidden');
+        modalOverlay.classList.toggle('hidden', !isHidden);
+        if (isHidden) refreshPresetList(rootElement);
+    });
+
+    closeBtn.addEventListener('click', () => modalOverlay.classList.add('hidden'));
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.add('hidden'); });
+
+    saveBtn.addEventListener('click', async () => {
+        const name = nameInput.value.trim();
+        if (!name) return;
+        const values = collectFormValues(rootElement);
+        const preset = { name, values, savedAt: new Date().toISOString() };
+        const result = await window.electronAPI.saveWaveguidePreset(preset);
+        if (result.success) {
+            nameInput.value = '';
+            refreshPresetList(rootElement);
+        }
+    });
+
+    // Block ALL keyboard events from propagating when input is focused
+    ['keydown', 'keyup', 'keypress'].forEach(evtType => {
+        nameInput.addEventListener(evtType, (e) => {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            if (evtType === 'keydown' && e.key === 'Enter') saveBtn.click();
+        }, true);
+    });
+}
+
+async function refreshPresetList(rootElement) {
+    const listEl = rootElement.querySelector('#wg-presets-list');
+    const presets = await window.electronAPI.getWaveguidePresets();
+
+    if (!presets || presets.length === 0) {
+        listEl.innerHTML = '<div class="wg-presets-empty">No saved presets</div>';
+        return;
+    }
+
+    listEl.innerHTML = presets.map(p => `
+        <div class="wg-preset-item" data-preset-name="${p.name.replace(/"/g, '&quot;')}">
+            <span class="wg-preset-item-name" title="${p.name.replace(/"/g, '&quot;')}">${p.name}</span>
+            <button class="wg-preset-load-btn" data-load-name="${p.name.replace(/"/g, '&quot;')}" title="Load preset">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Load
+            </button>
+            <button class="wg-preset-delete-btn" data-delete-name="${p.name.replace(/"/g, '&quot;')}" title="Delete">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+        </div>
+    `).join('');
+
+    listEl.querySelectorAll('.wg-preset-load-btn').forEach(loadBtn => {
+        loadBtn.addEventListener('click', async () => {
+            const presetName = loadBtn.dataset.loadName;
+            const preset = presets.find(p => p.name === presetName);
+            if (!preset) return;
+            applyFormValues(rootElement, preset.values);
+            updateUI();
+            EventHandlers.update2DChart(state, dom);
+            generateAndRenderWaveguide();
+            rootElement.querySelector('#wg-presets-modal-overlay').classList.add('hidden');
+        });
+    });
+
+    listEl.querySelectorAll('.wg-preset-delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const name = btn.dataset.deleteName;
+            await window.electronAPI.deleteWaveguidePreset(name);
+            refreshPresetList(rootElement);
+        });
+    });
 }

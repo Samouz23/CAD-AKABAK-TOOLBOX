@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Curve File Object (2800)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Curve File Object</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">General</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20Curve%20Graph.jpg"><br><center>AKABAK</center></td></tr>
+    <tr           ><td><img src="../../_Images/Desktop%20-%20VACS%20Export%20Data.jpg"><br><center>VACS</center></td></tr>
+  </table>
+
+
+  <p>The Curve-File object contains Frequency Response curves, which are used
+  by components. For example a curve can weight the driving such as as in
+  <a href="../Desktop/Form-FixedDriving.html">Fixed Driving</a>,
+  <a href="../LEM-Part/Cmps/Source.html">LE-Source</a> or <a href="../LEM-Part/Cmps/Filter.html">LE-Filter</a>.
+  Curves can be the Response and Impedance of a
+  <a href="../LEM-Part/Cmps/MeasRadiator.html">LE-Measured Radiator</a> component.
+  It can also be the frequency impedance curve of <a href="Form-WallImpedance.html">Wall Impedance</a>.</p>
+
+  <p>Create a new <i>Curve-File</i>-object with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  The home of a <i>Curve-File</i> is in page <i>General</i>.
+  Edit an existing object by dbl-click its entry in page <i>General</i>
+  or issue menu <i>Edit/Parameters</i> or press CTRL+E.</p>
+
+  <p>The graph can contain as many curves as you like. However, you need to specify which
+  curve shall be used by components. This is done with the help of the curve-name
+  which you need to enter at the appropriate fields.</p>
+
+
+  <h4>Importing Data</h4>
+
+  <p>Most convenient it is if the file format is using the
+  <a href="Import%20Data%20-%20Control%20Setting%20-%20Data.html">Import Control Settings</a> of VACS.
+  In this case the import is automatic.</p>
+
+  <p>However, you can also import other formats. Here is a short-hand documentation:
+  <a href="Import%20Data%20-%20Text%20Format.html">Import Text Formats</a>,
+  <a href="Import%20Data%20-%20Control%20Dialog.html">Import Control Dialog</a>.
+  For example, you may want to enter a frequency response curve. Take a text-editor
+  and enter for example:</p>
+
+  <pre>
+      20   0.2
+      50   0.5
+     100   0.7
+     200   0.8
+    1000   1.0
+    2000   1.0
+  </pre>
+
+  <p>Copy this sequence to the clipboard and and issue Button - Paste of this form.
+  The <a href="Import%20Data%20-%20Control%20Dialog.html">Import Control Dialog</a>
+  opens where you can make adjustments. Eventually, the curve appears in the plot.</p>
+
+
+
+  <h4>Using VACS</h4>
+
+  <p>In VACS you can prepare the frequency response. In VACS select the curve you want to use.
+  Then issue VACS-menu <i>IO/Export Data</i>.</p>
+
+  <p>Eventually you should see a form as displayed to the right.
+  Select <i>File Format = VACS Text Format</i> or
+  <i>File Format = VACS Binary Format</i>.
+  For single curve-data most of the check boxes may not apply.
+  If your data-set is complex-valued then <i>Bode Type</i> should be set to <i>Bode Type = Real + Imaginary</i>,
+  <i>Bode Type = Amplitude + Phase</i> or <i>Bode Type = Level dB + Phase</i>,
+  respectively.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Page - General</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <h4>Name of component</h4>
+
+  <p>Text string which identifies the component. This name will be displayed
+  at reference lists.</p>
+
+  <h4>Info</h4>
+
+  <p>Place for comments.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Page - Graph</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <h4>Button - Open</h4>
+
+  <p>Opens the <a href="../Appendix/File%20-%20Dialogs.html">file-dialog</a>
+  where you can select the data-file. The new dataset will be added as a curve to
+  the existing curves.</p>
+
+
+  <h4>Button - Paste</h4>
+
+  <p>This command assumes a filename or data are available at the clipboard. If its a
+  filename then the associated file will be imported. A filename is copied to the clipboard
+  with the help of the File-Manager of the operating system. There you would select a file
+  and then issue menu <i>Start/Copy</i> or press CTRL+C. You can also drag the filename
+  from the File-Manager into the Curve File Form.
+  If the clipboard contains data then these will be imported directly.
+  Eventually, the new dataset will be added as a curve to the existing curves.</p>
+
+
+  <h4>Button - Swap Axis</h4>
+
+  <p>Moves selected curves to the other ordinate axis.</p>
+
+
+  <h4>Button - Graph</h4>
+
+  <p>Opens a menu of tools for adjusting the whole graph. For details see VACS-manual.</p>
+
+
+  <h4>Button - Curves</h4>
+
+  <p>Opens a menu of tools for adjusting selected curves. For details see VACS-manual.</p>
+
+
+  <h4>Name of curves to be used</h4>
+
+  <p>Enter here the "name" of the curve to be used during calculations. All other curves
+  will be ignored for calculations. Unspecified curves will still be saved with the
+  project.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

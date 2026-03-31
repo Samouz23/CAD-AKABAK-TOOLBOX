@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Drawing Controls</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Drawing Controls</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Desktop</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=150px><td width=220px><img src="../../_Images/Desktop%20-%203DViewer.jpg"></td></tr>
+    <tr height=150px><td width=220px><img src="../../_Images/Desktop-Schematic.jpg"></td></tr>
+    <tr height=350px><td width=220px><img src="../../_Images/Desktop-Menu-Venue.jpg"></td></tr>
+    <tr height=550px><td width=220px><img src="../../_Images/Desktop-Sch-Selection.jpg"></td></tr>
+    <tr height=750px><td width=220px><img src="../../_Images/Desktop-DrawingButtons.jpg"></td></tr>
+  </table>
+
+  <p>The 3D-Viewer renders acoustic boundaries, pressure points and
+  field calculation results of the <a href="../BEM-Part/_Index.html">BEM-Part</a>.
+  The scene is drawn in orthographic projection.
+  Components can be check visible/un-visible at the <a href="Treelist%20Controls.html">tables</a>.
+  Further there are checks at <a href="Page-Views.html">Page Views</a>.</p>
+
+  <p>The Schematic Designer handles the lumped element networks of the
+  <a href="../LEM-Part/_Index.html">LEM-Part</a>. The Designer is a 2D-Drawing tool
+  with wiring. Parameters of a selected element can
+  be edited with the help of the LE-Parameter Editor.</p>
+
+  <p>The 3D-Viewer and the Schematic Designer can be controlled with the help of the mouse
+  and the keyboard.
+  For this to work the viewer or the schematic designer should have focus (click into it).</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Main-Menu</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <h4>Set keyboard to</h4>
+
+  <p><i>Rotating, Shifting, Zooming, Clipping</i>. If you activate one of these items then
+  control-keys of your keyboard operate accordingly. For example if Rotating is clicked
+  then any press on up/down and left/right will rotate the scene.</p>
+
+
+  <h4>Axis Upwards</h4>
+
+  <p><img src="../../_Images/Desktop-AxisUp.jpg">&nbsp;
+  Use this feature to quickly rotate the structure with one of the axis pointing upwards.
+  Clicking again rotates the view by 90 degree.</p>
+  <p>Secondly this setting controls also the rotation axis for
+  <a href="../Appendix/Rotation%20Modes.html">Euler-Rotation</a>.</p>
+
+
+  <h4>Resetting</h4>
+
+  <p>Resets rotation, shift, zoom and clipping.</p>
+
+
+  <h4>ArcBall, Euler</h4>
+
+  <p>Toggling <a href="../Appendix/Rotation%20Modes.html">rotation-modes</a>.</p>
+
+
+  <h4>Copy as Picture</h4>
+
+  <p>Copies the current view of the 3D-Viewer or of the schematic designer onto the clipboard
+  as a bitmap. The bitmap-format can be selected
+  via menu <a href="../Desktop/Form-Preferences.html#Graphics">Options/Preferences-Graphics</a>.</p>
+
+
+  <h4>Save as Picture</h4>
+
+  <p>This function allows to save the current view of the 3D-Viewer or of the schematic designer
+  as a bitmap. The bitmap-format can eventually be selected in the
+  <a href="../Appendix/File%20-%20Dialogs.html">file-dialog-form</a> at "Save as Type".</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Mouse</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <h4>Selection</h4>
+
+  <p>Many operation operate on the currently selected item. A selected item has
+  input-focus.</p>
+
+  <p>Basically, selection happens on mouse-click. Normally it is mutually exclusive,
+  which means all other items get un-selected.</p>
+
+  <p>At places selection is extended, so we can select/un-select multiple items.
+  For example, in the schmatic designer there can be selected multiple components.
+  If multiple selection is available menu <i>Edit/Select all</i> will select
+  all components.
+  Groups of components of the schematic designer can be selected with the
+  help of a focus rectangle; click somewhere and drag the mouse, which opens this rectangle.
+  All components within get selected.
+  Alternatively, for extended selection use the SHIFT key while clicking with the mouse. </p>
+
+
+  <h4>Rotation</h4>
+
+  <p>Left-click and drag. Press CTRL-key for rotation on a finer grid.
+  See at <a href="../Appendix/Rotation%20Modes.html">rotation-modes</a>.</p>
+
+
+  <h4>Shifting</h4>
+
+  <p>Wheel- or middle-click and drag.  The structure is panned until the mouse
+  button is released.</p>
+
+
+  <h4>Zooming</h4>
+
+  <p>Rotate the mouse-wheel for zooming the view in and out of the structure.</p>
+
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Keyboard</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <p>The view can be translated with the LEFT/RIGHT and UP/DOWN keys. Increase the
+  step with simultaneously pressing the CTRL-key. The HOME-key rests the default values.
+  The END-key yields maximum zooming or clipping.</p>
+
+  <p>Use menu <i>Drawing/Set Keyboard To...</i> to select, whether the
+  keys rotate, shift, zoom or clip the structure.</p>
+
+  <p>Alternatively simply type</p>
+
+  <pre>
+    R   Rotation mode
+    S   Shifting mode
+    Z   Zooming mode
+    C   Clipping mode</pre>
+  <p>Note, for the quick-keys to work the drawing should have input-focus.</p>
+
+  <p>For example: Press "R" and then the LEFT-key in order to rotate to the left.
+  Press "C" and then the END-key in order to set the clipping to maximum.
+  And so on.</p>
+
+
+  <!-- ------------------------------------------------------------------------------ -->
+  <h3>Desktop Buttons</h3>
+  <!-- ------------------------------------------------------------------------------ -->
+
+  <p>On the right of the
+  <a href="_Index.html">Desktop</a> you find a page labelled "Drawing".
+  These buttons navigate the 3D-viewer and the schematic-designer.
+  The function is similar to mouse and keyboard operation.</p>
+
+  <p>Buttons labeled <i>Zooming, Rotation, Shifting, Clipping</i> switch
+  LEFT/RIGHT and UP/DOWN keys.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

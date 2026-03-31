@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Data Files - Spectrum - WallImpedance</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Data Files - Spectrum - WallImpedance</h1>
+  <p class=navi><a href="../Index.html">Home</a> &raquo;
+                <a href="Data%20Files%20-%20Spectrum.html">Data Files - Spectrum</a> </p>
+  <hr>
+
+  <table align=right>
+  <tr><td><img src="../../_Images/WallImpedance.jpg" /></td></tr>
+  <tr><td><img src="../../_Images/Vacs%20Export%20Data%20Dialog.jpg" /></td></tr>
+  <tr><td><p>VACS - Curves and Export Data</p></td></tr>
+  </table>
+
+  <p>Assuming you want to assign a frequency dependent impedance spectrum
+  to section <a href="../BEScripts/Sections/WallImpedance.html">WallImpedance</a>.
+  The curve may be imported into <a href="VacsViewer.html">VACS</a>
+  or generated with its formula-system (<i>Vacs/Graph/Create Curve or Contour</i>).</p>
+
+  <p>In order to help swift processing in ABEC the number of curve points should
+  be moderate, say for example 200 points on a log-axis. Otherwise consider to use
+  resampling features of <i>VACS</i>. Often only a few points are sufficient.
+  <i>ABEC</i> will perform the interpolation if necessary.</p>
+
+  <p>Finally, in <i>VACS</i>, select the curve and issue <i>Vacs/IO/Export Data...</i></p>
+
+  <p>For <i>File Format</i> select</p>
+
+  <ul>
+  <li><i>VACS</i> - Text Format</li>
+  <li><i>VACS</i> - Binary Format</li>
+  </ul>
+
+  <p>Then click Save and provide a filename in
+  the subsequent <a href="File%20-%20Dialogs.html">File Dialog</a>.</p>
+
+  <br />
+
+  <p>In <i>ABEC</i> issue
+  <a href="../GUI/Project/Add%20Data%20File.html">Add Data File</a>
+  and provide an alias. This alias can then be
+  used in the scripts where you want to access the data of this file.
+  The parameter is <a href="../BEScripts/Parameters/DataFileAlias=.html">DataFileAlias=</a>.
+  For example:</p>
+
+  <pre>
+  <b>WallImpedance</b> "Damping Wall"
+    <font color="#800000">DataFileAlias=Z1</font>
+    RefElements="wall"
+    ImpType=Impedance
+    Normalized </pre>
+
+  <br />
+  <br />
+  <h4>Example File</h4>
+
+  <p>In textual format such a data-file could look like the following tables.
+  The red colored lines are the above mentioned <i>VACS-Import Control Settings</i>
+  which provide just enough information to the <i>ABECs</i> import-driver to
+  perform proper interpretation. For <i>WallImpedance</i> the exact meaning of the
+  data are controlled with parameters
+  <a href="../BEScripts/Parameters/ImpType=.html">ImpType=</a> and
+  <a href="../BEScripts/Parameters/Normalized=.html">Normalized=</a>.</p>
+
+  <p>The following two data-file-examples are
+  identical in value. The first lists a spectrum of normalized impedance
+  as real- and imaginary parts, whereas the second has it as amplitude and phase
+  values, the latter in degree. If <i>Data_Format=</i> were absent
+  it would be hard to distinguish the proper complex notation.</p>
+
+  <p>Assuming the data-file is always a spectrum, then,
+  for <i>WallImpedance</i> and in many other cases,
+  the import-engine of ABEC needs only to be provided with
+  a single <i>Vacs-Import Control Settings</i> together with your
+  data, which is</p>
+
+  <pre>
+  <b>Data_Format=</b></pre>
+
+  <br />
+  <br />
+  <hr />
+  <pre><font color="#800000">
+  Data_Format=Complex
+  Data_Domain=Frequency</font>
+      20             1.35083       -0.796214
+      39.9052        1.21632       -0.526054
+      79.6214        1.13338       -0.34756
+     158.866         1.08224       -0.229631
+     316.979         1.05071       -0.151716
+     632.456         1.03127       -0.100237
+    1261.91          1.01928       -0.0662262
+    2517.85          1.01189       -0.0437552
+    5023.77          1.00733       -0.0289088
+   10023.7           1.00452       -0.0190999
+   20000             1.00279       -0.0126191</pre>
+
+  <br />
+  <hr />
+
+  <pre><font color="#800000">
+  Data_Format=Ampl_Phase
+  Data_Domain=Frequency</font>
+       20            1.56802      -30.5162
+       39.9052       1.32521      -23.3883
+       79.6214       1.18548      -17.0486
+      158.866        1.10634      -11.9794
+      316.979        1.06161       -8.21634
+      632.456        1.03613       -5.55161
+     1261.91         1.02143       -3.71749
+     2517.85         1.01283       -2.476
+     5023.77         1.00774       -1.64385
+    10023.7          1.0047        -1.08929
+    20000            1.00287       -0.720977
+  </pre>
+
+
+  <br>
+  <br>
+</body>
+</html>
+
+

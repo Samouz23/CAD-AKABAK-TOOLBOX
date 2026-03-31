@@ -6,21 +6,17 @@
 
 import { getGeometryPanelHtml, initializeGeometryPanel } from './panels/geometry.js';
 import { getPowerPanelHtml, initializePowerPanel } from './panels/physics/power.js';
-import { getMeshPanelHtml, initializeMeshPanel } from './panels/mesh.js';
+import { getMeshPanelHtml, initializeMeshPanel } from './panels/mesh/mesh.js';
 import { getSettingsPanelHtml, initializeSettingsPanel } from './panels/mainsettings/mainsettings.js';
 import { getDriversPanelHtml, initializeDriversPanel } from './panels/driver_db/drivers.js';
 import { getNotesPanelHtml, initializeNotesPanel } from './panels/notes.js';
 import { getHornPanelHtml, initializeHornPanel } from './panels/horn.js';
 import { getWaveguidePanelHtml, initializeWaveguidePanel } from './panels/waveguidestudio/waveguide.js';
-import { getHornscriptPanelHtml, initializeHornscriptPanel } from './panels/hornscript.js';
-import { getDuctscriptPanelHtml, initializeDuctscriptPanel } from './panels/ductscript.js';
+import { getHornStudioPanelHtml, initializeHornStudioPanel } from './panels/hornstudio/hornstudio.js';
+import { getAkabakLemPanelHtml, initializeAkabakLemPanel } from './panels/Akabak_Lem/akabakLem.js';
 import { getDirectivityPanelHtml, initializeDirectivityPanel } from './panels/directivity.js';
+// import { getBemPanelHtml, initializeBemPanel } from './panels/bem/bem.js';
 import { initializeUi } from '../ui.js';
-
-// [IMPORTS CONDITIONNELS] sim-db et orders sont chargés dynamiquement
-// pour permettre leur suppression sans casser l'application
-let getSimDbPanelHtml, initializeSimDbPanel;
-let getOrdersPanelHtml, initializeOrdersPanel;
 
 import { 
   getBasicOhmHtml, 
@@ -62,10 +58,10 @@ const panelModules = {
   notes: { getHtml: getNotesPanelHtml, initialize: initializeNotesPanel },
   horn: { getHtml: getHornPanelHtml, initialize: initializeHornPanel },
   waveguide: { getHtml: getWaveguidePanelHtml, initialize: initializeWaveguidePanel },
-  hornscript: { getHtml: getHornscriptPanelHtml, initialize: initializeHornscriptPanel },
-  ductscript: { getHtml: getDuctscriptPanelHtml, initialize: initializeDuctscriptPanel },
+  hornstudio: { getHtml: getHornStudioPanelHtml, initialize: initializeHornStudioPanel },
+  akabak_lem: { getHtml: getAkabakLemPanelHtml, initialize: initializeAkabakLemPanel },
   directivity: { getHtml: getDirectivityPanelHtml, initialize: initializeDirectivityPanel },
-  // 'sim-db' et 'orders' sont ajoutés dynamiquement au démarrage
+  // bem: { getHtml: getBemPanelHtml, initialize: initializeBemPanel },
   'basic-ohm': { getHtml: getBasicOhmHtml, initialize: initializeBasicCalculatorPopup },
   'basic-parallel': { getHtml: getBasicParallelHtml, initialize: initializeBasicCalculatorPopup },
   'basic-wavelength': { getHtml: getBasicWavelengthHtml, initialize: initializeBasicCalculatorPopup },
@@ -189,42 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const features = await window.electronAPI.getFeatures();
   
-  // [CHARGEMENT CONDITIONNEL SIM-DB]
-  const openSimDbBtn = document.getElementById('open-sim-db-btn');
-  if (features.isNasEnabled) {
-    try {
-      const simDbModule = await import('../../private/sim-db.js');
-      getSimDbPanelHtml = simDbModule.getSimDbPanelHtml;
-      initializeSimDbPanel = simDbModule.initializeSimDbPanel;
-      panelModules['sim-db'] = { getHtml: getSimDbPanelHtml, initialize: initializeSimDbPanel };
-      console.log("Module SIM-DB chargé avec succès.");
-    } catch (error) {
-      console.warn("Impossible de charger sim-db.js:", error.message);
-      if (openSimDbBtn) openSimDbBtn.style.display = 'none';
-    }
-  } else {
-    if (openSimDbBtn) openSimDbBtn.style.display = 'none';
-    console.log("Fonctionnalité SIM-DB (NAS) désactivée.");
-  }
 
-  // [CHARGEMENT CONDITIONNEL ORDERS]
-  const openOrdersBtn = document.getElementById('open-orders-btn');
-  if (features.isOrdersManagerEnabled) {
-    try {
-      const ordersModule = await import('./panels/orders/orders.js');
-      getOrdersPanelHtml = ordersModule.getOrdersPanelHtml;
-      initializeOrdersPanel = ordersModule.initializeOrdersPanel;
-      panelModules['orders'] = { getHtml: getOrdersPanelHtml, initialize: initializeOrdersPanel };
-      console.log("Module Orders chargé avec succès.");
-    } catch (error) {
-      console.warn("Impossible de charger orders.js:", error.message);
-      if (openOrdersBtn) openOrdersBtn.style.display = 'none';
-    }
-  } else {
-    if (openOrdersBtn) openOrdersBtn.style.display = 'none';
-    console.log("Fonctionnalité Gestionnaire de Commandes désactivée.");
-  }
-  
   // Show startup disclaimer popup if enabled
   const settings = await window.electronAPI.getSettings();
   if (settings.showStartupInfo !== false) {
@@ -373,19 +334,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       showTool('settings', 'Configuration');
   });
 
-  if (openOrdersBtn && features.isOrdersManagerEnabled) {
-    openOrdersBtn.addEventListener('click', () => {
-        openedFromSubMenu = false;
-        showTool('orders', 'Gestionnaire de Commandes');
-    });
-  }
 
-  if (openSimDbBtn && features.isNasEnabled) {
-      openSimDbBtn.addEventListener('click', () => {
-          openedFromSubMenu = false;
-          showTool('sim-db', 'SIM-DB Cloud');
-      });
-  }
   
   closeToolBtn.addEventListener('click', () => {
     toolView.style.display = 'none';

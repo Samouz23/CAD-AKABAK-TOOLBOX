@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Technical Specifications</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Technical Specifications</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <p>
+
+  <h3>Hardware Requirement</h3>
+
+  <p>In general ABEC assumes modern PC-hardware, fit for a
+  standard MS-Windows 7+ system.</p>
+
+  <p>Recommended is an amply equipped computer with many CPUs and
+  lots of memory, because ABEC makes extensively use of parallel processing.
+  However, with each used thread also the memory allocation
+  goes up, which should be available.</p>
+
+  <p>On 32bit-systems memory is limited to a maximum of 2GByte per process.
+  If you simulate large structures on multiple CPUs it is recommended to
+  run the 64bit version of ABEC. Of course, this assumes a 64bit OS-system
+  with plenty of memory.</p>
+
+  <p>It is hard to give reliable prediction of memory consumption.
+  In fact the best measurement-tool is ABEC itself. Run ABEC
+  with different mesh-distributions and frequency ranges and observe
+  Windows' Task-Manager/Performance board. Note, regarding memory consumption
+  the free and commercial version of ABEC are similar.</p>
+
+  <p>ABEC 3D-viewer runs OpenGL. Make sure your graphic-card
+  is up-to-date. Typically this is OK for 32bit systems, however,
+  some older graphic-cards may not have a proper 64bit driver.</p>
+
+
+  <h3>OS Requirements</h3>
+
+  <p>ABEC should run on all versions of MS-Windows 8 and 7.
+  There is available a 32bit and a 64bit version.
+  The installation is organized automatically by the installer.</p>
+
+
+  <h3>Other Software</h3>
+
+  <p>For swift working you also need some further software-tools as explained
+  in chapter <a href="../Appendix/ABEC%20Modules.html">Modules</a>.</p>
+
+
+  <h3>Installing</h3>
+
+  <p>Installing is straightforward. Open the install application and follow the instructions.
+  The installer installs automatically the correct bit-version of ABEC (32/64bit).
+  Examples are very important, and are part of the installation.</p>
+
+
+  <h3>User Documentation</h3>
+
+  <p>The basic user documentation is available as Help. If you are new
+  to ABEC, simply press F1 and enjoy the reading!</p>
+
+  <br />
+  <p>Please let us know about your suggestions concerning ABEC, and we also are eager to
+  know about difficulties and any bugs you may come across by using ABEC.
+  Please use the contact-email at the <i>Help</i>-menu, called <i>About</i>.</p>
+
+
+  <h3>Technical Details</h3>
+
+  <pre>
+  Version:      ABEC3 v3.5.1
+  Date:         04.12.2014
+  Footprint:    18/26MB (32/64bit)
+  Modules:      1
+  Num Lines:    480k    (full build)
+                238k    (only in-house modules)
+                 94k    (stricktly ABEC modules)
+  Compiler:     <a href="http://www.embarcadero.com/" title="External">Embarcadero Delphi XE2</a>
+  Tools:        <a href="http://www.raize.com" title="External">Raize GUI Tools</a>,
+                <a href="http://www.trichview.com/" title="External">RichView RTF-editor</a>,
+                <a href="http://www.delphigl.com/" title="External">dglOpenGL</a>,
+                <a href="http://www.blumentals.net/htmlpad/" title="External">HTMLPad Editor</a>,
+                <a href="http://helpware.net/FAR/" title="External">FAR Help Authoring</a>,
+                <a href="http://www.abacom-online.de/uk/">Drawing Schematics</a>
+
+  </pre>
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Len=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Len=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Len=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>        <td class=param1><a href="../../Appendix/Units.html">m</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Length of Duct.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Duct.html">Duct</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Len=</i> is the length of the waveguide-axis specified in
+  section <a href="../Sections/Duct.html">Duct</a>.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Duct</b>  "D1"
+     DuctType=Circle
+     dD=160mm
+     <span style="color: #800000">Len=120mm</span>
+     Position=x
+     NumBaffles=2</pre>
+
+
+  <h4>Direction</h4>
+
+  <p>The value of <i>Len=</i> can be positive and negative.</p>
+
+  <p><i>Len=</i> creates a duct, which starts at
+  its first aperture as specified by parameter
+  <a href="Position=.html">Position=</a>.</p>
+
+  <p>A positive value extends the duct to the rear of the first aperture.</p>
+
+  <p>A negative value extends the duct into the front-direction.</p>
+
+  <table width=50% align=right><tr>
+  <td class=c width=200><img src="../../../_Images/Duct%20Len%20Pos.jpg"></td>
+  <td class=c width=200><img src="../../../_Images/Duct%20Len%20Neg.jpg"></td>
+  </tr><tr>
+  <td class=c>Len &gt; 0</td>
+  <td class=c>Len &lt; 0</td>
+  </tr></table>
+
+  <p>For example</p>
+
+  <pre>
+  ...
+  <b>Baffle</b> "B1"
+    ...
+    101  Ref="Duct1"  xc=0mm  yc=0mm
+
+  <b>Duct</b>  "Duct1"
+    DuctType=Oval;  WD=150mm;  HD=50mm
+    <span style="color: #800000">Len=120mm</span>
+   </pre>
+
+  <p>The <i>Duct</i> is placed on a <a href="../Sections/Baffle.html">Baffle</a>.
+  With <i>Len=120mm</i> the <i>Duct</i> will extend to the rear of the <i>Baffle</i>.</p>
+
+  <br>
+  <pre>
+  ...
+  <b>Duct</b>  "Duct1"
+    DuctType=Oval;  WD=150mm;  HD=50mm
+    <span style="color: #800000">Len=-120mm</span>
+   </pre>
+
+  <p>With a negative length-value the <i>Duct</i> extends now to the front of the <i>Baffle</i>.</p>
+
+  <br>
+  <br>
+</body>
+</html>

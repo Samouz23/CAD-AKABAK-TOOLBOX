@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>List of Field Planes By RefElements</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>List of Field Planes By RefElements</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>List of field planes.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                       <a href="../Sections/Field.html">Field</a>
+                                       </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1 COLSPAN=2>
+                                       <a href="List%20of%20Field%20Planes.html">List of Field Planes</a>,
+                                       <a href="List%20of%20Field%20Planes%20by%20Mesh-File.html">List of Field Planes by Mesh-File</a>
+                                       </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>The list of field-planes follows the parameter part of the <i>Field</i>-section.
+  If you want to calculate the field-plot on the boundary then you can
+  take reference by following format:</p>
+  <pre>
+    &lt;Index&gt;    RefElements=</pre>
+
+
+  <h4>Index</h4>
+
+  <p>The first entry is an index, which becomes the "name" of a field-plane.</p>
+
+
+  <h4>RefElements=</h4>
+
+  <p><i>RefElements=</i> indicates the name of a section of the
+  <a href="../BEScript.html">solving file</a>. <i>RefElements=</i>
+  can point to the following sections:</p>
+
+  <p class=indent><a href="../Sections/Elements.html">Elements</a></p>
+  <p class=indent><a href="../Sections/Diaphragm.html">Diaphragm</a></p>
+  <p class=indent><a href="../Sections/Shell.html">Shell</a></p>
+  <p class=indent><a href="../Sections/VibFile.html">VibFile</a></p>
+  <p class=indent><a href="../Sections/Baffle.html">Baffle</a></p>
+
+
+  <h4>For example</h4>
+
+  <p>This declaration calculates the velocity distribution of a <i>VibFile</i>
+  in dB. It assumes a <i>VibFile</i>-section with name "Vib" in the solving script.</p>
+
+  <pre>
+  <b>Field</b>  "Velocities"
+    EdgeLength=2mm
+    AnalysisType=DrvVelocity
+    BodeType=LeveldB;   StepSize=1;   Range=50dB
+    Sym=xy
+    101   RefElements="Vib"</pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

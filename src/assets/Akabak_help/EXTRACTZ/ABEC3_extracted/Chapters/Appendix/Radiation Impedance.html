@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Radiation Impedance - General</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Radiation Impedance - General</h1>
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <p class=navi>See also
+    <a href="Driving%20Groups.html">Driving Groups</a>,
+    <a href="../BEScripts/Sections/Radiation_Impedance.html">Observation Radiation_Impedance</a></p>
+  <hr>
+
+  <p>The acoustic radiation impedance is defined as z<sub>a</sub> = p/V,
+  with sound pressure p and volume velocity V. Integration yields the lumped
+  acoustic radiation impedance [<a href="Literature.html">9</a>]:</p>
+
+  <table align=center width=70%>
+  <td><img src="../../_Formulae/BEM-RadImp%20Zast.jpg" ></td>
+  <td>with</td>
+  <td><img src="../../_Formulae/BEM-RadImp%20Ss.jpg" ></td>
+  </table>
+
+  <p><i>Z<sub>ast</sub></i> is the acoustic radiation impedance from DrvGroup=t
+  to DrvGroup=s. Hence, DrvGroup=t is the source, which radiates and creates
+  a sound pressure p<sub>t</sub> at the receiving diaphragm of DrvGroup=s.
+  &nu; is the normalized normal velocity-distribution of the receiving diaphragm
+  (DrvGroup=s) (The bar indicates conjugate complex).</p>
+  <p>S<sub>0</sub> means integration of the boundary surface.
+  S'<sub>s</sub> is the effective radiation area.</p>
+
+  <p>For the self-radiation impedance s = t, otherwise we have a mutual radiation
+  impedance.</p>
+
+  <br />
+  <p>"Lumped" means a power-mean-value over the radiating area
+  of a <i>Driving Group</i>. For details, see [<a href="Literature.html">9</a>].
+  The lumped <i>Z<sub>ast</sub></i> is not localized anymore.
+  For example for a loudspeaker membran <i>Z<sub>ast</sub></i> can be measured
+  at the point of mechanical driving. This point is typically there where the
+  voice coil is attached to the cone.</p>
+
+  <p>The mechanical equivalent of the lumped radiation impedance is</p>
+
+  <p class=formula>z<sub>mst</sub> = z<sub>ast</sub>&middot;S'<sub>s</sub><sup>2</sup></p>
+
+  <p>The radiation impedance is a spectrum. The signature of the curve has
+  typical features, which are important for the design of electro-acoustic devices,
+  such as horns, for example. One such feature is that the radiation impedance
+  for free radiating devices approaches Z<sub>0</sub> = &rho;&middot;c
+  at high frequencies with Z<sub>0</sub> the radiation impedance of a
+  free traveling plane wave.</p>
+
+  <p>Hence, it is practical to view the curve normalized to Z<sub>0</sub> and
+  to the effective radiation area S'<sub>s</sub>, so that the asymptotic value
+  is one at high frequencies:</p>
+
+  <p class=formula>z<sub>st</sub> = z<sub>ast</sub>&middot;S'<sub>s</sub>/(&rho;&middot;c)</p>
+
+  <p>The lumped radiation impedance is related to the acoustic power:</p>
+
+  <p class="formula"><img src="../../_Formulae/BEM-RadImp%20Past.jpg" ></p>
+
+  <p>with lumped velocity at driving point v<sub>s</sub>.
+  For uniform velocity distribution &nu; = 1 for all points on S and the
+  power-formula becomes</p>
+
+  <p class="formula">P<sub>ast</sub> = 1/2&middot;z<sub>ast</sub>&middot;v<sub>s</sub><sup>2</sup>&middot;S<sub>s</sub><sup>2</sup></p>
+
+  <p>Hence, for free radiation and for the self-impedance (s=t)
+  we have the relation that the larger the real part of z<sub>ast</sub> the
+  higher the acoustic output for a loudspeaker.</p>
+
+  <p>For internal acoustics we observe a high value of the real part of
+  z<sub>ast</sub> at enclosure modes. The level of this value indicates the amount
+  of damping.</p>
+
+  <p>The mutual cases of P<sub>ast</sub> represents the acoustic
+  energy exchange between diaphragms.</p>
+
+  <p>In general the imaginary part of z<sub>ast</sub> is related to blind energy (the one which
+  potentially goes into resonance). If it is positive then we have an acoustic
+  mass. If z<sub>ast</sub> is negative then it represents an acoustic stiffness.</p>
+
+  <h4>Discussion of some Radiation Impedance Curves</h4>
+
+  <p><img src="../../_Images/RadImp%20Curves.jpg" ></p>
+
+  <p>The above diagram displays the normalized specific radiation impedance
+  of a diaphragm of dD=2in in an infinite baffle (one side).
+  With this diameter the wave-number-factor k&middot;r = 1 at f = 2150 Hz.</p>
+
+  <p>The red curve is
+  of a piston, the blue of a concave shaped dome and the green of a convex shaped
+  dome. At high frequencies all curves converge to a value of one, which
+  corresponds to Z<sub>0</sub> = &rho;&middot;c. At very low frequency the radiation impedance
+  goes to zero. At mid-band the wavelength is comparable to the dimension of
+  the radiator. Here the radiation impedance typically displays its most
+  interesting features. The shape of the curves depend on the details of the
+  diaphragm (and also on its velocity distribution).</p>
+
+  <p>The real-part, which belongs to the piston (red)
+  quickly raises without too much of an overshot. Its imaginary part is mass-like
+  throught the frequeny band.</p>
+
+  <p>The curves belonging to the convex shaped diaphragm (green) are similar to
+  those of the piston, however it typically features a more smooth transition
+  band of the real-part.</p>
+
+  <p>The concave shaped diaphragm typically features the strongest overshot
+  of the real part (blue). Remember that the acoustic power is proportional
+  to the real-part. The imaginary part has frequency bands, where it becomes
+  negative. This indicates a spring type radiation reactance caused by the
+  cavity, which is formed by the diaphragm. If the depth of the diaphragm is
+  enlarged, it would finally converge to a horn and then to a duct. In this case
+  the ripples of the radiation impedance would correspond to the standing waves
+  within the pipe, and would be more pronounced.</p>
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Mesh-File-Tags</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Mesh-File-Tags</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <p>Mesh-files are a list of planes, typically triangles, which can be
+  linked to <a href="../BEScripts/Sections/Elements.html">Elements</a>- and
+  <a href="../BEScripts/Sections/Field.html">Field</a>-sections and can be
+  used to position components such as the
+  <a href="../BEScripts/Sections/Diaphragm.html">Diaphragm</a> or
+  <a href="../BEScripts/Sections/Shell.html">Shell</a>.</p>
+
+  <p>However, often we do not want to use all triangles of a mesh-file.
+  For example, we may want to structure a script and assign certain
+  planes to one <i>Elements</i>-section and others to a second section and so on.</p>
+
+  <p>This filtering can be done with so-called Tags of the mesh-file.
+  As there are different formats there are also different types of Tags.</p>
+
+
+  <h3>Number Tags</h3>
+
+  <p><img src="../../_Images/Drawing%20-%20Tags.jpg" align=right />
+  If you select an element a Tag-number will be reported. This Tag
+  is part of the <a href="Mesh-Files.html">mesh-file</a>.
+  Its generation depends on the application, which exports the mesh-file.
+  Simple formats, such as <a href="http://www.wikimedia.org/wikipedia/en/wiki/STL_(file_format)" title="External">STL</a>,
+  provide no special Tags. Here the Tag is the index of the triangle.</p>
+
+
+  <h4>GMSH</h4>
+
+  <p>In <a href="http://geuz.org/gmsh/" title="External">GMESH</a>, conveniently,
+  all triangles of a CAD-item are assigned a common Tag. The index starts with 1, 2, 3,...
+  For example, all elements of the right wall of the box have a
+  different Tag than those of the left wall.</p>
+
+
+  <h4>Collada</h4>
+
+  <p>Collada-files, which originate from Sketchup, contain triangles. Here the
+  Tag-number is the index of a triangle within a group starting with
+  1, 2, 3, ...</p>
+
+
+  <h3>String Tags</h3>
+
+
+  <table width=30% align=right><tr>
+  <td class=c width=370><img src="../../_Images/Pressure_Points%20Sketchup%20Tags.jpg"></td>
+  </tr><tr height=300>
+  <td class=c width=370><img src="../../_Images/Mesh-File-Tags%20Dom%20Small.jpg" /></td>
+  </tr></table>
+
+  <p>
+  The mesh-file may support strings as Tags. This is typically the name of a
+  group in the CAD-system.</p>
+
+
+  <h4>GMSH</h4>
+
+  <p>On importing from CAD into <a href="http://geuz.org/gmsh/" title="External">GMESH</a>
+  you open the first CAD-file, assign a Physical Group to all the
+  imported surfaces. Then hide this Physical Group in GMSH.
+  In the next step you merge the next CAD-file into the GMSH-project.
+  Assign the next Physical Group to all the visible surfaces (there is a window
+  selection tool that will ignore the hidden Physical Groups for this so that
+  you do not have to select them one by one), hide the new Physical Group,
+  and so on ...</p>
+
+  <p>For meshing you just unhide all Physical Groups and perform the meshing.
+  Many things are easier with Physical Groups as you can define individual mesh
+  sizes or mesh-types for different Physical Groups etc.
+  (thanks to Eric V. for this report).</p>
+
+  <p>Eventually you would save the mesh-file in GMSH and register it with
+  the ABEC project. You can then use the names of the Physical Groups as
+  Tags.</p>
+
+
+  <h4>Collada</h4>
+
+  <p>Collada-files, which originate from Sketchup, can have string-<i>Tags</i>.
+  For this to work, you need to organize CAD-items into groups and
+  then provide names to it.</p>
+
+  <h4>SVG</h4>
+
+  <p>Inkscape lets you assign String-Tags with the help of Object Properties/ID,
+  either to the drawing object or to the group
+  (SVG is for <a href="../BEScripts/Parameters/Dim=.html">Dim=2D</a>).</p>
+
+
+  <h3>Include  &nbsp;&nbsp; Exclude </h3>
+
+  <p>In ABEC-scripts Tags can be filtered with the help of
+  <b>Include</b> and <b>Exclude</b>, where both follow each other in a
+  line. Behind <i>Include</i> we list all Tags to be part of this
+  line and behind Exclude we list all Tags which to ignore.
+  All separated by blanks, tabs or comma (but semi-colon).</p>
+
+  <p>Typing "All" includes or excludes all triangles, respectively.</p>
+
+  <p>Tags can be Number-Tags or String-Tags. If a String-Tag contains blanks
+  it should be quoted.</p>
+
+  <p>For Number-Tags you can also specify a range with the help of two or three dots.
+  For example 100...115 means you want to include/exclude all mesh-elements
+  with Tags ranging from 100 to 115. It is also possible to omit the first or
+  last index, which then means open-end. For example ...100 means to
+  include/exclude all mesh-elements up to Tag 100.</p>
+
+  <h4>Example Number Tags</h4>
+
+  <pre>
+  <b>Elements</b> "Mesh1"
+    Subdomain=1
+    101  MeshFileAlias=M1  Include All   Exclude 10 12  100...115  16
+    102  MeshFileAlias=M2  Include 1000...
+    ...</pre>
+
+  <pre>
+  <b>Elements</b> "Mesh1"
+    Subdomain=1
+    MeshFileAlias=M
+    RefNodes=N
+    101  Mesh  Include All   Exclude 1, 2, 3
+    102  1001  1002  1003   //Node indices
+    ...</pre>
+
+  <pre>
+  <b>Diaphragm</b>  "D1"
+    Subdomain=1
+    Position= MeshFileAlias=M  Include=111  SwapNormal
+    ...</pre>
+
+  <pre>
+  <b>Field</b>  "F1"
+    ...
+    MeshFileAlias=M
+    101  Mesh  Include 100
+    ...</pre>
+
+  <!-- --------------------------------------------------------- -->
+  <h4>Example String-Tags</h4>
+
+  <pre>
+  <b>Elements</b> "Hall-Elements"
+    MeshFileAlias=M
+    101  Mesh Include  <span style="color: #800000">"Hall"</span>  Exclude 128 129
+
+  <b>Elements</b> "Stage-Elements"
+    MeshFileAlias=M
+    101  Mesh Include <span style="color: #800000">"Stage"</span>
+
+  ...
+  <b>Field</b>
+    ...
+    MeshFileAlias=M
+    101  Mesh Include  <span style="color: #800000">"ObHall"  "ObStage"</span>
+    ...
+    </pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

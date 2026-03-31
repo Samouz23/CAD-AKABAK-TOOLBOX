@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>File=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>File=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>File=</td>  <td class=paramID>(Has no section)</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Strings.html">String</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Relative filename of embedded script</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Scripts.html">Scripts</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>File=</i> is used to embed another file in a script.
+  This helps structuring a project. The main purpose is sharing information
+  across several scripts, such as
+  <a href="../Sections/Nodes.html">Node</a>- and
+  <a href="../Sections/Formula.html">Formula</a>-sections.</p>
+
+  <p>For example</p>
+
+  <pre>
+  ...
+  <font color="#800000"><b>File=</b></font>"Nodes.txt"
+
+  // Embed mutual exclusively script with elements
+  // either for sealed or vented enclosure.
+
+  <b>off</b> <font color="#800000"><b>File=</b></font>"Elements - Sealed.txt"
+
+  <font color="#800000"><b>File=</b></font>"Elements - Vented.txt"
+
+  <b>Control_Solver</b>
+    f1=20;  f2=500;  NumFrequencies=30;  Abscissa=log;
+    ImpedanceNumFrequencies=100
+    Sym=y; Dim=3D
+    MeshFrequency=1500Hz
+    Meshing=Bifu
+  ... </pre>
+
+  <br />
+  <p>Embedded files are displayed on the desktop of <i>ABEC</i>,
+  for example</p>
+
+  <p align=center><img src="../../../_Images/File=%20Desktop.jpg"></p>
+
+  <br>
+  <br>
+</body>
+</html>

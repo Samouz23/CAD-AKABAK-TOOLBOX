@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Normalized=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Normalized=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Normalized=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>[true, false]</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Specification if given wall-impedance is normalized</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/WallImpedance.html">WallImpedance</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1><a href="ImpType=.html">ImpType=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>The <a href="../Sections/WallImpedance.html">WallImpedance</a>-section
+  defines elements with a surface impedance:</p>
+
+  <p class=formula>Z<sub>s</sub>&nbsp;&nbsp;=&nbsp;&nbsp;Z<sub>0</sub>&middot;Z<sub>n</sub></p>
+
+  <p>with Z<sub>s</sub> = p/v<sub><small>n</small></sub>
+  is the specific impedance, p is the sound pressure
+  and v<sub><small>n</small></sub> is the normal (particle) velocity at the
+  surface of the element.
+  Z<small><sub>0</sub></small> = &rho;c is the plane-wave impedance and
+  Z<small><sub>n</sub></small> is the
+  normalized specific impedance.</p>
+
+  <p><i>Normalized=true</i> specifies that given impedance values are
+  regarded as being normalized, i.e. they are equal to Z<sub>n</sub>.
+  Normalized values will be expanded internally.
+  <i>Normalized=</i> is used for single values as well as for
+  linked data-files.</p>
+
+  <p><i>Normalized=</i> has only an effect on
+  <a href="../Parameters/ImpType=.html">ImpType=Impedance</a> or
+  <i>ImpType=Admittance</i>.</p>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Mesh File Object (3600)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Mesh File Object</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">General</a></td>
+  </tr></table>
+  <hr>
+
+  <h4>See also</h4>
+
+  <p class=indent><table width=900>
+    <tr height=20><td width=150><a href="../Appendix/Mesh-Files.html">Mesh-Files</a></td>           <td>Over view about mesh-files.</td>   </tr>
+    <tr height=20><td width=150><a href="../Appendix/Mesh-File-Tags2.html">Mesh-File-Tags</a></td>  <td>A Tag is used to refer to a group of mesh-elements.</td>   </tr>
+    <tr height=20><td width=150><a href="../Appendix/Mesh-File-GMSH.html">Mesh-File-GMSH</a></td>                    <td>Details on the use of external FE meshing tool.</td>   </tr>
+    <tr height=20><td width=150><a href="../Appendix/Mesh-File-Simple.html">Mesh-File-Simple</a></td>                <td>Details on the use of external meshes.</td>   </tr>
+    <tr height=20><td width=150><a href="../BEM-Part/Form-Elements%20(Mesh-File).html">Elements (Mesh-File)</a></td>       <td>BEM-component using mesh-file elements (see <a href="../BEM-Part/_Index.html">BEM-Part</a>).</td>   </tr>
+    <tr height=20><td width=150><a href="../Observation-Part/Form-Fields%20(Mesh-Files).html">Fields (Mesh-File)</a></td>  <td>Field using mesh-file elements (see <a href="../Observation-Part/_Index.html">Observation-Part</a>).</td>   </tr>
+    <tr height=20><td width=150><a href="../Desktop/Form-Position%20(frame).html">Positioning</a></td>  <td>Mesh-file elements can specify position of a component.</td>   </tr>
+  </table>
+
+  <br>
+  <p>The home of a Mesh-File object is page <i>General</i> of the
+  <a href="../Desktop/_Index.html">desktop</a>.
+  The data of the Mesh-File object originate typically from CAD-applications as
+  explained in detail in chapter <a href="../Appendix/Mesh-Files.html">Mesh-Files</a>.
+  There can be multiple Mesh-File-objects.</p>
+
+  <p>Once there is a Mesh-File object other components of page
+  BEM and page Observation can make use of its planes. See components
+  <a href="../BEM-Part/Form-Elements%20(Mesh-File).html">Elements (mesh-file)</a>  and
+  <a href="../Observation-Part/Form-Fields%20(Mesh-Files).html">Fields (mesh-file)</a>.
+  Mesh-files can also be used to position components, see chapter
+  <a href="../Desktop/Form-Position%20(frame).html">Form-Position</a>.</p>
+
+  <p>A new Mesh-File-object is created with the help of the
+  <a href="../Desktop/Form-NewComponent.html">Form - New Components</a>.
+  You can edit an existing Mesh-File object with the help of the associated form starting
+  at menu <i>Edit/Parameters</i>.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Page - General</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <h4>Name of component</h4>
+
+  <p>Text string which identifies the component. This name will be displayed
+  at sub-sequent reference lists.</p>
+
+  <h4>Info</h4>
+
+  <p>Place for comments.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Page - File</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <table class=pic>
+    <tr height=500><td><img src="../../_Images/Desktop%20-%20MeshFiles-Files.jpg"  /></td></tr>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20MeshFiles-Entities.jpg"  /></td></tr>
+    <tr height=350><td><img src="../../_Images/Desktop%20-%20MeshFiles-Scaling.jpg"  /></td></tr>
+    <tr height=300><td><img src="../../_Images/Desktop%20-%20MeshFiles-Group.jpg"  /></td></tr>
+  </table>
+
+  <h4>Open</h4>
+
+  <p>Opens the <a href="../Appendix/File%20-%20Dialogs.html">file-dialog</a>
+  and reads the mesh-file. The button with the arrow down provides
+  a recent file list.</p>
+
+
+  <h4>Re-Open</h4>
+
+  <p>This button starts the import process directly by using the current file-name.<br>
+  Note, <i>re-open</i> maintains the current stack of Tag-Filters, which means that
+  the specification of mesh-file elements may still be valid or
+  may need only a slight modification. See also chapter
+  <a href="../Appendix/Mesh-File-Tags2.html#TagPickingTool">Tag Picking Tool</a>.</p>
+
+
+  <h4>Compatibility</h4>
+
+  <p>The Tag machinery of previous versions of Akabak worked similar. If you want
+  to apply your current Tag-Filters to a newly to be imported mesh-file, then
+  check the compatibility check-box. This setting will create certain strings
+  which your old Tag-Filters can specify.</p>
+
+
+  <h4>Report</h4>
+
+  <p>After import this box will display the format, date and time stamps of the mesh-file.
+  There are also reports of the number of elements and the overall dimension.</p>
+
+  <p>Note, the size-parameter gives a hint whether the structure needs to be scaled.
+  For example, if the CAD was using millimeter as units, in Akabak a small device would come
+  out way too large and needs scaling (see below).</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Page - Entities</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>The rendering of the mesh-file depends on the current setting of the Dimension
+  as can be set in form <a href="../Desktop/Form-BEM-Parameters.html">BEM Parameters</a>:</p>
+
+  <ul>
+    <li><i>3D</i>: Reading of planes such as triangles and quadrilaterals.</li>
+    <li><i>Circular symmetric</i>: Reading of line-segments which Akabak completes
+    to circular symmetric bodies.</li>
+    <li><i>2D</i>: Reading of planes in 2D.</li>
+  </ul>
+
+
+  <h4>Filter</h4>
+
+  <p>The purpose of the Filter-parameter is to exclude degenerated
+  elements, such as elements of where the inner angle is smaller than
+  <i>Min Angle</i>. Or, where the area of the element is smaller than
+  <i>Min Area</i>. Or, where one of edges is shorter than
+  <i>Min Length</i>.</p>
+
+  <p>Note, <i>Min Length and Area</i> are applied to the un-scaled data-set.
+  In the example to the right a scaling of 0.001 is applied because the original CAD
+  was drawn in milimeter which height came out nearly 1km after import.
+  Hence, if you were to exclude tiny planes you may enter for Min Length = 10e3 or so.</p>
+
+  <p>After editing, a marker appears at page <i>Drawing</i>. This indicates modification.
+  On switching to page <i>Drawing</i> the Filter gets applied and
+  the mesh is displayed.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Page - Scaling</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>The dimensions of the imported mesh-file are assumed to be in SI-units, regardless
+  of the setting at <a href="../Desktop/Form-Units.html">User-Units</a>.
+  If the drawing comes out too large then use
+  <i>Scaling</i> in order to convert mesh-dimensions to SI-units.
+  How can one determine the size of the object?
+  Firstly, there is a report of overall size given on page <i>File</i>.
+  Alternatively, one can select an element inside the drawing, which in turn
+  outputs its location and size.</p>
+
+  <p>Details on how to specify parameters of scaling are given here:
+  <a href="../Desktop/Form-Scaling%20(frame).html">Form-Scaling</a>.
+  One can not only scale the dimensions but also shift and rotate the mesh.<br>
+  Note, shift-parameters are expected in <a href="../Desktop/Form-Units.html">user-units</a>.</p>
+
+  <p>On editing, a marker appears at page <i>Drawing</i>. This indicates modification.
+  On switching to page <i>Drawing</i> scaling parameter get applied and
+  the mesh is displayed.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <a name="Drawing"></a>
+  <h3>Page - Drawing</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+
+  <h4>Tags</h4>
+
+  <p>Tags are used to specify elements. Only a specified plane will be available to the system,
+  otherwise it would be hidden and not accessible for further operation.
+  Specified elements are those which are listed in the box on the right hand side.
+  Specified planes can also be inverted, that is,
+  its <a href="../Appendix/Normals%20and%20Volumes.html">Normal</a> swapped.
+  Details of the operation are given in chapter <a href="../Appendix/Mesh-File-Tags2.html#TagPickingTool">Tag Picking Tool</a>.</p>
+
+
+  <h4>Control</h4>
+
+  <p>The 3D-viewer displays the mesh-file as imported, filtered and scaled.
+  The operation of the viewer is similar to the
+  <a href="../Desktop/Drawing%20Controls.html">3D-viewer of the main-desktop</a>.</p>
+
+
+  <h4>Messages</h4>
+
+  <p>Report on available and specified elements.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <a name="Formula"></a>
+  <h3>Page - Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format
+  <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter
+  <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers for Elements are:</p>
+
+  <p class=formula><table >
+    <!-- Filter -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Filter</b></span></td> </tr>
+    <tr> <td>MinAngle</td>     <td>Exclude all triangles of angles smaller than MinAngle</td>  </tr>
+    <tr> <td>MinLength</td>    <td>Exclude all triangles of sides smaller than MinLength (in units of file)</td>  </tr>
+    <tr> <td>MinArea</td>      <td>Exclude all triangles of area smaller than MinArea (dito)</td>     </tr>
+
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Scaling</b></span></td> </tr>
+    <tr> <td width=100>Scale</td>          <td>Isotropic scaling</td>             </tr>
+    <tr> <td>ScaleX</td>         <td>Scaling in x-direction</td>        </tr>
+    <tr> <td>ScaleY</td>         <td>Scaling in y-direction</td>        </tr>
+    <tr> <td>ScaleZ</td>         <td>Scaling in z-direction</td>        </tr>
+    <tr> <td>RotateX</td>        <td>Rotation about x-axis (in degree)</td>         </tr>
+    <tr> <td>RotateY</td>        <td>Rotation about y-axis (dito)</td>         </tr>
+    <tr> <td>RotateZ</td>        <td>Rotation about z-axis (dito)</td>         </tr>
+    <tr> <td>ShiftX</td>         <td>Shift in x-direction (in <a href="../Desktop/Form-Units.html">user-units</a>)</td>          </tr>
+    <tr> <td>ShiftY</td>         <td>Shift in y-direction (dito)</td>          </tr>
+    <tr> <td>ShiftZ</td>         <td>Shift in z-direction (dito)</td>          </tr>
+  </table></p>
+  <br>
+  <br>
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

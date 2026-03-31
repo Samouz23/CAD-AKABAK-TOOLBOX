@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Nodes and Elements</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Nodes and Elements</h1>
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+  <tr><td class=c><img src="../../_Images/Nodes%20and%20Elements%20-%20General-Page.jpg"></td></tr>
+  <tr><td class=c>&nbsp;</tr>
+  <tr><td class=c><img src="../../_Images/Nodes%20and%20Elements%20-%20Nodes-Form.jpg"></td></tr>
+  <tr><td class=c>&nbsp;</tr>
+  <tr><td class=c><img src="../../_Images/Nodes%20and%20Elements%20-%20Elements-Form.jpg"></td></tr>
+  <tr><td class=c>&nbsp;</tr>
+  <tr><td class=c><img src="../../_Images/Nodes%20and%20Elements%20-%20Plane.jpg"></td></tr>
+  </table>
+
+  <p>The <a href="Boundary%20Element%20Analysis.html">Boundary Element Analysis</a>
+  make extensive use of geometrical data. AKABAK has two different schema
+  to provide geometric information for points, lines and
+  <a href="Planes.html">planes</a>:</p>
+  <ol>
+  <li>Nodes and Elements</li>
+  <li>CAD drafts via <a href="Mesh-Files.html">Mesh-files</a></li>
+  </ol>
+
+  <p><i>Nodes and Elements</i> could be regarded as a primitive CAD-system.
+  It turns out to be an elegant schema in order to provide simple geometry
+  in a manageable form. The schema always consists of two
+  related sections:</p>
+
+  <ol>
+  <li><a href="../General-Part/Form-Nodes.html">Nodes</a></li>
+  <li><a href="../BEM-Part/Form-Elements%20(Nodes).html">Elements</a> or
+      <a href="../Observation-Part/Form-Fields%20(Nodes).html">Fields</a></li>
+  <li><a href="../Desktop/Form-Position%20(frame).html">Positions</a> and <a href="../Desktop/Form-Position%20Dir%20(frame).html">Directions</a></li>
+  </ol>
+
+
+  <h4>Nodes</h4>
+
+  <p><i>Nodes</i> is a list of coordinates. Each list should have a unique name
+  ("N1" in the example to the right).</p>
+
+  <p>Each record of the list creates a point in space, and
+  has a unique name in form of an integer (for exampel "1001").</p>
+
+  <p>Coordinates can be edited with the help of dialog
+  <a href="../General-Part/Form-Nodes.html">Nodes</a>.
+  The home of Nodes-sections is page <i>General</i> of the Desktop. There can be as many
+  Nodes-sections as you like.</p>
+
+
+  <h4>Elements and Field</h4>
+
+  <p>Elements form the planes of the acoustic boundaries.
+  Planes for Fields are working in a similar way.
+  The individual planes are assumed to be flat and can have three, four or more vertices,
+  ie triangles, quadrilaturals or polygons. A polygon can be concave or convex, however
+  its edges should not cross.</p>
+
+  <p>Planes are organized in lists.
+  <a href="../BEM-Part/Form-Elements%20(Nodes).html">Elements</a>
+  for boundaries are stored on page
+  "BEM" of the desktop. Planes of
+  <a href="../Observation-Part/Form-Fields%20(Nodes).html">Fields</a>
+  should be on page "Observation".
+
+
+  <p>Each line represents one plane. The first column is the index or "name"
+  of the plane.</p>
+
+  <p> It follows the array of node-names as given by the
+  referenced Nodes-section. The numbers should be separated by blanks. If there
+  are three numbers a triangle is created. Four entries yield a quadrilateral.
+  More entries create a polygon, for example</p>
+  <pre>1001 1002 1003 1004 1005 1006 1007 1008</pre>
+
+  <p>for convenience it is also possible to type it in the form</p>
+
+  <pre>1001 .. 1008</pre>
+
+  <p>If
+  <a href="../Desktop/Form-BEM-Parameters.html#Dimension">Dimension = CircSym</a>
+  then the boundaries are the surface of a truncated cone. Here
+  the "vertices" are at the edges of this cone. Hence there would be only two entries.</p>
+
+  <p>If Dimension = 2D then the element is an infinite plane seen
+  edge-on. We need two points, which specify the line-segment.</p>
+
+  <p>For Boundary Elements the order of node-indices matter as explained
+  in <a href="Normals%20and%20Volumes.html">Normal and Volumes</a>. The normal can be
+  mirrored by inverting the order of specification. For convenience the forms provide
+  a button called <i>Swap Normals</i> which mirrors the normal of all selected planes.</p>
+
+  <br />
+  <p>If you enter Nodes and Elements manually it is of advantage to make first
+  a sketch of the structure.</p>
+
+  <p>Best is to type all nodes first. In AKABAK you can check section Nodes
+  in the treeview which displays the nodes as little dots.</p>
+
+  <p>In a second step you are going to specify all planes of
+  <a href="../BEM-Part/Form-Elements%20(Nodes).html">Elements</a> or
+  <a href="../Observation-Part/Form-Fields%20(Nodes).html">Fields</a>.</p>
+  <p><img src="../../_Images/OperationAKABAK_Sketch.jpg"></p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

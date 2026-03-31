@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Radiation Impedance (4600)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Radiation Impedance</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Observation</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=420><td><center><img src="../../_Images/Desktop%20-%20RadImp.jpg" /></center></td></tr>
+  </table>
+
+  <p><a href="../Appendix/Radiation%20Impedance.html">Radiation Impedance</a> is an
+  observation of the lumped acoustic impedance of a vibrating boundary area.</p>
+
+  <p>Create a new <i>Radiation Impedance</i>-component with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a> at page <i>Observation</i>.
+  For editing dbl-click its entry on page <i>Observation</i>, press CTRL+E or
+  issue menu <i>Edit/Parameters</i></p>
+
+  <p>The result of the spectrum calculation is a frequency response which will be
+  displayed with the help of <a href="../Appendix/VacsViewer.html">VACS</a>.</p>
+
+  <p>The frequency range is specified at menu <a href="../Desktop/Form-Frequencies.html">Global/Frequencies</a>.</p>
+
+
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - General</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Name and Annotation</h4>
+
+  <p>Provide the name of the component in form of a <a href="../Appendix/Strings.html">string</a>.</p>
+  <p>There is also space for annotations.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Parameters</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Driving Boundaries</h4>
+
+  <p>The vibrating boundaries are assumed specified with the help of a
+  <a href="../BEM-Part/Form-Diaphragm.html">Diaphragm</a>-component
+  or via the <a href="../Desktop/Form-Boundaries%20(frame).html">Boundary Conditions</a>
+  of a component of the <a href="../BEM-Part/_Index.html">BEM-Part</a>.</p>
+
+  <p>These components can be selected in tables <i>Ref 1</i> and
+  <i>Ref 2</i>.</p>
+
+  <p>Often we want to observe the Self Radiation Impedance,
+  which displays the effect of the sound pressure on itself. In this case
+  leave table <i>Ref 2</i> empty.</p>
+
+  <p>The mutual radiation impedance shows the power-coupling between two vibrating
+  groups of boundaries. In this case specify also <i>Ref 2</i>.</p>
+
+
+  <h4>Domain</h4>
+
+  <p>The lumped acoustic impedance is the ratio of the "mean-value" of sound pressure and
+  the volume velocity: Za = p/q.
+  The mean-value is calculated across the effective radiation area:</p>
+
+  <p class=formula><img src="../../_Formulae/BEM-RadImp%20Ss.jpg" ></p>
+
+  <p>with normalized velocity distribution &nu; (normalized means here to the velocity at
+  the driving point of the membrane).</p>
+
+  <p><i>Specific Normalized</i>: It is practical to view the curve normalized to
+  &rho;&middot;c and to the effective radiation area S',
+  so that the asymptotic value of the real part of Z<sub>n</sub> becomes one at high frequencies:
+  Z<sub>n</sub> = Z<sub>a</sub>&middot;S'/(&rho;&middot;c)</p>
+
+  <p><i>Specific</i> radiation impedance is defined as Z<sub>s</sub> = p/v.
+  In general p and v can be field values of the sound pressure and acoustic velocity.
+  However, if we form the mean-value over S' then we have the lumped version of the
+  specific radiation impedance. Often this integration means a simple multiplication of
+  the acoustic impedance by the area: Z<sub>s</sub> = Z<sub>a</sub>&middot;S'.
+  The asymptotic value of the real part at high frequencies is &rho;&middot;c.</p>
+
+  <p><i>Acoustic</i> is the lumped acoustic radiation impedance Z<sub>a</sub> = p/q with
+  p and v lumped sound pressure and volume-velocity.</p>
+
+  <p><i>Mechanic</i> is the equivalent mechanic radiation impedance
+  Z<sub>m</sub> = F/v = Z<sub>a</sub>&middot;S'<sup>2</sup> with
+  force F acting on the membrane and mechanic velocity v.</p>
+
+
+  <h4>Calc Mass</h4>
+
+  <p>If checked the impedance is divided by j&omega; which yields the associate mass.
+  This option can be helpful to determine the mechanic equivalent mass load of a diaphragm.
+  Or, it can be used to find a value for the end-correction of a waveguide.</p>
+
+  
+
+
+  <h4>Type of Parameter</h4>
+
+  <p><i>Impedance</i> displays the radiation impedance, for example Z<sub>a</sub> = p/q.</p>
+
+  <p><i>Admittance</i> displays the radiation admittance, which is Y = 1/Z.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Range</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>On this page you find controls for the range of output as
+  the ranging directly controls the contouring.
+  Also sources can be selected which shall take part in the simulation.
+  More see chapter <a href="Form-Range%20(frame).html">Frame - Range</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers are:</p>
+
+  <p><table >
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Range</b></span></td> </tr>
+    <tr> <td width=100>Range</td>          <td>Max-Min of output</td>             </tr>
+    <tr> <td width=100>RangeMax</td>       <td>Upper bound of output range</td>   </tr>
+    <tr> <td width=100>RangeMin</td>       <td>Lower bound of output range</td>   </tr>
+  </table></p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

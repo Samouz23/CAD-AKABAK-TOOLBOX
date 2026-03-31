@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Add Data File</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Add Data File</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+    <a href="Project.html">Project</a></p>
+  <hr>
+
+  <p><img src="../../../_Images/Project%20-%20Add%20Data%20File.jpg"  align=right>
+  <i>Add Data File</i> registers a data-file with the project. All
+  data-files, which are used in solving and observation scripts, need to be
+  registered.</p>
+
+  <p>Scripts refer to the data-file with the help of an alias. This alias
+  can be specified at various sections in the scripts, see
+  <a href="../../BEScripts/Parameters/DataFileAlias=.html">DataFileAlias=</a>.</p>
+
+  <p>For example:</p>
+
+  <pre>
+  <b>WallImpedance</b> "Damping Wall"
+    <font color="#800000">DataFileAlias=Z1</font>
+    ...</pre>
+
+  <p>Data-Files typically provide impedance spectra for
+  the section
+  <a href="../../BEScripts/Sections/WallImpedance.html">Wall_Impedance</a>,
+  driving values for
+  section <a href="../../BEScripts/Sections/Driving_Values.html">Driving_Values</a>,
+  impedance and SPL values for
+  <a href="../../LEScript/Sections/Def_MeasRadiator.html">Def_MeasRadiator</a> and
+  directivity data for the
+  <a href="../../BEScripts/Sections/Pressure_Box.html">Pressure_Box</a>.</p>
+
+  <p>The format and generation of the file is explained in
+  <a href="../../Appendix/Data%20Files%20-%20Spectrum.html">Spectrum Data-Files</a>.</p>
+
+  <br />
+  <p>During adding the data-file to the project, i.e. at registration,
+  this alias has to be specified as well.</p>
+
+  <p>First select the file-name of the Data-File in the opening
+  <a href="../../Appendix/File%20-%20Dialogs.html">File-Dialog</a>.</p>
+
+  <p>Sub-sequentially the
+  <a href="../Edit/Edit%20File%20Alias.html">File-Alias-Dialog</a>
+  opens, where you can provide an alias.</p>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

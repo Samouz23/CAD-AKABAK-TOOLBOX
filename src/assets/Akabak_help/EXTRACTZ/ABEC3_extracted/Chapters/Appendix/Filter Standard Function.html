@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Filter - Standard Functions</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Filter - Standard Functions</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <p>As outlined at section <a href="../LEScript/Sections/Filter.html">Filter</a>
+  there are several ways of specification for the transfer-functions.
+  In particular there are two rational transfer-functions:</p>
+
+  <p class=formula>H(s) = H<sub>1</sub>(s)&middot;H<sub>2</sub>(s)</p>
+
+  <p>H<sub>1</sub>(s) is a <a href="Filter%20Transfer%20Function.html">rational transfer function</a>
+  where the coefficients <a href="../LEScript/Parameters/a0=b0=.html">ai= and bi=</a>
+  are specified explicitly. If no <i>ai= and bi=</i> are specified then H<sub>1</sub>(s) = 1.</p>
+
+  <p>H<sub>2</sub>(s) is also a rational transfer function. However, coefficients
+  of H<sub>2</sub>(s) are internally calculated from a family of standard
+  filter alignments and its transforms. H<sub>2</sub>(s) is instigated if
+  parameter <a href="../LEScript/Parameters/Order=.html">Order=</a> is
+  given. Otherwise H<sub>2</sub>(s) = 1. This type of specification is explained
+  here.</p>
+
+  <p>See also <a href="Filter%20Examples.html">Filter-examples</a>.</p>
+
+  <br />
+  <p>Specification possibilities:</p>
+
+  <table>
+  <tr>
+  <td width=300 valign=top><pre>
+    <b>Filter</b>  'Any Name'
+      <a href="../LEScript/Parameters/f0=.html">f0=</a>
+      <a href="../LEScript/Parameters/v0=.html">v0=</a>
+      <a href="../LEScript/Parameters/t0=.html">t0=</a>
+      <a href="../LEScript/Parameters/z0=.html">z0=</a>
+      { <a href="../LEScript/Parameters/a0=b0=.html">b0=...;  b1=...;  ...;
+        a0=...;  a1=...;  ...;</a> }
+      { General formula }
+  </pre></td>
+  <td width=200 valign=top><pre>
+    <!-- Standard Filter -->
+    <a href="../LEScript/Parameters/Order=.html">Order=</a>
+    <a href="../LEScript/Parameters/AlignmentTypes.html">&lt;Alignment Type&gt;</a>
+    <a href="../LEScript/Parameters/TransformTypes.html">&lt;Transformation Type&gt;</a>
+    <a href="../LEScript/Parameters/Ripple=.html">Ripple=</a>
+    <a href="../LEScript/Parameters/Param=.html">Param=</a>
+    <a href="../LEScript/Parameters/Bandwidth=.html">Bandwidth=</a>
+    <a href="../LEScript/Parameters/d=.html">d=</a>
+    <a href="../LEScript/Parameters/Q=.html">Q=</a>
+  </pre>
+  </tr>
+  </table>
+
+  <p>For the standard-filter-alignment we need parameters on the right hand side.
+  Not all. Some parameters depend on others.
+  Further we need the filter-frequency f0=. All others are optional.</p>
+
+
+  <h4>Order=</h4>
+
+  <p>A transfer-function with a standard-alignment is only created if
+  the parameter <i>Order</i> &gt; 0. <i>Order</i> is the degree of the
+  denominator-polynom of the
+  <a href="Filter%20Transfer%20Function.html">rational transfer function</a>,
+  i.e. of the low-pass-version of the filter-function.
+  See parameter <a href="../LEScript/Parameters/Order=.html">Order=</a> for details.</p>
+
+
+  <h4>Alignment</h4>
+
+  <p>The transfer function with a standard-alignment is created from
+  a low-pass function. This means first the low-pass coefficients are
+  calculated and then transformed into other forms, for example a high-pass.</p>
+
+  <p>The type of low-pass is specified by simply stating the name
+  of the alignment. See chapter
+  <a href="../LEScript/Parameters/AlignmentTypes.html">Alignment Types</a>.</p>
+
+
+  <h4>Transformation</h4>
+
+  <p>By default a low-pass is created. The type of transformation is
+  specified by stating the name of the transformation,
+  see chapter <a href="../LEScript/Parameters/TransformTypes.html">Transformation Type</a>.</p>
+
+
+  <h4>Ripple=</h4>
+
+  <p>For low-pass type = CH (Chebychev)
+  <a href="../LEScript/Parameters/Ripple=.html">Ripple=</a>
+  is the level of the amplitude deviations.</p>
+
+  <p>For low-pass type = LR (Linkwitz Riley)
+    this value is the ripple of the BU-LR compromise cross-over filter
+    (LR with Ripple=0dB, BU with Ripple=3dB),
+    see Literature [<a href="../Appendix/Literature.html">20</a>].</p>
+
+  <p>For low-pass of other types <i>Ripple=</i> is ignored.</p>
+
+
+  <h4>Param=</h4>
+
+  <p>For low-pass type = BT (Butterworth-Thomson),
+  <a href="../LEScript/Parameters/Param=.html">Param=</a> is
+  the transition parameter between BU and BE alignments,
+  (BU with Param=0, BE with Param=1).</p>
+
+  <p>For low-pass of other types <i>Param=</i> is ignored.</p>
+
+
+  <h4>d= and Q=</h4>
+
+  <p>For low-pass type = Block and if Order = 2 then
+  <a href="../LEScript/Parameters/d=.html">d=</a> or
+  <a href="../LEScript/Parameters/Q=.html">Q=</a>, respectively,
+  control the resonance.</p>
+
+  <p>For low-pass of other types and orders
+  <i>d=</i> and <i>Q=</i> are ignored.</p>
+
+  <br />
+  <br />
+</body>
+</html>

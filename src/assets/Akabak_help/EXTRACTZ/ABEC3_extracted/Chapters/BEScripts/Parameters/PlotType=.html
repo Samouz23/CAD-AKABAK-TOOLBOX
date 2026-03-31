@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>PlotType=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>PlotType=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>PlotType=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format 1</td>       <td class=param1>[Contour] for Field</td>
+  </tr>
+  <tr>
+    <td class=param0>Format 2</td>       <td class=param1>[Curves, Directivity, Line, Arc] for BE_Spectrum</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Type of calculation and associated graphical representation</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                         <a href="../Sections/Field.html">Field</a>,
+                                         <a href="../Sections/BE_Spectrum.html">BE_Spectrum</a>
+                                       </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1>
+                                         <a href="AnalysisType=.html">AnalysisType</a>
+                                       </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <h3>Field</h3>
+
+  <p><i>PlotType=Contour</i> segments the field value in contour-levels.
+  This is currently the only selection and also the default value. </p>
+
+
+  <h3>BE_Spectrum</h3>
+
+  <p><i>PlotType=</i> selects the simulation and the associated graphical
+  representation.</p>
+
+
+  <table align=right>
+  <tr><td><img src="../../../_Images/PlotType=Curve.jpg"  /></td></tr>
+  </table>
+
+  <h4>PlotType = Curves</h4>
+
+  <p><i>PlotType=Curves</i> is the default value and calculates the frequency
+  response function for a single field point. The coordinates are given by the
+  <a href="List%20of%20BE_Spectrum%20Items.html">List of BE_Spectrum Items</a>,
+  which should follow the parameter-header.</p>
+
+  <p>For displaying, the curves are sent to
+  <a href="../../Appendix/VacsViewer.html">VACS</a>
+  and assigned to the VACS-Tree-Folder as specified in section
+  <a href="../Sections/Control_Spectrum.html">Control_Spectrum</a>.</p>
+
+  <p>Example</p>
+
+  <pre>
+  <b>Control_Spectrum</b>
+    Name="Horn H 400"
+    ID=ID5000
+    NumFrequencies=100; Abscissa=log
+
+  <b>Nodes</b>  "Spectrum"
+    Scale=1mm
+    1001      0      0    -300   // Point on-axis
+    1002      0    100    -300   // Point off-axis
+
+  <b>BE_Spectrum</b>
+    <font color="#800000">PlotType=Curves</font>
+    AnalysisType=Pressure
+    RefNodes="Spectrum"
+    GraphHeader="Sound pressure"
+    BodeType=LeveldB;   Range=50
+    101   1001   ID=5001
+    102   1002   ID=5002</pre>
+
+  <p>In this example two curves will be calculated. The first is the
+  sound pressure response at point 1001 with coordinates (0, 0, -300mm)
+  and the second curve is at point 1002 with coordinates (0, 100mm, -300mm).</p>
+
+
+  <h4>PlotType = Directivity</h4>
+
+  <table align=right>
+  <tr height=300><td><center><img src="../../../_Images/PlotType=Directivity1.jpg" /></center></td></tr>
+  <tr height=300><td><center><img src="../../../_Images/PlotType=Directivity2.jpg"></center></td></tr>
+  <tr height=300><td><center><img src="../../../_Images/PlotType=Arc.jpg"></center></td></tr>
+  <tr height=300><td><center><img src="../../../_Images/PlotType=Line.jpg"></center></td></tr>
+  </table>
+
+  <p>
+  <i>PlotType=Directivity</i> calculates the frequency response for
+  multiple field points, which are automatically arranged on a circular arc.
+  Hence, 3D-charts are calculated with frequencies along the x-axis and
+  the angular range along the y-axis, which eventually are rendered in
+  contour-plots in
+  <a href="../../Appendix/VacsViewer.html">VACS</a>.
+  In these contour-plots one projection yields a frequency response and
+  the other yields the polar response. This means, that after calculation
+  and data are transferred to VACS, you can inter-actively investigate
+  frequency and polar responses.</p>
+
+  <p>For <i>PlotType=Directivity</i> to work you also need to specify
+  <a href="PolarRange=.html">PolarRange=</a> and
+  <a href="BasePlane=.html">BasePlane=</a>. Also, the
+  <a href="List%20of%20BE_Spectrum%20Items.html">List of BE_Spectrum Items</a>
+  should define an <a href="Inclination=.html">Inclination=</a> angle.</p>
+
+  <p>For example</p>
+  <pre>
+  <b>BE_Spectrum</b> "Directivity"
+    <font color="#800000">PlotType=Directivity</font>
+    GraphHeader="Directivity"
+    BodeType=LeveldB;  Range=50
+    BasePlane=xy
+    PolarRange=-100,100,45
+    Distance=1600mm
+    101   Inclination=0     ID=201</pre>
+
+  <p>In this example there are distributed 45 points on an arc at a distance
+  of 1600mm ranging from -100° to +100°. Instead of rendering the actual points
+  ABEC sketches a symbolic arc indicating the start and on-axis location.</p>
+
+
+  <br>
+  <h4>PlotType = Arc</h4>
+
+  <p><i>PlotType=Arc</i> is similar to <i>Directivity</i> only that the actual
+  points are displayed in the 3D-viewer. <i>Arc</i> is useful if the
+  receiving points are close to the structure.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>BE_Spectrum</b> "Directivity"
+    <font color="#800000">PlotType=Arc</font>
+    GraphHeader="Directivity"
+    BodeType=LeveldB;  Range=50
+    BasePlane=xy
+    PolarRange=-180,180,45
+    Distance=600mm
+    101   Inclination=0     ID=301 </pre>
+
+
+  <br>
+  <h4>PlotType = Line</h4>
+
+  <p><i>PlotType=Line</i> distributes observation points along a line.</p>
+
+  <p>With <i>PlotType=Line</i> we need two coordinates of the starting- and
+  end-points of the line. Hence, a reference to a
+  <a href="../Sections/Nodes.html">Node</a>-section should be made. Also, the
+  <a href="List%20of%20BE_Spectrum%20Items.html">List of BE_Spectrum Items</a>
+  should define N=, which specifies the number of points.</p>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    <font color="#800000">PlotType=Line</font>
+    GraphHeader="Sound pressure"
+    BodeType=LeveldB;  Range=50
+    RefNodes="Nodes"
+  <span style="color: #808080">//Name  Node  Node   NumPoints</span>
+    101   3000  3001   N=61     ID=401</pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

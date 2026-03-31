@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Introduction</title>
+  <link href="../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Introduction</h1>
+
+  <p class=navi><a href="Index.html">Home</a>
+  <hr>
+
+  <table class=pic>
+    <tr height=100><td width=200><center><img src="../_Images/Intro1.jpg"  /></center></td></tr>
+  </table>
+
+  <p>AKABAK is an Acoustic Boundary Element Calculator. AKABAK has on board a
+  <a href="BEM-Part/_Index.html">Boundary Element</a> and a
+  <a href="LEM-Part/_Index.html">Lumped Element</a> solver which fully couple.
+  Further, the <a href="Appendix/Direct%20Sound%20Analysis.html">Direct Sound mode</a> is available.</p>
+
+  <p>The Boundary Element Method is for acoustics only, typically for the more complicated
+  parts of a loudspeaker such as vented enclosures, multiple drivers, waveguides and
+  radiation. The Boundary Element part of AKABAK can also be used to investigate the
+  response of small rooms and all kinds of other acoustic problems.</p>
+
+  <p>The Lumped Element Method typically is used to model electro-acoustic structures.
+  The LE-part is very similar to the legacy Akabak 2.1, allowing to simulate various
+  responses including filters, electronics, mechanics and acoustics.</p>
+
+  <p>The Direct Sound Mode calculates an acoustic field without diffraction and reflections.
+  This approximate approach does not need a solving stage. It proves practical in
+  estimating the sound pressure distribution of a large scale audience. It can also be
+  used to design cross-over filters for loudspeakers.</p>
+
+  <p>The Boundary Element and the Lumped Element parts can be fully coupled.
+  The coupling allows to attach complicated acoustic structures to an electro-acoustic
+  network. Further, the coupling is established at the observation stage,
+  with the advantage that changing lumped elements does not make necessary a re-solving.</p>
+
+  <p>AKABAK supports <a href="Appendix/Sub-Domain%20Modelling.html">sub-domain modeling</a>.
+  Sub-domain modeling is powerful for larger acoustic systems, such as vented loudspeaker
+  enclosures or horns. In BEM it is the only way to deal with a certain case of
+  radiation from an Infinite Baffle.</p>
+
+  <p>AKABAK recognizes multiple domains automatically, in cases where volumes are
+  decoupled. An example is the modeling of a sealed loudspeaker enclosure.</p>
+
+  <p>AKABAK standard mode is 3D, but the application also supports the axis-symmetric
+  model and the 2D mode.</p>
+
+  <p>AKABAK is easy to use. For input of geometry there is a simple
+  <a href="Appendix/Nodes%20and%20Elements.html">internal CAD-tool</a> available with specific
+  support for electro-acoustic devices.
+  It is possible to import
+  <a href="Appendix/Mesh-Files.html">mesh-files</a>, which facilitates the input of
+  exterior CAD-files. Also supported are
+  <a href="General-Part/Form-VibFile.html">vibrational data-files</a>,
+  for example from the Klippel vibrometer.
+  All input can be parameterized with the help of
+  <a href="Formula/_Index.html">formula systems</a>.</p>
+
+  <p>AKABAK will auto-mesh the structure in preparation for the boundary element analysis.</p>
+
+  <table class=pic>
+    <tr height=100><td width=200><center><img src="../_Images/Intro2.jpg"  /></center></td></tr>
+  </table>
+
+  <p>AKABAK is a desktop application with guided forms, organization of data-files,
+  rendering of the boundaries and resulting fields as a 3D-picture and managing of
+  observations such as fields and spectra. After the solving stage, the response can
+  be observed immediately. Sound pressure fields can be displayed as contours inside
+  AKABAKs 3D-viewer. Spectral response curves at any point in space can be calculated
+  and rendered with the help of our graphic engine
+  <a href="Appendix/VacsViewer.html">VACS</a>.
+  The coupling between AKABAK and VACS is seamless and fully automatic.</p>
+
+  <p>AKABAK supports parallel processing and 32 and 64 bit architectures.
+  The professional version stores and retrieves result-files of the solver automatically.
+  The user-manual comes in form of this help-system, where each item and all parameters
+  are explained. With the installation a rich set of examples is copied to your computer.</p>
+  <br>
+
+  <p>We wish you successful working with AKABAK.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

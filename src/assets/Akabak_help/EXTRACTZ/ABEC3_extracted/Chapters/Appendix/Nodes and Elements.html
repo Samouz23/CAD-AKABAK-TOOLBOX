@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Nodes and Elements</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Nodes and Elements</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <p>The <a href="Boundary%20Element%20Analysis.html">Boundary Element</a> and
+  <a href="Direct%20Sound%20Analysis.html">Direct Sound</a> Analysis
+  make extensive use of geometrical data. ABEC has two different schema
+  to provide geometric information for <a href="Planes.html">planes</a>:</p>
+  <ol>
+  <li>Nodes and Elements</li>
+  <li>CAD drafts via <a href="Mesh-Files.html">Mesh-files</a></li>
+  </ol>
+
+  <br />
+  <p>Nodes and Elements is an elegant schema in order to provide 3D-geometry
+  manually in a manageable form. The schema always consists of two
+  related sections:</p>
+
+  <ol>
+  <li><a href="../BEScripts/Sections/Nodes.html">Nodes</a></li>
+  <li><a href="../BEScripts/Sections/Elements.html">Elements</a> or
+      <a href="../BEScripts/Sections/Field.html">Field</a>
+  </li>
+  </ol>
+
+
+  <h4>Nodes</h4>
+
+  <p>Nodes are lists of coordinates, which form points in space. Each point
+  has a unique name in form of an integer. For example:</p>
+
+  <pre>
+  <b>Nodes</b>   "N"
+    Scale=1mm
+    1001      0.0      0.0        0.0
+    1002    302.5      0.0        0.0
+    1003    302.5    205.0        0.0
+    ...</pre>
+
+  <p>Each line represents one point (node). The first column is the index or "name"
+  of the node. It follows the coordinates, in the above example, Cartesian
+  x-, y- and z-values in mm.</p>
+
+
+  <h4>Elements and Field</h4>
+
+  <p>Elements form the Boundary Elements or planes for visualization of fields.
+  The individual planes are assumed to be flat and can have currently
+  three or four vertices, ie triangles or quadrilaturals.</p>
+
+  <p>For specification, elements are listed as arrays of node-indices, which
+  are assumed to be specified in one of the Node-lists (see above).
+  For example:</p>
+
+  <pre>
+  <b>Elements</b> "E1"
+    RefNodes="N"
+    ...
+    101   1001  1002  1003  1004
+    102   1011  1012  1013
+    ...</pre>
+
+  <p>or</p>
+
+  <pre>
+  <b>Field</b> "F1"
+    RefNodes="N"
+    ...
+    101   1001  1002  1003  1004
+    102   1011  1012  1013
+    ...</pre>
+
+  <p>Each line represents one plane. The first column is the index or "name"
+  of the plane. It follows the array of node-names as given by the
+  referenced Nodes-section (<a href="../BEScripts/Parameters/RefNodes=.html">RefNodes=</a>).
+
+  <p>For Boundary Elements the order of node-indices matter as explained
+  in <a href="Normals%20and%20Volumes.html">Normal and Volumes</a>.</p>
+
+  <br />
+  <br />
+  <p><img src="../../_Images/OperationABEC_Sketch.jpg" align=right />
+  If you enter Nodes and Elements manually it is of advantage to make
+  a sketch of the structure.</p>
+
+  <p>Best is to type all nodes first. In ABEC you can enable
+  <a href="../GUI/Desktop/Views%20Page.html">Views</a>/Structure/Nodes,
+  which displays all available nodes.</p>
+
+  <p>In a second step you specify all planes of the
+  <a href="../BEScripts/Sections/Elements.html">Elements</a>-
+  or <a href="../BEScripts/Sections/Field.html">Field</a>-sections.</p>
+
+  <br>
+  <br>
+</body>
+</html>

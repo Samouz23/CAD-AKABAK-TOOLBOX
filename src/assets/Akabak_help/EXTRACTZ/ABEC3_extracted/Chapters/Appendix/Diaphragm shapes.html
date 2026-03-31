@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Diaphragm Shapes</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Diaphragm Shapes</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <p>The <a href="../BEScripts/Sections/Diaphragm.html">Diaphragm</a>-section
+  allows for a variety of shapes. The most simple shape is a circular disc and 
+  the most complex is the diaphragm of a conical loudspeaker driver.</p>
+  <p>Depending on how many parameters are specified the shape will morph from
+  one to the other.</p>
+  <p>Some parameters can be negative (hD1 or dVC) and as such will yield the
+  concave version or a hole, respectively. See also
+  <a href="Diaphragm%20case%20tree.html">Diaphragm Case-Tree</a>.</p>
+
+  <br />
+  <p>In this chapter:
+  <a href="#OuterShapes">Outer Shapes</a>,
+  <a href="#LoudspeakerCone">Loudspeaker Cone</a>,
+  <a href="#LoudspeakerDome">Loudspeaker Dome</a></p>
+
+  <h3 ID=OuterShapes>Outer Shapes</h3>
+  <table><tr>
+  <td align=center width=400><p><img src="../../_Images/Diaphragm%20disc.jpg"></p></td>
+  <td align=center width=400><p><img src="../../_Images/Diaphragm%20cone%20rect.jpg"></p></td>
+  </tr><tr>
+  <td align=center width=400><p><img src="../../_Images/Diaphragm%20cone%20ellipse.jpg"></p></td>
+  <td align=center width=400><p><img src="../../_Images/Diaphragm%20cone%20oval.jpg"></p></td>
+  </tr></table>
+
+  <p><a href="../BEScripts/Parameters/dD=.html">dD=</a> is the outer diameter of
+  a circular diaphragm (without the suspension).</p>
+
+  <p><a href="../BEScripts/Parameters/WD=HD=.html">WD= and HD=</a> are the width
+  and height of a non-circular shape (without the suspension).</p>
+  <p><a href="../BEScripts/Parameters/RectType=.html">RectType=</a>
+  Rectangle, Ellipse or Oval controls the detail of the shape.</p>
+
+  <p><a href="../BEScripts/Parameters/SD=.html">SD=</a> or
+  <a href="../BEScripts/Parameters/SD1=.html">SD1=</a> specify the
+  projected area and will be converted to dD,
+  WD=HD or dD1, respectively.</p>
+
+  <p><a href="../BEScripts/Parameters/dD1=.html">dD1=</a> specifies an inner diameter.</p>
+
+  <p class=indent>dD1 &gt; zero is the diameter of an inner dome (see <a href="#ConeFront">below</a>).</p>
+
+  <p class=indent>dD1 &lt; zero  is the inner diameter of an annulus.</p>
+
+  <p><a href="../BEScripts/Parameters/ws=.html">ws=</a> is the width of an outer suspension.
+  On the suspension the velocity is distributed linearly. At the inner
+  edge the velocity is at 100% and at the outer edge at zero.</p>
+
+
+  <h3 ID=LoudspeakerCone>Loudspeaker Cone</h3>
+
+  <p><i>Diaphragm</i> creates a cone if the cone-depth
+  <a href="../BEScripts/Parameters/tD1=.html">tD1=</a> is unequal zero.
+  Positive values create a concave cone otherwise it is convex.
+  tD1 measures at the front side of the diaphragm and from the level of the suspension
+  down to the base of the dust-cap.</p>
+
+  <p>The diaphragm is rendered differently for the front and rear side,
+  as explained at parameter <a href="../BEScripts/Parameters/Side=.html">Side=</a>.</p>
+
+
+  <h4 ID=ConeFront>Cone Front</h4>
+
+  <table><tr valign=top>
+  <td align=center width=400><p><img src="../../_Images/Diaphragm%20cone%20front.jpg"/></p></td>
+  <td>
+
+  <p><a href="../BEScripts/Parameters/hD1=.html">hD1=</a>
+  is the height of the dust-cap. If hD1 &gt; zero then
+  the dome is rendered convex, if hD1=0 flat and if
+  hD1 &lt; 0 its shape is concave
+  (see <a href="#Concave_Dome">below</a>).</p>
+  <p>Removing the dome can be achieved with
+  dVC &lt; zero (see at <a href="#ConeRear">Cone Rear</a>).</p>
+  </td>
+  </tr></table>
+
+
+  <h4 ID=ConeRear>Cone Rear</h4>
+
+  <table><tr valign=top>
+  <td align=center width=400><p><img src="../../_Images/Diaphragm%20cone%20rear.jpg"/></p></td>
+  <td>
+
+  <p><a href="../BEScripts/Parameters/hD2=.html">hD2=</a>
+  is the height of the total cone, which typically goes beyond the
+  dust-cap, therefore hD2 &gt;= tD1.</p>
+  <p><a href="../BEScripts/Parameters/dVC=.html">dVC=</a>
+  is the diameter of the voice-coil assumed here to be identical
+  to the base of the cone.</p>
+  <p>If dVC &lt; zero then the front-side of the
+  <i>Diaphragm</i> will have a hole.</p>
+  <p><a href="../BEScripts/Parameters/hVC=.html">hVC=</a>
+  is the height of the voice-coil former, which contributes to
+  the boundary of the acoustic field.</p>
+  <p><a href="../BEScripts/Parameters/dM=.html">dM=</a> is the diameter of the magnet.</p>
+  <p><a href="../BEScripts/Parameters/hM=.html">hM=</a> is the height of the magnet.</p>
+  </td>
+  </tr></table>
+
+
+  <h4 ID=Concave_Dome>Cone with Concave Dome</h4>
+
+  <table><tr valign=top>
+  <td align=center width=400>  <p><img src="../../_Images/Diaphragm%20cone%20concave%20dome.jpg"/></p></td>
+  <td><p>If hD1 &lt; zero then a concave dust-cap is rendered.</p></td>
+  </tr></table>
+
+
+  <h3 ID=LoudspeakerDome>Loudspeaker Dome</h3>
+
+  <table><tr valign=top>
+  <td align=center width=400><p><img src="../../_Images/Diaphragm%20Dome.jpg"/></p></td>
+  <td><p>The <i>Diaphragm</i> becomes a dome if only the outer diameter <i>dD=</i>
+  and the height <i>hD1=</i> is specified. For positive values of hD1 the dome is convex,
+  for negative values it is concave.</p></td>
+  </tr></table>
+
+
+  <br>
+  <br>
+</body>
+</html>

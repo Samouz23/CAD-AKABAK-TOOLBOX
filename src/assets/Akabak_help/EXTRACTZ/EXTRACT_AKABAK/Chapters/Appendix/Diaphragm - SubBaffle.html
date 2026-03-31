@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Diaphragm - Baffle</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1 class=param>Diaphragm - Baffle</h1>
+
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Creates a rectangular baffle</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                         <a href="../BEM-Part/Form-Diaphragm.html">Diaphragm</a>,
+                                         <a href="../BEM-Part/Form-Shell.html">Shell</a>,
+                                         <a href="../BEM-Part/Form-Duct.html">Duct</a>,
+                                         <a href="../BEM-Part/Form-VibFile.html">Vib-File</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table class=pic align=right>
+    <tr><td><img src="../../_Images/VibFile%20HasBaffle.jpg" /></td></tr>
+    <tr><td><img src="../../_Images/VibFile%20NoBaffle.jpg" /></td></tr>
+  </table>
+
+
+  <!-- ---------------------------------------------------------------- -->
+  <h3>Baffle Type</h3>
+  <!-- ---------------------------------------------------------------- -->
+
+  <p>Components
+     <a href="../BEM-Part/Form-Diaphragm.html">Diaphragm</a>,
+     <a href="../BEM-Part/Form-Shell.html">Shell</a>,
+     <a href="../BEM-Part/Form-Duct.html">Duct</a>,
+     <a href="../BEM-Part/Form-VibFile.html">Vib-File</a>
+  feature a local baffle which helps to embed circular shapes into an
+  otherwise rectangular environment. In the associate edit-forms the
+  Baffle Type can be selected with the help of a list. For example at
+  Diaphragm - Page Parameter.</p>
+
+  <p><i>With Baffle</i> creates a rectangular baffle around the
+  circular, elliptical or oval
+     <a href="../BEM-Part/Form-Diaphragm.html">Diaphragm</a>,
+     <a href="../BEM-Part/Form-Shell.html">Shell</a>,
+     <a href="../BEM-Part/Form-Duct.html">Duct</a>,
+     <a href="../BEM-Part/Form-VibFile.html">Vib-File</a>.</p>
+
+  <p>If the component has a rectangular shape no baffle is created. However,
+  parameter <i>Offset</i> can still be used.</p>
+
+  <p>The size of this baffle is always identical to the outer-diameters of the component.</p>
+
+  <p><i>No Baffle</i> disables the baffle.</p>
+
+  <p><i>Only Recess</i> disables the baffle. However, extrusion walls
+  are created if parameter <i>Offset</i> is specified (see below).</p>
+
+
+  <!-- ---------------------------------------------------------------- -->
+  <h3>Offset</h3>
+  <!-- ---------------------------------------------------------------- -->
+
+  <p align=center>
+  <img src="../../_Images/VibFile%20HasBaffle%20tB=-10mm.jpg" /> &nbsp; &nbsp; &nbsp;
+  <img src="../../_Images/VibFile%20HasBaffle.jpg" /> &nbsp; &nbsp; &nbsp;
+  <img src="../../_Images/VibFile%20HasBaffle%20tB=10mm.jpg" />
+  </p>
+
+  <p><i>Offset</i> allows to create a tunnel or a step at the outer edge of following
+  elements:
+
+  <p class=formula>
+     <a href="../BEM-Part/Form-Diaphragm.html">Diaphragm</a>,
+     <a href="../BEM-Part/Form-Shell.html">Shell</a>,
+     <a href="../BEM-Part/Form-VibFile.html">Vib-File</a>
+  </p>
+
+  <p>If <i>Baffle Type = Only Recess</i> then a tunnel or step is
+  extruded but without the attached baffle.</p>
+
+  <p>If <i>Baffle Type = No Baffle</i> then Offset is ignored.
+
+
+  <h4>Side=Front</h4>
+
+  <table class=pic align=right>
+  <tr height=150><td><img src="../../_Images/Diaphragm%20front%20tB=10.jpg"></td></tr>
+  <tr height=200><td><img src="../../_Images/Diaphragm%20rear%20tB=10.jpg"></td></tr>
+  <tr height=100><td><img src="../../_Images/Diaphragm%20front%20tB=10%20(side%20view).jpg"></td></tr>
+  <tr height=150><td><img src="../../_Images/Diaphragm%20rear%20tB=10%20(side%20view).jpg"></td></tr>
+  <tr height=150><td><img src="../../_Images/Diaphragm%20front%20rear%20tB=10%20t1=-10.jpg"></td></tr>
+  </table>
+
+  <p>If Offset &gt; 0 then the baffle is displaced forward, which creates a tunnel in
+  front of the device. If Offset &lt; 0 then the baffle is displaced backwards, which
+  creates a step with respect to the baffle.</p>
+
+
+  <h4>Side=Rear</h4>
+
+  <p>For the rear of a diaphragm it is the same from the view-point of the whole
+  device. If Offset &gt; 0 then the baffle is displaced in direction of the front
+  diaphragm, which creates a step for the rear. If Offset &lt; 0 then the
+  baffle is displaced in direction of the rear-side, which
+  creates a tunnel for the rear diaphragm.</p>
+
+
+  <h4>Front and Rear</h4>
+
+  <p>Often we have the case where a diaphragm is within a wall with a certain
+  thickness. There are two <i>Diaphragm</i>-elements, one with <i>Side=Front</i>
+  and one with <i>Side=Rear</i>. In this case we use Offset in combination
+  with axial offset of the
+  <a href="../Desktop/Form-Scaling.html">Scaling Form</a>.</p>
+
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Normals and Volumes</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Normals and Volumes</h1>
+
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <hr>
+
+  <p>See also Normals of</p>
+  <p class=indent><a href="Normals%20and%20Volumes%20-%203D-Elements.html">3D Elements</a></p>
+  <p class=indent><a href="Normals%20and%20Volumes%20-%20Circular%20Symmetric%20Elements.html">Circular Symmetric Elements</a></p>
+  <p class=indent><a href="Normals%20and%20Volumes%20-%20Interface%20Elements.html">Interface Elements</a></p>
+
+  <hr>
+
+  <p>The normal is an orientation-vector, which points
+  perpendicular to the surface of a boundary element. For each BEM-boundary
+  you need to provide the principal
+  orientation of this normal.</p>
+
+  <table><tr>
+  <td width=30> </td>
+  <td width=200><img src="../../_Images/Normals%20-%20Positiv.jpg"></td>
+  <td width=200><img src="../../_Images/Normals%20-%20Negativ.jpg"></td>
+  </tr></table>
+
+  <p>The principal orientation of the normal can have two spins because there are two
+  sides to a boundary element. As explained further down the spin of the normal is
+  derived from the order of specification of the vertices.</p>
+
+  <p>For the Boundary Element Method the normals are playing an important role,
+  because it is through the normals the solver knows about the enclosed volume.
+  In general, the BEM produces a field only for the volume, which is completely surrounded
+  by a boundary.
+  In case of radiation into open space, one of the boundaries is at infinity assuming
+  a <i>Sommerfeld</i> radiation-condition. Outside the boundary the result of the
+  Helmholtz-Integral yields zero pressure.
+  For Direct-Sound-Analysis normals are of no importance.</p>
+
+  <p>In AKABAK normals should point always into the domain, which the element belongs to. For
+  an exterior domain this volume is the outer space extending to infinity. An
+  exterior domain is specified by Element Type = Exterior of
+  section <a href="../BEM-Part/Form-Subdomain.html">Subdomain</a>.
+  In AKABAK a Domain is an individual radiation volume. A <i>Subdomain</i>
+  is similar, however a Subdomain is coupled to other Subdomains.</p>
+
+  <table><tr>
+  <td width=30> </td>
+  <td width=200><img src="../../_Images/Normals%20-%20SP38%20Interior.jpg"></td>
+  <td width=200><img src="../../_Images/Normals%20-%20SP38%20Exterior.jpg"></td>
+  </tr></table>
+
+  <p>In the above vented-box-example the inner Subdomain is displayed on the left
+  side. The tiny bars indicate the normals of each element, which point into the
+  enclosed volume.</p>
+
+  <p>The right picture shows the normals of all elements, which belong to the
+  exterior Subdomain.
+  For the external domain all normals should point away from the enclosure i.e.
+  into the infinite exterior volume.</p>
+
+  <br />
+  <p>Note: There is no thickness to the walls as it was neglected in this example.
+  In AKABAK zero-thickness-walls are feasible if their two sides belong to
+  individual Subdomains. In general any Subdomain should have a non-zero volume.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

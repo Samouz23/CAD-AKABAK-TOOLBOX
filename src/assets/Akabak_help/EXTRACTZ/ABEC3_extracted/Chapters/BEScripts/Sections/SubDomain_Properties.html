@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Subdomain_Properties</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Subdomain_Properties</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Properties of a sub-domain</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../BEScript.html">BE-Script</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table><tr>
+  <td width=300 valign=top><pre>
+  <b>Subdomain_Properies</b>  "Any Name"
+    <a href="../Parameters/Subdomain=.html">Subdomain=</a>
+    <a href="../Parameters/ElType=.html">ElType=</a>
+    <a href="../Parameters/MeshFrequ=.html">MeshFrequency=</a>
+    <a href="../Parameters/EdgeLength=.html">EdgeLength=</a>
+    <a href="../Parameters/Meshing=.html">Meshing=</a>
+    <a href="../Parameters/RefNodes=.html">RefNodes=</a>
+  </td><td width=300 valign=top><pre>
+
+    <a href="../Parameters/Scale=.html">Scale=</a>
+    <a href="../Parameters/Shift=.html">Shift=</a>
+    <a href="../Parameters/Rotate=.html">Rotate=</a>
+    <a href="../Parameters/Mirror=.html">Mirror=</a>
+    <a href="../Parameters/Color=.html">Color=</a>
+    <a href="../Parameters/Set=.html">Set=</a>
+    </pre></td>
+  </tr></table>
+
+  <p>The specification of a section <i>Subdomain_Properties</i>
+  helps structuring the script if multiple
+  <a href="../../Appendix/Sub-Domain%20Modelling.html">sub-domains</a> are used,
+  and to provide global parameters common to a particular sub-domain.
+  There should be only one <i>Subdomain_Properties</i>-section per sub-domain.</p>
+
+  <p>For example</p>
+
+  <pre>
+  ...
+  <b>Subdomain_Properties</b> "Interior"
+    Subdomain=1
+    ElType=Interior
+    Color=Yellow
+
+  <b>Subdomain_Properties</b> "Exterior"
+    Subdomain=2
+    ElType=Exterior
+  ...</pre>
+
+  <p>There are two sub-domains in this script. The first sub-domain
+  has index "1" and the second "2". All sections with the specification
+  <a href="../Parameters/Subdomain=.html">Subdomain=1</a> get assigned
+  "ElType=Interior". All sections with <i>Subdomain=2</i> will have
+  "ElType=Exterior".</p>
+
+  <br>
+  <br>
+</body>
+</html>

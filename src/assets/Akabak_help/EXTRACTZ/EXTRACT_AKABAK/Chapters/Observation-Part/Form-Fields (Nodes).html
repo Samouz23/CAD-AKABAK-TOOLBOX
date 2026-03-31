@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Fields (Nodes) (4100)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Fields (Nodes)</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Observation</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=300><td><img src="../../_Images/Desktop%20-%20Fields%20(Nodes).jpg" /></td></tr>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20Fields%20(Nodes)%20Form.jpg" /></td></tr>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20Fields%20(Nodes)%20Form%20Planes.jpg" /></td></tr>
+  </table>
+
+  <p>Field (Nodes) generates regularly spaced observation points on planes
+  of quadrangle or triangular shape. These planes are defined by vertex-coordinates taken
+  from an associated <a href="../General-Part/Form-Nodes.html">Nodes-database</a>.</p>
+
+  <p>Create a new <i>Field</i>-component with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  The home of the component is page <i>Observation</i>.
+  Edit an existing component by dbl-click its entry on page <i>Observation</i>
+  or issue menu <i>Edit/Parameters</i> or press CTRL+E.</p>
+
+  <p>The result of the Field calculation is the frequency response of the sound pressure.
+  It will be displayed as a contour-plot in the 3D-viewer.</p>
+
+  <p>The frequency range is specified at menu
+  <a href="../Desktop/Form-Frequencies.html">Global/Frequencies</a>.
+  After calculation select the frequency or frequency-range to plot at
+  <a href="../Desktop/Page-Frequencies.html">Desktop-Page - Frequencies.</a></p>
+
+  <p>The check-box of the <a href="../Desktop/Treelist%20Controls.html">list</a> at the side
+  of the desktop lets you show or hide the field. Un-checked Field-records will be
+  skipped at next round of calculation.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - General</h3>
+  <!-- ----------------------------------------------- -->
+
+  <h4>Name of Component</h4>
+
+  <p>Provide the name of the component in form of a <a href="../Appendix/Strings.html">string</a>.</p>
+
+
+  <h4>Analysis Type</h4>
+
+  <p><i>Pressure</i> means the type of analysis is set to sound pressure response.</p>
+
+
+  <h4>Meshing - Edge Length</h4>
+
+  <p>Meshing is responsible for the distribution of observation points, which we can regard
+  as microphones. Edge Length is a measure for the distance between two such points.
+  The distance will not be exactly the same as Edge Length, but the distance will
+  be guaranteed to be smaller. We need a sufficiently dense mesh of microphones in order
+  to avoid aliasing artifacts.<br>
+  <i>Quad Ratio</i>: Quadrilaturals of large aspect ratio are cut into two new and smaller
+  quadrilaturals until L<sub>max</sub>/L<sub>min</sub> &lt; <i>Quad Ratio</i>.</p>
+
+
+  <h4>Info</h4>
+
+  <p>Here is space for annotations.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Range</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>On this page you find controls for the range of output as
+  the ranging directly controls the contouring.
+  Also sources can be selected which shall take part in the simulation.
+  More see chapter <a href="Form-Range%20(frame).html">Frame - Range</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Planes</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>On this page we organize the database of observation-planes.</p>
+
+
+  <h4>Nodes</h4>
+
+  <p>Reference to the associated
+  <a href="../General-Part/Form-Nodes.html">Nodes</a>-database.</p>
+
+
+  <h4>New, Insert, Delete</h4>
+
+  <p>Create a new record, or delete the selected records.
+  You can use the menu, the buttons or the keyboard (Insert, Ctrl+Del).</p>
+
+
+  <h4>Table</h4>
+
+  <p>See also chapter <a href="../Appendix/List%20Editors.html">List Editors</a>.</p>
+  <p>The table lists all specified observation-planes.
+  <i>Name</i> is an arbitrary integer-number.
+  <i>Node-Indices</i> are pointers to coordinates of the associated
+  <a href="../General-Part/Form-Nodes.html">Nodes</a>-database.
+  Each node-index will form a vertex of the polygon of the plane.
+  See chapter <a href="../Appendix/Nodes%20and%20Elements.html">Nodes and Elements</a>.
+  <i>Comment</i> provides a place for annotation.</p>
+
+  <p>Node-indices are edited directly in the list. Separate each node-index by a blank.</p>
+
+  <p>Start edit-mode: Simply start typing numbers. Press keyboard F2. Mouse slow dbl-click.</p>
+
+  <p>Submit the new value: Press keyboard ENTER. Press keyboard up/down. Mouse click.</p>
+
+  <p>Cancel editing: Press keyboard ESC.</p>
+
+
+  <h4>Copy and Paste</h4>
+
+  <p>Selected records or values can be copied to the clipboard. Eventually, these
+  data can be pasted into the table. The datum is copied in text-format, which allows
+  to paste the content also into the formula-editor or to any text-editor.<br>
+  If a range of node-indices is selected the clipboard contains only these values.
+  For pasting at the target table you can select more than available values.<br>
+  If the plane-index is selected then the whole record gets copied to the clipboard.
+  Eventually you can paste these records into the table or any Element- or Fields-Form.
+  Here are two options available: over-writing existing coordinates or adding as new.</p>
+
+
+  <h4>Moving and Sorting</h4>
+
+  <p>Selected records can be moved up or down the list by issuing local menu
+  <i>Move up, Move down, ...</i> or press CTRL+UP or CTRL + DOWN keys.<br>
+  Records can be sorted with respect to the node-index. For this click on
+  the header of the first column.</p>
+
+
+  <h4>Undo</h4>
+
+  <p>Operations can be undone with the local menu <i>Undo</i> or CTRL+Z key.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Scaling</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>Page <i>Scaling</i> alters position of all coordinates. For details see
+  <a href="../Desktop/Form-Scaling%20(frame).html">sub-form Scaling</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers are:</p>
+
+  <p class=formula><table >
+    <!-- Meshing -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Meshing</b></span></td> </tr>
+    <tr> <td>EdgeLength</td>     <td>Distance of observation points</td>        </tr>
+    <tr> <td>QuadRatio</td>      <td>Aspect ratio of quads</td>         </tr>
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Scaling</b></span></td> </tr>
+    <tr> <td width=100>Scale</td>          <td>Isotropic scaling</td>             </tr>
+    <tr> <td>ScaleX</td>         <td>Scaling in x-direction</td>        </tr>
+    <tr> <td>ScaleY</td>         <td>Scaling in y-direction</td>        </tr>
+    <tr> <td>ScaleZ</td>         <td>Scaling in z-direction</td>        </tr>
+    <tr> <td>RotateX</td>        <td>Rotation about x-axis</td>         </tr>
+    <tr> <td>RotateY</td>        <td>Rotation about y-axis</td>         </tr>
+    <tr> <td>RotateZ</td>        <td>Rotation about z-axis</td>         </tr>
+    <tr> <td>ShiftX</td>         <td>Shift in x-direction</td>          </tr>
+    <tr> <td>ShiftY</td>         <td>Shift in y-direction</td>          </tr>
+    <tr> <td>ShiftZ</td>         <td>Shift in z-direction</td>          </tr>
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Range</b></span></td> </tr>
+    <tr> <td>Range</td>          <td>Max-Min of output</td>             </tr>
+    <tr> <td>RangeMax</td>       <td>Upper bound of output range</td>   </tr>
+    <tr> <td>RangeMin</td>       <td>Lower bound of output range</td>   </tr>
+    <tr> <td>StepSize</td>       <td>Contouring step</td>               </tr>
+
+  </table></p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

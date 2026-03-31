@@ -1,0 +1,237 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Script-Syntax</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Script-Syntax</h1>
+  <p class=navi><a href="../Index.html">Home</a> &raquo;
+                <a href="../BEScripts/Scripts.html">Scripts</a></p>
+  <hr>
+
+  <p>Note, the syntax for ABEC- and Lumped Element scripts is similar.
+  Slight differences are explained <a href="#LE-Syntax">below</a>.</p>
+
+  <br />
+  <p>All script identifiers are assumed case-insensitive. An exception are
+  <a href="Units.html">units</a>, which should be entered case-sensitive.</p>
+
+  <p>All entries are line-oriented. However you can use ";" as a separator.
+  For example:</p>
+
+  <pre>
+  <b>Control_Solver</b>
+    f1=10Hz;  f2= 100Hz;  NumFrequencies=10;  Abscissa=lin
+    Sym=x
+    MeshFrequency=100Hz
+    ...</pre>
+
+  <br />
+  <p>"//" is the comment-symbol. Anything behind is regarded as comment and
+  ignored during interpretation. The comment-mode stops at the end of line
+  and ignores any ";"</p>
+
+  <br />
+  <p>Indentation is not mandatory but extremely useful. Our recommendation
+  is to indent parameters and section-items by two blanks relative to
+  section-identifiers. Tabs should be avoided, especially
+  if you want to exchange scripts with colleagues (try with switching on
+  "Tabs to Spaces" in your editor).</p>
+
+  <br />
+  <p>Syntax Highlighting enhances readability.
+  We provide highlighting-schema for some editors.
+  If you use a different editor you may use the generic list
+  from which you can create your own highlighting.</p>
+
+
+  <h3>ABEC Scripts</h3>
+
+  <h4>Sections</h4>
+
+  <p>Scripts are organized in sections. Each section starts with an
+  identifier followed by a name. If the name has blanks then the string
+  should be set in quotation-marks (use "dbl quotes " or 'single quotes').</p>
+
+  <p>The next lines behind the section-identifier are reserved for
+  parameters, many of which are optional (see below). Some sections
+  have at the bottom a list of section-items (see below).</p>
+
+  <p>Typing "OFF" in front of a section-identifier disables the whole section.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b><font color="#800000">OFF</font> Elements</b> "Part II"
+    RefNodes="N"
+    100    2001  2002  2003  2004  // Floor
+    101    2011  2014  2013  2012  // Ceiling
+    ...
+
+  <b>Elements</b> "Part I"
+    RefNodes="N"
+    100    1001  1002  1003  1004  // Floor
+    101    1011  1014  1013  1012  // Ceiling
+    ...</pre>
+
+
+  <h4>Parameters</h4>
+
+  <p>Each section provides a range of parameters, many of which
+  are optional. A parameter typically has the format</p>
+
+  <pre>
+    Indentifier=Value</pre>
+
+  <p>Syntactically each parameter should form a single line in the script.</p>
+
+  <p>Format and unit of the value depends on the type of parameter.
+  In BE-scripts blanks are allowed between identifier and value. In LE-scripts
+  there should be no blank.</p>
+
+  <p>If no unit is provided SI-units are assumed (ie meter, kilogram, etc),
+  see chapter <a href="Units.html">Units</a>.</p>
+
+  <p>Value can be a
+  <a href="Floating%20point%20values.html">floating point number</a>,
+  <a href="Strings.html">string</a>,
+  <a href="Boolean.html">boolean</a>,
+  <a href="Integer%20values.html">integer</a> or
+  a special word.</p>
+
+  <p>Parameters of floating point values can be assigned a
+  <a href="Formula%20Real.html">formula</a>,
+  which facilitates the
+  <a href="Parameterization%20of%20Scripts.html">Parameterization of the Script</a>.</p>
+
+  <p>At some places multiple values can be entered. Each such item
+  should be separated by a blank, tab or comma (but not ";", which
+  is equivalent to a new line).</p>
+
+  <p>Parameter-values can itself contain "identifier-value" pairs,
+  for example <a href="../BEScripts/Parameters/Position=.html">Position=</a>.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Control_Solver</b>
+    Frequencies = 1Hz, 100Hz  // List of floating point numbers with unit
+    Sym=x                     // "x" special word
+    ...
+  <b>Diaphragm</b>  "D1"
+    EdgeLength= 15cm, 1cm
+    DrvGroup=1001
+    HasBaffle=false;   tb= -10mm
+    dD=200mm;  hD1=50mm;  dD1={ 0.3*0.2 }
+    Position=  theta=90   phi=0   Rot=30</pre>
+
+
+  <h4>Lists of Section-Items</h4>
+
+  <p>At the bottom of the section, ie behind the parameters, have some
+  sections a list of items. Internally, each such item produces a copy
+  of the section with all its parameters. For example, each item of section
+  <a href="../BEScripts/Sections/Elements.html">Elements</a>
+  forms an Element, each item of
+  <a href="../BEScripts/Sections/Driving_Values.html">Driving_Values</a>
+  assigns a value to a DrvGroup and so on.</p>
+
+  <p>Syntactically each section-items should form a single line in the script.</p>
+
+  <p>Each section-item itself is a list of identifier=value sub-items.
+  At some places only values are expected.
+  All sub-items should be separated by a blank or tab.
+  Within a line of a section-item there should be no ";"</p>
+
+  <p>Each section-item always has a number as its first parameter, which
+  is the "name" of this section-item. The name should be unique.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Nodes</b> N1
+    Scale=1mm
+    <font color="#800000">1001    0     0     0
+    1002    1.0   0     0
+    1003    0     1.0   0</font></pre>
+
+  <pre>
+  <b>Radiation_Impedance</b>
+    GraphHeader="Radiation Impedance"
+    BodeType=Complex
+    RadImpType=Normalized
+    <font color="#800000">101    1001     1001   ID=101
+    102    1002     1002   ID=102
+    103    1001     1002   ID=103</font> </pre>
+
+
+  <h4>Embedding Scripts</h4>
+
+  <p><img src="../../_Images/Scripts%20Embed%20Project%20TreeList.jpg" align=right />
+  Solving- and observation-scripts allow embedding further scripts,
+  see parameter <a href="../BEScripts/Parameters/File=.html">File=</a>.
+  <i>File=</i> does not belong to a particular section. For example:</p>
+
+  <pre><font color="#800000"><b>File=</b>"Nodes.txt"</font>
+
+  <b>Control_Solver</b>
+    f1=10Hz;  f2= 100Hz;  NumFrequencies=10;  Abscissa=lin
+    Sym=x
+    MeshFrequency=100Hz
+    ...</pre>
+
+
+  <a name="LE-Syntax"></a>
+  <h3>Lumped Element Scripts</h3>
+
+  <p>The syntax is intentionally designed to be as compatible as possible to
+  the legacy system Akabak v2.1. Because of this, the syntax in the
+  LE-scripts slightly differs from the syntax of other input-scripts.</p>
+
+  <h4>Differences</h4>
+
+  <ul>
+    <li>Multiple parameters are allowed in one line - no ";" is required.</li>
+
+    <li><i>Identifier=Value</i> pairs should have no blanks.</li>
+
+    <li>Units are mandatory.</li>
+  </ul>
+
+  <br>
+  <p>See also chapter
+  <a href="../LEScript/LEScripts.html">LE-Scripts</a>.</p>
+
+  <br />
+  <h4>For example</h4>
+
+  <br>
+  <pre>
+  <b>Def_Driver</b> "SP38"
+    Re=6.86ohm   Le=2.75mH        fre=4.84kHz  ExpoRe=2.9  ExpoLe=0.775
+    Mms=68.5g    Cms=0.108e-3m/N  Rms=4Ns/m    Bl=19.65N/A
+
+  <b>Def_Driving</b> "Voltage source"
+    Value=1V  IsRms
+
+  <b>System</b> "S1"
+    <b>Resistor</b> "Rg"
+      Node=1=2   R=1ohm
+
+    <b>Driver</b> "Drv1"  Def="SP38"
+      Node=2=0=20=30    DrvGroup=1001,1002
+
+    <b>RadImp</b> "Front"
+      Node=20    DrvGroup=1001
+
+    <b>RadImp</b> "Rear"
+      Node=30    DrvGroup=1002
+  </pre>
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Boundary Element Analysis</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Boundary Element Analysis</h1>
+  <p class=navi><a href="../Index.html">Home</a> </p>
+  <hr>
+
+  <p>The <i>Boundary Element Analysis</i> calculates the acoustic field
+  satisfying boundary conditions, i.e. including reflection and diffraction.
+  The <i>Boundary Element Analysis</i> solves
+  the Helmholtz Integral for the interior and exterior radiation problem
+  [<a href="Literature.html">1,2,4,5</a>].</p>
+
+  <p>The Boundary Element solver is used here only for the acoustics.
+  Only boundary condition of motion are taken into account. Potential
+  boundary conditions are not supported.
+  The integral is
+  solved by decomposing the structure into triangles assuming constant pressure
+  on each finite element.</p>
+
+  <p>In order to do so, you need to specify these boundaries in the
+  <a href="../BEScripts/BEScript.html">BE Solving Script</a>.
+  The <i>Boundary Element Analysis</i> also makes it necessary to solve for
+  certain unknowns. Therefore, the analysis always goes through two steps:</p>
+  <ol>
+    <li>Solving stage</li>
+    <li>Observation stage</li>
+  </ol>
+
+
+  <br />
+  <p>For <i>Boundary Element Analysis</i> you need to register the
+  solving script at the associate section in the Project tree-list,
+  see <a href="../GUI/Project/Add%20Solving%20Script.html">Add Solving Script</a>.</p>
+
+  <br />
+  <p>ABEC switches into <i>Boundary Element Mode</i> automatically as soon as
+  there is a Solving Script with sections <i>Elements</i> and <i>Control_Solver</i>.
+  Otherwise ABEC is in the mode for
+  <a href="Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>. </p>
+
+  <br />
+  <p>The Boundary Element part can be fully coupled to the
+  <a href="Lumped%20Element%20Analysis.html">Lumped Element Analysis</a>
+  Analysis [<a href="Literature.html">9</a>]. The coupling is
+  specified at observation stage by taking reference to
+  <a href="../LEScript/LEScripts.html">LE-scripts</a>.</p>
+  <br>
+  <br>
+</body>
+</html>
+
+

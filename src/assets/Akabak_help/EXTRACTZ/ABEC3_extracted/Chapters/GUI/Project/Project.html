@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Project</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Project</h1>
+  <p class=navi><a href="../../Index.html">Home</a>
+  <hr>
+
+  <p>Menu for organizing the project.</p>
+
+
+  <h3>New Project</h3>
+
+  <p>Start a new project. All data are cleared. In the file-dialog enter the
+  name of the project. After pressing OK in the
+  <a href="../../Appendix/File%20-%20Dialogs.html">File-Dialog</a>
+  an empty project-file will be created (*.abec).</p>
+
+  <br />
+  <p align=center><img src="../../../_Images/Project%20files%20example.jpg" /></p>
+  <br />
+
+  <p><img src="../../../_Images/Project%20new%20-%20create%20folder.jpg" align=right />
+  Each project should reside in an individual folder.
+  The reason for this is that <a href="../../Appendix/ResultFiles.html">Result Files</a>
+  are stored in a sub-folder, and there can be many files making a project
+  as demonstrated in the above screen-shot.</p>
+
+  <p>Note, the
+  <a href="../../Appendix/File%20-%20Dialogs.html">File-Dialog</a>
+  provides a little button at the top right, which lets you create
+  a folder on the fly.</p>
+
+  <p>Note, if you call the project "Project.abec" then labels of
+  the desktop refer to the folder-name instead.</p>
+
+  <p>After the project-file has been created the next step is to add scripts and
+  data-files to the project, see at "Add (files)" below.</p>
+
+
+  <h3>Open Project</h3>
+
+  <p>Open an existing ABEC project. In the
+  <a href="../../Appendix/File%20-%20Dialogs.html">File-Dialog</a>
+  select an *.abec file and press OK.</p>
+
+  <p>If <a href="../../Appendix/ResultFiles.html">Result Files</a> are present
+  they will be loaded, otherwise registered scripts are interpreted.</p>
+
+  <p>All data-files are loaded.</p>
+
+  <p>Finally the structure will be displayed.</p>
+
+  <p>If <i>Result Files</i> are available observation can be calculated right away
+  otherwise the system has to be solved in <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Mode</a>.</p>
+
+  <p>A Recent File List can be found on page <i>Project</i>.
+  Click on one of the items of this list to directly open the related ABEC-project.</p>
+  <p>Drag and Drop of *.abec-files from Windows File-Explorer also directly
+  opens the project.</p>
+  <p>ABEC.exe can be started with an *.abec-file as parameter, which opens the
+  project directly at start of ABEC.</p>
+
+
+  <h3>Add (Files)</h3>
+
+  <p><img src="../../../_Images/Project%20Add%20Files1.jpg" align=right />
+  In ABEC all parameters are input with the help of scripts, mesh-files,
+  wall-impedance-curves, driving-values, etc.
+  You need to register all these files as explained in
+  <a href="Add%20Files.html">Add (Files)</a>.</p>
+
+
+  <h3>Reopen file</h3>
+
+  <p>Enforces the selected file to be re-loaded and interpreted. Normally
+  you would not need this function as ABEC does this automatically if it receives
+  input-focus, i.e. if the application gets selected with the mouse or with the
+  ALT+TAB-key, and only if a file has been modified, see
+  <a href="Updating%20Files.html">Updating Files</a>.</p>
+
+
+  <h3>Remove File</h3>
+
+  <p>Un-registers the selected file from the project.</p>
+
+
+  <h3>File Explorer</h3>
+
+  <p>Calls the Window File-Explorer at the projects' folder.</p>
+
+
+  <h3>Exit</h3>
+  
+  <p>Terminates ABEC, which may delay during solving or calculation because
+  all threads need to be closed first.</p>
+
+  <br>
+  <br>
+</body>
+</html>

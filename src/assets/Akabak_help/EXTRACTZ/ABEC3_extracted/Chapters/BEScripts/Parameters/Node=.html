@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Node=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Node=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../ObSpectrum.html">Spectrum-Observation-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Node=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Integer%20values.html">Integer</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Identification network node of <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Analysis</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/LE_Spectrum.html">LE_Spectrum</a>
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1>
+                                         <a href="System=.html">System=</a>,
+                                         <a href="ElName=.html">ElName=</a>,
+                                         <a href="Port=.html">Port=</a>,
+                                         <a href="AnalysisType=.html">AnalysisType=</a>
+                                         </td>
+  </tr>
+  </table>
+
+  <hr>
+  <table width=30% align=right>
+  <tr><img src="../../../_Images/LE_Spectrum%20Node.jpg" ></tr>
+  <tr>
+  <pre>
+  <b>System</b>  'S1'
+    Driver    'Drv1'  Node=1=2=2=0=10=20  Def=X1  DrvGroup=1001
+    Enclosure 'E1'    Node=20             Vb=100L
+    RadImp    'Rad1'  Node=10             DrvGroup=1001
+  </pre>
+  </tr>
+  </table>
+
+  <p><i>Node=</i> identifies one or two particular nodes of a Lumped Element network
+  for observation of spectra with <a href="../Sections/LE_Spectrum.html">LE_Spectrum</a>.</p>
+
+  <p><i>Node=</i> is necessary for inspecting potentials
+  such as <a href="AnalysisType=.html">AnalysisType=</a>[Voltage, Force, Pressure].</p>
+
+  <p><i>Node=</i> can have one or two node-indices. If only one index is specified
+  then the potential is always versus ground. If two indices are given then
+  the potential is the difference between the two nodes, Node=s=t yields:</p>
+
+ <pre>  p<sub>st</sub> = p<sub>s</sub> - p<sub>t</sub></pre>
+
+
+  <br />
+  <h4>Example</h4>
+  <p>If the Lumped Element script defines a loudspeaker-driver with
+  two voice-coils and a sealed enclosure and
+  you want to inspect the voltage-difference over the first voice-coil
+  U<sub>12</sub> = U<sub>1</sub> - U<sub>2</sub></p>
+
+  <pre>
+  <b>LE_Spectrum</b> 'U12'
+    AnalysisType=Voltage
+    System=S1
+    101  <font color="#800000">Node=1=2</font>   ID=U12</pre>
+
+  <br />
+  <p>Or, if you want to inspect the pressure-difference between the front and rear
+  diaphragm p<sub>1020</sub> = p<sub>10</sub> - p<sub>20</sub></p>
+
+  <pre>
+  <b>LE_Spectrum</b> 'p1020'
+    AnalysisType=Pressure
+    System=S1
+    101  <font color="#800000">Node=10=20</font>   ID=U12</pre>
+
+  <br />
+  <p>The associate LE-script looks like this:</p>
+
+  <pre>
+  ...
+  <b>System</b>  'S1'
+    <b>Driver</b>    'Drv1'
+      Def='Drv1'
+      Node=1=2=2=0=10=20
+      DrvGroup=1001
+    <b>RadImp</b> 'Front'
+      Node=10
+      DrvGroup=1001
+    <b>Enclosure</b> 'Rear'
+      Node=20
+      Vb=100L  Lb=300mm</pre>
+
+  <br>
+  <br>
+</body>
+</html>

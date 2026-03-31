@@ -18,10 +18,10 @@ export function getMeshMeshingHtml() {
 
   return `
     ${getWindowControlsStyles()}
-    ${getWindowControlsHtml('Meshing (Gmsh)')}
+    ${getWindowControlsHtml('Physical (Gmsh)')}
     <div class="space-y-4">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="text-2xl font-bold text-white">Meshing (Gmsh)</h2>
+              <h2 class="text-2xl font-bold text-white">Physical (Gmsh)</h2>
               <button id="manual-select-file-btn" title="Select a file manually" class="p-1.5 border border-gray-600 rounded-md text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
                 ${importSVG}
               </button>
@@ -38,6 +38,23 @@ export function getMeshMeshingHtml() {
                 <input type="checkbox" id="batch-mode-toggle" class="sr-only peer">
                 <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-600"></div>
               </label>
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-gray-900/50 rounded-md">
+              <label for="bem-mode-toggle" class="font-semibold text-white">Physical Mode</label>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="bem-mode-toggle" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-600"></div>
+              </label>
+            </div>
+
+            <div id="symmetry-mirror-container" class="flex items-center justify-between p-4 bg-gray-900/50 rounded-md hidden">
+              <label for="symmetry-mirror-select" class="font-semibold text-white">Symmetry Mirror</label>
+              <select id="symmetry-mirror-select" class="form-input" style="width: auto; min-width: 100px;">
+                <option value="none" selected>None</option>
+                <option value="H">H (Top Plane)</option>
+                <option value="V">V (Right Plane)</option>
+              </select>
             </div>
 
             <div id="single-clmax-container">
@@ -66,7 +83,9 @@ export function getMeshMeshingHtml() {
             <div id="mesh-status" class="pt-2 pb-4 text-center min-h-[2.5rem]"></div>
             <div id="mesh-progress" class="w-full bg-gray-700 rounded-full h-2.5 hidden">
               <div class="themed-bg h-2.5 rounded-full" style="width: 0%"></div>
-        </div>
+            </div>
+
+
       </div>
     ${getCommonStyles()}
   `;
@@ -139,6 +158,9 @@ function initializeMeshingTool() {
   const clmaxInput1 = document.getElementById('clmax-1');
   const clmaxInput2 = document.getElementById('clmax-2');
   const clmaxInput3 = document.getElementById('clmax-3');
+  const bemModeToggle = document.getElementById('bem-mode-toggle');
+  const symmetryMirrorSelect = document.getElementById('symmetry-mirror-select');
+  const symmetryMirrorContainer = document.getElementById('symmetry-mirror-container');
 
   const manualSelectFileBtn = document.getElementById('manual-select-file-btn');
   const manualFileDisplayContainer = document.getElementById('manual-file-display-container');
@@ -166,6 +188,18 @@ function initializeMeshingTool() {
     });
   }
 
+  function updateWinBtnText() {
+    const isBatch = batchModeToggle.checked;
+    const isPhysical = bemModeToggle ? bemModeToggle.checked : false;
+    if (isBatch) {
+      startBtn.textContent = 'Start Batch';
+    } else if (isPhysical) {
+      startBtn.textContent = 'Physical Preview';
+    } else {
+      startBtn.textContent = 'Start Meshing';
+    }
+  }
+
   if (batchModeToggle) {
     batchModeToggle.addEventListener('change', () => {
       if (batchModeToggle.checked) {
@@ -175,6 +209,16 @@ function initializeMeshingTool() {
         singleClmaxContainer.classList.remove('hidden');
         batchClmaxContainer.classList.add('hidden');
       }
+      updateWinBtnText();
+    });
+  }
+
+  if (bemModeToggle) {
+    bemModeToggle.addEventListener('change', () => {
+      if (symmetryMirrorContainer) {
+        symmetryMirrorContainer.classList.toggle('hidden', !bemModeToggle.checked);
+      }
+      updateWinBtnText();
     });
   }
 
@@ -206,19 +250,64 @@ function initializeMeshingTool() {
       if (progressBar) progressBar.style.width = '0%';
 
       try {
-        const result = await window.electronAPI.startMeshing({
-          clmaxList,
-          curv,
-          manualFilePath: manualMeshFilePath
-        });
+        const settings = await window.electronAPI.getSettings();
+        if (!settings?.paths?.gmsh) throw new Error('GMSH path not configured.');
+        if (!settings?.paths?.dataRoot) throw new Error('Data root not configured.');
 
-        if (result.success) {
-          statusEl.textContent = result.message || 'Meshing completed successfully!';
-          statusEl.style.color = 'lightgreen';
-          if (progressBar) progressBar.style.width = '100%';
-        } else {
-          statusEl.textContent = result.message || 'Meshing failed.';
-          statusEl.style.color = 'red';
+        const meshOutPath = settings.paths.dataRoot + '/Mesh-out';
+        let lastResult = null;
+
+        for (let i = 0; i < clmaxList.length; i++) {
+          const clmax = clmaxList[i];
+          if (clmaxList.length > 1) {
+            statusEl.textContent = `Meshing ${i + 1}/${clmaxList.length} (clmax: ${clmax})...`;
+          }
+          const meshArgs = {
+            gmshPath: settings.paths.gmsh,
+            downloadsPath: manualMeshFilePath ? null : settings.paths.downloads,
+            destPath: meshOutPath,
+            clmax: String(clmax),
+            curv: String(curv),
+            fileNameSuffix: isBatch ? `(${clmax}_${curv})` : `_meshed`,
+            sourceFilePath: manualMeshFilePath,
+            physicalSurfaces: bemModeToggle ? bemModeToggle.checked : false,
+            symmetryMirror: symmetryMirrorSelect ? symmetryMirrorSelect.value : 'none',
+            // Single mode + Physical Surfaces ON: mesh to temp for preview
+            tempMode: !isBatch && bemModeToggle && bemModeToggle.checked,
+          };
+
+          const result = await window.electronAPI.runMesh(meshArgs);
+
+          if (result.success) {
+            lastResult = result;
+            if (progressBar) progressBar.style.width = `${((i + 1) / clmaxList.length) * 100}%`;
+          } else {
+            statusEl.textContent = result.message || 'Meshing failed.';
+            statusEl.style.color = 'red';
+            return;
+          }
+        }
+
+        statusEl.textContent = isBatch ? `Batch of ${clmaxList.length} meshes completed!` : 'Meshing completed successfully!';
+        statusEl.style.color = 'lightgreen';
+        if (progressBar) progressBar.style.width = '100%';
+
+        // Single + Physical Surfaces ON: open preview popup
+        if (!isBatch && bemModeToggle && bemModeToggle.checked && lastResult?.outputPath) {
+          const symVal = symmetryMirrorSelect ? symmetryMirrorSelect.value : 'none';
+          const axis = symVal !== 'none' ? symVal : null;
+          window.electronAPI.openMeshPreview({
+            mshPath: lastResult.outputPath,
+            axis,
+            destPath: meshOutPath,
+            gmshPath: settings.paths.gmsh,
+            sourceFilePath: lastResult.sourceFilePath,
+            shellTagMap: lastResult.shellTagMap,
+            defaultMeshSize: lastResult.defaultMeshSize || Number(clmaxList[0]),
+            defaultCurveMeshSize: lastResult.defaultCurveMeshSize || Number(clmaxList[0]),
+          });
+          statusEl.textContent = 'Physical preview window opened.';
+          statusEl.style.color = '#60a5fa';
         }
       } catch (err) {
         statusEl.textContent = 'Error: ' + err.message;
@@ -226,12 +315,6 @@ function initializeMeshingTool() {
       }
     });
   }
-
-  window.electronAPI.onMeshProgress((progress) => {
-    if (progressBar) {
-      progressBar.style.width = `${progress}%`;
-    }
-  });
 }
 
 function initializeFrequencyListTool() {

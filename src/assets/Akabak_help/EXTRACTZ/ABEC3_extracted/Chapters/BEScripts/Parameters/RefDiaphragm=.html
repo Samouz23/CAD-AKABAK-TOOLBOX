@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>RefDiaphragm=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>RefDiaphragm=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>RefDiaphragm=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Strings.html">String</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Reference to other Diaphragm</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>RefDiaphragm=</i> belongs to a mechanism, which facilitates entering
+  parameters for a <a href="../Sections/Diaphragm.html">Diaphragm</a>-section.
+  It is possible to daisy chain <i>Diaphragm</i>-sections, where each
+  linked <i>Diaphragm</i> inherits all parameters of its reference as default
+  settings.</p>
+
+  <p>In this way it is easy to enter arrays of <i>Diaphragm</i>. Reference is
+  also useful for speaker membranes where we use front and rear,
+  see example at <a href="Side=.html">Side=</a></p>
+
+  <p><i>RefDiaphragm=</i> is a string and relates to the name of another
+  <i>Diaphragm-section</i>.</p>
+
+  <br />
+
+  <p>For example, there are four speakers. Only the fist diaphragm is
+  fully specified, all the others take reference and over-write only
+  the <a href="Position=.html">Position=</a>,
+  <a href="Subdomain=.html">Subdomain=</a> and
+  <a href="DrvGroup=.html">DrvGroup=</a>. </p>
+
+  <pre><img src="../../../_Images/Diaphragm%20RefDiaphragm.jpg" align=right>
+  <b>Diaphragm</b>  "<font color="#800000">Woofer1</font>"
+    DrvGroup=1001
+    SubDomain=3
+    EdgeLength=20mm
+    Position= MeshFileAlias=M Include 6
+    NoBaffle
+    Simple=true
+    Side=Front
+    dD=120mm
+    tD1=20mm
+    dD1=20mm
+    hD1=5mm
+
+  <b>Diaphragm</b> "Woofer2"
+    <font color="#800000">RefDiaphragm="Woofer1"</font>
+    SubDomain=3
+    DrvGroup=1002
+    Position= MeshFileAlias=M Include 32
+
+  <b>Diaphragm</b> "Woofer3"
+    <font color="#800000">RefDiaphragm="Woofer1"</font>
+    SubDomain=3
+    DrvGroup=1003
+    Position= MeshFileAlias=M Include 2
+
+  <b>Diaphragm</b> "Woofer4"
+    <font color="#800000">RefDiaphragm="Woofer1"</font>
+    SubDomain=3
+    DrvGroup=1004
+    Position= MeshFileAlias=M Include 36  </pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Field Observation Scripts</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Field Observation Scripts</h1>
+  <p class=navi><a href="../Index.html">Home</a> &raquo;
+                <a href="Scripts.html">Scripts</a></p>
+  <hr>
+
+  <p>For larger projects it is recommended to specify
+  <a href="Sections/Field.html">Field</a>-sections
+  in a dedicated script. In any case the following sections are relevant for
+  field observations.</p>
+
+
+  <h4>Driving Values - Coupling</h4>
+
+  <p>Each observation-script should specify driving-values either by
+  providing a section
+  <a href="Sections/Driving_Values.html">Driving_Values</a>
+  in the observation script or by coupling to a
+  <a href="../LEScript/LEScripts.html">LE-Script</a>
+  as explained in chapter
+  <a href="Observation.html">Observation Scripts</a>.</p>
+
+
+  <H4>Control_Field</H4>
+
+  <p>Section <a href="Sections/Control_Field.html">Control_Field</a>
+  can provide script-global settings for all field calculations, such as
+  the mesh-generation parameters.</p>
+
+  <p>For observing <a href="../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Analysis</a>
+  field-frequencies are taken from the solving stage.</p>
+
+  <p>For observing <a href="../Appendix/Direct%20Sound%20Analysis.html">Direct Sound</a>
+  fields section <i>Control_Field</i> needs to specify a frequency abscissa.</p>
+
+
+  <h4>Field</h4>
+
+  <p>Section <a href="Sections/Field.html">Field</a> generates a plane
+  with regularly spaced observation points, which will be calculated for all
+  checked frequencies. Eventually you can select a frequency or a range of
+  frequencies in the frequency-list on page
+  <a href="../GUI/Fields/Fields.html">Ob_Fields</a>.
+  The result will be rendered as a field plot in the 3D-viewer
+  on page <a href="../GUI/Drawing/Drawing.html">Drawing</a>.</p>
+
+  <br>
+  <br>
+</body>
+</html>

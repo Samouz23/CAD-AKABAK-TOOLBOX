@@ -4,7 +4,7 @@
 // =======================================================
 
 import { showGeometryCalculatorSelector } from '../popup/geometry/geometry.js';
-import { safeEvaluateMath } from './horn.js';
+import { safeEvaluateMath } from './horn/formulas.js';
 
 export function getGeometryPanelHtml() {
   // Le HTML est modifié pour permettre la saisie de calculs (ex: "500/2")

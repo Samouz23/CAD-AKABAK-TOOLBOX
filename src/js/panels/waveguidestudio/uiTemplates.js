@@ -199,15 +199,45 @@ export function getWaveguidePanelHtml() {
   </div> <!-- Fin de la colonne de gauche -->
 
   <!-- ================================================================== -->
-  <!-- Colonne droite : Vues 2D et 3D (inchangée)                       -->
+  <!-- Colonne droite : Vues 2D et 3D                                    -->
   <!-- ================================================================== -->
-  <div id="visualization-panel" class="flex-grow min-w-0 flex flex-col space-y-4 min-h-0">
+  <div id="visualization-panel" class="flex-grow min-w-0 flex flex-col space-y-4 min-h-0 relative">
     <div id="wg-2d-viewer-container" class="flex-grow bg-black border border-gray-700 rounded-md relative p-2 min-h-0">
       <span class="viewer-label">Shape view</span>
       <canvas id="wg-2d-chart"></canvas>
     </div>
     <div id="wg-preview-container" class="flex-grow bg-black border border-gray-700 rounded-md relative min-h-0">
       <span class="viewer-label">3D View</span>
+    </div>
+  </div>
+
+  <!-- Bouton Presets (positionné en haut à droite, à côté de la croix fermer) -->
+  <button id="wg-presets-btn" class="wg-preset-toggle-btn" title="Waveguide Presets">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    </svg>
+  </button>
+
+  <!-- Modal Presets (Toast central avec blur) -->
+  <div id="wg-presets-modal-overlay" class="wg-presets-modal-overlay hidden">
+    <div class="wg-presets-modal">
+      <div class="wg-presets-header">
+        <div>
+          <h2 class="wg-presets-title">Waveguide Presets</h2>
+          <p class="wg-presets-subtitle">Save and load waveguide configurations</p>
+        </div>
+        <button id="wg-presets-panel-close" class="wg-presets-close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div id="wg-presets-list" class="wg-presets-list"></div>
+      <div class="wg-presets-save-row">
+        <input id="wg-preset-name-input" type="text" class="wg-preset-name-input" placeholder="Preset name...">
+        <button id="wg-preset-save-btn" class="wg-preset-save-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save
+        </button>
+      </div>
     </div>
   </div>
 

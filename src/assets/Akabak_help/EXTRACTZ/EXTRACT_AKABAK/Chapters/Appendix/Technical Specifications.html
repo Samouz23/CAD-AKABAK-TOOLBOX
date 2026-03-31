@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Technical Specifications</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>  <h1>Technical Specifications</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+
+  <table class=pic align=right>
+    <tr height=300><td><img src="../../_Images/Desktop%20-%20Threads.jpg" /></td></tr>
+  </table>
+
+  <h4>Hardware Requirement</h4>
+
+  <p>In general AKABAK assumes modern PC-hardware, fit for a standard MS-Windows system.</p>
+
+  <p>Recommended is an amply equipped computer with many CPUs and
+  lots of memory, because AKABAK makes extensively use of parallel processing.
+  However, with each used thread also the memory allocation goes up.
+  The maximum number of supported threads are 64.</p>
+
+  <p>On 32bit-systems memory is limited to a maximum of 2GByte per process.
+  If you simulate large structures on multiple CPUs it is recommended to
+  run the 64bit version of AKABAK. Of course, this assumes a 64bit OS-system.</p>
+
+  <p>It is hard to give reliable prediction of memory consumption.
+  In fact the best measurement-tool is AKABAK itself. Run AKABAK
+  with different mesh-distributions and frequency ranges and observe
+  Windows' Task-Manager/Performance board. Note, regarding memory consumption
+  the free and commercial version of AKABAK are identical.
+  To give a number, most projects run well on a laptop with 4 CPUs, 8 threads
+  and 16 GByte of memory.</p>
+
+  <p>AKABAK 3D-viewer runs OpenGL. Make sure your graphic-card
+  is up-to-date.</p>
+
+
+  <h4>OS Requirements</h4>
+
+  <p>AKABAK should run on all versions of MS-Windows 11, 10, 8 and 7.
+  There is available a 32bit and a 64bit version.
+  The installation is organized automatically by the installer.</p>
+
+
+  <h4>Other Software</h4>
+
+  <p>For spectral output you need to install also
+  the application <a href="VacsViewer.html">VACS</a> which is typically part of the
+  license which you have purchased.</p>
+
+
+  <h4>Installing</h4>
+
+  <p>Installing is straightforward. Open the install application and follow the instructions.
+  The installer automatically installs the correct bit-version of AKABAK (32/64bit).
+  Examples are very important, and are part of the installation.</p>
+
+
+  <h4>User Documentation</h4>
+
+  <p>The basic user documentation is available as Help. If you are new
+  to AKABAK, simply press F1 and enjoy the reading!</p>
+
+  <br />
+  <p>Please let us know about your suggestions concerning AKABAK, and we also are eager to
+  know about difficulties and any bugs you may come across by using AKABAK.
+  See menu <a href="../Desktop/Form-Bugs-Wishes.html">Help/Bug Reporter</a>.</p>
+
+
+  <h4>Technical Details</h4>
+
+  <pre>
+  Version:       AKABAK v3.1
+  Date:          05.09.2023
+  First release: 02.05.2020
+  Footprint:     31/44MB (32/64bit)
+  Modules:       1
+  Num Lines:     1,112,085    (full build)
+  Compiler:      <a href="http://www.embarcadero.com/" title="External">Embarcadero Delphi Pascal 10</a>
+  Tools:         <a href="http://www.trichview.com/" title="External">RichView RTF-editor</a>,
+                 <a href="http://www.delphigl.com/" title="External">dglOpenGL</a>,
+                 <a href="http://www.blumentals.net/htmlpad/" title="External">HTMLPad Editor</a>,
+                 <a href="http://helpware.net/FAR/" title="External">FAR Help Authoring</a>,
+                 <a href="http://www.abacom-online.de/uk/">ABACOM sPlan</a>
+
+  </pre>
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

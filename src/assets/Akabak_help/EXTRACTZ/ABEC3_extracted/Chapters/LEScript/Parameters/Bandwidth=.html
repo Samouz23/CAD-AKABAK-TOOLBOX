@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Bandwidth=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=Bandwidth>Bandwidth=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=Bandwidth>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Bandwidth=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating-point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Bandwidth of band-pass transformation.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Sections/Filter.html">Filter</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Bandwidth=</i> belongs to the parameter-set of
+  <a href="../../Appendix/Filter%20Standard%20Function.html">standard filter alignments</a>.</p>
+
+  <p>This parameter controls the relative bandwidth of the band-pass
+  transformation. For example</p>
+
+  <pre>
+    <b>Filter</b> 'F14'
+      f0=1kHz
+      Order=6   BU  Bandpass   <font color="#800000">Bandwidth=2</font>
+  </pre>
+
+  <p><i>Bandwidth</i> is defined as</p>
+
+  <p class=formula>Bandwidth = (f<sub>2</sub> - f<sub>1</sub>)/f<sub>0</sub></p>
+
+  <p>with f1 and f2 lower and upper cut-off frequency and f0 filter-frequency.</p>
+
+  <p><img src="../../../_Images/LE-Filter%20Bandwidth.jpg"></p>
+  
+  <br>
+  <br>
+</body>
+</html>

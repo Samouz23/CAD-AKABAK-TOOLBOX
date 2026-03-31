@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Frame - Position</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Frame - Position</h1>
+
+  <table class=header><tr>
+  <td class=header><a href="../Index.html">Home</a></td>
+  <td class=header>(accessible only from forms)</td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+  <tr height=300><td>
+          <img src="../../_Images/Position%20Mounting%20Point%20Cone.jpg" />
+          <img src="../../_Images/Position%20Mounting%20Point%20Dome.jpg" /><br>
+          <img src="../../_Images/Position%20Mounting%20Point%20Duct.jpg" /></td></tr>
+  <tr><td><img src="../../_Images/Desktop%20-%20Position-Identifier.jpg" /></td></tr>
+  <tr height=400>
+      <td><img src="../../_Images/Position%20DirIDs%20z%20RefNode.jpg" />&nbsp;&nbsp;
+          <img src="../../_Images/Position%20DirIDs%20x%20RefNode.jpg" /><br>
+          <img src="../../_Images/Position%20DirIDs%20x%20Offset.jpg" /></td></tr>
+  <tr><td><img src="../../_Images/Desktop%20-%20Position-Triangle.jpg" /></td></tr>
+  <tr height=250>
+      <td><img src="../../_Images/Position%20Diaphragm.jpg" />
+          <img src="../../_Images/Position%20Duct%20Rot.jpg" /></td></tr>
+  <tr><td><img src="../../_Images/Position%20Islands.jpg" /></td></tr>
+  <tr><td><img src="../../_Images/Desktop%20-%20Tags%20Pos.jpg" /></td></tr>
+  </table>
+
+  <p>Boundary Element Components, such as the
+  <a href="../BEM-Part/Form-Diaphragm.html">Diaphragm</a>,
+  <a href="../BEM-Part/Form-Shell.html">Shell</a>,
+  <a href="../BEM-Part/Form-Duct.html">Duct</a>,
+  <a href="../BEM-Part/Form-VibFile.html">VibFile</a> and the
+  <a href="../BEM-Part/Form-Baffle.html">Baffle</a>
+  need positioning which specifies the mounting-point and the orientation of the
+  device.</p>
+
+  <p>The mounting-point, P1, is always the center point of lateral extension of the component.
+  In the other dimension, the mounting point is in the plane of the outer
+  rim. For example, the outer suspension of a loudspeaker-diaphragm,
+  the aperture of the duct or the opening of the shell-component.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Identifier</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>If the orientation of the component is aligned with one of the coordinate-axis then
+  direction-specifiers are convenient:</p>
+
+  <h4>Identifier of Direction</h4>
+
+  <p class=indent> <table size=50%>
+  <tr><td width=170>x, y, z</td>                 <td width=100>Axis</td>    <td width=100>3D</td></tr>
+  <tr><td width=170>xy, xz, yz, yx, zx, zy</td>  <td width=100>Plane</td>   <td width=100>3D</td></tr>
+  <tr><td width=170>pos, neg</td>                <td width=100>Axis</td>    <td width=100>CircSym</td></tr>
+  </table></p>
+
+  <p>x, y, z are directions of the main-axis of the component.
+  xy ... zy can be used alternatively. These are planes which normal
+  points the direction. A negative-sign inverts the direction.
+  Pos and Neg are used for
+  <a href="Form-BEM-Parameters.html">Dim=CircSym</a> and point along the axial-axis.</p>
+
+  <p>For example the first dome-shaped Diaphragm
+  in the picture on the right is specified with
+  <i>Identifier of Direction</i>=z. The second with <i>Identifier of Direction</i>=x
+  (The pictures of the example show an additional offset, which can be provided
+  with the help of sub-form <a href="Form-Scaling.html">Scaling of Position</a>).</p>
+
+
+  <h4>Mounting Position P1</h4>
+
+  <p>By default the mounting position is at the origin of the global coordinate system.
+  You can pin the component to a coordinate from a database of
+  <a href="../General-Part/Form-Nodes.html">Nodes</a>. Specify here the Node-Index
+  of the coordinate. Further you need to select the Nodes-database at
+  list-box <i>Reference to Nodes</i>.</p>
+
+
+  <h4>Reference to Nodes</h4>
+
+  <p>Reference to database of <a href="../General-Part/Form-Nodes.html">Nodes</a>.
+  You would need this entry only if you want to use a coordinate from
+  this database as specified at input-field <i>Mounting Position P1</i>.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Triangle</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Items can also be positioned with the help of a <i>positioning triangle</i>.
+  This technique is particular  practical if coordinates are readily available.
+  See also at chapter
+  <a href="../Appendix/Planes.html">Planes</a>.</p>
+
+
+  <h4>Reference to Nodes</h4>
+
+  <p>First we need a reference to a database of
+  <a href="../General-Part/Form-Nodes.html">Nodes</a>.</p>
+
+
+  <h4>P1, P2 and P3</h4>
+
+  <p>P1 gives the absolute position of the mounting point of the component.
+  The mounting point is typically the center of the front edges of the component.
+  Specify the Node-Index of the coordinate.</p>
+
+  <p>P2 and P3 are there to provide orientation. The length of P2 and P3
+  can be arbitrary. The direction of the component-axis is identical to
+  the normal N of the triangle:</p>
+
+  <p class=formula>N &prop; (P2 - P1) x (P3 - P1)</p>
+
+  <p>P2 controls axial rotation. The local x-axis of the component is
+  aligned with the vector from P1 to P2.</p>
+
+  <p>P3, together with P2, controls the inclination of the component-axis.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Mesh-File</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Positions can also be based on planes as given by
+  <a href="../Appendix/Mesh-Files.html">Mesh Files</a>.
+  The schema is similar to using a Position Triangle as explained above.
+  However, with mesh-files the position triangle is constructed from the assigned
+  mesh-planes. P1 is the center-point of all included triangles. In case
+  symmetry is exploited the shape gets expanded first. The normal is deduced
+  from the first plane of the set, assuming the control-plane is flat.</p>
+
+  <p>It can happen that the control-plane may yield an unexpected axial rotation.
+  For a circular diaphragm or a duct the axial rotation may not matter. However, for
+  rectangular or oval shaped cross-sections we may need to adjust the axial
+  rotation with the help of the Scaling form, as explained below.</p>
+
+
+  <h4>Reference to Mesh File</h4>
+
+  <p>First we need a reference to a
+  <a href="../General-Part/Form-MeshFile.html">Mesh File</a>-object.</p>
+
+
+  <h4>Mesh File Tags</h4>
+
+  <p><i>Include</i>. Here you specify, which planes shall be included.
+  Because each plane of the mesh-file has one or multiple
+  <a href="../Appendix/Mesh-File-Tags2.html">Tags</a>, we can use these
+  for selection.</p>
+
+  <p><i>Exclude</i>. Tags specified here will be excluded from
+  selection.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Baffle</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Some components can be positioned with the help of a
+  <a href="../BEM-Part/Form-Baffle.html">Baffle</a>-component.
+  In this case all parameters of positioning would be ignored.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Scaling of Position</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>The <a href="Form-Scaling.html">Scaling</a> sub-form provides a range of
+  local and global rotation and translation parameters.</p>
+
+  <p>Note, Scaling-parameters are not
+  <a href="Form-Inheritance.html">inherited</a>.</p>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Inheritance</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Position and Scaling parameters cannot be
+  <a href="Form-Inheritance.html">inherited</a>.
+  However, <i>Button Get</i> will retrieve these parameters from
+  the ancestor.</p>
+
+  <p>This button is hidden if there is no inheritance specified.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

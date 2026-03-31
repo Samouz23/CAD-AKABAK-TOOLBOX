@@ -1,0 +1,283 @@
+﻿======================================================================
+  COMPONENT TYPE POINTER MAPS
+======================================================================
+
+--- Duct_instance ---
+  Duct_instance_v1v2: size=2069B, delta=2659, u64=38, u32=0
+  Duct_instance_v6v7: size=2081B, delta=4246, u64=39, u32=0
+    !! INCONSISTENT with first entry !!
+
+  Canonical u64 pointer positions (38):
+    [ 0] +0x0010  (after 0x65)
+    [ 1] +0x001C  (after 0x65)
+    [ 2] +0x007C  (after 0x66)
+    [ 3] +0x00DA  (after 0x65)
+    [ 4] +0x00E6  (after 0x65)
+    [ 5] +0x0127  (after 0x66)
+    [ 6] +0x0178  (after 0x65)
+    [ 7] +0x01BC  (after 0x66)
+    [ 8] +0x0216  (after 0x65)
+    [ 9] +0x0222  (after 0x65)
+    [10] +0x0247  (after 0x65)
+    [11] +0x026B  (after 0x65)
+    [12] +0x027B  (after 0x65)
+    [13] +0x0287  (after 0x65)
+    [14] +0x0293  (after 0x67)
+    [15] +0x029F  (after 0x65)
+    [16] +0x02FE  (after 0x66)
+    [17] +0x035B  (after 0x67)
+    [18] +0x0383  (after 0x67)
+    [19] +0x03AB  (after 0x67)
+    [20] +0x03D3  (after 0x67)
+    [21] +0x03FC  (after 0x67)
+    [22] +0x0424  (after 0x67)
+    [23] +0x0458  (after 0x66)
+    [24] +0x0464  (after 0x65)
+    [25] +0x049E  (after 0x66)
+    [26] +0x04FF  (after 0x66)
+    [27] +0x050B  (after 0x65)
+    [28] +0x055C  (after 0x66)
+    [29] +0x05BD  (after 0x66)
+    [30] +0x05C9  (after 0x65)
+    [31] +0x0612  (after 0x66)
+    [32] +0x0673  (after 0x66)
+    [33] +0x067F  (after 0x65)
+    [34] +0x06EB  (after 0x66)
+    [35] +0x074D  (after 0x65)
+    [36] +0x0759  (after 0x65)
+    [37] +0x07B8  (after 0x66)
+
+--- Duct_template ---
+  Duct_template_v1v2: size=317B, delta=2659, u64=7, u32=0
+  Duct_template_v1v4: size=317B, delta=4483, u64=7, u32=0
+  Duct_template_v6v7: size=319B, delta=4246, u64=7, u32=0
+    !! INCONSISTENT with first entry !!
+
+  Canonical u64 pointer positions (7):
+    [ 0] +0x0010  (after 0x68)
+    [ 1] +0x0020  (after 0x65)
+    [ 2] +0x00CF  (after 0x67)
+    [ 3] +0x00EF  (after 0x65)
+    [ 4] +0x010C  (after 0x65)
+    [ 5] +0x0129  (after 0x65)
+    [ 6] +0x0135  (after 0x65)
+
+--- DynDriver_instance ---
+  DynDriver_instance_v7v11: size=3923B, delta=2402, u64=74, u32=0
+
+  Canonical u64 pointer positions (74):
+    [ 0] +0x0015  (after 0x65)
+    [ 1] +0x0021  (after 0x65)
+    [ 2] +0x0081  (after 0x66)
+    [ 3] +0x00DF  (after 0x65)
+    [ 4] +0x00EB  (after 0x65)
+    [ 5] +0x012C  (after 0x66)
+    [ 6] +0x017D  (after 0x65)
+    [ 7] +0x01C1  (after 0x66)
+    [ 8] +0x021B  (after 0x65)
+    [ 9] +0x0227  (after 0x65)
+    [10] +0x024C  (after 0x65)
+    [11] +0x0270  (after 0x65)
+    [12] +0x0280  (after 0x65)
+    [13] +0x028C  (after 0x67)
+    [14] +0x0298  (after 0x65)
+    [15] +0x02FA  (after 0x66)
+    [16] +0x0357  (after 0x67)
+    [17] +0x037F  (after 0x67)
+    [18] +0x03A7  (after 0x67)
+    [19] +0x03CF  (after 0x67)
+    [20] +0x03F8  (after 0x67)
+    [21] +0x0420  (after 0x67)
+    [22] +0x0454  (after 0x67)
+    [23] +0x0460  (after 0x65)
+    [24] +0x04C0  (after 0x66)
+    [25] +0x051D  (after 0x67)
+    [26] +0x0545  (after 0x67)
+    [27] +0x056D  (after 0x67)
+    [28] +0x0595  (after 0x67)
+    [29] +0x05BE  (after 0x67)
+    [30] +0x05E6  (after 0x67)
+    [31] +0x061A  (after 0x66)
+    [32] +0x0626  (after 0x66)
+    [33] +0x0632  (after 0x65)
+    [34] +0x0672  (after 0x66)
+    [35] +0x06DA  (after 0x66)
+    [36] +0x06E6  (after 0x65)
+    [37] +0x072B  (after 0x66)
+    [38] +0x078C  (after 0x66)
+    [39] +0x0798  (after 0x65)
+    [40] +0x07DE  (after 0x66)
+    [41] +0x0845  (after 0x66)
+    [42] +0x0851  (after 0x65)
+    [43] +0x0894  (after 0x66)
+    [44] +0x08FB  (after 0x66)
+    [45] +0x0907  (after 0x65)
+    [46] +0x094A  (after 0x66)
+    [47] +0x09B1  (after 0x66)
+    [48] +0x09BD  (after 0x65)
+    [49] +0x0A0C  (after 0x66)
+    [50] +0x0A6D  (after 0x66)
+    [51] +0x0A79  (after 0x65)
+    [52] +0x0AC1  (after 0x66)
+    [53] +0x0B26  (after 0x65)
+    [54] +0x0B32  (after 0x66)
+    [55] +0x0B3E  (after 0x65)
+    [56] +0x0B87  (after 0x66)
+    [57] +0x0BEE  (after 0x66)
+    [58] +0x0BFA  (after 0x65)
+    [59] +0x0C3A  (after 0x66)
+    [60] +0x0C9B  (after 0x66)
+    [61] +0x0CA7  (after 0x65)
+    [62] +0x0CEC  (after 0x66)
+    [63] +0x0D4D  (after 0x66)
+    [64] +0x0D59  (after 0x65)
+    [65] +0x0DA2  (after 0x66)
+    [66] +0x0DF7  (after 0x67)
+    [67] +0x0E20  (after 0x67)
+    [68] +0x0E49  (after 0x67)
+    [69] +0x0E72  (after 0x67)
+    [70] +0x0E9D  (after 0x67)
+    [71] +0x0EC6  (after 0x67)
+    [72] +0x0EEF  (after 0x67)
+    [73] +0x0F17  (after 0x67)
+
+--- DynDriver_template ---
+  DynDriver_template_v7v11: size=323B, delta=2402, u64=7, u32=0
+
+  Canonical u64 pointer positions (7):
+    [ 0] +0x0015  (after 0x68)
+    [ 1] +0x0025  (after 0x65)
+    [ 2] +0x00D5  (after 0x67)
+    [ 3] +0x00F5  (after 0x65)
+    [ 4] +0x0112  (after 0x65)
+    [ 5] +0x012F  (after 0x65)
+    [ 6] +0x013B  (after 0x65)
+
+--- Radiator_instance ---
+  Radiator_instance_v4v7: size=1502B, delta=6646, u64=26, u32=0
+
+  Canonical u64 pointer positions (26):
+    [ 0] +0x0014  (after 0x65)
+    [ 1] +0x0020  (after 0x65)
+    [ 2] +0x0080  (after 0x66)
+    [ 3] +0x00DE  (after 0x65)
+    [ 4] +0x00EA  (after 0x65)
+    [ 5] +0x012B  (after 0x66)
+    [ 6] +0x017C  (after 0x65)
+    [ 7] +0x01C0  (after 0x66)
+    [ 8] +0x021A  (after 0x65)
+    [ 9] +0x0226  (after 0x65)
+    [10] +0x024B  (after 0x65)
+    [11] +0x026F  (after 0x65)
+    [12] +0x027F  (after 0x67)
+    [13] +0x028B  (after 0x65)
+    [14] +0x0297  (after 0x65)
+    [15] +0x02E5  (after 0x66)
+    [16] +0x0342  (after 0x65)
+    [17] +0x034E  (after 0x65)
+    [18] +0x03C5  (after 0x66)
+    [19] +0x0422  (after 0x65)
+    [20] +0x042E  (after 0x65)
+    [21] +0x0481  (after 0x66)
+    [22] +0x04DE  (after 0x65)
+    [23] +0x04EA  (after 0x65)
+    [24] +0x0579  (after 0x66)
+    [25] +0x05D6  (after 0x65)
+
+--- Radiator_template ---
+  Radiator_template_v4v7: size=322B, delta=6646, u64=7, u32=0
+
+  Canonical u64 pointer positions (7):
+    [ 0] +0x0014  (after 0x68)
+    [ 1] +0x0024  (after 0x65)
+    [ 2] +0x00D4  (after 0x67)
+    [ 3] +0x00F4  (after 0x65)
+    [ 4] +0x0111  (after 0x65)
+    [ 5] +0x012E  (after 0x65)
+    [ 6] +0x013A  (after 0x65)
+
+--- Waveguide_instance ---
+  Waveguide_instance_v2v4: size=2337B, delta=1824, u64=45, u32=0
+
+  Canonical u64 pointer positions (45):
+    [ 0] +0x0015  (after 0x65)
+    [ 1] +0x0021  (after 0x65)
+    [ 2] +0x0081  (after 0x66)
+    [ 3] +0x00DF  (after 0x65)
+    [ 4] +0x00EB  (after 0x65)
+    [ 5] +0x012C  (after 0x66)
+    [ 6] +0x017D  (after 0x65)
+    [ 7] +0x01C1  (after 0x66)
+    [ 8] +0x021B  (after 0x65)
+    [ 9] +0x0227  (after 0x65)
+    [10] +0x024C  (after 0x65)
+    [11] +0x0270  (after 0x65)
+    [12] +0x0280  (after 0x65)
+    [13] +0x028C  (after 0x66)
+    [14] +0x0298  (after 0x67)
+    [15] +0x02A4  (after 0x65)
+    [16] +0x0304  (after 0x66)
+    [17] +0x0361  (after 0x67)
+    [18] +0x0389  (after 0x67)
+    [19] +0x03B1  (after 0x67)
+    [20] +0x03D9  (after 0x67)
+    [21] +0x0402  (after 0x67)
+    [22] +0x042A  (after 0x67)
+    [23] +0x045E  (after 0x67)
+    [24] +0x046A  (after 0x65)
+    [25] +0x04C9  (after 0x66)
+    [26] +0x0526  (after 0x67)
+    [27] +0x054E  (after 0x67)
+    [28] +0x0576  (after 0x67)
+    [29] +0x059E  (after 0x67)
+    [30] +0x05C7  (after 0x67)
+    [31] +0x05EF  (after 0x67)
+    [32] +0x0623  (after 0x66)
+    [33] +0x062F  (after 0x65)
+    [34] +0x066E  (after 0x66)
+    [35] +0x06CF  (after 0x66)
+    [36] +0x06DB  (after 0x65)
+    [37] +0x072D  (after 0x66)
+    [38] +0x078E  (after 0x66)
+    [39] +0x079A  (after 0x65)
+    [40] +0x0800  (after 0x66)
+    [41] +0x0861  (after 0x65)
+    [42] +0x086D  (after 0x65)
+    [43] +0x08BB  (after 0x66)
+    [44] +0x0919  (after 0x65)
+
+--- Waveguide_template ---
+  Waveguide_template_v2v4: size=322B, delta=1824, u64=7, u32=0
+
+  Canonical u64 pointer positions (7):
+    [ 0] +0x0015  (after 0x68)
+    [ 1] +0x0025  (after 0x65)
+    [ 2] +0x00D4  (after 0x67)
+    [ 3] +0x00F4  (after 0x65)
+    [ 4] +0x0111  (after 0x65)
+    [ 5] +0x012E  (after 0x65)
+    [ 6] +0x013A  (after 0x65)
+
+======================================================================
+  REFERENCE BLOB EXTRACTION
+======================================================================
+
+  Duct (from v1):
+    Template: 317B, Instance: 2069B, Total: 2386B
+    Source offset: 0x33DB
+
+  Waveguide (from v2):
+    Template: 322B, Instance: 2337B, Total: 2659B
+    Source offset: 0x33DB
+
+  Radiator (from v4):
+    Template: 322B, Instance: 1502B, Total: 1824B
+    Source offset: 0x33DB
+
+  DynDriver (from v7):
+    Template: 323B, Instance: 3923B, Total: 4246B
+    Source offset: 0x33DB
+    -> Saved C:\Users\RΘgie D\Desktop\AKA HEX\blobs\duct_ref.akb (2394B)
+    -> Saved C:\Users\RΘgie D\Desktop\AKA HEX\blobs\waveguide_ref.akb (2667B)
+    -> Saved C:\Users\RΘgie D\Desktop\AKA HEX\blobs\radiator_ref.akb (1832B)
+    -> Saved C:\Users\RΘgie D\Desktop\AKA HEX\blobs\dyndriver_ref.akb (4254B)

@@ -1,0 +1,302 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Enclosure</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Enclosure</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Enclosure sealed or vented</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Network element (2 pole)</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Acoustic</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1> <a href="../Systems.html">System</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table align=center>
+  <tr height=50>
+  <th width=300>Sealed</th>
+  <th width=300>Vented</th>
+  </tr><tr>
+  <td width=300 align=center><img src="../../../_Images/LE-Enclosure%20Sealed.jpg"  /></td>
+  <td width=300 align=center><img src="../../../_Images/LE-Enclosure%20Vented.jpg"  /></td>
+  </tr><tr height=250>
+  <td><pre>
+  <b>Enclosure</b>  'Any name'
+    <a href="../Parameters/Node=.html">Node=s</a>
+    <a href="../Parameters/Vb=.html">Vb=</a>
+    <a href="../Parameters/Lb=.html">Lb=</a>
+    <a href="../Parameters/eta=.html">eta=</a>
+  </pre></td>
+  <td><pre>
+  <b>Enclosure</b>  'Any name'
+    <a href="../Parameters/Node=.html">Node=s</a>
+    <a href="../Parameters/Vb=.html">Vb=</a>
+    <a href="../Parameters/Lb=.html">Lb=</a>
+    <a href="../Parameters/eta=.html">etaB=</a>
+    <a href="../Parameters/DrvGroup=.html">DrvGroup=</a>
+    <a href="../Parameters/fb=.html">fb=</a>
+    <a href="../Parameters/Len=.html">Len=</a>
+    <a href="../Parameters/dD=.html">dD=</a>
+    <a href="../Parameters/SD=.html">SD=</a>
+    <a href="../Parameters/WD=HD=.html">WD= HD=</a>
+    <a href="../Parameters/eta=.html">etaD=</a>
+    <a href="../Parameters/Visc=.html">Visc=</a>
+  </pre></td>
+  </tr>
+  </table>
+
+  <p>The <i>Enclosure</i>-component can be a very simple acoustic compliance or
+  a more complex rectangular enclosure with standing waves. It is also possible
+  to specify a vent in order to create a Helmholtz-Resonator.</p>
+
+  <p class=indent><a href="#SE">Sealed Enclosure</a></p>
+  <p class=indent><a href="#VE">Vented Enclosure</a></p>
+
+  <p>In the script the <i>Enclosure</i> is always specified as a two-pole,
+  where one pole is always grounded. Depending on the complexity of the
+  <i>Enclosure</i> it becomes expanded to a multi-pole internally.</p>
+
+
+  <h3 id=SE>Sealed Enclosure</h3>
+
+  <p><img src="../../../_Images/LE-Enclosure%20Sealed%20LE%20Sketch.jpg" align=right>
+  An enclosure without radiating vents is a <i>Sealed Enclosure</i>.
+  This mode is the default and automatically available if there are no
+  specifications for the vent.</p>
+
+
+  <h4>Lumped Element Model</h4>
+
+  <p>In the most simple case there is specified only a volume <i>Vb=</i>.
+  For example</p>
+
+  <pre>
+  <b>Enclosure</b> 'E1'
+    Node=20
+    Vb=100L
+  </pre>
+
+  <p><img src="../../../_Images/LE-Enclosure%20Sealed%20LE.jpg" align=right>
+  The associated lumped element network features the acoustic compliance Cab,
+  mass Mab and the resistances Rab1 and Rab2.</p>
+
+  <table><td>
+  <p class=formula>Cab = Vb/(&rho;&middot;c<sup>2</sup>)</p>
+
+  <p class=formula>Rab2 = &rho;&middot;c/(&eta;&middot;Vb)</p>
+
+  </td><td>
+
+  <p class=formula>Mab = 1/3&middot;&rho;&middot;Vb/Sb<sup>2</sup></p>
+
+  <p class=formula>Rab1 = 1/3&middot;&eta;&middot;&rho;&middot;c&middot;Vb/Sb<sup>2</sup></p>
+  </td> </table>
+
+  <p>See chapter <a href="../Parameters/Ca=.html">Ca=</a>
+  and <a href="../Parameters/Ra=.html">Ra=</a> for derivation.
+  Rab1 abd Rab2 are obtained by using a complex wave-number
+  <b>k</b> = k - j&eta; with loss-factor <a href="../Parameters/eta=.html">eta=</a>
+  and effective cross-section of cabinet <a href="../Parameters/Sb=.html">Sb=</a>.</p>
+
+
+  <h4>Wave Model</h4>
+
+  <table width=200px align=right>
+  <tr height=110><td colspan=2><center><img src="../../../_Images/LE-Enclosure%20Lb=.jpg"></center></td></tr>
+  <tr height=110><td><center><img src="../../../_Images/LE-Enclosure%20Lb=%20Standing%20Wave.jpg"></center></td>
+  <td><center><img src="../../../_Images/LE-Enclosure%20Lb=%20Standing%20Wave%20500Hz.jpg"></center></td></tr>
+  <tr height=250><td colspan=2><center><img src="../../../_Images/LE-Enclosure%20Vented%20Sketch.jpg"></center></td></tr>
+  </table>
+
+  <p>If you additionally specify an enclosure depth, <i>Lb=</i>, then Akabak models the
+  cavity with the help of a closed duct. In this model it features the same
+  acoustic compliance at low frequencies but includes
+  standing waves between the driving wall and the rear wall at higher frequencies.
+  This mode of operation is similar to the <a href="Duct.html">Duct</a>-component
+  with hard wall termination. For discussion of the various models see notes at
+  <a href="../Parameters/Ca=.html">Ca=</a>. For example</p>
+
+  <pre>
+  <b>Enclosure</b> 'E1'
+    Node=20
+    Vb=100L
+    <span style="color: #800000">Lb=300mm</span></pre>
+
+
+  <p>For example, in general and at higher frequencies there will be
+  standing waves inside the enclosure. Enclosure with Lb= will model those
+  between the speaker and the rear wall (first picture).
+  Modes in the other directions are ignored.</p>
+
+
+  <h3 id="VE">Vented Enclosure</h3>
+
+  <p>The vent forms an acoustic mass, which resonates with the acoustic
+  compliance of the enclosure volume at the so-called Helmholtz Frequency, fb.
+  The purpose of this construction is to amplify the low end of the
+  transmission range by resonance-effects of low damping.</p>
+
+  <p>The Enclosure component of ABEC supports the model of the most common construction.
+  More complicated devices, such as multiple coupled enclosures need to be modeled
+  with the help of multiple Duct and Enclosure components or BEM.</p>
+
+  <p>In ABEC the enclosure-vent is a combination of
+  duct and radiation-impedance. The duct gets implemented if
+  parameter <a href="../Parameters/Len=.html">Len=</a>
+  is specified, which is the length of the vent. Hence,
+  the Lumped Element Model of the vent takes into account standing waves.
+  The cross-section shape is mostly ignored. Only the fundamental mode is considered.
+  The perimeter/cross-section-area ratio determines the amount of viscosity.
+  If Len=0 then the vent is a simple hole, and the vent is represented only
+  by the radiation impedance of its cross-section.</p>
+
+  <p>The radiation-impedance is calculated with the help of the
+  Boundary Element Method. Internally a
+  <a href="RadImp.html">RadImp</a> component is
+  added automatically. Hence, with respect to the radiation impedance,
+  the exact cross-section shape is taken into account, which typically yield
+  results of high precision. Also,
+  If the Enclosure component is coupled to the Boundary Element part
+  no cross-section parameters (dD=, SD=, etc) should be specified.
+  The cross-section area for the duct is assigned automatically via
+  parameter <a href="../Parameters/DrvGroup=.html">DrvGroup=</a>.</p>
+
+  <h4>Example</h4>
+
+  <p><span style="color: #808080">See ABEC Examples "Speaker Cabinet SP38 BEM+LEM".</span></p>
+
+  <br>
+  <table>
+  <tr valign=top><td align=left width=300>BE-Script</td> <td align=left  width=300>LE-Script</td>
+  <td  width=300 rowspan=3><img src="../../../_Images/LE-Enclosure%20Vented%20Example%20Field.jpg"></td></tr>
+
+  <tr valign=top><td>
+  <pre>
+  <b>Elements</b> "Vent-Radiator"
+    SubDomain=1
+    RefNodes="NF"
+    101   2012  2011  2014  2013
+
+  <b>Driving</b>
+    RefElements="Vent-Radiator"
+    DrvGroup=<span style="color: #C80000">1002</span></pre>
+  </td>  <td>
+  <pre>
+  <b>Enclosure</b> 'E1'
+    Node=20
+    DrvGroup=<span style="color: #C80000">1002</span>
+    Vb=116.9L
+    etaB=0.05
+    Lb=424mm
+    Len=160mm
+    etaD=0.2</pre></td>
+  <td></td>
+  </tr> </table>
+
+  <p>The vented enclosure consists of two parts. The first part is defined
+  in the BE-Script. Here we specify the geometry and mark the driving by
+  assigning a <a href="../../BEScripts/Parameters/DrvGroup=.html">DrvGroup=</a>
+  parameter. Note, we could have use here also the
+  <a href="../../BEScripts/Sections/Diaphragm.html">Diaphragm</a> section
+  for convenience.</p>
+
+  <p>In the LE-script we specify lumped parameters of the enclosure and
+  of the vent, such as the volume, <a href="../Parameters/Vb=.html">Vb=</a>
+  and the vent-length <a href="../Parameters/Len=.html">Len=</a>.
+  <a href="../Parameters/DrvGroup=.html">DrvGroup=</a>
+  should point to the associated <i>DrvGroup=</i> in the BE-Script.
+  The <i>DrvGroup=</i> schema enables the exchange of radiation-impedance,
+  radiation-area and velocity between the BE and LE parts.</p>
+
+  <p>This example displays the external field, which is calculated with the
+  help of the Boundary Element Method. The BEM also calculates the radiation
+  impedance at the diaphragm and the vent and the mutual radiation-impedances.
+  The interior acoustics is calculated with the help of Lumped Elements.</p>
+
+
+  <h4>Enclosure Configurations</h4>
+
+  <table width=200px align=right>
+  <tr height=00><td><img src="../../../_Images/LE-Enclosure%20Vented%20LE.jpg"></td></tr>
+  <tr height=50><td>(1) Basic lumped elements + duct</td></tr>
+  <tr height=00><td><img src="../../../_Images/LE-Enclosure%20Vented%20Ducts%20Deep.jpg"></td></tr>
+  <tr height=50><td>(2) Deep enclosure: 2 ducts parallel</td></tr>
+  <tr height=00><td><img src="../../../_Images/LE-Enclosure%20Vented%20Ducts%20Long.jpg"></td></tr>
+  <tr height=50><td>(3) Long enclosure: 2 ducts in series</td></tr>
+  </table>
+
+  <p>The vented enclosure comes in three flavors. Which configuration is used
+  is controlled solely by parameter <a href="../Parameters/Lb=.html">Lb=</a>
+  and the presence of keyword <i>Long</i>.</p>
+
+  <p>(1) The Basic Lumped Element model is selected if there is no depth
+  <a href="../Parameters/Lb=.html">Lb=</a> of the enclosure
+  specified. In this basic model the cabinet exhibits no standing waves.
+  Only standing waves in the vent are taken into account. The cabinet acts
+  as a simple acoustic compliance Cab.
+  The values of the components are calculated with the same
+  formulae as given at the <a href="#SE">sealed enclosure</a> above.</p>
+
+  <pre>
+  <b>Enclosure</b> 'E1'
+    Node=20
+    ...
+    Len=160mm  // Length of vent</pre>
+
+  <br>
+  <p>(2) If we specify the depth of the enclosure,
+  <a href="../Parameters/Lb=.html">Lb=</a>, then the model for the vented
+  enclosure consists of two ducts wired in parallel. The first duct
+  stands for the cabinet. It is terminated, so we have zero velocity at
+  its rear wall. In this configuration standing waves for the cabinet and for
+  the vent are taken into account. This configuration is called Deep because
+  we have a somewhat deep enclosure so that we can assume the same
+  pressure at the terminals of the Enclosure-component and the vent - at
+  least approximately.</p>
+
+  <pre>
+  <b>Enclosure</b> 'E1'
+    Node=20
+    ...
+    <span style="color: #800000">Lb=424mm</span>   // Depth of enclosure
+    Len=160mm  // Length of vent</pre>
+
+  <br>
+  <p>(3) This configuration is called <i>Long</i>. It is similar to (2) but
+  here we wire the ducts in series. The sound-wave passes first through
+  the length of the cabinet and then through the vent. Hence, this
+  configuration is for somewhat elongated enclosures where the vent is
+  opposite to the point of driving. In order to enable this configuration you
+  need to specify <a href="../Parameters/Lb=.html">Lb=</a> and the key word
+  <i>Long</i>.</p>
+
+  <pre>
+  <b>Enclosure</b> 'E1'
+    Node=20
+    ...
+    <span style="color: #800000">Lb=424mm</span>   // Depth of enclosure
+    <span style="color: #800000">Long</span>       // Its a long-configuration
+    Len=160mm  // Length of vent</pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Def_PiezoDriver</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Def_PiezoDriver</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-Def_PiezoDriver.jpg"  />
+  </td></tr></table>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Piezo-electric loudspeaker driver</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Definition</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Electric - acoustic</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Defs.html">Definition part</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1><a href="Driver.html">Driver</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table><tr>
+  <td width=200 valign=top><pre>
+  <b>Def_PiezoDriver</b>  "Any Name"
+    <a href="../Parameters/fs=.html">fs=</a>
+    <a href="../Parameters/Mms=.html">Mms=</a>
+    <a href="../Parameters/Cms=.html">Cms=</a>
+    <a href="../Parameters/Kms=.html">Kms=</a>
+    <a href="../Parameters/Rms=.html">Rms=</a>
+    <a href="../Parameters/Qms=.html">Qms=</a>
+    <a href="../Parameters/Lamda=.html">Lamda=</a>
+  </pre></td>
+  <td width=200 valign=top><pre>
+
+    <a href="../Parameters/Cp=.html">Cp=</a>
+    <a href="../Parameters/F_U=.html">F/U=</a>
+    </pre>
+  </td><td width=200 valign=top><pre>
+
+    <a href="../Parameters/dD=.html">dD=</a>
+    <a href="../Parameters/SD=.html">SD=</a>
+    <a href="../Parameters/WD=HD=.html">WD=; HD=</a>
+    <a href="../Parameters/dD1=.html">dD1=</a>
+    <a href="../Parameters/SD1=.html">SD1=</a>
+    Elliptical
+    </pre></td>
+  </tr></table>
+
+  <p><i>Def_PiezoDriver</i> defines a driver with a piezo-motor.
+  It is referenced by the four-pole network-element <a href="Driver.html">Driver</a>.</p>
+
+  <p><img src="../../../_Images/Def_PiezoDriver%20Bimorph.jpg" align=right>
+  Piezo-drivers have a piezo-electric crystal, which deflects if a voltage is applied,
+  and thus generate the force F at the attached diaphragm-mass.
+
+  <p>The conversion-factor of the piezo-driver is F/U, i.e. force divided by voltage.</p>
+
+  <p>Cp represents the piezoelectric capacitance. Zms is the mechanical impedance of the
+  vibrating system, including the stiffness of the piezo and the suspension of the diaphragm.
+  The mechanical part is similar to the one of the electro-dynamic driver as described in:</p>
+
+  <ul>
+    <li><a href="Def_Driver.html">Def_Driver</a></li>
+    <li><a href="../../Appendix/Mechanics%20of%20Driver.html">Mechanics of Driver</a></li>
+    <li><a href="../../Appendix/Lumped%20Element%20Diaphragms.html">Lumped Element Diaphragms</a></li>
+  </ul>
+
+  <p></p>
+
+
+  <br>
+  <br>
+</body>
+</html>

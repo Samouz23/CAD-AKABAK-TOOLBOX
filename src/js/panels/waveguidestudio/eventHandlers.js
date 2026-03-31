@@ -168,6 +168,7 @@ const normalizeHotkeyEvent = (event) => {
 export function createHotkeyHandler(state, dom) {
     return function handleHotkeys(event) {
         if (dom.root.offsetParent === null) return;
+        if (state.presetsInputFocused) return;
         // Les raccourcis fonctionnent maintenant même dans les inputs
         // if (['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName) && !event.ctrlKey && !event.altKey && !event.metaKey) return;
 

@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Source (LE)</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Source</h1>
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  <td class="header">General</td>
+  </tr></table>
+  <hr>
+
+  <p>The <i>Source</i> component is driving a network of lumped elements.
+  Each network can have only a single Source component. However, it is possible to specify multiple
+  independent networks, each one with an individual Source.<br>
+  A Source is a component, where one terminal is always grounded.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Parameters</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <table class=pic>
+    <tr height=80><td width=200><center><img src="../../../_Images/LE-Source.jpg"  /></center></td></tr>
+  </table>
+
+  <p class=indent><table>
+    <tr height=23><td width=130><a href="../Parameters/LE%20Params%20Editors.html">Caption</a></td>            <td width=100>String</td>    <td>Name of component</td></tr>
+    <tr height=23><td width=130><a href="../Parameters/LE%20Params%20Editors.html">Formula</a></td>            <td width=100>String</td>    <td>Formula of parameters</td></tr>
+    <tr height=00><td width=130>Domain Type</td>   <td colspan=2>[Electric, Mechanic, Acoustic]</td>         </tr>
+    <tr height=00><td width=130>Source Type</td>   <td colspan=2>[Potential, Flow]</td></td>    </tr>
+    <tr height=23><td width=130>Network Type</td>  <td colspan=2>[Impedance, Mobility] (only Domain=Mechanic)</td></tr>
+    <tr height=00><td width=130>Weight (f)</td>    <td colspan=2>[Unchanged, Mul by j&omega;, Div by j&omega;]</td></tr>
+    <tr height=00><td width=130>Weight</td>        <td width=100></td>     <td>Amplification of signal</td></tr>
+    <tr height=00><td width=130>Delay</td>         <td width=100>s</td>    <td>Delay of signal</td></tr>
+    <tr height=00><td width=130>Ref to Data</td>   <td width=100></td>     <td>Reference to frequency spectrum</td></tr>
+  </table>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Domain Type</h4>
+
+  <p><i>Domain Type</i> selects the type of domain which the source is
+  directly connected to. For example, if you model an electro-acoustic transducer
+  then Domain Type = Electric because the first element which the source is connected
+  to is likely an electric component. Conversely, if you simulate
+  a mechanic device, for example, then Domain Type = Mechanic.</p>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Source Type</h4>
+
+  <p><i>Source Type</i> selects whether the Source behaves as an ideal potential source or
+  as a flow Source. An ideal potential source has zero series impedance. An ideal
+  flow source features zero parallel admittance. As explained in chapter
+  <a href="../../Appendix/Lumped%20Element%20Analysis.html">LEM-Analysis</a> depends
+  the physical meaning on the selection of <i>Domain Type</i> and <i>Network Type</i>.</p>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Network Type</h4>
+
+  <p><i>Network Type</i> is available only for Domain Type = Mechanic. Otherwise it is fixed
+  to <i>Impedance</i>. In the <i>Impedance</i> type of network the physical resistance
+  forms an impedance. For example in the electric domain we have Ze(R) = Re = V/I.
+  Similarly the impedance of an acoustic resistance is Za(R) = Ra = p/q.
+  <br>
+  In the mechanic domain it is practical to have available two network types:
+  With Network Type = Impedance the mechanic impedance is defined to be Zm(R) = Rm = F/v.
+  With Network Type = Mobility the mobility admittance is defined to be Ymob(R) = Rm = F/v.
+  The mechanical impedance network is usually of advantage for analytical analysis.
+  The mechanic mobility network has its advantage at its ease of modeling. One always can
+  transform the type of network using a dual transformation technique [<a href="../../Appendix/Literature.html#10">10</a>].
+  See also at <a href="../../Appendix/Lumped%20Element%20Analysis.html">LEM-Analysis</a>.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Weighing</h4>
+
+  <p>The value of driving is by default of amplitude 1 unit peak value.
+  You can alter this value with the help of parameter <i>Weight</i>.
+  Note, that the over-all level of driving is typically set at menu
+  <a href="../../Desktop/Form-LevelOfDriving.html">Global/Level of Driving</a>.<br>
+  The signal can also be delayed by  &tau; seconds:
+  v<sub>2</sub> = v<sub>1</sub>&middot;exp(-j&middot;&omega;&middot;&tau;)</p>
+
+  <p><i>Weight(f)</i> provides a frequency dependent weighing of the signal:</p>
+
+  <p class=indent><i>Unchanged</i> : This means the spectrum is not altered.<br>
+  <i>Multiply by j&omega;</i> : in this case the spectrum is raising with frequency:
+  v<sub>2</sub> = v<sub>1</sub>&middot;j&omega;<br>
+  <i>Divide by j&omega;</i> : in this case the spectrum is falling with frequency:
+  v<sub>2</sub> = v<sub>1</sub>/j&omega;. This case is often used to mimic the
+  response of a direct radiating loudspeaker which is roughly proportional to the acceleration. </p>
+
+  <p>Additionally the driving value can be weighted by a frequency response from a dataset.
+  This dataset comes from a <a href="../../General-Part/Form-CurveFile.html">Curve File Object</a>
+  of the <a href="../../General-Part/_Index.html">General-Part</a>.
+  The reference points to the first curve. This curve is
+  named in edit-field labeled <i>Transfer-Function</i> and has a red background.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Multiple Networks</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>A network is established with the help of a new Source component.
+  Between independent Networks there should be no flow, i.e. each system is decoupled from
+  any other system.</p>
+
+  <p>Note, <a href="Radiator.html">Radiator</a>-components will automatically
+  install hidden mutual radiation impedance components within a network.
+  There will be no mutual radiation coupling between Radiators across different Networks.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Passive Networks</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <table class=pic>
+    <tr height=420><td width=400><Center><img src="../../../_Images/LE-Source-GhostNet1.jpg"  /><br>
+                                         <img src="../../../_Images/LE-Source-GhostNet2.jpg"  /></Center></td></tr>
+    <tr height=80><td width=400><Center><img src="../../../_Images/LE-Source-GhostNetRad.jpg"  /></Center></td></tr>
+  </table>
+
+  <h4>Disabling Networks</h4>
+
+  <p>Only components which are directly or indirectly connected to the source are
+  taken into account. Un-connected components will be ignored during calculation.
+  For example the upper network to the right will be calculated whereas the second
+  version will be switched off.</p>
+
+
+  <h4>Connecting Radiation Networks</h4>
+
+  <p>Radiation components such as
+  <a href="Radiator.html">Radiator</a>, for example, install acoustic radiation admittances.
+  Further, AKABAK tries to install mutual radiation elements. These are hidden
+  and stand for the transfer of acoustic power between Radiators.
+  Mutual radiation elements are installed only within a network and also only
+  of a single BEM-subdomain. This is so because there is by definition no coupling
+  between individual LE-networks. Likewise boundaries and sources of different BEM-subdomains
+  do not interact.<br>
+  The LE-network of example <i>/BEM/ABEC21 Sealed.akp</i> is shown to the
+  right. In this example there are three speakers in a sealed enclosure. Their front sides
+  radiate into an exterior Domain. The rear into an enclosure. There is no acoustic
+  connection between the inner of the cabinet and the outside. Hence, there are 18
+  mutual radiation elements. These will be installed automatically.</p>
+
+  <p>However, the example <i>/BEM/ABEC21 Sealed.akp</i> is intended not to work as a normal
+  speaker system. In this experiment, one speaker is driven by the Source, whereas the other
+  two speakers are operating as microphones. These passive speakers are driven merely
+  acoustically by means of acoustic mutual radiation elements.<br>
+  Because the mutual radiation elements are installed automatically we should provide
+  information to which network the <i>passive network</i> shall belong. Further, we
+  have to make sure it is not getting ignored during calculation.</p>
+
+  <p>Connecting a passive network can be achieved by wiring its Ground
+  to the ground-point of the Source-Symbol as demonstrated by the red wire in schematic
+  to the right. In this example there are two passive networks.</p>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3 ID=F>Formula</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>The name of the parameters are equal to the <a href="../../Formula/_Index.html">formula-identifiers</a>:</p>
+
+  <p class=formula>  <table> <tr>
+  <td width=300><table >
+    <!-- Acoustical -->
+    <tr height=22px> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Parameter</b></span></td> </tr>
+    <tr> <td>Weight</td>         <td>Amplification</td>       </tr>
+    <tr> <td>Delay</td>          <td>Delay of signal</td>     </tr>
+  </table></td>
+  </tr> </table> </p>
+
+
+  <table class=pic>
+    <tr height=80><td width=400><img src="../../../_Images/LE-Source%20(1).jpg"  /></td></tr>
+  </table>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Examples</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>To the right we have a voltage source of the electrial domain. Althought
+  the Filter component serves as a voltage controlled voltage-source there
+  is nevertheless coupling between the tweeter- and woofer-branches. The coupling
+  stems from mutual radiation impedances which are installed automatically by
+  the application.</p>
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

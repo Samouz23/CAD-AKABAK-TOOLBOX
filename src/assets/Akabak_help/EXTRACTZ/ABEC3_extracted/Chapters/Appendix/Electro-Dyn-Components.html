@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Electro Dynamic Components</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Electro Dynamic Components</h1>
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <p class=navi>See also</p>
+  <p><a href="Electro-Dyn-Model.html">Electro Dynamic Driver</a>,
+    <a href="Electro-Dyn-Model-VC.html">Voice Coil Model</a>,
+    <a href="Mechanics%20of%20Driver.html">Mechanics of Driver</a>,
+    <a href="Lumped%20Element%20Diaphragms.html">Lumped Element Diaphragms</a>,
+    <a href="Electro-Dyn-Standard-Model.html">Electro Dynamic Standard Model</a></p>
+  <p><a href="Electro-Dyn-Components.html">Electro Dynamic Components</a></p>
+  <hr>
+
+
+  <p>Example for a model for an electro-dynamic transducer with individual
+  components and
+  <a href="../LEScript/Sections/RadImp.html">RadImp</a> and
+  <a href="../LEScript/Sections/Enclosure.html">Enclosure</a>
+  attached.</p>
+
+  <center><table width=70%>
+  <tr>
+    <td width=300><img src="../../_Images/LE-Coupler%20Example3.jpg" ></td>
+  </tr>
+  </table></center>
+
+  <p>Ze and Zms are the frequency dependent impedances of the
+  <a href="Electro-Dyn-Model-VC.html">voice-coil</a>
+  and the <a href="Mechanics%20of%20Driver.html">mechanical elements</a>
+  Mms, Cms and Rms, respectively.
+  BL is the force-factor or conversion factor of the
+  <a href="Electro-Dyn-Model.html">electro-dynamic motor</a>.
+  The mechano-acoustical coupling is provided by the front- and rear-sides of
+  the diaphragm. See chapter
+  <a href="Lumped%20Element%20Diaphragms.html">Lumped Element Diaphragms</a>.</p>
+
+  <br />
+  <p>The following script is an example for the model used by
+  <a href="../LEScript/Sections/Def_Driver.html">Def_Driver</a>.
+  <i>System</i> S1 is modeled with the help of basic lumped elements.
+  <i>System</i> S2 is for comparison. This example is LE-only,
+  i.e. it is not coupled to a Boundary Element Analysis.</p>
+
+  <br />
+
+  <p><img src="../../_Images/Electro-Dyn-Comp%20Impedance.jpg" align=right></p>
+  <pre>
+  // Common parameters of the driver
+  <b>Def_Const</b>
+    {  Reo=10;        fre=10e3;     ExpoRe=0.7;
+       Leo=50e-6;     ExpoLe=0.6;
+       Bl=10;
+       Mms = 1.2e-3;  Rms = 1.7;    Cms = 33e-6;
+       dD = 50e-3;    // 50mm
+       SD = pi*sqr(dD/2);
+    }
+
+  // Definition only used for the second System 'S2' for comparison
+  <b>Def_Driver</b>  'Drv1'
+    dD={dD}
+    Re={Reo}   fre={fre}    ExpoRe={ExpoRe}
+    Le={Leo}   ExpoLe={ExpoLe}
+    Bl={Bl}
+    Mms={Mms}  Rms={Rms}  Cms={Cms}
+
+
+  // S1 is a transducer, which is modeled with the help of individual elements
+  <b>System</b>  'S1'
+
+    // Voice-coil
+    <b>Impedance</b>  'Ze'
+      Node=1=2
+      Z={ Re_f = Reo*(1.0 + f/fre)^ExpoRe;
+          wLe = w*Leo;      hh = sqr(wLe/Reo);
+          r = (ExpoLe*hh + 1.0)/(hh + 1.0);
+          Le_f = wLe^r;
+          Ze = Re_f + j*Le_f; }
+
+    // Motor
+    <b>Gyrator</b> 'G1'
+      Node=2=0=3=4
+      Bl={Bl}
+
+    // Mechanical part.
+    <b>Impedance</b>  'Zms'
+      Node=3=5
+      Z={ Zms = Rms + jw*Mms + 1/(jw*Cms) }
+
+    // Rear side with enclosure
+    <b>Coupler</b>  'SD_r'
+      Node=4=0=8
+      dD={dD}
+
+    <b>Enclosure</b>  'Vb'
+      Node=8
+      Vb=0.3L Lb=3cm
+
+    // Front side with radiation
+    <b>Coupler</b>  'SD_f'
+      Node=5=0=7
+      dD={dD}
+
+    // Radiation impedance
+    <b>RadImp</b> 'RI1'
+      Node=7
+      dD={dD}
+
+
+  // S2 models the transducer with the help of a compact component
+  <b>System</b> 'S2'
+
+    <b>Driver</b>  Def='Drv1'
+      Node=1=0=7=8
+
+    <b>Enclosure</b>  'E1'
+      Node=8
+      Vb=0.3L  Lb=3cm
+
+    // Radiation impedance
+    <b>RadImp</b> 'RI2'
+      Node=7
+      dD={dD}
+  </pre>
+
+
+
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>VibFile</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>VibFile</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Vibrating boundary elements from import</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../BEScript.html">BE-Script</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+
+  <table>
+  <tr>
+  <td width=300 valign=top><pre>
+  <b>VibFile</b>  "Any Name"
+    <a href="../Parameters/Subdomain=.html">Subdomain=</a>
+    <a href="../Parameters/ElType=.html">ElType=</a>
+    <a href="../Parameters/VibFileAlias=.html">VibFileAlias=</a>
+    <a href="../Parameters/VibType=.html">VibType=</a>
+    <a href="../Parameters/NormType=.html">NormType=</a>
+    <a href="../Parameters/UseLineScan=.html">UseLineScan=</a>
+    <a href="../Parameters/HasBaffle=.html">HasBaffle=</a>
+    <a href="../Parameters/Meshing=.html">Meshing=</a>
+    <a href="../Parameters/MeshFrequ=.html">MeshFrequency=</a>
+    <a href="../Parameters/EdgeLength=.html">EdgeLength=</a>
+    <a href="../Parameters/Position=.html">Position=</a>
+    <a href="../Parameters/RefNodes=.html">RefNodes=</a>
+    <a href="../Parameters/MeshFileAlias=.html">MeshFileAlias=</a>
+  </pre></td>
+  <td width=200 valign=top><pre>
+    <a href="../Parameters/DrvGroup=.html">DrvGroup=</a>
+    <a href="../Parameters/DrvWeight=.html">DrvWeight=</a>
+    <a href="../Parameters/DrvDelay=.html">DrvDelay=</a>
+    <a href="../Parameters/NoDriving=.html">NoDriving=</a>
+    <a href="../Parameters/t1=.html">t1=</a>
+    <a href="../Parameters/tB=.html">tB=</a>
+    </pre>
+  </td>
+  <td width=200 valign=top><pre>
+
+    <a href="../Parameters/Scale=.html">Scale=</a>
+    <a href="../Parameters/Shift=.html">Shift=</a>
+    <a href="../Parameters/Rotate=.html">Rotate=</a>
+    <a href="../Parameters/Mirror=.html">Mirror=</a>
+    <a href="../Parameters/Color=.html">Color=</a>
+    <a href="../Parameters/DrvColor=.html">DrvColor=</a>
+    <a href="../Parameters/Set=.html">Set=</a>
+    </pre>
+  </tr>
+  </table>
+
+
+  <p>Section <i>VibFile</i> is used in the
+  <a href="../BEScript.html">solving script</a> of the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Analysis</a>.
+  <i>VibFile</i> creates boundary elements automatically from a special file
+  with geometric and vibrational data. This file is referenced with the
+  help of parameter <a href="../Parameters/VibFileAlias=.html">VibFileAlias=</a>.</p>
+
+  <p>Currently, <i>VibFile</i> supports files, which are exported by the
+  <a href="http://www.klippel.de" title="External">Klippel</a>
+  laser-scanner software.</p>
+
+  <p>The vibrational data should be available for the frequency range of analysis.
+  Outside the range, ABEC substitutes vibration-values of the nearest available
+  frequency point. Within the range, vibration values are interpolated.</p>
+
+
+  <h4>Example</h4>
+
+  <p></p>
+
+  <pre>
+  <b>VibFile</b> "Vib"
+    SubDomain=1
+    VibFileAlias=Vib
+    DrvGroup=1001
+    NoBaffle
+    NormType=PosPolar 12.8mm 0deg
+    </pre>
+
+
+  <p>ABEC assumes a static quasi-stationary velocity profile. Static means that
+  the velocity distribution is not changed in frequency, amplitude and spatially
+  by the acoustic load. In other words, the imported velocity profile is the same
+  for a speaker build in a waveguide or free radiation. Even, if you change
+  the <a href="../../Appendix/Acoustic%20Parameters.html">acoustic properties</a>,
+  say to water, it will still be the same distribution. In reality, of course,
+  the vibration of a body will alter with changing acoustic radiation impedance.
+  This is especially true for a dense medium such as water. However, in air,
+  this alteration may be small enough to yield a good approximation, hopefully better
+  than to assume a piston movement.</p>
+
+  <p>The coupling to the lumped element network is via the radiation-impedance,
+  which in turn is based on the acoustic power on the diaphragm. If a diaphragm
+  has a velocity-distribution then this is taken into account during integrations.
+  For details, see [<a href="../../Appendix/Literature.html">9</a>].
+
+
+  <h3>Modes of Operation</h3>
+
+  <p>By bringing together mechanical vibrational data and the acoustic simulation,
+  naturally, there are several modes of operation:</p>
+
+  <table align=center width=80%>
+  <tr>
+  <td width=100><b>Case</b></td>
+  <td width=300><b>Vibrational data</b></td>
+  <td width=300><b>Acoustic simulation</b></td>
+  <td width=300><b>Symmetry</b></td>
+  <td witdh=300><b>UseLineScan=</b></td>
+  <td width=300><b>Results in</b></td>
+  </tr>
+  <tr>
+  <td>1)</td>
+  <td>Full 3D scan</td>
+  <td>Dim=3D</td>
+  <td>No symmetry</td>
+  <td>false</td>
+  <td>3D-scan</td>
+  </tr>
+  <tr>
+  <td>2)</td>
+  <td>Full 3D scan</td>
+  <td>Dim=3D</td>
+  <td>Sym=any sym</td>
+  <td>false</td>
+  <td>Line-scan</td>
+  </tr>
+  <tr>
+  <td>3)</td>
+  <td>Full 3D scan</td>
+  <td>Dim=CircSym</td>
+  <td>-</td>
+  <td>false</td>
+  <td>Line-scan</td>
+  </tr>
+  <tr>
+  <td>4)</td>
+  <td>Full 3D scan</td>
+  <td>Dim=all modes</td>
+  <td>Sym=all sym</td>
+  <td>true</td>
+  <td>Line-scan</td>
+  </tr>
+  <tr>
+  <td>5)</td>
+  <td>Line-scan</td>
+  <td>Dim=all modes</td>
+  <td>Sym=all sym</td>
+  <td>-</td>
+  <td>Line-scan</td>
+  </tr>
+  </table>
+
+  <p>During import of a 3D-vibrational data-set ABEC directly creates both, a
+  3D representation and a line-scan. The latter is created by forming a mean-value
+  in circumferential direction of the vibrational data. The mean-forming is
+  performed complex-valued so that symmetric modes cancel by interference.</p>
+
+  <p>As the above table demonstrates, only case 1) results in the application
+  of the original 3D data-set. In any other case ABEC makes use of the
+  circumferential mean-value (line-scan), automatically.</p>
+
+  <p>With the help of parameter <i>UseLineScan=</i> you can enforce the application
+  of the line-scan mode.</p>
+
+
+  <h3>Some Notes</h3>
+
+  <p>Note, that <i>VibFiles</i> yield an approximation, albeit in most cases
+  a better one than assuming piston type vibration. Because of this there are
+  limits of accuracy, which is to say that more data, or a higher resolution,
+  may not yield better results in all cases.</p>
+
+  <p>For example during measurement of circular structures
+  circumferential modes may not be excited, albeit potentially they are ready
+  to spring into action.
+  Under certain circumstances acoustic forces can excite these kind of modes.
+  Because ABEC does not perform a full vibro-acoustic coupling this effect
+  cannot be taken into account.</p>
+
+  <p>Try to make the vibrational scan a course as possible. For example, the
+  Klippel scanner software can help you to identify dominant radiating
+  modes (although this depends very much on the radiation condition).</p>
+
+  <p>For example, for low frequency analysis we may need only a very course scan.
+  Detailed scans may yield superb simulation results at higher frequencies,
+  however on the cost of calculation time.</p>
+
+  <br>
+  <br>
+</body>
+</html>

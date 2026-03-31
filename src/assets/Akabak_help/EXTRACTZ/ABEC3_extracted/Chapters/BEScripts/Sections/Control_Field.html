@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Control_Field</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Control_Field</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Output control of field analysis</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../ObField.html">Field observation script</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>Control_Field</b>
+    <a href="../Parameters/MeshFrequ=.html">MeshFrequency=</a>
+    <a href="../Parameters/EdgeLength=.html">EdgeLength=</a>
+    <a href="../Parameters/Meshing=.html">Meshing=</a>
+
+    <a href="../Parameters/f1=f2=.html">f1=</a>
+    <a href="../Parameters/f1=f2=.html">f2=</a>
+    <a href="../Parameters/NumFrequs=.html">NumFrequencies=</a>
+    <a href="../Parameters/Absc=.html">Abscissa=</a>
+    <a href="../Parameters/Frequs=.html">Frequencies=</a>
+
+    <a href="../Parameters/rho=.html">rho=</a>
+    <a href="../Parameters/c=.html">c=</a>
+    <a href="../Parameters/Altitude=.html">Altitude=</a>
+    <a href="../Parameters/StaticPressure=.html">StaticPressure=</a>
+  </pre>
+
+  <p><i>Control_Field</i> is part of an observation script, which is mainly used for
+  <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>.</p>
+
+  <p>In <i>Direct Sound</i> mode we need to specify a set of observation frequencies for
+  which field-plots can be calculated. The range of frequencies you
+  specify here will be displayed in the frequency-list on page
+  <a href="../../GUI/Fields/Fields.html">Ob-Field</a>.
+  Before starting the field-calculation is is possible to
+  select only certain frequencies from this list.</p>
+
+  <p>For <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Analysis</a>
+  the frequencies for which a field can be calculated are identical to the solving
+  frequencies. Hence in this mode all frequency related specifications in
+  <i>Control Field</i> are ignored. </p>
+
+  <p>Like wise the <a href="../../Appendix/Acoustic%20Parameters.html">acoustic parameters</a>
+  (&rho;, c, etc). These can be specified for the <i>Direct Sound Analysis</i>
+  but are ignored if the script is used for the <i>Boundary Element Method</i>.</p>
+
+  <p>However, specifications for meshing, i.e. distribution of observation points,
+  can be specified with the help of <i>Control_Field</i>. These settings
+  will then form default values for all
+  <a href="Field.html">Field</a>-sections in this script.</p>
+
+  <br>
+  <br>
+</body>
+</html>

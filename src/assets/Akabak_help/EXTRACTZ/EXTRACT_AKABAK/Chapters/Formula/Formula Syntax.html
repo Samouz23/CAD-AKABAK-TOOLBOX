@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Formula Syntax</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Formula Syntax</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Formula</a></td>
+  </tr></table>
+  <hr>
+
+  <p>Formula can be used to parameterize
+  <a href="../Appendix/Floating%20point%20values.html">floating point values</a>.
+  Formula can be entered globally, at BEM-Dialogs and at the LE-parameter editor,
+  as explained in chapter
+  <a href="Formula%20Dialog%20Operation.html">Formula Form - Operation</a>.
+  The syntax follows the typical mathematic convention. For example:</p>
+
+  <pre>
+    w = 0.01
+    R = 0.1 + w
+    dD = 2*R
+  </pre>
+
+  <p>There can be multiple formula. Each formula is assumed to be in one line.
+  If there are more formula for one line then use ";" as separator. For example</p>
+
+  <pre>
+    w = 0.01;    R = 0.1 + w;    dD = 2*R
+  </pre>
+
+  <p>The name of a formula becomes an <i>Identifier</i>,
+  which can be used in sub-sequent formula. In the example above "w", "R" and "dD"
+  are <i>identifiers</i>.</p>
+
+
+  <h4>Results</h4>
+
+  <p>Each formula yields a result, which gets displayed on the right hand side
+  of the formula-dialog.</p>
+
+  <p>Further, results can be assigned to component-parameters, such as the
+  diameter dD of the Diaphragm or coordinate of Node 1001.
+  On how this is to be operated is explained in chapter
+  <a href="Formula%20Dialog%20Operation.html">Formula Dialog - Operation</a>.
+  </p>
+
+  <p>The list of special identifiers depends on the component and
+  is reported at the <i>Formula</i>-page of the component.</p>
+
+  <p><a href="../Desktop/Form-Units.html">Units</a>
+  and sub-units are not supported within the formula-system.
+  However, results are assumed to be of the current
+  User-Units.</p>
+
+
+  <h4>Reference</h4>
+
+  <p>As explained in chapter <a href="Formula%20Dialog%20Global.html">Formula Dialog - Global</a>
+  there is a hierarchy of formula systems. If you want to address a constant
+  of another formula system you would use the @-sign for prefix. The
+  referenced formula must be in one of the global formula systems.</p>
+
+  <p>For example, if the following formula are specified globally:</p>
+  <pre>
+    w = 0.01
+    <span style="color: #AA0000">R</span> = 0.1 + w  </pre>
+
+  <p>Then, at component level, we can take reference to "R" by typing "@R":</p>
+  <pre>
+    dD = 2*@<span style="color: #AA0000">R</span>
+  </pre>
+
+
+  <h4>Comments</h4>
+
+  <p>The text of the formula can contain blank lines and lines of comment.
+  A comment is signalled with the help of "//". Any characters behind
+  "//" get ignored. The comment stops at the end of line.
+  For example:</p>
+
+  <pre>
+    w = 0.01      <span style="color: #808080">// Width of suspension</span>
+    R = 0.1 + w   <span style="color: #808080">// Total radius</span>
+    dD = 2*R      <span style="color: #808080">// Result assigned</span>
+  </pre>
+
+  <h4>Identifiers</h4>
+
+  <p>Identifiers are to the left of the equal sign and form constants
+  after calculation, and therefore represent a numerical value.</p>
+  <pre>
+    x = 1.0e3;   y = 5*x^2
+  </pre>
+
+  <p>Any characters may be used except for point, comma, |, and
+  the operator characters:
+  <pre>
+    +, -, *, /, ^, (, ), {, }   etc.
+  </pre>
+
+  <p>An identifier’s name must not start with 'j', but can
+  start with 'J'. Neither should the name be the same as a
+  function name nor the constant pi.</p>
+
+
+  <h4>Numbers</h4>
+
+  <p>Numerical values are entered as floating point numbers
+  without thousand-separation. The decimal separator is a
+  point and negative values are preceded by a minus sign
+  (without a space). For very large or very small numerical
+  values, the computer has its own exponential notation.
+  "e" is an abbreviation for times ten to the power of,
+  for example:</p>
+  <pre>
+    1.26e3 = 1.26&middot;10<sup>3</sup>	(Scientific Format SCI)
+  </pre>
+
+  <p>The largest and smallest numbers that can be entered are:
+  10<sup>20</sup>  or 10<sup>-20</sup>, respectively. Double precision is
+  used internally. Example</p>
+  <pre>
+    b = sin(0.5);   a = -110.34*exp(b)
+  </pre>
+
+  <p>The identifier for the constant &pi;=3.14159... is called pi.
+  The growth constant e=2.718... is entered via the function Exp(1).
+  For example</p>
+  <pre>
+    SD = pi*sqr(dD)/4;  e = exp(1)
+  </pre>
+
+
+  <h4>Brackets</h4>
+
+  <p>Within formulae, round brackets ( ) can be placed or
+  nested according to the rules of arithmetic.</p>
+
+
+  <h4>Operators</h4>
+
+  <p>There are five binary operators:</p>
+  <p class=indent>+ &nbsp;Addition</p>
+  <p class=indent>- &nbsp;Subtraction</p>
+  <p class=indent>* &nbsp;Multiplication</p>
+  <p class=indent>/ &nbsp;Division</p>
+  <p class=indent>^ &nbsp;Exponential</p>
+
+
+  <h4>Functions</h4>
+
+  <pre>
+    z = Name(Argument)
+    z = Name(Argument1, Argument2, Argument3)
+  </pre>
+
+  <p>Name is the function name (case insensitive).
+  The argument is another expression and is written in brackets.
+  Multiple arguments should be separated by commas.
+  Do not use function names as identifiers. Unitary operators -
+  such as the minus sign the name.</p>
+
+  <p>See also build-in
+  <a href="Formula%20Real%20-%20Standard%20Functions.html">standard functions</a>.</p>
+
+  <h4>Examples</h4>
+  <pre>
+    z = arccos(cos(x))
+    z = arctan4(Im(x), Re(x))
+  </pre>
+
+  <br><br>
+</td></tr></table></body>
+</html>

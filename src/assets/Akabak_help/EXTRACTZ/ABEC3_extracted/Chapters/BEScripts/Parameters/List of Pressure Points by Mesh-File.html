@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>List of Pressure Points by Mesh-File</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>List of Pressure Points by Mesh-File</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>List of mesh-file items.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Pressure_Points.html">Pressure_Points</a>
+                                       </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>The list of <i>Pressure Points</i> follows the parameter part of the <i>Pressure_Points</i>-section.
+  Each line yields one or more Pressure-Points at the center of at the mesh-file-shapes:</p>
+
+  <pre>
+    &lt;Index&gt;    Mesh    MeshFileAlias=  Include &lt;tags&gt;   Exclude &lt;tags&gt;</pre>
+
+
+  <table width=30% align=right><tr>
+  <td class=c width=200><img src="../../../_Images/Pressure_Points%20Sketchup.jpg"></td>
+  </tr><tr>
+  <td class=c width=200><img src="../../../_Images/Pressure_Points%20MeshMode=Elements.jpg"></td>
+  </tr><tr>
+  <td class=c width=200><img src="../../../_Images/Pressure_Points%20MeshMode=Center.jpg"></td>
+  </tr></table>
+
+  <br>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Pressure_Points</b>  "PP1"
+    DrvGroup=1002
+    MeshFileAlias=M
+    MeshMode=Elements
+    MeshMinDistance=0.2m
+    <span style="color: #800000">101   Mesh Include "Right"</span>
+    ...</pre>
+
+
+  <h4>Index</h4>
+
+  <p>The first entry is an index, which becomes the "name" of all mesh-file elements.</p>
+
+
+  <h4>Mesh</h4>
+
+  <p>Indicator that this line is regarded as a mesh-file item (Note, <i>Mesh</i>
+  can be omitted if also <i>MeshFileAlias=</i>, <i>Include</i> or <i>Exclude</i> is specified).</p>
+
+
+  <h4>MeshFileAlias=</h4>
+
+  <p>If you use a mesh-file you need to specify <a href="MeshFileAlias=.html">MeshFileAlias=</a>
+  in the parameter-part of the section. Alternatively it is also possible to provide
+  <i>MeshFileAlias=</i> individually with each item of the <i>Pressure Point</i> List.</p>
+
+
+  <h4>Include &lt;tags&gt;  Exclude &lt;tags&gt;</h4>
+
+  <p>With <i>Include</i> and <i>Exclude</i> you can filter triangles of
+  the mesh-file as explained in <a href="../../Appendix/Mesh-File-Tags.html">Mesh-File-Tags</a>.</p>
+
+  <br>
+
+  <h4>Note</h4>
+
+  <p>Creating <i>Pressure_Points</i> with the help of a mesh-file needs some control over
+  the way mesh-elements yield the positioning of the point-source.
+  For example, included mesh-elements can yield the position of a single Pressure-Point
+  (<i>MeshMode=Center</i>) or there can be Pressure-Points at the center of each mesh-element
+  (<i>MeshMode=Elements</i>). See parameter <a href="MeshMode=.html">MeshMode=</a> for details.</p>
+
+  <br>
+  <br>
+</body>
+</html>

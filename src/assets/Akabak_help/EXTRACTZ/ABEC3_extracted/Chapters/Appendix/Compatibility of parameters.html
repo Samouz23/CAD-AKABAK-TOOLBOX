@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Compatibility of Parameters</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Compatibility of Parameters</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <h3>Position</h3>
+
+  <p>From ABEC version &gt;= 3.3.4 the position-triangle controls also the
+  axial rotation as explained in chapter
+  <a href="Compatibility%20of%20position.html">Compatibility of Position</a>.</p>
+
+
+  <h3>Parameters</h3>
+
+  <p>Versus ABEC2 some parameter-identifiers have been updated.
+  You can still use the old set of parameter, however they are regarded
+  depreciated and are not part of the documentation.</p>
+
+  <p>
+  <table width=70%>
+  <tr>
+    <th align=left>ABEC3</th>             <th align=left><font color="#808080">ABEC2</font></th>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/File=.html">File=</a></td>
+    <td>File_BE=</td>
+  </tr>
+  <tr class=narrow>
+    <td><a href="../BEScripts/Parameters/MeshFrequ=.html">MeshFrequency=</a></td>
+    <td>SamplFrequ=</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/Frequs=.html">Frequencies=</a></td>
+    <td>Frequs=</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/NumFrequs=.html">NumFrequencies=</a></td>
+    <td>NumFrequs=</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/ImpedanceNumFrequs=.html">ImpedanceNumFrequencies=</a></td>
+    <td>ImpedanceNumFrequs=</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/Absc=.html">Abscissa=</a></td>
+    <td>Absc=</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/Color=.html">Color=</a></td>
+    <td>DrvColor=</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/RefDiaphragm=.html">RefDiaphragm=</a></td>
+    <td>RefDiaph=</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/ElType=.html">ELType=</a>Interior</td>
+    <td>ELType=BE_Interior</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/ElType=.html">ELType=</a>Exterior</td>
+    <td>ELType=BE_Exterior</td>
+  </tr>
+  <tr>
+    <td><a href="../BEScripts/Parameters/ID=.html">ID=</a></td>
+    <td>VacsID=</td>
+  </tr>
+
+  </table>
+  </p>
+
+
+  <h3>LE-Scripts and Data-Files</h3>
+
+  <p>The biggest change versus ABEC2 concerns the handling of data-files. In ABEC3
+  all data-files and
+  <a href="../LEScript/LEScripts.html">LE-scripts</a>
+  need to be registered with the project,
+  before you can access the data or couple to it in any script.
+  The previous embedding of data-files and LE-scripts is not supported any more and
+  and an error message is displayed.
+  For example, in ABEC2 an observation script, which coupled to a
+  LE-script typically had a line like this</p>
+
+  <pre>
+  <span style="color: #808080">File_LE="LEScript.txt"</span></pre>
+
+  <br />
+  <p>In ABEC3 this has changed. There can be only a single LE-script for all
+  observations. This LE-script need to be registered with the project,
+  see at <a href="../GUI/Project/Add%20LE%20Script.html">Add LE-Script</a>.
+  If an observation script has
+  <a href="../BEScripts/Sections/Driving_Values.html">Driving_Value</a> sections
+  then constant driving is assumed (for this particular observation script).
+  If an observation script is void of <i>Driving_Value</i> sections then
+  ABEC assumes coupling to an existing LE-Script.</p>
+
+  <br />
+  <p>Likewise, the embedding command "File_Data=" of ABEC2 is replaced
+  by the new alias schema. For example, if you want to attach an
+  impedance-spectrum to <a href="../BEScripts/Sections/WallImpedance.html">WallImpedance</a>,
+  you simply specify</p>
+
+  <pre>
+  <b>WallImpedance</b>
+    DataFileAlias=Imp1
+    ...</pre>
+
+  <p>Also here you need to register the data-file with the project and provide
+  an alias for this file. In the above example the alias is "Imp1".</p>
+
+  <br />
+  <p>More on aliases and registering data-files and LE-scripts see at
+  <a href="../GUI/Project/Add%20Data%20File.html">Add Data File</a> and at
+  <a href="../GUI/Project/Add%20LE%20Script.html">Add LE-scripts</a>.</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

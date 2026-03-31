@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>LE Systems - Example 1</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>LE Systems - Example 1</h1>
+  <p class=navi><a href="../Index.html">Home</a>  &raquo;
+                <a href="LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <p>Example script for simulating a loudspeaker with a two-way passive cross-over
+  in <a href="../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Mode</a>.</p>
+
+
+  <p class=indent><img src="../../_Images/LE-System-Example1.jpg" ></p>
+
+  <table width=800><tr>
+  <td valign=top>
+  <pre><font size="-2">  <b>Def_MeasRadiator</b>  'Tweeter'
+    DataFileAlias='Imp_Tweeter'
+    DataFileAlias='SPL_Tweeter'
+    DataDistance=1m,1m
+    DataDriving={ dB(-25) }  IsRms
+
+  <b>Def_MeasRadiator</b>  'Woofer'
+    DataFileAlias='Imp_Woofer'
+    DataFileAlias='SPL_Woofer'
+    DataDistance=1m,1m
+    DataDriving={ dB(-15) }  IsRms
+
+  // Driving voltage of networks
+
+  <b>Def_Driving</b>
+    DrvValue={ dB(-15)}
+    IsRms
+
+
+  <font color="#800000"><b>System</b></font> 'LF'
+    // Lowpass 3rd order
+    <b>Coil</b>       'L1'  Node=5=7   L=1.8mH   Rs=0.86ohm
+    <b>Capacitor</b>  'C1'  Node=7=0   C=27uF
+    <b>Coil</b>       'L2'  Node=7=10  L=0.68mH  Rs=0.51ohm
+
+    // Impedance compensation
+    <b>Capacitor</b>  'C2'  Node=10=11  C=6.8uF
+    <b>Resistor</b>   'R1'  Node=11=0   R=10ohm
+
+    <b>MeasRadiator</b>  'W1'
+      Def='Woofer'
+      Node=10=20  DrvGroup=1001
+
+    <b>MeasRadiator</b>  'W2'
+      Def='Woofer'
+      Node=10=20   DrvGroup=1002
+
+    <b>MeasRadiator</b>  'W2'
+      Def='Woofer'
+      Node=20=0    DrvGroup=1003
+
+    <b>MeasRadiator</b>  'W2'
+      Def='Woofer'
+      Node=20=0    DrvGroup=1004
+
+
+  <font color="#800000"><b>System</b></font> 'HF'
+    <b>Filter</b> 'F1' to=0.0ms { b0=1 }
+
+    <b>Resistor</b>  'P'  Node=1=2  R=0.6ohm
+
+    <b>Capacitor</b> 'C3' Node=2=3  C=12uF
+    <b>Coil</b>      'L3' Node=3=0  L=1.2mH  Rs=1.3ohm
+    <b>Capacitor</b> 'C4' Node=3=4  C=12uF
+    <b>Coil</b>      'L4' Node=4=0  L=8mH    Rs=9.7ohm
+
+    <b>Resistor</b>  'R2'  Node=4=40  R=4.7ohm
+    <b>Coil</b>      'L5'  Node=40=0  L=0.22mH  Rs=10.4ohm
+
+    <b>Capacitor</b> 'C5'  Node=40=50  C=2.2uF
+    <b>Resistor</b>  'R3'  Node=40=50  R=15ohm
+
+    <b>MeasRadiator</b>  'Tweeter'
+      Def='Tweeter'
+      Node=50=0  DrvGroup=2001 </font></pre>
+  </td>
+  <td valign=top>
+    <p>Definition part of script. Network components take
+    reference to the Definitions.</p>
+    <p><a href="Sections/Def_MeasRadiator.html">Def_MeasRadiator</a>
+    creates an electro-acoustic element, which is based on measurements.</p>
+    <p><i>Def_MeasRadiator</i> can be used in
+    <a href="../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>
+    only.</p>
+
+    <p><a href="Sections/Def_Driving.html">Def_Driving</a>
+    specifies the value of the global source,
+    at which all Systems are wired in parallel. The global source is
+    a potential source with no generator resistance. Here the global
+    source is a voltage source. The value is calculated with the
+    help of an inline-formula.</p>
+
+
+    <br /><br /><br /><br />
+
+    <p>Here begins the part, which sections are organized in
+    <a href="Systems.html">Systems</a>.
+    All Systems are wired in parallel and are decoupled from each other.</p>
+
+    <p>Only one network-node can be driven. In the script it is the one with
+    the smallest node-index specified (for System 'LF' it is Node=5).</p>
+
+    <br /><br /><br /><br />
+
+    <p><a href="Parameters/DrvGroup=.html">DrvGroup=</a> links the
+    LE-component to the <a href="../BEScripts/Direct%20Sound.html">Direct Sound Script</a> or
+    to the <a href="../BEScripts/BEScript.html">Boundary Element Script</a>.</p>
+
+
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+    <p>Here ends the first System and a new one starts.</p>
+
+    <p>In a System the flow-network can be driven via a bank of
+    <a href="Sections/Filter.html">Filter</a>-components.
+    Here, the <i>Filter</i> is used to check the sensitivity of the output
+    due to some delay.</p>
+    <p></p>
+  </td>
+  </tr></table>
+
+  <br>
+  <br>
+</body>
+</html>

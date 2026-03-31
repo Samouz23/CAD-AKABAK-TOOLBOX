@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>VibType=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>NormType=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>NormType=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>[Lowest, Mean, Org, PosPolar, PosCartesian]</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Type of normalization of imported data</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/VibFile.html">VibFile</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>NormType=</i> is a parameter of section <a href="../Sections/VibFile.html">VibFile</a>.
+  <i>NormType=</i> specifies the type of normalization of vibrational data.</p>
+
+
+  <p>If you want to couple the <i>VibFile</i>-diaphragm to a
+  <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Network</a>
+  the vibrational distribution should be normalized to the rigid body motion of
+  the diaphragm. This is so because the lumped velocity shall be controlled by
+  the lumped element network. In order to normalize the vibration data
+  we specify <i>NormType=</i>. The point used for normalization is typically the one,
+  where the driving force is attached. For an electro-dynamic speaker
+  this is the connection of the voice coil. After normalization the frequency
+  response of the velocity at the reference point is simply one for all frequencies.
+  At any other point the frequency response of vibration relates to this
+  reference point.</p>
+
+  <p align=center><img src="../../../_Images/VibFile%20NormType.jpg"></p>
+
+  <h4>NormType=Lowest</h4>
+
+  <p><i>NormType=Lowest</i> normalizes the vibration-data to the vibration
+  at the lowest point, i.e. the point with coordinates most recessed. This
+  setting is particular helpful for scans of conical loudspeaker membranes
+  with convex dust-cap. Here we assume that the lowest point coincides with
+  the connection of the voice-coil.</p>
+
+
+  <h4>NormType=Mean</h4>
+
+  <p><i>NormType=Mean</i> normalizes the data-set to the mean-value at each
+  frequency. This setting makes that the frequency response of the mean-value is
+  one for all frequencies. The frequency response of any particular point relates
+  to this mean-value.</p>
+
+
+  <h4>NormType=Org</h4>
+
+  <p><i>NormType=Org</i> does not perform a normalization. Hence, the
+  vibrational-data are used as is. This means that the frequency response
+  at any point may include the response of the driver. Obviously this setting
+  makes only sense, if we observe with static value driving (no Lumped Element
+  Coupling), see section <a href="../Sections/Driving_Values.html">Driving_Values</a>.</p>
+
+
+  <h4>NormType=PosPolar</h4>
+
+  <p><img src="../../../_Images/VibFile%20NormType=PosPolar.jpg" align=right  >
+  <i>NormType=PosPolar</i> normalizes the data-set of vibration to a
+  certain point, which needs to be specified additionally, for example</p>
+
+  <pre>
+    <b>VibFile</b> "Vib"
+      SubDomain=1
+      VibFileAlias=Vib
+      DrvGroup=1001
+      NoBaffle
+      <font color="#800000">NormType=PosPolar   12.8mm   0deg</font></pre>
+
+  <p><i>NormType=PosPolar</i> expects at least one additional parameter, which
+  is the radius from the center of the <i>VibFile</i>-element, as indicated
+  in the above sketch. A second additional parameter specifies the angle.
+  By default this angle is zero. For circular symmetric data-sets this angle
+  is ignored. </p>
+
+
+  <h4>NormType=PosCartesian</h4>
+
+  <p><img src="../../../_Images/VibFile%20NormType=PosCartesian.jpg" align=right >
+  <i>NormType=PosCartesian</i> is similar to the previous setting only that
+  in this case the coordinates of the reference point is specified in
+  Cartesian coordinates. For example</p>
+
+  <pre>
+    <b>VibFile</b> "Vib"
+      SubDomain=1
+      VibFileAlias=Vib
+      DrvGroup=1001
+      NoBaffle
+      <font color="#800000">NormType=PosCartesian   12.8mm   0mm</font></pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

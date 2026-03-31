@@ -16,7 +16,6 @@ Toutes les icônes SVG sont centralisées dans le dossier `/src/assets/icon/`
 
 ### Icônes d'Interface
 - `calendar.svg` - Gestionnaire de commandes
-- `cloud.svg` - SIM-DB Cloud
 - `settings.svg` - Configuration
 
 ### Icônes de Fichiers
@@ -88,7 +87,6 @@ ICONS = {
   GOGGLES: 'goggles.svg',
   PENCIL: 'pencil.svg',
   CALENDAR: 'calendar.svg',
-  CLOUD: 'cloud.svg',
   SETTINGS: 'settings.svg',
   FOLDER: 'folder.svg',
   FILE: 'file.svg',
@@ -113,15 +111,12 @@ Les emojis suivants ont été remplacés :
 - 🔊 → `speaker.svg`
 - 🥽 → `goggles.svg`
 - ✏️ → `pencil.svg`
-- ☁️ → `cloud.svg`
 - 📁 → `folder.svg`
 - 📄 → `file.svg`
 
 ## 🎯 Fichiers Modifiés
 
 - `/src/index.html` - Dashboard principal
-- `/src/js/panels/sim-db.js` - Liste de fichiers
-- `/src/js/panels/orders/templates.js` - Boutons de copie
 - `/src/js/icons.js` - Module centralisé (nouveau)
 - `/src/assets/icon/` - Dossier des icônes SVG
 

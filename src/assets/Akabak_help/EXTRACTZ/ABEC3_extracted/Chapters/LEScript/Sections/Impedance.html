@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Impedance</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Impedance</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-Impedance.jpg"  />
+  </td></tr></table>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Formula defined impedance</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Network element (2 pole)</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>All</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1> <a href="../Systems.html">System</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1><a href="../../Appendix/Formula%20Complex.html">Formula</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>Impedance</b>   'Any Name'
+    <a href="../Parameters/Node=.html">Node=s=t</a>
+    <a href="../Parameters/Z=.html">Z={...}</a>
+  </pre>
+
+
+  <p>This two-pole implements an impedance in the network, where the
+  value is specified by a <a href="../../Appendix/Formula%20Complex.html">formula-system</a>.</p>
+
+  <p>The <i>Impedance</i> element can be an electrical, mechanical or acoustical element.</p>
+
+
+  <h4>1) Example</h4>
+
+  <p><img src="../../../_Images/LE-Zms.jpg" align=right>
+  In this example <i>Impedance</i> comprises four parameters,
+  which shall control the model of a mass-resistance-compliance resonator
+  usually found as part of a loudspeaker-driver.
+  Mms, Cms and Rms are specified here as global constants at the top of script.
+  In this way you are able to use them in other elements, too.
+  The formula-term (1 + &omega;/&omega;<sub>0</sub>) makes the mass of the
+  vibrating assembly frequency dependent. Here the idea is that the effective
+  mass becomes smaller at high frequencies. At 5kHz its value is the half of
+  the specified value.</p>
+
+  <p>'j' is the imaginary unit. The result of the last formula is
+  assigned to the component. The last identifier 'Zms' could
+  also be omitted.
+
+  <p class=formula></p>
+
+  <pre>
+  <b>Def_Const</b>
+    {  Mms=1e-3;   // Mechanical mass [kg]
+       Rms=1;      // Mechanical resistance [Ns/m]
+       Cms=70e-6;  // Mechanical compliance [N/m]
+    }
+  ...
+  <b>System</b>  'S1'
+  ...
+    <b>Impedance</b>  'Imp1'
+      Node=100=110
+      Z={ wo = 2*pi*5000;
+          Zms = Rms + j*w*Mms/(1 + w/wo) + 1/(j*w*Cms) }
+  ...
+  </pre>
+
+
+  <h4>2) Example</h4>
+
+  <p>The effect of viscosity and thermal exchange in a duct leads to a frequency
+  dependent resistance. The resistance increases approximately as:</p>
+
+  <p class=formula> Ra(f) &prop; &radic;f</p>
+
+  <p>The formula for viscosity and thermal exchange is given at parameter
+  <a href="../Parameters/Ra=.html">Ra</a> of component
+  <a href="AcouResistance.html">AcouResistance</a>:</p>
+
+  <pre>
+  <b>Impedance</b>  'Imp1'
+    Node=100=110
+    Z={ WD=10e-2;                      // Width of duct
+        HD=1e-2;                       // Height of duct
+        L=30e-2;                       // Length of duct
+        rho=1.189;                     // Density of air
+        c=343;                         // Velocity of sound in air
+        nue=18.2e-6;                   // Dyn. viscosity
+        gamma=1.402;                   // Specific heat of air @ 20° and 101kPa
+        dvo=sqrt(nue/(rho*pi));        // Viscosity boundary layer factor
+        dho=sqrt(5*nue/(3*gamma*rho*pi));  // Thermal boundary layer factor
+        D=2*(WD + HD);                     // Perimeter
+        S=WD*HD;                           // Area
+        k=w/c;                             // Wave-number
+        Ra=rho*c*D*L/(2*sqr(S))*k/sqrt(f)*(dvo + (gamma-1)*dho);
+      }</pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

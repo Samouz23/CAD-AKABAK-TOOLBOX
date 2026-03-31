@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>BasePlane=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>BasePlane=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>BasePlane=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format 1</td>     <td class=param1>[xy, xz, yz, yx, zx, zy, -xy, -xz, -yz, -yx, -zx, -zy, Pos, Neg]</td>
+  </tr>
+  <tr>
+    <td class=param0>Format 2</td>     <td class=param1>Node indices</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Plane of the arc</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/BE_Spectrum.html">BE_Spectrum</a> with
+                                                        <a href="PlotType=.html">PlotType=</a>[Directivity,Arc]</td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1>
+                                          <a href="Inclination=.html">Inclination=</a>,
+                                          <a href="PolarRange=.html">PolarRange=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><img src="../../../_Images/BasePlane%20xy.jpg" align=right>
+  <i>BaseBlane=</i> is a parameter of section <i>BE_Spectrum</i>,
+  which controls the localization of points for spectral analysis.
+  With the help of parameter <i>PlotType=Directivity</i> or <i>PlotType=Arc</i>
+  we can generate a range of points, which are distributed in a plane.
+  The orientation of this plane and start and on-axis points needs to be
+  specified. This can be done with the help of the two formats of
+  <i>BasePlane=</i>:</p>
+
+
+  <h3>Format 1 - Directional Specifiers</h3>
+
+  <p><i>Format 1</i> is useful if <i>BasePlane</i> is aligned with the
+  principal planes of the coordinate system. It provides a pair of symbols
+  each stand for the name of an axis (x, y or z). The two axis named
+  will span the plane. For example <i>BasePlane=zx</i> will create
+  observation-points in the x-z-plane. Further, the first character
+  - in our example the z-axis, will point into on-axis direction. The
+  second character indicates the "-90 deg" point of the arc on which points are
+  distributed - in our case the x-axis. A minus sign will invert the arc.
+  For example:</p>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    PlotType=Directivity
+    BodeType=LeveldB;  Range=50
+    Distance=1m
+    PolarRange=-90, 90, 19
+    <font color="#800000">BasePlane=zx</font>
+    101   Inclination=0.0    ID=TS_200</pre>
+
+  <p>This example creates 19 points on an arc ranging from -90 deg to
+  +90 deg at 1 m distance from the origin of the
+  global coordinate system. The semi-circle is rendered in the x-z-plane.
+  The first point is at -90 deg. The on-axis (0 deg) points along
+  the z-axis.</p>
+
+  <br />
+
+  <p><img src="../../../_Images/BasePlane%20xy%20-70+70.jpg" align=right>
+  Another example:</p>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    PlotType=Directivity
+    BodeType=LeveldB;  Range=50
+    Distance=1m
+    PolarRange=<font color="#0000FF">-70, 70</font>, 19
+    <font color="#800000">BasePlane=zx</font>
+    101   Inclination=0.0    ID=TS_200</pre>
+
+  <p>This example demonstrates, what kind of role the "-90 deg"-point plays.
+  The actual start point is at the first angle as specified at
+  <i>PolarRange=-70, 70, 19</i> i.e. at -70 deg. Hence, the second character of
+  <i>BasePlane=zx</i> indicates the direction along the arc.</p>
+
+  <br />
+
+  <p><img src="../../../_Images/BasePlane%20xy%20-170+170.jpg" align=right>
+  Another example:</p>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    PlotType=Directivity
+    BodeType=LeveldB;  Range=50
+    Distance=1m
+    PolarRange=<font color="#0000FF">-170, 170</font>, 19
+    <font color="#800000">BasePlane=zx</font>
+    101   Inclination=0.0    ID=TS_200</pre>
+
+  <p>This example demonstrates how to specify a complete circle (only that
+  we restricted the range here for demonstration purpose).
+  For full circle you specify <i>PolarRange=-180, 180, ...</i> so that
+  the arc ranges from -180 deg to +180 deg. The first character of
+  <i>BasePlane=xz</i> specifies the on-axis point and the second where
+  the arc has its -90 degree point.</p>
+
+
+  <h3>Format 2 - Directional Vectors</h3>
+
+  <p><img src="../../../_Images/Position%20BasePlane.jpg" align=right>
+  The <i>BasePlane</i> can also be positioned with the help of
+  node-indices.</p>
+
+  <p>There are three nodes defining point P1, P2 and P3.</p>
+
+  <p>P1 is the point of rotation.</p>
+
+  <p>P2 and P3 mark the BasePlane.
+  The vector P2 - P1 is the on-axis direction (zero degree).</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    ...
+    PlotType=Directivity
+    Distance=100m
+    PolarRange=-90, 90, 37
+    <font color="#800000">BasePlane=1001  1002  1003   RefNodes=N</font>
+    101   Inclination=0.0   ID=ID101
+    ...</pre>
+
+  <br>
+  <br>
+</body>
+</html>

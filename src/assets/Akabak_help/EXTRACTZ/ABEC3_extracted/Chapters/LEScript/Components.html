@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>LE Components</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Lumped Element Components</h1>
+  <p class=navi><a href="../Index.html">Home</a>  &raquo;
+                <a href="LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <p>See also <a href="Systems.html">Systems</a> and <a href="Network.html">Network</a>.</p>
+
+  <br />
+  <h4>Lumped Elements</h4>
+
+  <p>A "Lumped" or "Concentrated" Element is a symbolic representation,
+  where the dimensions of the device are regarded way smaller than
+  the transmitted wave-length. Predominately spatial information is lost in
+  this transformation. For example, a bend in an acoustic duct is a geometric
+  device but becomes a concentrated mass in the lumped element circuit.</p>
+
+  <p>Certain Lumped Elements are only integrated in two dimensions.
+  Such elements are called one-dimensional-waveguides. See, for example the
+  <a href="Sections/Duct.html">Duct</a> and
+  <a href="Sections/Waveguide.html">Waveguide</a> component.</p>
+
+  <p>Certain components offer to specify extensions to the component.
+  For example the <a href="Sections/Coil.html">Coil</a> has an internal series resistance, and
+  the <a href="Sections/Capacitor.html">Capacitor</a> can even be extended to a resonator.
+  This is convenient but has the drawback that internal flows and potentials
+  cannot be observed.</p>
+
+  <br />
+  <Center><table>
+  <tr>
+    <td width=300><img src="../../_Images/LE-2Pole-Flow.jpg"></td>
+    <td width=300><img src="../../_Images/LE-4Pole-Flow.jpg"></td>
+  </tr>
+  </table></Center>
+
+  <p>Lumped Elements provide the flow between Nodes according to their
+  impedance. This flow has a direction. Because spatial information is lost
+  for Lumped Elements we have to define a symbolic direction versus which
+  the phase of the signal is measured.</p>
+
+  <br />
+  <Center><table>
+  <tr>
+    <td width=300>Flow = Y&middot;Ust</td>
+    <td width=300>Flow1 = y11&middot;Ust + y12&middot;Uuv <br />
+                  Flow2 = y21&middot;Ust + y22&middot;Uuv</td>
+  </tr>
+  </table></Center>
+
+  <p>with admittance, Y and four-pole admittance matrix components,
+  y11, y12, y21 and y22. Potential differences are Ust = Us - Ut and
+  Uuv = Uu - Uv. If one of the terminals are grounded then its potential is zero.</p>
+
+  <p>In the script the assignment of Nodes is done with the help of parameter
+  <a href="Parameters/Node=.html">Node=</a>, which each network-component provides.</p>
+
+  <p>Potentials, flows and powers can be observed with the help of section
+  <a href="../BEScripts/Sections/LE_Spectrum.html">LE_Spectrum</a> of an
+  <a href="../BEScripts/Observation.html">Observation Script</a>.
+  Typically the name of the component is specified and, for multi-ports,
+  the <a href="../BEScripts/Parameters/Port=.html">Port=</a>,
+  at which the potential-difference, flow or power is to be investigated.</p>
+
+
+  <h4>Ground</h4>
+
+  <p>Ground is a special Node, which always has the Node-Index zero. For example</p>
+
+  <pre>  <b>Coil</b>  'L1'  L=1mH  Node=10=0</pre>
+
+  <p>In this example there is a Coil between Node=10 and Ground.</p>
+
+  <p>Exception: The component <a href="Sections/Duct.html">Duct</a> appears as a
+  two-pole in the script. Internally it is expanded to a four-pole. This is convenient
+  because Ducts are always grounded by principal. The special case where the Duct is
+  closed means no normal velocity at the closing wall, i.e. no flow here.
+  In the script we would simply leave the second Node open. However, because of
+  compatibility to previous versions, you also can set the second Node to zero.
+  Normally, this would mean pressure=0, but at the Duct-component it "tells"
+  the program to regard this Duct to be closed.</p>
+
+
+
+  <h4>Nodes</h4>
+
+  <p>Nodes are connection points. Within a Node we assume constant potential.
+  At each Node we measure a potential versus ground. Between Nodes we measure a
+  potential-difference. At a node the sum-total of flux is zero.</p>
+
+  <p>Nodes are forming the network. Because we have a textual-input-system we
+  need to somehow communicate the graphical form of the network. This is done
+  with the help of node numbers of parameter <a href="Parameters/Node=.html">Node=</a>.</p>
+
+  <p>Node-numbers can be any positive integer-number.
+  Zero is reserved for ground. The smallest node-number is connected to the
+  source or to the output of the preceding Filter-bank.</p>
+
+  <p><img src="../../_Images/LE-LCR-Example.jpg" align=right>
+  For example</p>
+
+  <pre>
+  <b>Resistor</b>   'R1' Node=10=20  R=1ohm
+  <b>Coil</b>       'L1' Node=20=30  L=1mH
+  <b>Capacitor</b>  'C2' Node=30=0   C=10uF
+  <b>Resistor</b>   'R2' Node=30=0   R=10ohm
+  </pre>
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>DataDriving=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>DataDriving=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">Lumped Element Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>DataDriving=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Normalization of SPL</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Def_MeasRadiator.html">Def_MeasRadiator</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>The network-component <a href="../Sections/MeasRadiator.html">MeasRadiator</a>
+  is a two pole. After solving the lumped element network there will be a certain
+  potential at its terminals. This potential can be a voltage, force or a sound pressure,
+  depending what the <i>MeasRadiator</i> component represents. If the <i>MeasRadiator</i>
+  represents a typical loudspeaker driver, for example, then the potential is likely
+  to be a voltage.</p>
+
+  <p>The <i>MeasRadiator</i> component simply takes its terminal potential
+  and multiplies it with the data from the file which carries the
+  transfer function or sound pressure response. This product eventually
+  drives its associated
+  <a href="../../BEScripts/Sections/Pressure_Points.html">Pressure_Points</a>
+  or <a href="../../BEScripts/Sections/Pressure_Box.html">Pressure_Box</a>:</p>
+
+  <p class=formula>p = U<sub>st</sub>&middot;M</p>
+
+  <p>with p: sound pressure at the <i>Pressure_Point</i>,
+  U<sub>st</sub> potential difference at the terminals of <i>MeasRadiator</i> and
+  M: value from the file.</p>
+
+
+  <h4>Driving Normalization</h4>
+
+  <p>However, the above formula is valid only if M are values driven with 1V peak.
+  Measurements are typically performed at a different input level and need
+  to be normalized.</p>
+
+  <p>You can do the normalization with the help of the <i>Scaling Dialog</i> of
+  <a href="../../Appendix/VacsViewer.html">Vacs</a> prior exporting, or
+  you can use <i>DataDriving=</i>.</p>
+
+
+  <h4>Specification</h4>
+
+  <p><i>DataDriving=</i> expects a simple floating point value, which is the value
+  at which the device has been measured. The above formula then becomes:</p>
+
+  <p class=formula>p = U<sub>st</sub>&middot;M/DataDriving</p>
+
+  <br />
+
+  <p>Note, that ABEC calculates peak-values, whereas often driving values are
+  specified as rms-values. In this case simply add the key-word
+  <i>IsRms</i>. For example</p>
+
+  <br />
+
+  <pre>
+  <b>Def_MeasRadiator</b>  'Tweeter'
+    DataFileAlias='Imp_Tweeter'
+    DataFileAlias='SPL_Tweeter'
+    DataDistance=1m,1m
+    <font color="#800000">DataDriving=0.2876</font>  IsRms  </pre>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

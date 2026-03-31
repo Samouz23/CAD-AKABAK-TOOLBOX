@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Observation - Schematic</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Observation - Schematic</h1>
+  <p class=navi><a href="../Index.html">Home</a>
+  <hr>
+
+  <p><img src="../../_Images/Operation%20Modes%20-%20Schematic.jpg" align=right>
+  Final results are rendered by the
+  <a href="Observation%20stage.html">Observations Stage</a>,
+  either as a
+  <a href="../BEScripts/ObField.html">field</a> or as
+  a <a href="../BEScripts/ObSpectrum.html">spectrum</a>.
+  Spectral observations can be of the acoustic field or of
+  parameters inside a
+  <a href="Lumped%20Element%20Analysis.html">Lumped Element network</a>.</p>
+
+  <p>All observations are transfer-functions, which can be weighted by
+  Driving Values. Either driving is imprinted or comes via a Lumped Element
+  network.</p>
+
+  <p>The acoustic field is calculated with the help of the Boundary Element
+  Method (BEM) or approximated by the Direct Sound Analysis.
+  BEM needs a solving-stage prior observation.</p>
+
+  <p>During observation the calculation accesses geometry information from the
+  BEM- and the Direct Sound module. Also Lumped Element only analysis is
+  possible.</p>
+
+  <p>If BEM is used together with multiple driving-channels then the observation
+  takes place for each such channel. Finally all results are superimposed, which
+  yields the total response. All this, of course, is done internally.</p>
+
+  <p>If BEM is used the observation module accesses solutions from the
+  BEM-solving stage.</p>
+
+  <p>The Lumped Element network needs to be solved as well. However, this
+  calculation is usually quick and is done on-the-fly.
+  If BEM is used the network will access radiation impedance values from the
+  solving stage. The solution of the Lumped Element network are
+  voltages, forces and pressures (potentials). From these flow and motion
+  is deduced, such as the electrical current and mechanical velocity.
+  Having values for the velocity we can then use results from the BEM
+  solving stage and calculate acoustic response functions.</p>
+
+  <br>
+  <br>
+</body>
+</html>

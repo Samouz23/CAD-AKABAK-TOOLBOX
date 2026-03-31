@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Baffle (2600)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Baffle</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">BEM-Part</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=350><td><img src="../../_Images/Desktop%20-%20Baffle.jpg" /></td></tr>
+    <tr height=350><td><img src="../../_Images/Desktop%20-%20Baffle2.jpg" /></td></tr>
+    <tr height=300><td><center><img src="../../_Images/Baffle%20Intro.jpg">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                       <img src="../../_Images/Baffle%20Sym.jpg"></center></td></tr>
+    <tr height=300><td><center><img src="../../_Images/Baffle%20Extrusion.jpg">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                       <img src="../../_Images/Baffle%20Mesh.jpg"></center></td></tr>
+    <tr height=300><td><center><img src="../../_Images/Baffle%20PosTri.jpg"></center></td></tr>
+  </table>
+
+
+  <p>The <i>Baffle</i> component creates Boundary Elements on a flat plane
+  similar to component <a href="Form-Elements%20(Nodes).html">Elements</a>.</p>
+
+  <p>Baffle also can arrange items on the Baffle using a local
+  2D-coordinate system. These items can be either simple zones of exclusion
+  or components. If the item is a component it needs to exist already.
+  The Baffle will position the component on its plane and also
+  will cut out a hole for it. In this way boundary elements are not overlapping.</p>
+
+  <p>Create a new <i>Baffle</i>-component with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  The home of a <i>Baffle</i>-component is page <i>BEM</i>.
+  Edit an existing component by dbl-click its entry on page <i>BEM</i>
+  or issue menu <i>Edit/Parameters</i> or press CTRL+E.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <h3>Page - Name</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>On page <i>Name</i> provide the name of the component
+  in form of a <a href="../Appendix/Strings.html">string</a>.
+  Further there is space for annotations.</p>
+
+
+  <!-- ---------------------------------------------------------------- -->
+  <h3>Page - Outer Edge</h3>
+  <!-- ---------------------------------------------------------------- -->
+
+  <h4>Shape</h4>
+
+  <p>If you select <i>Shape</i> then the edge of the baffle is either a
+  Circle, Rectangle, Ellipse or an Oval. If such a fixed shape is selected we need further
+  information about its size (dB, WB, HB). Also
+  the position needs to be specified.</p>
+
+  <p><i>dB</i> is the diameter of the Baffle if <i>Shape=Circle</i>.
+  <i>WB</i> and <i>HB</i> are the width and height, respectively, of
+  a rectangular shape.</p>
+
+  <p><i>Position</i> shifts and rotates the mounting point of the baffle which is thought to be
+  in the center of the shape. The specification is similar to as described in
+  <a href="../Desktop/Form-Position%20(frame).html">Form-Position</a>.</p>
+
+
+  <h4>Vertices</h4>
+
+  <p>With this selection the edge of the Baffle is assumed to be specified
+  with the help of a list of coordinates. The associated node-indices
+  need to be entered into the long input-field.
+  The numbers should be separated by blanks. If there
+  are three numbers a triangle is created. Four entries would yield a quadrilateral.
+  More entries create a polygon, for example</p>
+
+  <pre>1001 1002 1003 1004 1005 1006 1007 1008</pre>
+
+  <p>for convenience it is also possible to type it in the form</p>
+
+  <pre>1001 .. 1008</pre>
+
+  <p>We also need a reference to a
+  database of <a href="../General-Part/Form-Nodes.html">Nodes</a>.</p>
+
+
+  <h4>Side</h4>
+
+  <p><i>Front</i> means the plane(s) point forward as expected by the
+  positioning parameters. This is the default.</p>
+
+  <p><i>Rear</i> is a special setting, which proofs helpful if you
+  are going to specify boundaries for a typical loudspeaker baffle.
+  If you are modeling both the interior and the exterior for the BEM there would be
+  necessary two Baffles - one for the inside and one for the outer side of the
+  cabinet. Often the Baffle for the interior is similar to the one of the exterior domain.
+  With <i>Side=Rear</i> you can specify the rear Baffle in the same way as the
+  front Baffle. AKABAK will adjust positions and normals.</p>
+
+
+  <h4>Extrusion</h4>
+
+  <p>Extrusion of the outer shape of the Baffle. Positive values
+  yield a concave shape, negative values makes a wall extending to the rear.<br>
+  Extrusion is a convenient way of specifying the boundaries of the side walls.
+  The drawback is that all planes of the Baffle receive the same meshing parameters.
+  If you need individual parameters then it might be better to specify the side walls
+  with the help of components
+  <a href="Form-Elements%20(Nodes).html">Elements</a>,
+  <a href="Form-Duct.html">Duct</a> or
+  <a href="Form-Transition.html">Transition</a>.</p>
+
+
+  <h4>Scaling</h4>
+
+  <p>Opens <a href="../Desktop/Form-Scaling%20(frame).html">Form Scaling</a>
+  which alters position and orientation of all coordinates.
+  If <i>Shape=Vertices</i> the scaling-factor would have an effect on the
+  coordinates of the vertices, hence making Baffle smaller or larger.
+  Otherwise the scaling-factor would be ignored.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <a name="Items"></a>
+  <h3>Page - Items</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>A Baffle can be host to a range of items. Such a Baffle-Item can be a simple
+  hole or an aperture for an existing component. The list allows for
+  <a href="../Appendix/List%20Editors.html">inline-editing</a>.
+  See <a href="Form-BaffleItem.html">Baffle-Item-Form</a> for details.</p>
+
+
+  <h4>Button - New</h4>
+
+  <p>Opens the <a href="Form-BaffleItem.html">Baffle-Item-Form</a> and eventually
+  adds the new item to the Baffle.</p>
+
+
+  <h4>Button - Delete</h4>
+
+  <p>Removes the selected Baffle-Item. The referenced component is preserved.
+  However, its position may need to be corrected.</p>
+
+
+  <h4>Button - Edit</h4>
+
+  <p>Opens the <a href="Form-BaffleItem.html">Baffle-Item-Form</a>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <a name="Boundaries"></a>
+  <h3>Page - Boundaries</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>Here you specify the acoustic properties of the boundaries of Baffle.
+  Details are given in chapter
+  <a href="../Desktop/Form-Boundaries%20(frame).html">Frame - Boundaries</a>.
+  Note, referenced components have their individual boundary specification.</p>
+
+
+  <!-- ---------------------------------------------------------------- -->
+  <a name="Meshing"></a>
+  <h3>Page - Meshing</h3>
+  <!-- ---------------------------------------------------------------- -->
+
+  <p>On this page you can control the way the finite element mesh is generated
+  for the Shell. If not specified Shell uses Meshing parameters
+  of its Parent, which can be a
+  <a href="Form-Subdomain.html">Subdomain</a> or an
+  <a href="Form-Interface.html">Interface</a>. These in turn
+  default to global settings (see menu <i>Global/Meshing...</i>).</p>
+
+  <p><b>Edge Length</b> and further parameters are described in
+  chapter <a href="../Desktop/Form-Meshing.html">Form - Meshing</a>.</p>
+
+  <p>If the Baffle contains <i>Items</i>, i.e. holes or referenced components
+  for positioning then the type of meshing should be specified as
+  <i>Delaunay</i>.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <a name="Formula"></a>
+  <h3>Page - Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format
+  <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter
+  <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers for Baffle parameters are:</p>
+
+  <p class=formula><table >
+    <!-- Outer Edge -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Outer Edge</b></span></td> </tr>
+    <tr> <td>dB</td>             <td>Diameter</td>       </tr>
+    <tr> <td>WB</td>             <td>Width</td>          </tr>
+    <tr> <td>HB</td>             <td>Height</td>         </tr>
+    <tr> <td>LenB</td>           <td>Extrusion</td>      </tr>
+    <!-- Driving -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Driving</b></span></td> </tr>
+    <tr> <td>Weight</td>         <td>Signal amplification</td>         </tr>
+    <tr> <td>Delay</td>          <td>Signal delay</td>                 </tr>
+    <!-- Meshing -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Meshing</b></span></td> </tr>
+    <tr> <td>EdgeLength</td>     <td>Length of largest edge</td>        </tr>
+    <tr> <td>EdgeLengthMin</td>  <td>At which to stop meshing</td>      </tr>
+    <tr> <td>PointDistance</td>  <td>Steiner points of Delaunay</td>    </tr>
+    <tr> <td>SkinnyAngle</td>    <td>Min angle at Delaunay</td>         </tr>
+    <tr> <td>QuadRatio</td>      <td>Aspect ratio of quads</td>         </tr>
+    <!-- Position-Scaling -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Position-Scaling</b></span></td> </tr>
+    <tr> <td>RotateVert</td>     <td>Local rotation vertical</td>       </tr>
+    <tr> <td>RotateHoriz</td>    <td>Local rotation horizontally</td>   </tr>
+    <tr> <td>RotateAxial</td>    <td>Local rotation axially</td>        </tr>
+    <tr> <td>OffsetAxial</td>    <td>Shift on-axis</td>                 </tr>
+    <tr> <td>RotateX</td>        <td>Rotation about x-axis</td>         </tr>
+    <tr> <td>RotateY</td>        <td>Rotation about y-axis</td>         </tr>
+    <tr> <td>RotateZ</td>        <td>Rotation about z-axis</td>         </tr>
+    <tr> <td>ShiftX</td>         <td>Shift in x-direction</td>          </tr>
+    <tr> <td>ShiftY</td>         <td>Shift in y-direction</td>          </tr>
+    <tr> <td>ShiftZ</td>         <td>Shift in z-direction</td>          </tr>
+  </table></p>
+
+
+  <h4>Formula for Baffle-Items</h4>
+
+  <p><a href="Form-BaffleItem.html">Baffle-Items</a> feature special identifiers in order to distinguish
+  the records. The identifier is made-up from character Identifier + Item-Number.
+  For example, "ShiftY1=" means that the result of
+  its formula will be assigned to the y-component of the shift-parameter
+  of the scaling of the Baffle-Item with index 1.</p>
+
+  <p>For example:</p>
+  <pre>
+    ShiftY<b>1</b> =  -640/2 + 460
+    ShiftY<b>2</b> =  -640/2 + 270
+    ShiftY<b>3</b> =  -640/2 + 80
+  </pre>
+
+  <p>If you select page <i>Items</i> then you should see marked entry fields:</p>
+  <p><img src="../../_Images/Desktop%20-%20Baffle%20Formula.jpg"></p>
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

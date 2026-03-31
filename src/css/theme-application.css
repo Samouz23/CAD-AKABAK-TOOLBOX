@@ -155,7 +155,6 @@ button:hover img[src*=".svg"] {
 }
 
 /* Icônes dans les listes de fichiers */
-#nas-file-list img[src*=".svg"],
 .file-list img[src*=".svg"] {
   filter: var(--icon-filter-primary);
 }

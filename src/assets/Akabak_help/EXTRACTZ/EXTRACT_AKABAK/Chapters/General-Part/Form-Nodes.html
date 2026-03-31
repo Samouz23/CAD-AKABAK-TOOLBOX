@@ -1,0 +1,283 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Nodes Database (3900)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Nodes Database</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">General</a></td>
+  </tr></table>
+  <hr>
+
+  <p><i>Nodes</i> provides a database of coordinates. Each record consists
+  of a name, coordinate values and a comment. Other components take reference
+  to Nodes as explained in chapter
+  <a href="../Appendix/Nodes%20and%20Elements.html">Nodes and and Elements</a>.
+  A node-record can be referenced by multiple components.</p>
+
+  <p>Create a new <i>Nodes</i>-database with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  The home of a <i>Nodes</i>-database is in page <i>General</i>.
+  Edit an existing database by dbl-click its entry in page <i>General</i>
+  or issue menu <i>Edit/Parameters</i> or press CTRL+E.</p>
+
+  <p><center><img src="../../_Images/Desktop%20-%20Nodes-Elements.jpg"></center></p>
+
+
+  <!-- ----------------------------------------------- -->
+  <a name="Name"></a>
+  <h3>Name</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>On page <i>Name</i> provide the name of the database
+  in form of a <a href="../Appendix/Strings.html">string</a>.
+  Further there is space for annotations.</p>
+
+  <!-- ----------------------------------------------- -->
+  <a name="Points"></a>
+  <h3>Points</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p><i>Points</i> are individual records of coordinates. Each record
+  consists of a name, values and a comment.</p>
+
+  <h4>Name</h4>
+
+  <p>Each coordinate has a name in form of an index.
+  This number is called <i>node-index</i>. Other components
+  take reference with the help of this number.</p>
+
+  <p>AKABAK suggest a unique number when a new point is added.
+  However, you can alter this to any value larger than zero.</p>
+
+  <p>The node-index should be larger than zero. It should be
+  unique.</p>
+
+  <p>If you alter a node-index, which other components use
+  for reference, these references are automatically updated accordingly.</p>
+
+
+  <h4>Coordinate Values</h4>
+
+  <p>We assume Cartesian coordinates. In 3D we have values for
+  the x-, y- and z-components.
+  In 2D only values for x and y need to be specified.
+  With Circular Symmetry there are only two values, the <i>Axial-</i>
+  and the <i>Radial-</i> component, respectively. The
+  <a href="../Desktop/Form-BEM-Parameters.html">dimension</a> needs to be
+  specified prior opening the dialog.
+  By default <a href="../Appendix/Floating%20point%20values.html">SI-units of distance</a>
+  are assumed. However, you can alter
+  <i>User Units</i> at menu <a href="../Desktop/Form-Units.html">Options/Units</a>.
+  If a value is calculated from a formula this is indicated by a yellow background
+  color. More on formula for nodes see <a href="#Formula">below</a>.</p>
+
+
+  <h5>New, Insert, Delete</h5>
+
+  <p><i>New</i>: Command to add a new coordinate record to the database.
+  <i>Insert</i>: Inserts a new record above current selection.
+  <i>Delete</i>: Deletes selected record.</p>
+
+
+  <h5>Editing</h5>
+
+  <p>Coordinates are edited directly in the list.</p>
+
+  <p>There are several ways to start the edit-mode of an entry-field.</p>
+  <ul>
+    <li>Simply start typing numbers.</li>
+    <li>Keyboard F2.</li>
+    <li>Mouse slow dbl-click.</li>
+  </ul>
+
+  <p>Submit the new value:</p>
+  <ul>
+    <li>Keyboard ENTER.</li>
+    <li>Keyboard up/down.</li>
+    <li>Mouse click.</li>
+  </ul>
+
+  <p>Cancel editing</p>
+  <ul>
+    <li>Keyboard ESC.</li>
+  </ul>
+
+
+  <h5>Swap Values</h5>
+
+  <p>A range of selected values can be swapped with its neighbors values.
+  Issue local menu <i>Swap Values</i> or press keys CTRL+SHIFT+LEFT or CTRL+SHIFT+RIGHT.</p>
+
+  <h5>Copy and Paste</h5>
+
+  <p>Selected records or values can be copied to the clipboard. Eventually, these
+  data can be pasted into the table. The datum is copied in text-format, which allows
+  to paste the content also into the formula-editor or any text-editor.</p>
+
+  <p>If a range of values is selected the clipboard contains only these values.
+  For pasting at the target table you can select more than available values. This
+  would yield a repetition of values. For example, select a single value, say the x-component
+  of the coordinate. Then issue Copy. You can then assign this single value to
+  multiple other coordinates. In order to do so select a range of existing values.
+  then issue Paste.</p>
+
+  <p>If the node-index is selected then the whole record gets copied to the clipboard.
+  Eventually you can paste these records into the table or any Node-Form.
+  Here are two options available: over-writing existing coordinates or adding as new.</p>
+
+
+  <h5>Renaming</h5>
+
+  <p>This tool can provide new node numbers to a selected range of nodes.
+  Select a range of nodes in the first column (Click with Shift).
+  Then issue <i>Rename</i> of the popup-menu.
+  The <a href="../Desktop/Form-NodeNames.html">New Node Name-Form</a> opens.</p>
+
+
+  <h5>Moving and Sorting</h5>
+
+  <p>Selected records can be moved up or down the list by issuing local menu
+  <i>Move up, Move down, ...</i> or press CTRL+UP or CTRL + DOWN keys.<br>
+  Records can be sorted with respect to the node-index. For this click on
+  the header of the first column.</p>
+
+
+  <h5>Undo</h5>
+
+  <p><i>New, Delete, Editing, Paste and Sorting</i> can be undone with the local menu
+  <i>Undo</i> or CTRL+Z key.<br>
+  Note, after assigning node-numbers to the system (pressing Apply) Undo still works.
+  However, node-numbers cannot be synchronized anymore.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <a name="Groups"></a>
+  <h3>Groups</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p><i>Groups</i> is a convenience-feature. It creates groups of
+  coordinates based on specification of size and position
+  of a fictional shape such as a rectangle.</p>
+
+  <p>A Group has individual node-indices. However, it also
+  has a main-index.
+  A component can take reference to all coordinates of a group
+  by simply specifying the main-index.</p>
+
+  <p class=indent><img src="../../_Images/Desktop%20-%20Nodes-Elements-Group.jpg"></p>
+
+  <p>In the above example there is a group with main-index 1000.
+  It controls a group of four nodes, which are the vertices of a fictional rectangle.
+  In this example will the <a href="../Observation-Part/Form-Fields%20(Nodes).html">Fields-component</a>
+  create the actual rectangle by referencing the main-index 1000.</p>
+
+  <h5>New, Edit, Delete</h5>
+
+  <p><i>New</i>: Command to add a new group record to the database.</p>
+  <p><i>Edit</i>: Editing of a record by calling the <a href="Form-Nodes-Group.html">Nodes-Group-Sub-Form</a>.</p>
+  <p><i>Delete</i>: Deletes selected record.</p>
+
+
+  <h5>Copy and Paste</h5>
+
+  <p>Selected Groups can be copied to the clipboard. Eventually, these
+  data can be pasted into the table. The datum is copied in text-format, which allows
+  to paste the content also into the formula-editor or any text-editor.</p>
+
+
+  <h5>Moving</h5>
+
+  <p>Selected records can be moved up or down the list by issuing local menu
+  <i>Move up, Move down, ...</i> or press CTRL+UP or CTRL + DOWN keys.</p>
+
+
+  <h5>Undo</h5>
+
+  <p><i>New, Delete, Editing, Paste and Sorting</i> can be undone with the local menu
+  <i>Undo</i> or CTRL+Z key.<br>
+  Note, after assigning node-numbers to the system (pressing Apply) Undo still works.
+  However, node-numbers cannot be synchronized anymore.</p>
+
+
+  <!-- ----------------------------------------------- -->
+  <a name="Scaling"></a>
+  <h3>Scaling</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>Page <i>Scaling</i> alters size, position and orientation
+  of all coordinates. For details see
+  <a href="../Desktop/Form-Scaling%20(frame).html">sub-form Scaling</a>.</p>
+
+  <!-- ----------------------------------------------- -->
+  <a name="Formula"></a>
+  <h3>Formula</h3>
+  <!-- ----------------------------------------------- -->
+
+  <p>All parameters of format
+  <a href="../Appendix/Floating%20point%20values.html">floating-point</a>
+  can be assigned a formula. Please check chapter
+  <a href="../Formula/Formula%20Dialog%20Geo.html">Form - Formula</a>
+  for further details. Formula-identifiers for Nodes are:</p>
+
+  <p class=formula><table >
+    <!-- Position-Scaling -->
+    <tr style="height:28px"> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Scaling</b></span></td> </tr>
+    <tr> <td width=100>Scale</td>          <td>Isotropic scaling</td>             </tr>
+    <tr> <td>ScaleX</td>         <td>Scaling in x-direction</td>        </tr>
+    <tr> <td>ScaleY</td>         <td>Scaling in y-direction</td>        </tr>
+    <tr> <td>ScaleZ</td>         <td>Scaling in z-direction</td>        </tr>
+    <tr> <td>RotateX</td>        <td>Rotation about x-axis</td>         </tr>
+    <tr> <td>RotateY</td>        <td>Rotation about y-axis</td>         </tr>
+    <tr> <td>RotateZ</td>        <td>Rotation about z-axis</td>         </tr>
+    <tr> <td>ShiftX</td>         <td>Shift in x-direction</td>          </tr>
+    <tr> <td>ShiftY</td>         <td>Shift in y-direction</td>          </tr>
+    <tr> <td>ShiftZ</td>         <td>Shift in z-direction</td>          </tr>
+  </table></p>
+
+  <p>If you switch to page Scaling the associated input-fields should be highlighted.</p>
+
+
+  <h4>Formula for Points and Groups</h4>
+
+  <p><i>Points</i> and <i>Groups</i> feature special identifiers in order to distinguish
+  the records. The identifier is made-up from character "X"+node-number,
+  "Y"+node-number or "Z"+node-number. For example, "Z2001=" means that the result of
+  its formula will be assigned to the z-component of point "2001".</p>
+
+  <p>For example:</p>
+  <pre>
+                                                   Z2001 = @Hc + 2*@tc
+                           Y2002 = @Wc/2 + @tc;    Z2002 = @Hc + 2*@tc
+                           Y2003 = @Wc/2 + @tc
+    X2201 = -@Dc - 2*@tc;                          Z2201 = @Hc + 2*@tc
+    X2202 = -@Dc - 2*@tc;  Y2202 = @Wc/2 + @tc;    Z2202 = @Hc + 2*@tc
+  </pre>
+
+  <p>If you select page <i>Points</i> then you should see marked entry fields:</p>
+  <p><img src="../../_Images/Desktop%20-%20Scaling-Form-Formula-Nodes.jpg"></p>
+
+  <br>
+  <p>Likewise, if you want to assign a formula to a record of a <i>Group</i> you would
+  type the identifier as "Width"+group-number or "Height"+group-number.</p>
+
+  <p>For example:</p>
+  <pre>
+    Width1000 = @Width;    Height1000 = 1.618*@Width;
+  </pre>
+
+  <p>This would assign the record with Group-Number "1000" the result of formula
+  "Width" or "1.618*Width", respectively.
+  Note, prefix "@" means that we access a <a href="../Formula/Formula%20Dialog%20Global.html">global-formula</a>.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

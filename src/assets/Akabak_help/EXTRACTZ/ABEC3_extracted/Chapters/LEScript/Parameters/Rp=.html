@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Rp=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Rp=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Rp=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">ohm</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Parallel resistance</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Capacitor.html">Capacitor</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><img src="../../../_Images/LE-Capacitor%20Rp.jpg" align=right />
+  <i>Rp=</i> is a loss resistance parallel to the capacitance of
+  the Capacitor element. Units [Rp] = &Omega;</p>
+
+  <p>If not specified then 1/Rp = 0. With most modern
+  components Rp can be neglected.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Capacitor</b>  'C1'
+    Node=10=20
+    C=1uF  Rp=1e9ohm</pre>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

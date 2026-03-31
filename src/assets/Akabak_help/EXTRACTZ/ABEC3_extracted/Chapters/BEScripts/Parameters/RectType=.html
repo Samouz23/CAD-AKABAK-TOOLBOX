@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>RectType=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>RectType=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>RectType=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>[Rectangle, Ellipse, Oval]</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Type of rectangular diaphragm</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                         <a href="../Sections/Diaphragm.html">Diaphragm</a>,
+                                         <a href="../Sections/Baffle.html">Baffle</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1>
+                                         <a href="WD=HD=.html">WD=; HD=</a>,
+                                         <a href="WD=HD=.html">WB=; HB=</a>,
+                                         <a href="../../Appendix/Diaphragm%20shapes.html">Diaphragm shapes</a>
+                                       </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>RectType=</i> allows to specify details of a non-circular shape.</p>
+
+  <p>For example, if you specified the width and height of a
+  <a href="../Sections/Diaphragm.html">Diaphragm</a> or of a
+  <a href="../Sections/Baffle.html">Baffle</a>
+  then ABEC needs to know what particular shape you want to model.</p>
+
+  <p>As sketched in chapter <a href="../../Appendix/Diaphragm%20shapes.html">Diaphragm shapes</a>
+  ABEC offers a rectangular, elliptical or an oval shape. Accordingly you need to type
+  <i>RectType=Rectangle</i>, <i>RectType=Ellipse</i> or <i>RectType=Oval</i>, respectively.</p>
+
+  <p>Note, that if WD=HD then ABEC creates a circular shape by default.
+  In order to get a squared shape specify <i>RectType=Rectangle</i>, too.</p>
+
+
+  <h4>For example</h4>
+
+  <table width=30% align=right><tr>
+  <th width=200><img src="../../../_Images/Diaphragm%20NoBaffle.jpg" /></th>
+  </tr></table>
+
+  <pre>
+  <b>Diaphragm</b>  "D"
+    DrvGroup=1001
+    SubDomain=1
+    EdgeLength=10mm 10mm
+    Position=1001,1002,1003 RefNodes=N
+    NoBaffle
+    Side=front
+    WD=200mm;  HD=100mm
+    <font color="#800000">RectType=Oval</font>
+    hD1=10mm;   tD1=20mm;  dD1=50mm;
+    Ws=10mm;
+    tB=10mm;  t1=-10mm</pre>
+
+  <br />
+  <p>...or, for the shape of the <a href="../Sections/Baffle.html">Baffle</a>:</p>
+
+  <pre>
+  <b>Baffle</b>
+    Subdomain=1
+    EdgeLength=25mm, 25mm
+    Position=2001, 2002, 2003  "N"
+    WB=400mm;  HB=640mm
+    <font color="#800000">RectType=Rectangle;</font>
+    101  Ref="D1"   xl=0mm  yc=140mm  Rot=0
+    102  Ref="D2"   xl=0mm  yc=-50mm  Rot=0
+    103  Ref="Du1" xl=0mm  yc=-240mm Rot=0
+    104  Ellipse  W=70mm  H=30mm  xr=50mm  yt=50mm Rot=40  EdgeLength=2mm
+  </pre>
+
+  <br>
+  <br>
+</body>
+</html>

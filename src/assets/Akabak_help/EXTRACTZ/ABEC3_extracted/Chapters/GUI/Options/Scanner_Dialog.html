@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Scanner-Dialog</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Scanner-Dialog</h1>
+  <p class=navi><a href="../../Index.html">Home</a>
+  <hr>
+
+  <p>The <i>Scanner Dialog</i> opens via menu <i>Options/Scanner...</i>.</p>
+
+  <p>This tool helps to manipulate and transform data-files
+  from <a href="http://www.klippel.de" title="External">Klippels Laser Scanner</a>,
+  which are going to be used at
+  section <a href="../../BEScripts/Sections/VibFile.html">VibFile</a>.</p>
+
+  <h3>Import</h3>
+
+  <p><img src="../../../_Images/Scanner%20Dialog%20-%20Import.jpg" align=right>
+  On page <i>Import</i> specify a text-file as has been exported by
+  Klippels' Laser Scanner Software. If such a file is currently registered
+  with the project and selected then its content is loaded directly.
+  Alternatively, you can load such a file (see button <i>Import</i>).</p>
+  <br><br><br>
+
+
+  <h3>Geometry</h3>
+
+  <table align=right>
+  <tr><img src="../../../_Images/Scanner%20Dialog%20-%20Mask%20Oval%201.jpg"></tr>
+  <tr><img src="../../../_Images/Scanner%20Dialog%20-%20Mask%20Oval%202.jpg"></tr>
+  </table>
+
+  <p>On page <i>Geometry</i> specify an optional mask, which is used to
+  remove superfluous elements.</p>
+
+  <p>For example, on the right hand side you see at the top a complete scan.
+  Because the scan is always circular there might be elements which need to be
+  removed. The bottom picture shows the same mesh but masked by an oval,
+  which erases all elements outside this shape.</p>
+
+
+  <h4>Shape of Outer Mask</h4>
+
+  <p><span style="color: #0000FF">Shape</span> specifies the shape of
+  the mask. All elements within this mask will be maintained.</p>
+
+  <p><span style="color: #0000FF">Diameter, Width, Height</span>
+  is the size of the mask.</p>
+
+  <p><span style="color: #0000FF">Preserve Height at Mask Edge.</span>
+  If checked then coordinates of the elements at the cutting
+  edge are maintained. Otherwise elements at the edge may be stretched in
+  order to be at zero height.</p>
+
+
+  <h3>Export</h3>
+
+  <p>Button <i>Export</i> starts the transformation from a Klippel
+  laser scanner data-format to a GMESH-file format (*.msh).
+  The GMESH-file format is documented at
+  [<a href="../../Appendix/Literature.html">17</a>].</p>
+
+  <p><span style="color: #0000FF">Manual Entry of Result Filename</span>.
+  If checked then specify a filename for the export-file.
+  Otherwise the filename from the Import-stage is used, however
+  with a different extension (*.msh).</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

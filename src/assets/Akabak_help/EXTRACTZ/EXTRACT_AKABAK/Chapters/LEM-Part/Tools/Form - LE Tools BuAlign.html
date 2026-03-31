@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - LE Tools Bassunit Alignments (7606)</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>LE Tools - Bassunit Alignments</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  <td class="header"><a href="../Cmps/Bassunit.html">Bassunit</a></td>
+  <td class="header"><a href="Form%20-%20LE%20Tools%20Bassunit.html">Bassunit Tool Form</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=100><td style="text-align: center"><img src="../../../_Images/LETools-BuAlign.jpg"></td></tr>
+  </table>
+
+  <p>It can be challenging to find parameters of good performance. One effective
+  and fast method to arrive at a suitable setting is by means of filter alignments.
+  The Bassunit is tuned to the transfer function of these filters.
+  Then well-known general characteristics, such as bandwidth, resonance behavior etc. of these
+  functions are passed to the speaker-system. For selection a list of meaningful alignments
+  is generated and can be applied to the loudspeaker model. The catalog is built up
+  according to the given driver data.</p>
+
+  <p>The model of the Bassunit is derived in a way that its transfer function of sound pressure
+  is identical to a polynomial high-pass. Because of this the Bassunit model is an approximation.
+  The order of the alignment depends on the system:</p>
+  <table>
+    <tr><td width=100>Speaker</td>  <td width=130>Order of Speaker</td>  <td width=130>Order of Filter</td>  <td width=130>Order of Alignment</td></tr>
+    <tr><td>Closed</td>   <td>2</td>                  <td>0</td>               <td>2</td></tr>
+    <tr><td>Closed</td>   <td>2</td>                  <td>2</td>               <td>4</td></tr>
+    <tr><td>Vented</td>   <td>4</td>                  <td>0</td>               <td>4</td></tr>
+    <tr><td>Vented</td>   <td>4</td>                  <td>2</td>               <td>6</td></tr>
+  </table>
+
+  <table class=pic>
+    <tr height=100><td style="text-align: center"><img src="../../../_Images/LE-Bassunit-Filter.jpg"></td></tr>
+  </table>
+
+  <p>The speaker, its enclosure and its radiation can be complemented by an electric filter
+  which is a high-pass of second order. This filter is assumed to be somewhere in the signal
+  path, preferably in font of the end-stage amplifier. If designed correctly this
+  high-pass effectively limits excursion whilst maintaining output bandwidth.</p>
+
+  <p>The list of the alignments gets updated automatically if you modify one of the parameters of the speaker.
+  At the right-hand side you can select which alignment family is included.</p>
+
+  <p>An example is given at <i>\Akabak Examples\Direct Sound\Bassunit vented filtered.akp</i></p>
+
+  <br>
+  <br>
+  <br>
+  <p><span style="color: rgb(255, 0, 0)">Note, work in progress...</span></p>
+
+  <!-- ----------------------------------------------------------------- -->
+  <h3>Output Parameters</h3>
+  <!-- ----------------------------------------------------------------- -->
+
+  <p>The table is a catalogue of possible parameters for the speaker, its enclosure and
+  the electric high-pass filter. Each alignment would tune the speaker system in a way that
+  following performance parameters can be expected.</p>
+
+  <p><b>Lpmax</b> is the related sound pressure assuming free-field radiation conditions.
+  Lpmax is calculated from the amplitude response of the membrane excursion.
+  The maximum of this function yields the highest amplitude of excursion.
+  If there is a high-pass filter then this maximum can be typically found near
+  the fundamental resonance of the speaker fs. Otherwise the maximum is asymptotic at
+  zero frequency. Eventually, the maximum is scaled by the specified parameter Xmax of the
+  driver. Xmax specifies the maximum excursion the speaker can perform without
+  producing distortion.</p>
+
+  <p><b>f3</b> is the cut-off frequency of the sound pressure response.
+  At f3 the level is down by 3dB compared to the level at high frequencies.</p>
+
+  <p><b>t60</b> is a reverberation-time by which the sound pressure level dropped by 60dB
+  after the signal has been switched off.
+  For the calculation of t60 the transfer function is decomposed into blocks of second order.
+  Form the block with the highest quality factor t60 is calculated.
+  The reverberation-time should be short.</p>
+
+  <p><b>Ripple</b> reports on the level-difference of the largest peak in the
+  sound pressure response.</p>
+
+
+  <!-- ----------------------------------------------------------------- -->
+  <h3>Alignments</h3>
+  <!-- ----------------------------------------------------------------- -->
+
+
+  <h4>Quasi-Butterworth (QB)</h4>
+
+  <p>This group of characteristic curves is related to the Butterworth filter function
+  and, so to speak, inherits some of the characteristics of the Butterworth function. Butterworth
+  filters have the flattest possible amplitude response and thus have the greatest possible
+  bandwidth without showing an amplitude magnification. The transition from the attenuation
+  band to the pass band is very steep. This is associated with high quality-factors.<br>
+  For a high-pass filtered vented loudspeaker system
+  the family of Quasi-Butterworth functions can yield alignments of well controlled
+  excursion, broad sound pressure bandwidth and relatively small enclosure.</p>
+
+  <p class=formula><img src="../../../_Formulae/Bassunit%20-%20BU,%20QB%20Ampl%20Sqr.jpg"></p>
+
+  <p>The left formula is the squared amplitude response of a <i>Butterworth</i> high-pass of order n.
+  The right function is the <i>Quasi-Butterworth</i> high-pass.
+  The coefficient C<sub>2n-2</sub> yields a range of alignments.
+  If C<sub>2n-2</sub> &lt; 0 then there would be a peak in the response.
+  If zero then its identical to the Butterworth curve.
+  If C<sub>2n-2</sub> &gt; 0 then we have a smooth transition from stop- to pass-band.
+  &Omega; = &omega;/&omega;<sub>0</sub> is the normalized frequency variable.
+  The mapping of the amplitude response to the transfer function of the QB-alignment
+  can be tricky, see
+  [<a href="../../Appendix/Literature.html#38">38</a>, <a href="../../Appendix/Literature.html#39">39</a>].</p>
+
+
+  <h4>Chebyshev (CH)</h4>
+
+  <p>Filters with a rippling Chebyshev setting (k<1) are extremely steep in the attenuation
+  band. The pass band has a uniform ripple. Based on the loudspeaker enclosure, a
+  considerable bandwidth extension is in some cases obtained. The critical frequency f3
+  may be up to an octave below the driver resonance. Rippling Chebyshev settings, however,
+  are problematic in most cases. On one hand it is difficult in practice to produce the
+  very high resonance qualities on the other hand these characteristic curves lead to an
+  extreme diaphragm excursion, so that the bandwidth extension is at the cost of the load
+  capacity (principal of unsharpness).<br>
+  In the non-rippling Chebyshev settings (k>1), on the other hand, the sound level graph
+  has a rounded transition characteristic.</p>
+
+
+  <h4>Butterworth-Thomson (BT)</h4>
+
+  <p>This group of filter functions glides from the Butterworth function (M=0) to the
+  Bessel function (M=1). Butterworth filters have a flattest possible amplitude response
+  and thus have the greatest possible bandwidth without manifesting an amplitude
+  magnification. Instead, their group delay curve has a intense, selective delays.
+  The Bessel filters, on the other hand, have a flattest possible group delay curve
+  (as low-pass), but with a highly rounded transition characteristic in the reproduction
+  curve of the magnitude. Butterworth-Thomson characteristic curves represent a compromise
+  between the two extremes. The greater the factor M of the characteristic curve, the
+  better is the build-up and decay characteristic of the loudspeaker system. </p>
+
+  <p>After the evaluation, the characteristic curves can be selected in the list.
+  The name of the characteristic curve is displayed at the top right-hand side in the dialog.
+  The name consists of the abbreviation of the type of characteristic curve, the pole class,
+  the order and the alignment factor.
+  For example: BTI 4 M= 0 designates a 4th order Butterworth-Thomson characteristic curve,
+  pole class 1, and the characteristic curve factor is M=0 (Butterworth curve)
+  (see [<a href="../../Appendix/Literature.html#38">38</a>]).</p>
+
+
+  <!-- ----------------------------------------------------------------- -->
+  <h3>Graph</h3>
+  <!-- ----------------------------------------------------------------- -->
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

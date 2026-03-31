@@ -40,8 +40,6 @@ place attitrée :
 *   **Contenu :**
     *   `settings.js` : Gère tout ce qui touche à la configuration
         (lecture, écriture, réinitialisation avec `electron-store`).
-    *   `nasClient.js` : Sa seule responsabilité est de créer et configurer
-        le client WebDAV pour le NAS.
     *   `windowManager.js` : Centralise toute la logique de création et de
         gestion des fenêtres (`BrowserWindow`).
 
@@ -54,10 +52,6 @@ place attitrée :
     fonctionnalités par domaine.
 
 *   **Contenu :**
-    *   `nasHandlers.js` : Contient toute la logique pour lister, envoyer,
-        télécharger des fichiers sur le NAS.
-    *   `ordersHandlers.js` : Gère la création des PDF, la sauvegarde des
-        clients, la gestion des projets, etc.
     *   `fileSystemHandlers.js` : Gère les interactions avec les fichiers
         locaux de l'utilisateur (ouvrir une boîte de dialogue, lire un
         fichier `.txt`, etc.).

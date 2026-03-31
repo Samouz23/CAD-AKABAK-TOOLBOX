@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Frame - Range</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Frame - Range</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">Observation</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=300><td><img src="../../_Images/Desktop%20-%20Range%20(frame).jpg" /></td></tr>
+  </table>
+
+  <p>This sub-form is part of all forms of components of the <a href="_Index.html">Observation-Part</a>.
+  It gives control of output-parameters.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Range</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>For Field-calculations the ranging directly controls the
+  contouring. For curves which are sent to
+  <a href="../Appendix/VacsViewer.html">VACS</a>, specifications done here have
+  only an effect at first creation of the curves and will be ignored for updates.</p>
+
+
+  <h4>Bode Type</h4>
+
+  <p>Bode Type selects the component of the complex-valued frequency response.
+  In Field plots we can select only scalars such as Level dB or the real part.
+  In curves for VACS we can select also combinations such as real and imaginary parts.<br>
+  Level dB is naturally normalized. In AKABAK all dB-amplitudes are normalized to
+  one unit peak. The sound pressure is normalized to<br>
+  p<sub>0</sub>&nbsp;=&nbsp;&radic;2&middot;20&micro;Pa.</p>
+
+
+  <h4>Range</h4>
+
+  <p>Range specifies the difference between Maximum - Minimum.<br>
+  If Minimum is specified then Maximum = Minimum + Range.<br>
+  If Maximum is specified then Minimum = Maximum - Range.<br>
+  If Maximum and Minimum are specified then Range = Maximum - Minimum.<br>
+  If not specified Range gets calculated.</p>
+
+
+  <h4>Minimum</h4>
+
+  <p>Minimum fixes the display range at the lower bound if specified.</p>
+
+
+  <h4>Maximum</h4>
+
+  <p>Maximum fixes the display range at the upper bound if specified.</p>
+
+
+  <h4>Step Size of Contour</h4>
+
+  <p>For Field plots only. Contour-plots are quantized.
+  The value of Step Size specifies the difference between the contour levels.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Radiation Elements</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Radiation simulations support the superposition technique, which enables to view
+  the response of all or only a sub-set of sources.</p>
+
+  <h4>List</h4>
+
+  <p>Check-in which radiating boundaries or pressure sources shall take part in
+  this observation.</p>
+
+
+  <h4>Buttons</h4>
+
+  <p><i>All</i> will check all items. <i>None</i> un-checks them.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Output</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Here the output can be selected individually. The default setting
+  is done at menu <a href="../Desktop/Form-Preferences.html">Options/Preferences</a>.</p>
+
+  <p>In case of Field-observations use menu
+  <a href="../Desktop/Form-FieldOutput.html">Tools/Export Fields</a> for saving results to file.</p>
+
+  <h4>Way of Output</h4>
+
+  <p>For output, there are various ways:</p>
+
+  <ul>
+    <li>None (means use Preference)</li>
+    <li>Save to file</li>
+    <li>Copy to clipboard</li>
+    <li>Pipeline to VACS using COM</li>
+  </ul>
+
+  <h4>Folder</h4>
+
+  <p>Specify here the folder-name where to store the files if Way of Output = Save to File.
+  Click on the button with the ellipse to open the folder-form.</p>
+
+
+  <h4>Text Format</h4>
+
+  <p>Data are stored using the
+  <a href="../General-Part/Import%20Data%20-%20Control%20Setting%20-%20Data.html">VACS Import Control Settings</a>.
+  The text-format-version is easier to parse, whereas the binary version is more compact.
+  Both versions are documented.</p>
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

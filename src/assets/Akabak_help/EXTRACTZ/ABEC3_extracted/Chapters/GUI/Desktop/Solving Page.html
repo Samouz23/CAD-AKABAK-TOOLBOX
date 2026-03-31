@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Solving Page</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Solving Page</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+    <a href="Desktop.html">Desktop</a></p>
+  <hr>
+
+  <p>After menu <i>Solving/Start Solving</i>, the Solving Page reports messages
+  from the solver of the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Analysis</a>.</p>
+
+  <p>If an error occurs a red flagged icon is placed on the tab of the page.</p>
+
+  <p>The solving process starts with menu <i>Solving/Start Solving</i>.
+  Typically solving is time consuming and ends automatically.
+  <i>Solved successfully</i> is reported and the Statusbar of the desktop
+  displays <i>Solved</i>. Then observations can take place.</p>
+
+  <p>The process can be stopped at any time via menu <i>Solving/Abort Solving</i>.
+  The termination may take a while until all sub-threads are cleared.</p>
+
+
+  <h4><i>Meshing</i></h4>
+
+  <p>In this step ABEC calculates the size of the Boundary Elements so
+  each element satisfies the frequency criterion as specified in the
+  solving script at
+  <a href="../../BEScripts/Parameters/MeshFrequ=.html">MeshFrequency=</a> or
+  <a href="../../BEScripts/Parameters/EdgeLength=.html">EdgeLength=</a>.</p>
+  <p>Please note, currently the meshing is not sub-threaded. Termination of this stage
+  can be achieved with pressing the ESC-key.</p>
+
+
+  <h4><i>Acoustic Constants</i></h4>
+
+  <p>This line reports parameters of the domain medium, which can be
+  specified in section <a href="../../BEScripts/Sections/Control_Solver.html">Control_Solver</a>
+  of the solving script or see at
+  <a href="../../Appendix/Acoustic%20Parameters.html">Acoustic Parameters</a>.</p>
+
+
+  <h4><i>Solving</i></h4>
+
+  <p><i>Num domains</i> are the number of independent un-coupled BE-domains.
+  For example, a simple sealed loudspeaker cabinet with interior and exterior domain
+  should report two BE-domains, because there is no acoustic coupling between
+  the interior and exterior domain with a sealed enclosure.</p>
+
+  <p><i>Num elements</i> reports the total number of elements meshed.</p>
+
+  <p><i>Num global freedoms</i> are the number of unknowns of the main-system matrix
+  to be solved. If there is only one sub-domain then <i>Num global freedoms</i>
+  = <i>Num elements</i> otherwise it is equal to the number of interface elements.</p>
+
+  <p><i>Num frequencies</i> are the number of frequencies as specified at
+  section <i>Control_Solver</i> of the solving script.</p>
+
+  <p><i>Calculating Volumes</i> reports the calculated volumina of each
+  interior sub-domain and the total. The values should be regarded approximate
+  as they are based on the triangulisation of the object. The volumina are not
+  used internally. However, the values are also useful for checking the
+  quality of the model. For example, negative values for a volume
+  typically indicate miss-aligned normals or over-lapping elements.</p>
+
+  <p><i>Calculating Free Terms</i> are special parameters of the solving of the
+  Helmholtz Integral. For you as a user of the program the Free Terms can be
+  used as an indicator for the quality of the mesh. Typically, its values should
+  be approx 1/2. Strong deviations from this value may indicate problems with the
+  normals or overlapping elements. However, there are also cases where Free Terms
+  may vary strongly, for example for elements at open edges.
+  The calculation of the Free Terms is single threaded.</p>
+
+  <p><i>Solving for frequencies</i>. In this processing-stage the
+  Helmholtz Integral Equation is solved for each frequency.
+  All available CPUs are used in parallel processing. Because of this there is
+  an increase of memory allocation, which may cause an <i>Out of Memory</i>
+  error for large models. In this case you can try to limit the number of CPUs in
+  menu <a href="../Options/Preferences.html">Options/Preferences</a>.</p>
+
+
+  <h4><i>Solved Successfully</i></h4>
+  <p>When this line is output the solving stage is finished and
+  you can proceed to observation-calculations.</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

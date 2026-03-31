@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Transformer</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Transformer</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-Transformer.jpg"  />
+  </td></tr></table>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Technical transformer</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Network component (4 pole)</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Electrical</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Systems.html">System</a></td>
+  </tr>
+  </table>
+
+  <hr>
+  <br>
+  <pre>
+  <b>Transformer</b> 'Any name'
+    <a href="../Parameters/Node=.html">Node=s=t=u=v</a>
+    <a href="../Parameters/L1=L2=.html">L1=  L2=</a>
+    <a href="../Parameters/R1=R2=.html">R1=  R2=</a>
+    <a href="../Parameters/k=.html">K=</a>
+  </pre>
+
+  <p>This network element creates a <i>Transformer</i> with two windings.
+  The primary winding is located at the poles s and t and the secondary winding
+  at the poles u and v. The transmission characteristics of the transformer are given by:</p>
+
+  <p class=formula><img src="../../../_Formulae/Transformer.jpg" ></p>
+
+  <p>U1 and U2 are the voltages across the primary and secondary windings.
+  I1 and I2 are the respective currents to the transformer.
+  L1 and L2 are the inductances and R1 and R2 their internal resistances,
+  which can be specified optionally.</p>
+
+  <p>The two coils are magnetically coupled by the coupling-factor k.
+  Here, the coupling-factor k should be specified in percent.
+  It is not possible to specify an ideal transformer by the
+  <i>Transformer</i> element. If you need ideal coupling, you would use
+  the <a href="Coupler.html">Coupler</a> element.
+  The coupling-factor therefore should have values in the range 0 &lt; k &lt; 100%.
+  In practice, maximum values between 90% and 99% can be achieved.
+  The expression k&middot;&radic;(L1&middot;L2) is equal to the so-called
+  mutual inductance M.</p>
+
+  <p>The transmission factor of an ideal transformer (k = 100%)
+  is equal to:</p>
+
+  <p class=formula>U2/U1 = &radic;(L2/L1) = n2/n1</p>
+
+  <p>with n1 and n2 primary and secondary windings, respectively.</p>
+
+
+  <h4>Examples</h4>
+
+  <p>1) Example: The primary winding is between nodes s=2 and t=0 and the
+  secondary winding is between nodes u=3 and v=0. The primary winding has
+  an inductance of L1=10mH and the inductance of the secondary winding is
+  L2=1mH. The coupling factor is k=95%.</p>
+
+  <pre>
+  <b>Transformer</b>  'Tr1'
+    Node=2=0=3=0
+    K=95%
+    L1=10mH  L2=1mH
+  </pre>
+
+  <p>2) Example: The primary winding has an internal resistance of
+  R1=10ohm and the secondary winding an internal resistance of R2=0.1ohm.</p>
+
+  <p>With L1=10mH and L2=1mH the turn ratio is n2/n1 = 0.316.</p>
+
+
+  <pre>
+  <b>Transformer</b>  'Tr1'
+    Node=2=0=3=0
+    K=95%
+    L1=10mH  R1=10ohm
+    L2=1mH   R2=0.1ohm</p>
+  </pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

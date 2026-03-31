@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Contour File Object (2700)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Contour File Object</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">General</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20Contour%20Graph.jpg" /><br><center>AKABAK</center></td></tr>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20VACS%20Export%20Data%20Contour.jpg" /><br><center>VACS</center></td></tr>
+  </table>
+
+  <p>The Contour-File object contains an ordered set of frequency response curves,
+  which is typically used by components to create a directivity, such as in component
+  <a href="../BEM-Part/Form-Pressure-Box.html">Pressure Box</a>.</p>
+
+  <p>Create a new <i>Contour-File</i>-object with the help of the
+  <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  The home of a <i>Contour-File</i> is in page <i>General</i>.
+  Edit an existing object by dbl-click its entry in page <i>General</i>
+  or issue menu <i>Edit/Parameters</i> or press CTRL+E.</p>
+
+  <p>At the referring component simply select the Contour-File object. Then it will
+  use the data-set.</p>
+
+
+  <h4>Importing Data</h4>
+
+  <p>Most convenient it is if the file format is using the
+  <a href="Import%20Data%20-%20Control%20Setting%20-%20Data.html">Import Control Settings</a> of VACS.
+  In this case the import is automatic.</p>
+
+  <p>In VACS you can prepare the frequency response curves all at once.
+  Eventually issue VACS-menu <i>IO/Export Data</i>.</p>
+
+  <p>You should see a form as displayed to the bottom-right. Select <i>File Format = VACS Text Format</i> or
+  <i>File Format = VACS Binary Format</i>.
+  Check <i>Export of parameters</i>.
+  If your data-set is complex-valued then <i>Bode Type</i> should be set to <i>Bode Type = Real + Imaginary</i>,
+  <i>Bode Type = Amplitude + Phase</i> or <i>Bode Type = Level dB + Phase</i>,
+  respectively.</p>
+
+
+  <h4>Parameter</h4>
+
+  <p>Each dataset should have Parameters. For directivity curves these are typically
+  spherical coordinates. Either &theta; or &phi; are mapped to the y-axis
+  as explained in chapter <a href="Graph%20-%20Parameters%20Dialog.html">Graph - Parameter Dialog</a>.
+  For example, a matrix of data may follow <i>Import Control Settings</i>
+  of the Parameter section:</p>
+
+  <pre>
+    ...
+    Param_Coord_x1=1
+    Param_Coord_x2='-180,-175,-170, ... 155,160,165,170,175'
+    Param_Coord_x3=90
+    Param_Coord_Type=Spherical
+    ... </pre>
+  <p><span style="color: #808080">Note, the dots in "Param_Coord_x2=" are an abbreviation only for this document.</span></p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Page - General</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <h4>Name of component</h4>
+
+  <p>Text string which identifies the component. This name will be displayed
+  at reference lists.</p>
+
+  <h4>Info</h4>
+
+  <p>Place for comments.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Page - Graph</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Data are visualized with the help of a contour-plot. This plot displays the
+  ordinate as contour levels. There are two abscissa. The frequency is
+  aligned with the horizontal x-axis and the angular distribution is aligned
+  with the vertical y-axis. The operation is similar to the Contour-Plot
+  in <a href="../Appendix/VacsViewer.html">VACS</a>.</p>
+
+  <h4>Button - Open</h4>
+
+  <p>Opens the <a href="../Appendix/File%20-%20Dialogs.html">file-dialog</a>
+  where you can select the data-file(s). The new dataset will replace the existing one.</p>
+
+
+  <h4>Button - Projections</h4>
+
+  <p>The sibling graphs display the projections. There are two cursors in the
+  contour plot. One controls the mapping of the x-projection and
+  the other of the y-projection.</p>
+
+  <p>Alternatively you can open the Projection dialog. Here you can specify the frequency
+  and angular position of the projected curves and enable the
+  Level Marker in order to show the beam-width traces.
+  For more details, please refer to the VACS-manual.</p>
+
+
+  <h4>Button - Contour</h4>
+
+  <p>Opens a menu of tools for adjusting the contour-plot. For details see VACS-manual.</p>
+
+
+  <h4>Button - Graph</h4>
+
+  <p>Opens a menu of tools for adjusting the sibling graphs. For details see VACS-manual.</p>
+
+
+  <h4>Button - Curves</h4>
+
+  <p>Opens a menu of tools for adjusting selected curves. For details see VACS-manual.</p>
+
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

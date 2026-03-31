@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Z=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=Z>Z=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=Z>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Z={&nbsp;}</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Formula%20Complex.html">Formula</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Impedance value vs frequency</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                         <a href="../Sections/Impedance.html">Impedance</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>Z={ ... }	is the driving-point-function of the
+  <a href="../Sections/Impedance.html">Impedance</a> component
+  in form of a <a href="../../Appendix/Formula%20Complex.html">complex valued formula</a>.
+  The formula-system is written in curly brackets
+  and can go over several lines. The identifier is Z=, for example</p>
+
+  <pre>
+  <b>Impedance</b>  'Imp1'
+    Node=100=110
+    Z={ Rms=1;   Mms=1e-3
+        Zms = Rms + j*w*Mms }  </pre>
+
+
+  <p>The result of the last formula is assigned to the impedance.
+  The value of the result is usually complex and frequency dependent.
+  There are two more reserved identifiers:<p>
+
+  <pre>
+    f
+    w</pre>
+
+  <p>with f frequency in Hz and w = &omega; = 2&pi;f.</p>
+
+  <p>The formula-system is calculated for each frequency.
+  The value of the abscissa frequency is copied into f or w, respectively.
+  You can use f and w in a mixed fashion as often as you need them in a formula or
+  in a formula-system.</p>
+
+
+  <p>Constants that have previously been computed in the definition
+  <a href="../Sections/Def_Const.html">Def_Const</a>
+  can also be assigned. The values of several <i>Impedance</i> or other
+  elements can thus be changed centrally.</p>
+
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Sym=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Sym=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Sym=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>[x, y, z, xy, xz, yz, xyz]</td>  <td class=param1>[-xy, -xz, -yz, -xyz, -xzy, -yzx]</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Symmetry of boundary elements or fields</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2><a href="../Sections/Control_Solver.html">Control_Solver</a>,
+                                                                  <a href="../Sections/Field.html">Field</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="Dim=.html">Dim=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table align=right>
+  <tr><img src="../../../_Images/Sym=x%20View=SymOn.jpg" /></tr>
+  <tr><br /></tr>
+  <tr><img src="../../../_Images/Sym=x%20View=SymOff.jpg" /></tr>
+  <tr><a href="../../GUI/Desktop/Views%20Page.html">Desktop/Views/Symmetries</a>
+  allows to toggle rendering of the mirrored symmetries.</tr>
+  </table>
+  <p><i>Sym=</i> specifies a symmetry for the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Mode</a>
+  in order to speed-up calculation time. <i>Sym=</i> works only for the
+  three dimensional mode (<a href="Dim=.html">Dim=3D</a>).
+  For the <i>Boundary Element Method</i>, <i>Sym</i> should be specified
+  at <a href="../Sections/Control_Solver.html">Control_Solver</a>.</p>
+
+  <p><i>Sym=</i> can also be used at observation of fields in order to
+  create mirror images of the field without calculation. (see <a href="#Fields">below</a>).</p>
+
+  <p>The way of specification is by normals of the plane of symmetries.
+  For example in case of <i>Sym=x</i> the x-axis is the normal of the plane of symmetry,
+  which is the yz-plane. For two planes of symmetry use a specifier from the set
+  [xy, xz, yz]. For example <i>Sym=xy</i> means that in the first step all coordinates are
+  mirrored along the x-axis. In a second step all points are mirrored along the
+  y-axis. Three planes of symmetry are rare and result in a symmetry in all
+  8 octants of a sphere.</p>
+
+  <h4>Boundary Element Method</h4>
+
+  <p>If <i>Sym=</i> is specified then <i>ABEC</i> expects only part of the
+  model. It will then complete the structure by mirroring entries according
+  to <i>Sym=</i>, which defines the axis along which to apply mirroring.
+  For example, if you entered a point at x= 1.0, 0.0, 0.0 and <i>Sym=x</i> then
+  the internal mirror-point would be at x'= -1.0, 0.0, 0.0.</p>
+
+  <p>This is also true for <a href="../../Appendix/Mesh-Files.html">mesh-files</a>.
+  If you plan to exploit symmetry then create a copy of your CAD-drawing
+  which shows only part of the whole structure.</p>
+
+  <p>The structure should be entered with the idea in mind that <i>ABEC</i>
+  will complete the structure. For example, there should be no
+  Boundary Elements in the plane of symmetry.</p>
+
+  <p>Note, that not only the field is mirrored but also all sources, such
+  as <a href="../Sections/Driving.html">Driven Elements</a>,
+  <a href="../Sections/Diaphragm.html">Diaphragm</a> and
+  <a href="../Sections/Pressure_Points.html">Pressure_Points</a>, etc.</p>
+
+  <p><a href="../../Appendix/Sub-Domain%20Modelling.html">Subdomains</a>
+  are mirrored as well. If a subdomain is complete in the original part
+  of the structure then the whole sub-domain is copied. If the subdomain
+  is across the plane of symmetry then it is made complete.</p>
+
+  <p><i>Sym=</i> mirrors the structure only for the visual
+  representation. Acoustically, we assume that also the pressure field is
+  symmetric. For example, with <i>Sym=x</i> we assume that the field
+  on the positive side of the x-axis is identical to the one on the negative side.
+  The speed-advantage in calculation stems from the usage of special
+  <i>Green</i>-functions. Not only integration is faster but also the size of the
+  system-matrices to solve for are smaller. For one plane of symmetry this matrix
+  is reduced to 1/4. For two planes it reduces to 1/8.</p>
+
+
+  <h4>Sym= and Coupling to Lumped Element Network</h4>
+
+  <p>If we have a source, which is not cut by the plane of symmetry then
+  it will be duplicated. And because <i>Sym=</i> enforces symmetric fields
+  this means that the mirrored source should be identical to the original.
+  However, if we couple such sources to the
+  <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Network</a>
+  we get a conflict here because the Lumped Element Network provides
+  degrees of freedom, which may violate the symmetry.</p>
+
+  <table align=center>
+  <td width=200px><img src="../../../_Images/Sym=%20Example2.jpg"></td>
+  <td width=200px><img src="../../../_Images/Sym=%20Example3.jpg"></td>
+  <td width=200px><img src="../../../_Images/Sym=%20Example4.jpg"></td>
+  </table>
+
+  <p>For example, a speaker system with two drivers symmetrically spaced
+  in a symmetric enclosure is a good candidate for exploiting symmetry.
+  Basically, in this particular case, we have the choice between two planes
+  of symmetry. If we cut horizontally we would duplicate the diaphragm.
+  Hence we would have a single driver with two diaphragms...
+  If we cut vertically, the two diaphragms would be halved, however,
+  <i>ABEC</i> will take care of this situation and will provide
+  the correct calculation. The second case allows to drive the diaphragm
+  individually.</p>
+
+
+  <a name="Fields"></a>
+  <h4>Observation Fields</h4>
+
+  <p><a href="../Sections/Field.html">Observation Fields</a> are not
+  automatically extended by the declaration of
+  <i>Sym=</i> in <a href="../Sections/Control_Solver.html">Control_Solver</a>.</p>
+
+  <p>The <i>Field</i> section provides its own <i>Sym=</i> parameter.
+  If specified <i>ABEC</i> will display the field also for the opposite
+  side of the plane of symmetry.</p>
+  <p>There are cases where the straight mirroring yields wrong results.
+  For these cases <i>Sym=</i> provides also anti-symmetry.
+  Use an identifier form the set [-xy, -xz, -yz, -xyz, -xzy, -yzx].
+  For <a href="Dim=.html">Dim</a>=CircSym use Sym=Radial.</p>
+
+  <table align=center>
+  <tr>
+  <td><img src="../../../_Images/Sym=%20Field%20NoSym.jpg"></td>
+  <td><img src="../../../_Images/Sym=%20Field%20Sym=x.jpg"></td>
+  </tr><tr>
+  <td align=center>No Sym</td>
+  <td align=center>Sym=x</td>
+  </tr><tr>
+  <td><img src="../../../_Images/Sym=%20Field%20Rot=20%20Sym=x.jpg"></td>
+  <td><img src="../../../_Images/Sym=%20Field%20Rot=20%20Sym=-xy.jpg"></td>
+  </tr><tr>
+  <td align=center>Out of plane, Sym=x</td>
+  <td align=center>Out of plane, Sym=-xy</td>
+  </tr>
+  </table>
+  <p>For example, in the above configuration we would get an error
+  for Sym=x if the observation plane is not exactly in one of the
+  principal planes.</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>DataDistance=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>DataDistance=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>DataDistance=A=P</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">m</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>List of two <a href="../../Appendix/Floating%20point%20values.html">floating point numbers</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Normalization of SPL in amplitude and phase</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Def_MeasRadiator.html">Def_MeasRadiator</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>Because ABEC calculates the response to any point in space due to the distance,
+  measured data of the sound pressure need to be normalized. Otherwise, we would
+  have the effect of sound-traveling twice.</p>
+
+  <p><i>DataDistance=</i> can be used to manipulates sound pressure-data as used in
+  <a href="../Sections/Def_MeasRadiator.html">Def_MeasRadiator</a>.
+  If the data-set of sound pressure is already normalized, say with the tools
+  provided in
+  <a href="../../Appendix/VacsViewer.html">VACS</a>,
+  then we do not need to specify <i>DataDistance=</i>.</p>
+
+
+  <h4>Distance Normalization</h4>
+
+  <p>Distance normalized sound pressure data are those which amplitude
+  is realigned to 1m distance to the point of radiation. The phase should be
+  the phase at the point of radiation (zero distance).</p>
+
+  <p>In VACS you can achieve this with the help of the <i>Scaling Dialog</i>,
+  which allows both amplitude and phase scaling.</p>
+
+  <p>Alternatively, the normalization can be done with the help of
+  <i>DataDistance=</i>. For example:</p>
+
+  <pre>
+  <b>Def_MeasRadiator</b>  'Tweeter'
+    DataFileAlias='Imp_Tweeter'
+    DataFileAlias='SPL_Tweeter'
+    <font color="#800000">DataDistance=1m,1m</font>
+    DataDriving=3.456  IsRms  </pre>
+
+
+  <h4>Specification</h4>
+
+  <p><i>DataDistance=A=P</i> accepts two values with units meter or inch,
+  see chapter <a href="../../Appendix/Units.html">Units</a>.</p>
+
+  <p>"A" and "P" stand for distance-values at which the measurement has been performed.
+  "A" affects the amplitude and "P" the phase of the response.</p>
+
+  <p>Often A=P and it is equal to the geometric distance to the acoustic center of the
+  device. The acoustic center is the apparent radiation center of the far-field
+  response, see [<a href="../../Appendix/Literature.html">18</a>].
+  However, in practice it is sometimes useful to be able to adjust the distance-values
+  for level and phase separately.</p>
+
+  <br>
+  <br>
+</body>
+</html>

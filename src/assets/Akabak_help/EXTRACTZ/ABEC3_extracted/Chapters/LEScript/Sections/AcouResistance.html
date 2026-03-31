@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>AcouResistance</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>AcouResistance</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-AcouResistance.jpg"  />
+  </td></tr></table>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Acoustic resistance</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Network element (2 pole)</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Acoustic</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1> <a href="../Systems.html">System</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>AcouResistance</b>	'Any Name'
+    <a href="../Parameters/Node=.html">Node=s</a>
+    <a href="../Parameters/Ra=.html">Ra=</a> </pre>
+
+  <br />
+  <p>This two-pole element implements a lumped acoustic resistance in the network.</p>
+
+  <p><i>AcouResistance</i> typically is used only in low frequency analysis or
+  to check the sensibility of a system to resistive parts anywhere
+  in the structure. More complex structures may be better analyzed with the help
+  of the <a href="Duct.html">Duct</a> or
+  <a href="Impedance.html">Impedance</a>
+  components or with the help of the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Method</a>.</p>
+
+  <p>In the frequency domain, the pressure-difference p across the acoustic resistance
+  Ra is equal to p = Ra&middot;V with volume velocity V.</p>
+
+  <p>The acoustic resistance corresponds to an electric resistance, if the flow
+  corresponds to the volume velocity V and the potential to the pressure p.</p>
+
+  <p>The element <i>AcouResistance</i> may represent any acoustic component within
+  which the volume-velocity vibrates in phase with the sound pressure. In other
+  words, no energy is stored with the sound-flow. Acoustic resistance is present
+  at for example:</p>
+
+  <ul>
+  <li>fine wire or textile meshes</li>
+  <li>porous acoustic material</li>
+  <li>narrow ducts and slits</li>
+  <li>obstructions and bends in waveguides</li>
+  </ul>
+
+  <br />
+  <p>See at <a href="../Parameters/Ra=.html">Ra=</a> for details and
+  examples.</p>
+
+  <br>
+  <br>
+</body>
+</html>

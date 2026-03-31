@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Duct</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Duct</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-Duct.jpg"  />
+  </td></tr></table>
+
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Waveguide with constant cross-section</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Network element</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Acoustic</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1> <a href="../Systems.html">System</a></td>
+  </tr>
+  </table>
+
+  <hr>
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-Duct%203D.jpg" align=right>
+  </td></tr></table>
+
+  <br>
+  <pre>
+  <b>Duct</b>  'Any Name'
+    <a href="../Parameters/Node=.html">Node=s=t</a>
+    <a href="../Parameters/Len=.html">Len=</a>
+    <a href="../Parameters/dD=.html">dD=</a>
+    <a href="../Parameters/SD=.html">SD=</a>
+    <a href="../Parameters/WD=HD=.html">WD= HD=</a>
+    <a href="../Parameters/Visc=.html">Visc=</a>
+    <a href="../Parameters/Vf=.html">Vf=</a>
+    <a href="../Parameters/eta=.html">eta=</a>
+    </pre>
+
+
+  <p>The <i>Duct</i> components creates an acoustic waveguide with
+  constant cross-sectional area in the network.<p>
+
+  <p>Standing waves along the waveguide are calculated and coupled to other network
+  components according to pressure and volume-velocity.
+  For the cross-section only the fundamental mode is used,
+  and, hence, the shape of the cross-section is ignored. </p>
+
+  <p>The shape of the cross-section can be ignored if the dimension of the
+  cross-section is smaller than the wavelength. Often this constraint can be
+  satisfied only approximately.</p>
+
+  <p>When modeling enclosures with the help of <i>Duct</i>-components make
+  sure that the total volume is maintained.</p>
+
+
+  <p>The duct-arithmetic yields the derivation of the lumped elements
+  <a href="AcouMass.html">AcouMass</a>,
+  <a href="AcouCompliance.html">AcouCompliance</a> and
+  <a href="AcouResistance.html">AcouResistance</a>.
+  These elements are often used in connection with the <i>Duct</i> in
+  order to model bends, constrictions and compression chambers.<p>
+
+  <p>The <i>Duct</i> and <a href="Waveguide.html">Waveguide</a> elements
+  are similar. The difference is that the <i>Duct</i> has a constant cross-section
+  area and the <i>Waveguide</i> has it variable. The <i>Duct</i> allows for volume
+  damping.</p>
+
+  <p>The duct-algorithm needs some damping to be present. By default this
+  damping is derived from basic viscosity considerations. The formula used is
+  explained at <a href="../Parameters/Ra=.html">Ra=</a> of <i>AcouResistance</i>.</p>
+
+  <p>A closed <i>Duct</i> is a tube where the opposite wall is acoustically hard,
+  i.e. where the normal velocity is zero (Neumann Condition).
+  In acoustic potential-networks (impedance networks) this means open-loop, i.e.
+  no connection.</p>
+
+  <p>Contrarily, the pressure-zero boundary condition has a short-cut of the output.
+  However, this condition is rarely used in electro-acoustic.
+  For convenience and compatibility reasons, if the output-terminal of the
+  <i>Duct</i> is specified as a short-cut in the script then Akabak interprets this
+  as a special case and will calculate a closed duct instead.</p>
+
+  <p>For convenience, the <i>Duct</i> is specified with only two poles
+  in the script. The two node-numbers symbolize the two outlets of the
+  <i>Duct</i>. Theoretically, the <i>Duct</i> is always a four-pole.
+  However, because by principal it turns out that the <i>Duct</i> is always grounded
+  (similar to the acoustic compliance) we can specify it as a two-pole and
+  eventually expand the duct to a four-pole internally.</p>
+
+  <p>Example</p>
+
+  <pre>
+  <b>Duct</b>  'D1'
+    Node=10=20
+    Len=100mm
+    dD=10mm
+  </pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

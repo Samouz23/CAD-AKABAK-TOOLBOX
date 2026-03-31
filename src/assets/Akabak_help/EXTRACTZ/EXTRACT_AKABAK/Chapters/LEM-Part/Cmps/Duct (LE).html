@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Duct</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Duct</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  <td class="header">Acoustic</td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=200><td width=250><center><img src="../../../_Images/LE-Duct.jpg"  /></center></td></tr>
+  </table>
+
+
+  <p>The Duct component creates an acoustic waveguide with
+  constant cross-section in the network.
+  Standing waves along the waveguide are calculated and coupled to other network
+  components according to continuity of pressure and axial volume-velocity.
+  The Duct and <a href="Waveguide.html">Waveguide</a> elements
+  are similar. The difference is that the Duct has a constant cross-section
+  area and the <i>Waveguide</i> has it variable. Further the Duct allows for volume
+  damping.</p>
+
+  <p>For convenience, the Duct is specified with only two poles. The two terminals
+  symbolize the two outlets of the Duct. Theoretically, the Duct is always a four-pole.
+  However, because it turns out that the Duct is always grounded
+  (similar to the <a href="AcouCompliance.html">acoustic compliance</a>) we can
+  specify it conveniently as a two-pole and internally expand the duct to a four-pole.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Parameters</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <table class=pic>
+    <tr height=150><td width=250><center><img src="../../../_Images/LE-Duct-Vf.jpg"  /></center></td></tr>
+  </table>
+
+  <p class=indent><table>
+    <tr height=00><td width=100><a href="../Parameters/LE%20Params%20Editors.html">Caption</a></td>            <td width=100>String</td>      <td>Name of component</td></tr>
+    <tr height=00><td width=100><a href="../Parameters/LE%20Params%20Editors.html">Formula</a></td>            <td width=100>String</td>      <td>Formula of parameters</td></tr>
+    <tr height=00><td width=100><a href="../Parameters/LE%20Diaphragm%20Parameters.html">Cross</a></td>        <td width=100>Ref or size</td> <td>Cross section size</td></tr>
+    <tr height=00><td width=100>Len</td>          <td width=100>m</td>          <td>Length of duct</td></tr>
+    <tr height=00><td width=100>Vf</td>           <td width=100>m^3</td>        <td>Volume of compression chamber</td></tr>
+    <tr height=00><td width=100>eta</td>          <td width=100></td>           <td>Damping factor</td></tr>
+    <tr height=00><td width=100>Visc</td>         <td width=100></td>           <td>Viscosity amplification factor</td></tr>
+    <tr height=00><td width=100>Type</td>         <td colspan=2>[Open, Closed]</td></tr>
+  </table>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Cross</h4>
+
+  <p>Parameter <i>Cross</i> specifies the cross-sectional area. Regarding the cross-section
+  only the fundamental mode is used, and, hence, the shape of the cross-section is ignored.
+  However, for convenience, the input-form provides shape parameters such as the diameter
+  or a reference to a BEM-component. Details are given at chapter
+  <a href="../Parameters/LE%20Diaphragm%20Parameters.html">Diaphragm Parameters</a>.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4 id="Len">Len</h4>
+
+  <p>Parameter <i>Len</i> specifies the effective length of the Duct. In the lumped element
+  world we often need an end-correction. This end-correction is an additional length
+  which takes into account acoustic radiation. At very low frequencies below
+  f<sub>D</sub> = c/(&pi;&middot;d<sub>D</sub>) we may add to the geometric length
+  for each side [<a href="../../Appendix/Literature.html#16">16</a>]:<br>
+  <table>
+  <tr height=0><td width=200>Len' = 0.4250&middot;d<sub>D</sub></td>	<td>The duct terminates at a large baffle.</td> </tr>
+  <tr height=0><td width=200>Len' = 0.3065&middot;d<sub>D</sub></td>	<td>The duct terminates freely.</td> </tr>
+  </table></p>
+
+  <p>Alternatively the acoustic mass can be read from the observation of the
+  <a href="../../Observation-Part/Form-Radiation%20Impedance.html">Radiation Impedance</a>
+  with <i>Domain=Acoustic</i> and <i>Calc Mass</i> checked.
+  The end-correction is then Len' = M<sub>a</sub>&middot;S/&rho;
+  as shown in chapter <a href="../../Appendix/Radiation%20Impedance.html">Radiation Impedance</a>.</p>
+
+  <p>Note, that we do not add Len' if the radiation impedance is provided by the
+  BE-Method.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Vf</h4>
+
+  <p>Parameter <i>Vf</i> specifies the volume of a chamber at the front-side of the Duct.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4 id=eta>eta</h4>
+
+  <p>Parameter <i>eta</i> (&eta;) is a damping factor of a wave traveling along the duct.
+  The ratio of amplitudes are: p2/p1 = exp(-&eta;&middot;d) with distance d between two
+  points of pressure p1 and p2. &eta; is part of the complex wavenumber: <u>k</u> = k' - j&eta;<br>
+  Large values of &eta; yield strong damping. Typical values are <br>
+  <table >
+  <tr><td width=100>&eta;</td> <td>Damping</td></tr>
+  <tr><td width=100>1.0e-5</td> <td>low</td></tr>
+  <tr><td width=100>1.0e-3</td> <td>medium</td></tr>
+  <tr><td width=100>0.1</td> <td>high</td></tr>
+  </table>
+
+  <p>There is a relation to the <a href="AcouResistance.html">acoustic resistance Ra</a>,
+  which can be derived from the duct wave-function of fundamental mode:
+  Z<sub>a</sub> = j&rho;c/SD&middot;tan(k&middot;L)
+  with wave-number k = &omega;/c. Expanding into Taylor series yields
+  Z<sub>a</sub> = j&rho;c/SD&middot;(k&middot;L + (k&middot;L)<sup>3</sup>/3 + ...)
+  Taking only the linear term and by substitution of the lossy wavenumber
+  <u>k</u> = k' - j&eta; we can identify the series connection of lumped
+  acoustic resistance and mass, where the acoustic resistance is
+  Ra = L/S<sub>D</sub>&middot;&rho;&middot;c&middot;&eta;
+  with with air-density &rho;, speed of sound c.</p>
+
+  <p>Note, old Akabaks "Q/f0" parameter is inverse proportional to &eta;.
+  The Qs are more related to second order circuits and coil quality factors,
+  whereas &eta; is home to waveguides. The relation to &eta; is:
+  Q/f0 = 2&pi;/c&middot;1/&eta; &nbsp;&asymp;&nbsp; 1/(55&middot;&eta;)</p>
+
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Visc</h4>
+
+  <p>The Duct-algorithm needs some damping to be present. A default value for the
+  damping is derived from basic viscosity considerations. The formula used is
+  explained at component <a href="AcouResistance.html">Acoustic Resistance</a>
+  at chapter <i>Examples - Viscosity and Thermal Exchange</i>.
+  The damping due to viscosity and thermal exchange depends on the perimeter of the duct.<br>
+  Parameter <i>Visc</i> is simply a multiplier and can be used to magnify or diminish the
+  damping factor due to viscosity:<br>
+  <table>
+    <tr><td width=80>Visc &gt; 1</td>    <td>Amplification</td></tr>
+    <tr><td width=80>Visc = 1</td>       <td>Original</td></tr>
+    <tr><td width=80>Visc &lt; 1</td>    <td>Diminishing</td></tr>
+    <tr><td width=80>Visc = -1</td>      <td>Switched off</td></tr>
+  </table>
+
+  <p>Note, specifying <i>Visc=-1</i> will cause skipping the viscosity calculation.
+  In this case you must specify parameter <i>eta</i>.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Type</h4>
+
+  <p>By default the Duct is assumed to have two terminals, one stands for the inlet
+  and one for the outlet. However often we need a Duct where at the outlet there is a wall
+  which is acoustically reflective, this means where the flow is zero (Neumann Condition).
+  In acoustic impedance-networks this means open-loop, hence no connection.
+  With the help of <i>Type = Closed</i> this condition is also graphically emphasized.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3 ID=F>Formula</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>The name of the parameters are equal to the <a href="../../Formula/_Index.html">formula-identifiers</a>:
+  <table> <tr>
+    <!-- Acoustical -->
+    <tr height=22px> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Parameter</b></span></td> </tr>
+    <tr> <td>Len</td>            <td>Length of duct</td></tr>
+    <tr> <td>Vf</td>             <td>Volume of compression chamber</td></tr>
+    <tr> <td>eta</td>            <td>Damping factor</td></tr>
+    <tr> <td>Visc</td>           <td>Viscosity amplification factor</td></tr>
+  </table> </p>
+
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

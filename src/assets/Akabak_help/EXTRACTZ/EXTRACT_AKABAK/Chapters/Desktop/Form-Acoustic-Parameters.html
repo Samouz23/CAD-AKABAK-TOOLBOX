@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form-Acoustic Parameters (5900)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Acoustic Parameters</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+  <tr height=250><td><img src="../../_Images/Desktop%20-%20AcouParams.jpg" /></td></tr>
+  </table>
+
+
+  <p>Acoustic Parameters control the mapping from spatial to temporal measures.
+  AKABAK uses the speed of sound, c and its density, &rho; of the medium.</p>
+
+  <p>Open this form at menu <i>Global/Acoustic Parameters</i>.</p>
+
+  <p>Note, values of &rho; and c can be used inside
+  <a href="../Formula/Formula%20Real%20-%20Standard%20Functions.html">formula</a>.
+  For example:</p>
+  <pre>
+    rho = <span style="color: rgb(0, 0, 128)"><b>Density</b></span>
+    c = <span style="color: rgb(0, 0, 128)"><b>Speed</b></span>
+    Z = rho*c
+    ...</pre>
+
+  <br>
+
+  <p>Examples where acoustic parameters are used:</p>
+  <p>For example, the density of the medium is involved in the relation between
+  the velocity potential &#981; and the sound pressure:
+  p&nbsp;=&nbsp;-j&omega;&middot;&rho;&middot;&#981;
+  by using the time-convention exp(j&omega;t).</p>
+
+  <p>In another example the speed of sound is part of the point-source
+  Green function: G&nbsp;=&nbsp; exp(-jk&middot;d)/(4&pi;&middot;d)
+  with free-field wave-number, k&nbsp;=&nbsp;&omega;/c and
+  distance d between source and receiver.</p>
+
+  <p>Another example is the radiation impedance of a plane wave:
+  Z&nbsp;=&nbsp;&rho;&middot;c</p>
+
+
+  <h4>Button - Default</h4>
+
+  <p>By default AKABAK calculates with</p>
+
+  <pre>
+  Speed of sound c   = 343.32 m/s
+  Density        rho = 1.205 kg/m3
+  Pressure       p0  = 101.33 kPa
+  Temperatur     T   = 20 C</pre>
+
+
+  <h4>Button - Calc</h4>
+
+  <p>Calculator for c and &rho; of air. See chapter
+  <a href="Form-Acoustic-Parameters-Sub.html">Sub-Form-Calculate Acoustic Parameters</a>.</p>
+
+  <p>For other media we need to enter &rho; and c directly.
+  For example, water has the following acoustic parameters at T=20C:</p>
+
+  <p class=indent>c = 1483m m/s</p>
+  <p class=indent>&rho; = 998 kg/m<sup>3</sup></p>
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

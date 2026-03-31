@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Offset</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Offset=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Offset=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">m</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Offset of arc.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/BE_Spectrum.html">BE_Spectrum</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="BasePlane=.html">BasePlane=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Offset=</i> is a parameter of
+  <a href="../Sections/BE_Spectrum.html">BE_Spectrum</a> with
+  <a href="PlotType=.html">PlotType=[Directivity,Arc]</a>.</p>
+
+  <p>It provides a shift of the arc in on-axis direction.</p>
+
+  <p>Note, <i>Offset=</i> works only if
+  <a href="BasePlane=.html">BasePlane=</a> is used with symbols. For example</p>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    PlotType=Directivity
+    Distance=1m
+    PolarRange=-90, 90, 19
+    BasePlane=<b>zx</b>
+    <font color="#800000">Offset=10mm</font>
+    101   0.0  ID=100 </pre>
+  <br>
+  <br>
+</body>
+</html>

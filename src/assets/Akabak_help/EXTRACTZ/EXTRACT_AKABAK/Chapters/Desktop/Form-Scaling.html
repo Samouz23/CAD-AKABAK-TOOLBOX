@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Scaling (1400)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Form - Scaling</h1>
+
+  <table class=header><tr>
+  <td class=header><a href="../Index.html">Home</a></td>
+  </tr></table>
+  <hr>
+
+  <p><img src="../../_Images/Desktop%20-%20Scaling-Form.jpg" align=right></p>
+
+  <p>The specifications in this sub-form allow to alter position
+  and direction of a component.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Local Transformations</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Local rotation about mounting point.</p>
+
+  <h4>Rot axial, horiz, vertical</h4>
+
+  <p>Rotation about the main-axis of the device. <i>Horiz</i> alters the
+  left/right direction. <i>Vertical</i> modifies the downwards or upwards
+  direction. Angles are expected to be in degree.</p>
+
+
+  <h4>Axial offset</h4>
+
+  <p>Offset along the main-axis. The value is assumed to be
+  specified in <a href="Form-Units.html">user-units</a>.</p>
+
+
+  <h4>Swap direction</h4>
+
+  <p>Inverts the direction along the main-axis.</p>
+
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Global Transformations</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <h4>Rotation about x-, y- and z-axis</h4>
+
+  <p>Rotations about axis of global coordinate system. Angles are expected to be in degree.</p>
+
+
+  <h4>Shifting in x,y,z</h4>
+
+  <p>Translations of mounting point in global coordinate system. Values are assumed to be
+  specified in <a href="Form-Units.html">user-units</a>.</p>
+
+
+  <h4>Mirror</h4>
+
+  <p>Inverting values of coordinate components, which yield a mirror position.
+  For example, if the position was [1.5, 2.2, 3.05] then, after
+  Mirror=x, the new coordinate would be [-1.5, 2.2, 3.05]. </p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Order of Transformation</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>The order of application of above scaling-operations does matter.
+  For example, there is a difference whether you first rotate the position
+  and then apply shift or whether you do it vice versa.</p>
+
+  <p>AKABAK applies transformation in the same order as the input-fields
+  are listed.
+  For altering the list first select one of the
+  input-fields so that the cursor blinks in it. Then click <i>up-down-button</i>.
+  This will move the focused input-field inside the form up or down, respectively.</p>
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

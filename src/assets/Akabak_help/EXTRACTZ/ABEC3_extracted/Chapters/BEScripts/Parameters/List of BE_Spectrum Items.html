@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>List of BE_Spectrum Items</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>List of BE_Spectrum Items</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>List of BE_Spectrum observation points.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/BE_Spectrum.html">BE_Spectrum</a>
+                                       </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p>The list of observation points follows the parameter part of the
+  <i>BE_Spectrum</i>-section.
+  Each line represents a particular observation, either a single point or a
+  range of points, depending on parameter
+  <a href="PlotType=.html">PlotType=</a>.</p>
+
+  <p>Each item of the line should be separated by a blank or tab.</p>
+
+
+  <!-- --------------------------------------------------------------------- -->
+
+  <h3>PlotType = Curve</h3>
+
+  <p>This format is for <a href="PlotType=.html">PlotType=Curve</a> only:</p>
+
+  <br />
+  <pre>
+    &lt;Index&gt;    &lt;Node-index&gt;   RefNodes=   DrvGroups=   ID=</pre>
+
+
+  <h4>Index</h4>
+
+  <p>The first entry is an index, which becomes the "name" of the
+  spectrum at the observation point.</p>
+
+
+  <h4>Node-Index</h4>
+
+  <p>The second index is a node-number from a list to which
+  <a href="RefNodes=.html">RefNodes=</a> points. The spectrum will be calculated
+  at this point in space.</p>
+
+
+  <h4>RefNodes=</h4>
+
+  <p>Optionally you can specify <a href="RefNodes=.html">RefNodes=</a> individually.</p>
+
+
+  <h4>DrvGroups=</h4>
+
+  <p>With <a href="DrvGroups=.html">DrvGroups=</a> you can filter on
+  <a href="../../Appendix/Driving%20Groups.html">driving groups</a>.</p>
+
+
+  <h4>ID=</h4>
+
+  <p><a href="ID=.html">ID=</a> is an arbitrary and unique string which links an <i>ABEC</i>-data-set
+  to a <i>VACS</i> curve..</p>
+
+  <br />
+  <h4>Example</h4>
+
+  <pre>
+  <b>Control_Spectrum</b>
+    Name="Horn H 400"
+
+  <b>Nodes</b>  "Spectrum"
+    Scale=1mm
+    1001      0      0    -300   // Point on-axis
+    1002      0    100    -300   // Point off-axis
+
+  <b>BE_Spectrum</b>
+    PlotType=Curves
+    AnalysisType=Pressure
+    RefNodes="Spectrum"
+    GraphHeader="Sound pressure"
+    BodeType=LeveldB; Range=50   <font color="#800000">
+    101   1001   ID=5001
+    102   1002   ID=5002 </font></pre>
+
+  <p>In the above example ABEC simulates two frequency response curves,
+  the first at -300mm distance on the z-axis, the second at -300mm
+  on the z-axis and 100mm on the y-axis. The parameters ID= are just some random
+  identifiers.</p>
+
+
+  <!-- --------------------------------------------------------------------- -->
+
+  <h3>PlotType = [Directivity, Arc]</h3>
+
+  <p>The format for
+  <a href="PlotType=.html">PlotType=[Directivity, Arc]</a> is:</p>
+
+  <br />
+  <pre>
+    &lt;Index&gt;    Inclination=   DrvGroups=    ID=</pre>
+
+
+  <h4>Index</h4>
+
+  <p>The first entry is an index, which becomes the "name" of the
+  frequency-directivity-plot.</p>
+
+
+  <h4>Inclination=</h4>
+
+  <p>The second parameter specifies the inclination angle in degree versus the
+  <a href="BasePlane=.html">BasePlane=</a>. See chapter
+  <a href="Inclination=.html">Inclination=</a>.</p>
+
+
+  <h4>DrvGroups=</h4>
+
+  <p>With <a href="DrvGroups=.html">DrvGroups=</a> you can filter on
+  <a href="../../Appendix/Driving%20Groups.html">driving groups</a>.</p>
+
+  <h4>ID=</h4>
+
+  <p><a href="ID=.html">ID=</a> is an arbitrary and unique string which links an ABEC-data-set
+  to a VACS contour-plot..</p>
+
+  <br />
+  <h4>For example</h4>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    PlotType=Directivity
+    GraphHeader="Directivity"
+    PolarRange=-90, 90, 37
+    BasePlane=xy
+    Distance=100
+    <font color="#800000">101   Inclination=0.0   ID=56171
+    102   Inclination=45.0  ID=56172</font></pre>
+
+  <p>In this example two frequency-directivity plots are generated in VACS.
+  The base-plane is spanned by the x- and y-axis, with the pole at the x-axis.
+  The first directivity arc runs in the base-plane from negative y-axis (-90deg)
+  to positive y-axis (+90deg). The second arc is inclined by 45deg.</p>
+
+
+  <!-- --------------------------------------------------------------------- -->
+
+  <h3>PlotType = Line</h3>
+
+  <p>The format for
+  <a href="PlotType=.html">PlotType=Line</a> is:</p>
+
+  <br />
+  <pre>
+    &lt;Index&gt;  &lt;Node1-index&gt; &lt;Node2-index&gt;  RefNodes=  N=   DrvGroups=    ID=</pre>
+
+
+  <h4>Index</h4>
+
+  <p>The first entry is an index, which becomes the "name" of the
+  plot, where the x-axis is the frequency abscissa and the y-axis
+  displays simple index numbers according to the points.</p>
+
+
+  <h4>Node1- and Node2-Indices</h4>
+
+  <p>The second and third indices are node-numbers from a list to which
+  <a href="RefNodes=.html">RefNodes=</a> points. The line stretches from
+  point with node-number Node1 to point with node-number Node2.</p>
+
+
+  <h4>RefNodes=</h4>
+
+  <p>Optionally you can specify <a href="RefNodes=.html">RefNodes=</a> individually.</p>
+
+
+  <h4>N=</h4>
+
+  <p><i>N</i> specifies the number of points, which are generated between
+  Node1 and Node2.</p>
+
+
+  <h4>DrvGroups=</h4>
+
+  <p>With <a href="DrvGroups=.html">DrvGroups=</a> you can filter on
+  <a href="../../Appendix/Driving%20Groups.html">driving groups</a>.</p>
+
+
+  <h4>ID=</h4>
+
+  <p><a href="ID=.html">ID=</a> is an arbitrary and unique string which links an <i>ABEC</i>-data-set
+  to a <i>VACS</i> contour-plot.</p>
+
+  <br />
+  <h4>For example</h4>
+
+  <pre>
+  <b>BE_Spectrum</b>
+    PlotType=Line
+    GraphHeader="Sound pressure"
+    RefNodes="Nodes"
+    BodeType=LeveldB;  Range=50
+  //Name  Node  Node   NumPoints
+    <font color="#800000">101   3000  3001   N=61     ID=010</font></pre>
+
+  <br>
+  <br>
+</body>
+</html>

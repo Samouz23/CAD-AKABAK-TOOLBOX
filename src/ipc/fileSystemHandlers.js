@@ -19,6 +19,12 @@ module.exports.registerFileSystemHandlers = () => {
         return path.join(userDataDir, 'driverDB.json');
     }
 
+    function getWaveguidePresetsPath() {
+        const dbDir = path.join(__dirname, '../js/panels/waveguidestudio/database');
+        if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+        return path.join(dbDir, 'waveguidePresets.json');
+    }
+
     function getBundledDbPath() {
         return path.join(__dirname, '../js/panels/driver_db/database/driverDB.json');
     }
@@ -74,7 +80,15 @@ module.exports.registerFileSystemHandlers = () => {
         }
         try {
             await fs.promises.mkdir(directory, { recursive: true });
-            const filePath = path.join(directory, fileName);
+            const parsed = path.parse(fileName);
+            let candidate = fileName;
+            let filePath = path.join(directory, candidate);
+            let counter = 1;
+            while (fs.existsSync(filePath)) {
+                candidate = `${parsed.name} ${counter}${parsed.ext}`;
+                filePath = path.join(directory, candidate);
+                counter += 1;
+            }
             await fs.promises.writeFile(filePath, content, 'utf-8');
             return { success: true, path: filePath };
         } catch (error) {
@@ -196,5 +210,48 @@ module.exports.registerFileSystemHandlers = () => {
                 .sort((a, b) => (a.type === 'folder' ? -1 : 1) - (b.type === 'folder' ? -1 : 1) || a.name.localeCompare(b.name));
         }
         return readDirRecursive(notesPath);
+    });
+
+    // --- Waveguide Presets ---
+    ipcMain.handle('waveguide-presets:get-all', () => {
+        const presetsPath = getWaveguidePresetsPath();
+        if (!fs.existsSync(presetsPath)) return [];
+        try {
+            return JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+        } catch { return []; }
+    });
+
+    ipcMain.handle('waveguide-presets:save', (event, preset) => {
+        try {
+            const presetsPath = getWaveguidePresetsPath();
+            let presets = [];
+            if (fs.existsSync(presetsPath)) {
+                presets = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+            }
+            const existingIndex = presets.findIndex(p => p.name === preset.name);
+            if (existingIndex >= 0) {
+                presets[existingIndex] = preset;
+            } else {
+                presets.push(preset);
+            }
+            fs.writeFileSync(presetsPath, JSON.stringify(presets, null, 2), 'utf8');
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
+
+    ipcMain.handle('waveguide-presets:delete', (event, presetName) => {
+        try {
+            const presetsPath = getWaveguidePresetsPath();
+            if (!fs.existsSync(presetsPath)) return { success: false, error: 'No presets file' };
+            let presets = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+            const filtered = presets.filter(p => p.name !== presetName);
+            if (filtered.length === presets.length) return { success: false, error: 'Preset not found' };
+            fs.writeFileSync(presetsPath, JSON.stringify(filtered, null, 2), 'utf8');
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
     });
 };

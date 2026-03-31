@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Shift=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Shift=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Shift=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>3 floating point numbers</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">m</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Translation</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Subdomain_Properties.html">Subdomain_Properties</a>,
+                                                        <a href="../Sections/MeshFile_Properties.html">MeshFile_Properties</a>,
+                                                        <a href="../Sections/Nodes.html">Nodes</a>,
+                                                        <a href="../Sections/Elements.html">Elements</a>,
+                                                        <a href="../Sections/Baffle.html">Baffle</a>,
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a>,
+                                                        <a href="../Sections/Shell.html">Shell</a>,
+                                                        <a href="../Sections/Field.html">Field</a>,
+                                                        <a href="../Sections/BE_Spectrum.html">BE_Spectrum</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="Scale=.html">Scale=</a>,
+                                                         <a href="Rotate=.html">Rotate=</a>,
+                                                         <a href="Mirror=.html">Mirror=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Shift=</i> translates coordinate definitions. There are three values.
+  The first translates in x-direction, the second in y- and the third in
+  z-direction.</p>
+
+  <p>You can use <a href="../../Appendix/Units.html">Units</a> for each value.</p>
+
+  <p><i>Shift=</i> values are not affected by <a href="Scale=.html">Scale=</a>.</p>
+
+  <p>The order of specification of <i>Shift=</i>,
+  <a href="Rotate=.html">Rotate=</a> and <a href="Mirror=.html">Mirror=</a>
+  matters.</p>
+
+  <br />
+  <p>For example</p>
+
+  <pre>
+  <b>Elements</b> "Chamber1"
+    <font color="#800000">Shift= 200mm, -700mm, 0</font>
+    RefNodes="Chambers"
+    SubDomain=1
+    100   1000 1001 1002 1003  // Top
+    101   2000 2001 2002 2003  // Bottom
+    ...</pre>
+
+  <br>
+  <br>
+</body>
+</html>

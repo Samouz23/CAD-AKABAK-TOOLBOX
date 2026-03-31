@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Import Text Formats</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Import Text Formats</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="_Index.html">General</a></td>
+  <td class="header"><a href="Import%20Data%20-%20Control%20Dialog.html">Import Control Form</a></td>
+  <td class="header"><a href="Import%20Data%20-%20Control%20Setting%20-%20Data.html">Import Control - Data</a></td>
+  </tr></table>
+  <hr>
+
+  <p>For importing datasets in text-format it is most convenient to use <i>Import Control Settings</i> of VACS.
+  In this case the import would be fully automatic, for example:</p>
+
+  <pre>
+  Data_Format=Complex
+  Data_Domain=Frequency
+  Data_LevelType=Impedance10
+         500        11.01502        1.141454
+    601.0638        11.02708        1.466311
+    702.1277        11.06961        1.925395
+    803.1915        11.79239        2.834777
+     ...  </pre>
+
+  <p>However, you also can import text-files of other formats.
+  The only assumption is that the first column is the abscissa.
+  The second is the first and the third part is the second component of the ordinate value.
+  For example a complex valued impedance curve could look like this</p>
+
+  <pre>
+         500        11.01502        1.141454
+    601.0638        11.02708        1.466311
+    702.1277        11.06961        1.925395
+    803.1915        11.79239        2.834777
+     ... </pre>
+
+  <p>In the above example the the import engine is not clear about the format.
+  In this case it would open the
+  <a href="Import%20Data%20-%20Control%20Dialog.html">Import Data Control Form</a>.</p>
+
+
+  <br>
+  <p>Below you find information about the general format of the text-format.
+  More features and information you find at VACS - Importing Data.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Data Separation</h4>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Data-values should be separated by Blanks, Tabs or Commas.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Line Separation</h4>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Datasets of text-format are organized in lines. Each line is separated
+  from the next line by a combination of characters called "Carriage Return" and
+  "Line Feed" (13+10).</p>
+
+  <p>A semi-colon (;) indicates also a new data-line.
+  However, a semi-colon (;) at the start of the line marks the line as a comment
+  and gets ignored subsequently.</p>
+
+  <p>A line, which starts with a character from the set (; | /) is regarded as a
+  comment and as such ignored.</p>
+
+  <p>The import engine also reads files where the "lines" are concatenated and
+  separated by commas. In such a file each "line" is encapsulated by commas.
+  Internally the single-line-file is converted to a multiple line-file.
+  For example</p>
+
+  <pre class="fixedsmall">
+  "xxxx...","yyyy...","zzzz...",...
+  </pre>
+
+  <p>will be converted to:</p>
+
+  <pre class="fixedsmall">
+  xxxx...
+  yyyy...
+  zzzz...
+  ...
+  </pre>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Floating Point Numbers</h4>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>Floating point numbers are assumed to be in SI-units. The decimal separator is
+  a point (.) or a comma (,). Thousand separators are not supported.
+  SCI-computer notation is fine, for example 1e3 for 10<sup>3</sup>.
+  The mantissa can have up to 15 digits, i.e. double precision.
+  The minimum and maximum absolutes are 10<sup>–300</sup> and 10<sup>300</sup>. </p>
+
+  <p>If there are data-lines with "NaN" or "INF" (case insensitive) then
+  the associated line is skipped.</p>
+
+
+  <br />
+  <br />
+</td></tr></table></body>
+</html>

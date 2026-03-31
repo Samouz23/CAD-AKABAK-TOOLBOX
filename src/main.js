@@ -14,39 +14,15 @@ const { createMainWindow, createSplashWindow, createToolWindow } = require('./co
 
 
 // --- 2. IMPORTATION ET ENREGISTREMENT DES GESTIONNAIRES IPC ---
-const { registerNasHandlers } = require('./ipc/nasHandlers');
 const { registerFileSystemHandlers } = require('./ipc/fileSystemHandlers');
 const { registerMeshHandlers } = require('./ipc/meshHandlers');
 const { registerSettingsHandlers } = require('./ipc/mainsettingsHandlers.js');
-
-// [IMPORT CONDITIONNEL] Orders handlers - permet la suppression du fichier
-let registerOrdersHandlers = null;
-if (features.isOrdersManagerEnabled) {
-    try {
-        ({ registerOrdersHandlers } = require('./ipc/ordersHandlers'));
-    } catch (error) {
-        console.warn('Impossible de charger ordersHandlers:', error.message);
-    }
-}
-
-// [NOUVEAU] Stock handlers
-const { setupStockHandlers } = require('./ipc/orders/stockHandlers');
-
-if (features.isNasEnabled) {
-    registerNasHandlers();
-}
-if (features.isOrdersManagerEnabled && registerOrdersHandlers) {
-    registerOrdersHandlers();
-}
+const { registerAkabakLemHandlers } = require('./ipc/akabakLemHandlers');
 
 registerFileSystemHandlers();
 registerMeshHandlers();
 registerSettingsHandlers();
-
-// [NOUVEAU] Initialiser les handlers de stock
-if (features.isOrdersManagerEnabled) {
-    setupStockHandlers(app.getPath('userData'));
-}
+registerAkabakLemHandlers();
 
 
 // --- 3. GESTIONNAIRES IPC GLOBAUX ---
@@ -54,8 +30,6 @@ if (features.isOrdersManagerEnabled) {
 // [MODIFIÉ] Permet au renderer de connaître les fonctionnalités activées.
 ipcMain.handle('features:get-all', () => {
     return {
-        isNasEnabled: features.isNasEnabled,
-        isOrdersManagerEnabled: features.isOrdersManagerEnabled,
         isDriverOcrEnabled: features.isDriverOcrEnabled,
         isEnclosureCalculatorEnabled: features.isEnclosureCalculatorEnabled
     };
@@ -63,6 +37,64 @@ ipcMain.handle('features:get-all', () => {
 
 ipcMain.on('open-tool-in-new-window', (event, { toolName, title }) => {
     createToolWindow({ toolName, title });
+});
+
+// --- Physical Preview popup: store data, open window, retrieve data ---
+let pendingMeshPreviewData = null;
+let lastPreviewState = null;
+let lastPreviewConfig = null;
+let meshPreviewWindow = null;
+
+ipcMain.on('open-mesh-preview', (event, data) => {
+    // Merge saved state into new data if available
+    if (lastPreviewState) {
+        data.savedState = lastPreviewState;
+    }
+    pendingMeshPreviewData = data;
+    // Keep a copy of the config for quick-remesh
+    lastPreviewConfig = { ...data };
+    delete lastPreviewConfig.savedState;
+
+    // Reuse existing window if still open
+    if (meshPreviewWindow && !meshPreviewWindow.isDestroyed()) {
+        meshPreviewWindow.webContents.send('reload-preview', data);
+        meshPreviewWindow.focus();
+        return;
+    }
+
+    meshPreviewWindow = createToolWindow({ toolName: 'mesh-preview', title: 'Physical Preview' });
+    meshPreviewWindow.on('closed', () => { meshPreviewWindow = null; });
+});
+ipcMain.handle('get-mesh-preview-data', () => {
+    const data = pendingMeshPreviewData;
+    pendingMeshPreviewData = null;
+    return data;
+});
+ipcMain.on('save-preview-state', (event, state) => {
+    lastPreviewState = state;
+});
+ipcMain.handle('get-last-preview-state', () => {
+    if (!lastPreviewState || !lastPreviewConfig) return null;
+    return { state: lastPreviewState, config: lastPreviewConfig };
+});
+ipcMain.on('show-mesh-preview', () => {
+    if (meshPreviewWindow && !meshPreviewWindow.isDestroyed()) {
+        meshPreviewWindow.focus();
+        return;
+    }
+    // Reopen with last config + saved state
+    if (lastPreviewConfig) {
+        const data = { ...lastPreviewConfig };
+        if (lastPreviewState) {
+            data.savedState = lastPreviewState;
+            if (lastPreviewState.currentMshPath) {
+                data.mshPath = lastPreviewState.currentMshPath;
+            }
+        }
+        pendingMeshPreviewData = data;
+        meshPreviewWindow = createToolWindow({ toolName: 'mesh-preview', title: 'Physical Preview' });
+        meshPreviewWindow.on('closed', () => { meshPreviewWindow = null; });
+    }
 });
 
 // [NOUVEAU] Gestionnaire pour les actions de fenêtre (minimize, maximize, close)

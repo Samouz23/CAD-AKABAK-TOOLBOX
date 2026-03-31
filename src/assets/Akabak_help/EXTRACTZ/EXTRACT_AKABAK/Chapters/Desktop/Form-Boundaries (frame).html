@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Frame - Boundaries</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Frame - Boundaries</h1>
+
+  <table class=header><tr>
+  <td class=header><a href="../Index.html">Home</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr><td><img src="../../_Images/Desktop%20-%20Boundaries.jpg"></td></tr>
+  </table>
+
+  <p>Each edit-form of a BE-component has a page named <i>Boundaries</i>. Here you specify
+  the acoustic properties of the wall enclosing the boundary element domain.</p>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Type of Boundaries</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <h4>Neumann</h4>
+
+  <p><i>Neumann</i> boundary condition means the normal component of acoustic
+  velocity-vector is zero at the walls. Or, in other words, the boundary is
+  fully reflective. This is the default setting.</p>
+
+
+  <h4>Wall Impedance</h4>
+
+  <p><i>Wall Impedance</i> indicates that a particular acoustic impedance
+  should be applied as boundary condition. In this case it is assumed that there
+  has been specified already an object of type <a href="../General-Part/Form-WallImpedance.html">Wall Impedance</a>
+  on page <i>General</i>. Once this object exists it can be referenced by one or multiple
+  Elements components.</p>
+
+
+  <h4>Driven</h4>
+
+  <p><i>Driven</i> means that the boundary is mechanically vibrating.
+  The normal component of the acoustic velocity-vector is equal to this
+  vibration.</p>
+
+  <p>If specified the associate component is selectable in the driving-lists at
+  <a href="Form-FixedDriving.html">Form - Fixed Driving</a> and
+  at various LE-Components, such as the
+  <a href="../LEM-Part/Cmps/Radiator.html">Radiator</a> or the
+  <a href="../LEM-Part/Cmps/EnclosureVented.html">Enclosure Vented</a> for example.</p>
+
+  <p><i>Button - Options if Boundary is Driven</i> provides the specification of
+  driving details, such as the direction of vibration and the weight of the signal.</p>
+
+
+  <h4>Swap Normals of Boundary</h4>
+
+  <p>Planes have an orientation, which is given by the
+  <a href="../Appendix/Normals%20and%20Volumes.html">normal of the plane</a>.
+  Use this check-box if you wish to see normals of all planes of this component
+  to point into the opposite direction.</p>
+
+  <p>Note, this check-box may be hidden if there are other means to swap the normals.</p>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Colors</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p><i>Boundary</i> specifies the color of boundaries of Type = Neumann.
+  By default this color is gray.</p>
+
+  <p><i>Imp</i> specifies the color of an impedance-boundary.
+  The default color is green.</p>
+
+  <p><i>Driven</i> specifies the color if the boundary is driven.
+  The default color is red.</p>
+
+  <p>You can alter the settings at the
+  <a href="../Desktop/Form-Color.html">Color-Form</a>.</p>
+
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

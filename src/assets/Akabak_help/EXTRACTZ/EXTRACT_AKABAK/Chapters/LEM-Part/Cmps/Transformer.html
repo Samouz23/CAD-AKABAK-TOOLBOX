@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Transformer</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Transformer</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  <td class="header">Electric</td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=80><td width=200><center><img src="../../../_Images/LE-Transformer.jpg"  /></center></td></tr>
+  </table>
+
+  <p><i>Transformer</i> is a four-pole component of the electrical domain.
+  The primary winding is located at the poles s and t and the secondary winding
+  at the poles u and v.</p>
+  <br>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Parameters</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p class=indent><table>
+    <tr height=23><td width=100><a href="../Parameters/LE%20Params%20Editors.html">Caption</a></td>            <td width=100>String</td>    <td>Name of component</td></tr>
+    <tr height=23><td width=100><a href="../Parameters/LE%20Params%20Editors.html">Formula</a></td>            <td width=100>String</td>    <td>Formula of parameters</td></tr>
+    <tr height=00><td width=100>L1</td>   <td width=100>H</td>       <td>Inductance primary</td></tr>
+    <tr height=00><td width=100>L2</td>   <td width=100>H</td>       <td>Inductance secondary</td></tr>
+    <tr height=00><td width=100>R1</td>   <td width=100>&Omega;</td> <td>Resistance primary</td></tr>
+    <tr height=00><td width=100>R2</td>   <td width=100>&Omega;</td> <td>Resistance secondary</td></tr>
+    <tr height=00><td width=100>k</td>    <td width=100>0 &lt; k &lt; 1</td>    <td>Coupling factor</td></tr>
+  </table>
+
+  <br>
+
+  <p>The admittance matrix of the transformer is given by:</p>
+
+  <p class=formula><img src="../../../_Formulae/Transformer.jpg" ></p>
+
+  <p>V1 and V2 are the voltages across the primary and secondary windings.
+  I1 and I2 are the respective currents to the transformer.
+  L1 and L2 are the inductances and R1 and R2 their internal resistances,
+  which can be specified optionally.</p>
+
+  <p>The two coils are magnetically coupled by the coupling-factor k, which runs 0 &lt; k &lt; 1.
+  The mutual inductance is M = k&middot;&radic;(L1&middot;L2).</p>
+
+  <p>If the k is close to one the voltage ratio would be V2/V1 = &radic;(L2/L1) = n2/n1
+  with n1 and n2 primary and secondary windings.
+  For ideal coupling there is the <a href="Coupler.html">Coupler</a> element.</p>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3 ID=F>Formula</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p>The name of the parameters are equal to the <a href="../../Formula/_Index.html">formula-identifiers</a>:</p>
+
+  <p class=formula>
+  <table>
+    <tr height=22px> <td style="vertical-align:bottom;"><span style="color: #800000"><b>Parameter</b></span></td> </tr>
+    <tr><td>L1</td>   <td>Inductance primary</td></tr>
+    <tr><td>L2</td>   <td>Inductance secondary</td></tr>
+    <tr><td>R1</td>   <td>Resistance primary</td></tr>
+    <tr><td>R2</td>   <td>Resistance secondary</td></tr>
+    <tr><td>k</td>    <td>Coupling factor</td></tr>
+  </table>
+  </p>
+
+
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

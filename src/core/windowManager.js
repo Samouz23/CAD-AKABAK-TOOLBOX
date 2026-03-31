@@ -30,7 +30,7 @@ function createMainWindow() {
         }
     });
 
-//mainWindow.webContents.openDevTools(); //CETTE LIGNE DOIT RESTER COMMENTÉE EN PRODUCTION ET NE DOIT PAS ETRE SUPPRIMÉE
+mainWindow.webContents.openDevTools(); //CETTE LIGNE DOIT RESTER COMMENTÉE EN PRODUCTION ET NE DOIT PAS ETRE SUPPRIMÉE
 
     // [DÉSACTIVÉ] Pour enlever complètement la barre de menu (File, Edit, View, etc.)
      mainWindow.setMenuBarVisibility(true);
@@ -80,6 +80,9 @@ function createToolWindow({ toolName, title }) {
     if (toolName === 'mesh-mini') {
         width = 320;
         height = 300;
+    } else if (toolName === 'mesh-preview') {
+        width = 1280;
+        height = 860;
     } else if (toolName === 'drivers-database') {
         width = 360;
         height = 480;

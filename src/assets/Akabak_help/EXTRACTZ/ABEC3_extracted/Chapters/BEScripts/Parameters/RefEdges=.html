@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>RefEdges=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>RefEdges=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>RefEdges=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>Two integer numbers</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Reference to an edge</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Transition.html">Transition</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>RefEdges=</i> refers to a particular edge of a component.
+  The component <a href="../Sections/Transition.html">Transition</a>
+  uses the points on this edge as start and end points.</p>
+
+  <p>The edge-index has different meaning, depending on the type of component:</p>
+
+  <br />
+  <center> <table>
+  <tr>
+  <td width=100><b>RefEdge=</b></td>  <td width=200><b>1</b></td>  <td width=200><b>2</b></td>  <td width=200><b>3</b></td>
+  </tr><tr>
+  <td><a href="../Sections/Duct.html">Duct</a></td>
+    <td>Edge in plane of mounting</td>  <td colspan=2>Far away edge</td>
+  </tr><tr>
+  <td><a href="../Sections/Baffle.html">Baffle</a></td>
+    <td>Outer edge</td>  <td  colspan=2>Outer edge at <a href="tB=.html">tB</a>&lt;&gt;0</td>
+  </tr><tr>
+  <td><a href="../Sections/Shell.html">Shell</a></td>
+    <td>Outer edge</td>  <td>Edge of baffle</td>  <td>Inner edge</td>
+  </tr><tr>
+  <td><a href="../Sections/Diaphragm.html">Diaphragm</a></td>
+    <td>Outer edge</td>  <td>Edge of baffle</td>  <td>Inner edge</td>
+  </tr>
+  </table></center>
+  <br />
+  <br />
+
+  <h4>Example 1</h4>
+
+  <p>This example demonstrates the modeling of a compression chamber.
+  <i>Transition</i> links the outer edge of an elliptical
+  <a href="../Sections/Diaphragm.html">Diaphragm</a>
+  to a <a href="../Sections/Duct.html">Duct</a> of elliptical cross-section.</p>
+
+  <br />
+
+  <table width=30% align=right><tr>
+  <td class=c width=200><img src="../../../_Images/Transition%20RefEdge=22.jpg" /></td>
+  </tr></table>
+
+  <pre>
+  <b>Diaphragm</b>  "Diaph"
+    Side=Front
+    DrvGroup=1001
+    WD=750mm;     HD=450mm;   RectType=Ellipse
+    dD1=-120mm;   hD1=250mm;  tD1=30mm
+    tB=20mm;
+    HasPole=true;   HasBaffle=false;
+
+  <b>Duct</b>  "Duct"
+    DuctType=Ellipse
+    WD=250mm; HD=100mm;   Len=100mm
+    t1=250mm
+
+  <b>Transition</b>
+    RefElements=Diaph,Duct
+    <font color="#800000">RefEdges=2,2</font>
+    SwapNormals  </pre>
+
+  <br />
+  <p>The <i>Transition</i>-elements are created from rays starting
+  at "Diaph" and ending at "Duct". In both cases edge #2 is addressed.
+  For the Diaphragm edge #2 means the edge, which goes around the baffle.
+  Because <i>HasBaffle=false</i> there is no baffle attached to the Diaphragm.
+  However, with tB=20mm there is a recess specified. In this case edge #2
+  goes around the end of the recess. For the Duct edge #2 is the edge,
+  which goes around the second aperture, opposite the mounting point.</p>
+
+
+  <h4>Example 2</h4>
+
+  <p>In this example the <i>Transition</i> is used for coupling two
+  <a href="../Sections/Duct.html">Duct</a>-components.</p>
+
+  <br />
+  <table width=30% align=right><tr>
+  <td class=c width=200><img src="../../../_Images/Transition%20Ducts.jpg" /></td>
+  </tr></table>
+
+  <pre>
+  <b>Duct</b>  "Duct_1"
+    DuctType=Rectangle
+    WD=150mm;  HD=50mm;  Len=200mm
+
+  <b>Duct</b>  "Duct_2"
+    DuctType=Oval
+    WD=370mm;  HD=120mm;  Len=200mm
+    t1=450mm
+
+  <b>Transition</b>
+    RefElements=Duct_2,Duct_1
+    <font color="#800000">RefEdges=2,1</font></pre>
+
+  <br />
+  <p>The transition is from Duct_2 to Duct_1. Of Duct_2 the second edge
+  is used and for Duct_1 the first.</p>
+
+  <br>
+  <br>
+</body>
+</html>

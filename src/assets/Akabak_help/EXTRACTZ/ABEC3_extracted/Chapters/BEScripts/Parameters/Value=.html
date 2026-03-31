@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Value=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Value=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Value=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Constant for wall-impedance or driving values.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/WallImpedance.html">WallImpedance</a>,
+                                                        <a href="../Sections/Driving_Values.html">Driving_Values</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Value=</i> is a constant giving default values to
+  <a href="../Sections/WallImpedance.html">WallImpedance</a> and
+  <a href="../Sections/Driving_Values.html">Driving_Values</a>.</p>
+
+
+  <h3>WallImpedance</h3>
+
+  <p>As explained in section
+  <a href="../Sections/WallImpedance.html">WallImpedance</a> the meaning of
+  <i>Value=</i> depends on parameter <i>ImpType=</i>.
+  See at <a href="ImpType=.html">ImpType=</a>
+  for details, formulae and examples.</p>
+
+  <p>If <i>WallImpedance</i> is linked to a data-file, ie if
+  <a href="DataFileAlias=.html">DataFileAlias=</a> is specified,
+  then <i>Value=</i> is ignored.</p>
+
+
+  <h4>ImpType=Reflection</h4>
+
+  <p><i>Value=</i> is a floating point value between 0...1.0.</p>
+
+  <p><i>Value=0</i> means no reflection, and boundary conditions equivalent to
+  an impedance of a free traveling plane-wave: Z<sub>s</sub> = &rho;c.</p>
+
+  <p><i>Value=1</i> means 100% reflection and Neumann boundary conditions,
+  which is the default in ABEC.</p>
+
+
+  <h4>ImpType=Damping</h4>
+
+  <p><i>Value=</i> is a floating point value between 0...1.0.</p>
+
+  <p><i>Value=0</i> means no damping and Neumann boundary conditions,
+  which is the default in ABEC.</p>
+
+  <p><i>Value=1</i> means 100% damping, which are boundary conditions equivalent to
+  an impedance of a free traveling plane-wave: Z<sub>s</sub> = &rho;c.</p>
+
+
+  <h4>ImpType=Impedance</h4>
+
+  <p><i>Value=</i> means an impedance-value. It expects one or two values.
+  The first value is the real-part and the second is the imaginary part of the
+  impedance. Both values are separated by a blank, tab or comma. For example
+  Value=0.123, -0.01</p>
+
+  <p>If <a href="Normalized=.html">Normalized=true</a>
+  the values of <i>Value=</i> are assumed to be normalized
+  to &rho;c, which is the specific impedance of a free travelling plane-wave.</p>
+
+  <p>If <a href="Normalized=.html">Normalized=false</a> or not specified then
+  the values of <i>Value=</i> are assumed to be
+  a specific impedance Z<sub>s</sub>&nbsp;=&nbsp;p/v.</p>
+
+
+  <h4>ImpType=Admittance</h4>
+
+  <p><i>Value=</i> means an admittance-value. An admittance is the inverse of an
+  impedance: Y&nbsp;=&nbsp;1/Z&nbsp; The specification is similar to
+  <i>ImpType=Impedance</i>.</p>
+
+  <p>If <a href="Normalized=.html">Normalized=true</a>
+  the values of <i>Value=</i> are assumed to be normalized
+  to 1/&rho;c, which is the specific admittance of a free travelling plane-wave.</p>
+
+  <p>If <a href="Normalized=.html">Normalized=false</a> or not specified then
+  the values of <i>Value=</i> are assumed to be
+  a specific admittance Y<sub>s</sub>&nbsp;=&nbsp;v/p.</p>
+
+
+  <h3>Driving_Values</h3>
+
+  <p>As explained in section <a href="../Sections/Driving_Values.html">Driving_Values</a>
+  physical values are assigned at observation-stage. <i>Value=</i>
+  provides the static and physical driving value. Its meaning and units
+  depend on <a href="DrvType=.html">DrvType=</a>.</p>
+
+  <h4>Weighing</h4>
+
+  <p><i>Value=</i> will weight imported values of the spectrum
+  assigned by <a href="DataFileAlias=.html">DataFileAlias=</a>.</p>
+
+  <p><i>Value=</i> will be modified by <a href="Weight=.html">Weight=</a>
+  parameter of items of <a href="List%20of%20Driving%20Values.html">List of Driving Values</a>.</p>
+
+
+  <h4>Units</h4>
+
+  <p>If no unit is given then SI-units are assumed otherwise the unit depends on
+  <i>DrvType=</i>:</p>
+
+  <pre>
+  Excursion       m             Value=1mm
+  Velocity        m/s           Value=1e-3m/s
+  Acceleration    m/s2          Value=1e-6m/s2
+  Pressure        Pa            Value=0.1Pa</pre>
+
+
+  <h4>Examples</h4>
+
+  <pre>
+  <b>Driving_Values</b>  "Point Sources"
+    DrvType=Pressure
+    <font color="#800000">Value=1Pa</font>
+    101   DrvGroup=1001  Weight=1.0  Delay=1ms
+    102   DrvGroup=1002  Weight=1.0  Delay=0
+    ...</pre>
+
+  <br />
+  <pre>
+  <b>Driving_Values</b>  "Membranes"
+    DrvType=Acceleration
+    <font color="#800000">Value=1m/s2</font>
+    DataFileAlias=A1
+    101   DrvGroup=1001  Weight=1.0
+    102   DrvGroup=1002  Weight=1.0
+    ...</pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

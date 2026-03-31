@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Delay=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Delay=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Delay=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1>s</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>Floating point number</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Individual delay of item-values</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="List%20of%20Driving%20Elements.html">List of Driving Elements</a>,
+                                                        <a href="List%20of%20Pressure%20Points.html">List of Pressure Points</a>,
+                                                        <a href="List%20of%20Driving%20Values.html">List of Driving Values</a>
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="Weight=.html">Weight=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Delay=</i> allows to add time-delay to the driving-value.
+
+  <i>Delay=</i> is used in item-lists of
+  <a href="../Sections/Driving_Values.html">Driving_Values</a>,
+  <a href="../Sections/Driving.html">Driving</a> and
+  <a href="../Sections/Pressure_Points.html">Pressure_Points</a>.
+  For details see chapter <a href="../../Appendix/Delay%20Example.html">Delay Example</a>.</p>
+
+  <p>The total time delay is the sum of the value given in the parameter-
+  part and at list-items:</p>
+
+  <pre>
+  Delay<sub><small>tot</small></sub> = DrvDelay + Delay</pre>
+
+  <br />
+  <p>Example</p>
+
+  <pre>
+  <b>Driving_Values</b>
+    DrvType=Pressure
+    <font color="#800000">DrvDelay=1ms</font>
+    Value=1.0
+    101   DrvGroup=1001   Weight=1.0   <font color="#800000">Delay=1ms</font>
+    102   DrvGroup=1002   Weight=1.0   <font color="#800000">Delay=2ms</font></pre>
+
+  <p>The total delay for item 101 is 2ms because <i>Delay=</i> is declared in the
+  parameter-part and in the list-item. The total delay for item 102 is 3ms.</p>
+
+  <br>
+  <br>
+</body>
+</html>

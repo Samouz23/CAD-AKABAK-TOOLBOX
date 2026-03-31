@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Spectrum Observation Scripts</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Spectrum Observation Scripts</h1>
+  <p class=navi><a href="../Index.html">Home</a> &raquo;
+                <a href="Scripts.html">Scripts</a></p>
+  <hr>
+
+  <p>For larger projects it is recommended to specify spectrum-observations
+  in a dedicated script. In any case the following sections are relevant for
+  spectral observations.</p>
+
+
+  <h4>Driving Values - Coupling</h4>
+  <p>Each observation-script should specify driving-values either by
+  providing a section
+  <a href="Sections/Driving_Values.html">Driving_Values</a>
+  in the observation script or by coupling to a
+  <a href="../LEScript/LEScripts.html">LE-Script</a>
+  as explained in chapter
+  <a href="Observation.html">Observation Scripts</a>.</p>
+
+
+  <H4>Control_Spectrum</H4>
+
+  <p>For <a href="../Appendix/Boundary%20Element%20Analysis.html">Boundary  Element Analysis</a>
+  the frequency abscissa is derived from the solving stage as
+  defined in section <a href="Sections/Control_Solver.html">Control_Solver</a>
+  of the <a href="BEScript.html">Solving Script</a>.
+  An alternate abscissa for spectral observation curves can be defined
+  with the help of section
+  <a href="Sections/Control_Spectrum.html">Control_Spectrum</a>
+  of an observation script.</p>
+  <p>For <a href="../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>
+  and <a href="../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Analysis only</a>
+  you need to specify <i>Control_Spectrum</i> in each observation script.
+
+
+  <h4>BE_Spectrum</h4>
+
+  <p>Section <a href="Sections/BE_Spectrum.html">BE_Spectrum</a> can be used
+  to observe the sound-pressure response at several spatial points.</p>
+
+  <h4>Radiation_Impedance</h4>
+
+  <p>Section <a href="Sections/Radiation_Impedance.html">Radiation_Impedance</a>
+  renders the spectral curves of the radiation impedance of vibrating surfaces
+  as defined in the solving script. <i>Radiation_Impedance</i> works only
+  in <i>Boundary Element Mode</i>.</p>
+
+  <h4>LE_Spectrum</h4>
+
+  <p>Section <a href="Sections/LE_Spectrum.html">LE_Spectrum</a> inspects
+  parameters of the Lumped Element Network, such as the voltage-, current-,
+  excursion-, etc. response.</p>
+
+  <br>
+  <br>
+</body>
+</html>

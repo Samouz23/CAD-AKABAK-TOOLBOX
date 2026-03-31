@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Def_MeasRadiator</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Def_MeasRadiator</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Radiator using measured data</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Any domain and acoustical</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Defs.html">Definition part</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1><a href="MeasRadiator.html">MeasRadiator</a></td>
+  </tr>
+  </table>
+
+  <hr>
+  <br>
+  <pre>
+  <b>Def_MeasRadiator</b>  "Any name"
+    <a href="../../BEScripts/Parameters/DataFileAlias=.html">DataFileAlias=</a>         <font color="#999999">// For impedance</font>
+    <a href="../../BEScripts/Parameters/DataFileAlias=.html">DataFileAlias=</a>         <font color="#999999">// For sound pressure</font>
+    <a href="../Parameters/DataDistance=.html">DataDistance=</a>
+    <a href="../Parameters/DataDriving=.html">DataDriving=</a>
+    <a href="../Parameters/TransferFactor=.html">TransferFactor=</a>
+    <a href="../Parameters/ConstResistance=.html">ConstResistance=</a>
+    <a href="../Parameters/IsRms.html">IsRms</a>
+    </pre>
+
+  <p>The network-component <i>MeasRadiator</i> and its definition <i>Def_MeasRadiator</i>
+  are used to create an element, which parameters are data-files. These
+  data-files are the measured sound-pressure and the electrical impedance
+  spectra.</p>
+
+  <p>The <i>MeasRadiator</i> is, for example, practical for designing cross-over
+  filters for loudspeakers in <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Mode</a>.
+  As there is no modeling involved, the response of <i>MeasRadiator</i> performs
+  like a snapshot of the device under test and can yield very precise results.</p>
+
+  <p>The <i>MeasRadiator</i> is linked to a section
+  <a href="../../BEScripts/Sections/Pressure_Points.html">Pressure_Points</a>
+  or <a href="../../BEScripts/Sections/Pressure_Box.html">Pressure_Box</a>
+  of the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element</a> or
+  <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound</a> scripts.
+  ...</p>
+
+  <p>The <i>Def_MeasRadiator</i> provides data for network-components
+  <a href="MeasRadiator.html">MeasRadiator</a>. Multiple <i>MeasRadiator</i>
+  components can share a definition. The network-component relates to the
+  Definition with the help of its parameter
+  <a href="../Parameters/Def=.html">Def=</a>.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Def_MeasRadiator</b>  'Tweeter'
+    DataFileAlias='Imp'
+    DataFileAlias='SPL'
+    DataDistance=1m,1m    DataDriving=1V   IsRms
+    ...
+  <b>System</b> 'S1'
+    ...
+    <b>Capacitor</b> 'C5'  Node=40=50  C=2.2uF
+    <b>Resistor</b>  'R3'  Node=40=50  R=15ohm
+
+    <b>MeasRadiator</b>  'Tweeter'
+      Def='Tweeter'
+      Node=50=0
+      DrvGroup=1001  </pre>
+
+  <br />
+
+  <p>The <i>Def_MeasRadiator</i> has two specifications of
+  <a href="../../BEScripts/Parameters/DataFileAlias=.html">DataFileAlias=</a>
+  because we need an impedance-file and a sound pressure-file. The distinction is made
+  by <i>Import Control Settings</i>, which are assumed to be part of the file.
+  <a href="../../Appendix/VacsViewer.html">VACS</a> formats these files
+  properly on export. <i>Import Control Settings</i> are
+  documented in the help-system of VACS at <i>Import Control Settings</i>.
+  Further examples see at chapter
+  <a href="../../GUI/Project/Add%20Data%20File.html">Add Data-File</a>.</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

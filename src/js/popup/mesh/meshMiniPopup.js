@@ -42,6 +42,10 @@ export function getMeshMiniPopupHtml() {
         <button id="mini-start-mesh-btn" class="action-btn btn--primary" style="width: 100%; height: 34px; font-size: 13px; font-weight: 700; border-radius: 4px; background-color: var(--theme-accent); color: white; border: none; cursor: pointer; transition: all 0.2s; margin-top: auto;">
           Start Meshing
         </button>
+
+        <button id="mini-remesh-physical-btn" class="action-btn" style="width: 100%; height: 34px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #1e3a5f; color: #38bdf8; border: 1px solid #2563eb; cursor: pointer; transition: all 0.2s; margin-top: 6px;">
+          Remesh Physical
+        </button>
       </div>
     </div>
     ${getCommonStyles()}
@@ -108,6 +112,7 @@ export function initializeMeshMiniPopup() {
   const clmaxSelect = document.getElementById('mini-mesh-clmax');
   const curvSelect = document.getElementById('mini-mesh-curv');
   const startBtn = document.getElementById('mini-start-mesh-btn');
+  const remeshPhysicalBtn = document.getElementById('mini-remesh-physical-btn');
   const statusDiv = document.getElementById('mini-mesh-status');
   const progressDiv = document.getElementById('mini-mesh-progress');
   const progressBar = document.getElementById('mini-mesh-progress-bar');
@@ -123,49 +128,34 @@ export function initializeMeshMiniPopup() {
 
     console.log('[Mesh Mini Popup] Starting mesh with clmax:', clmax, 'curv:', curv);
 
-    // Désactiver le bouton pendant le processus
     startBtn.disabled = true;
     startBtn.textContent = 'Meshing...';
-    
-    // Afficher la barre de progression
     progressDiv.style.display = 'block';
     progressBar.style.width = '0%';
-    
     statusDiv.textContent = 'Starting mesh generation...';
     statusDiv.style.color = 'var(--text-muted)';
 
     try {
-      // Charger les settings pour obtenir les chemins nécessaires
       const settings = await window.electronAPI.getSettings();
       
-      if (!settings?.paths?.gmsh) {
-        throw new Error('GMSH path not configured. Please configure it in Settings.');
-      }
-      
-      if (!settings?.paths?.downloads) {
-        throw new Error('Downloads folder not configured. Please configure it in Settings.');
-      }
-      
-      if (!settings?.paths?.dataRoot) {
-        throw new Error('Data root folder not configured. Please configure it in Settings.');
-      }
+      if (!settings?.paths?.gmsh) throw new Error('GMSH path not configured.');
+      if (!settings?.paths?.downloads) throw new Error('Downloads folder not configured.');
+      if (!settings?.paths?.dataRoot) throw new Error('Data root folder not configured.');
 
-      // Simulation de progression
       progressBar.style.width = '30%';
       
-      // Préparer les arguments pour runMesh
       const meshArgs = {
         gmshPath: settings.paths.gmsh,
         downloadsPath: settings.paths.downloads,
         destPath: settings.paths.dataRoot + '/Mesh-out',
         clmax: clmax,
         curv: curv,
-        fileNameSuffix: '_meshed'
+        fileNameSuffix: '_meshed',
+        physicalSurfaces: false,
+        symmetryMirror: 'none',
       };
       
-      // Appeler l'API pour lancer le mesh
       const result = await window.electronAPI.runMesh(meshArgs);
-
       progressBar.style.width = '100%';
       
       if (result.success) {
@@ -181,14 +171,113 @@ export function initializeMeshMiniPopup() {
       statusDiv.style.color = '#ef4444';
       progressBar.style.width = '0%';
     } finally {
-      // Réactiver le bouton
       startBtn.disabled = false;
       startBtn.textContent = 'Start Meshing';
-      
-      // Cacher la barre de progression après 2 secondes
-      setTimeout(() => {
-        progressDiv.style.display = 'none';
-      }, 2000);
+      setTimeout(() => { progressDiv.style.display = 'none'; }, 2000);
+    }
+  });
+
+  remeshPhysicalBtn.addEventListener('click', async () => {
+    remeshPhysicalBtn.disabled = true;
+    remeshPhysicalBtn.textContent = 'Remeshing...';
+    statusDiv.textContent = '';
+    statusDiv.style.color = 'var(--text-muted)';
+    progressDiv.style.display = 'block';
+    progressBar.style.width = '10%';
+
+    try {
+      const saved = await window.electronAPI.getLastPreviewState();
+      if (!saved) {
+        throw new Error('No Physical Preview session found. Open Physical Preview first.');
+      }
+
+      const { state, config } = saved;
+      const settings = await window.electronAPI.getSettings();
+      if (!settings?.paths?.downloads) throw new Error('Downloads folder not configured.');
+      if (!settings?.paths?.dataRoot) throw new Error('Data root folder not configured.');
+
+      const gmshPath = config.gmshPath || settings.paths.gmsh;
+      if (!gmshPath) throw new Error('GMSH path not configured.');
+
+      const downloadsPath = settings.paths.downloads;
+      const files = await window.electronAPI.readDirectory?.(downloadsPath)
+        || [];
+
+      progressBar.style.width = '20%';
+      statusDiv.textContent = 'Finding latest STEP file...';
+
+      // Step 1: mesh the latest STEP with physical surfaces to get a temp msh
+      const meshResult = await window.electronAPI.runMesh({
+        gmshPath,
+        downloadsPath,
+        destPath: settings.paths.dataRoot + '/Mesh-out',
+        clmax: String(config.defaultMeshSize || 50),
+        curv: '0',
+        fileNameSuffix: '_meshed',
+        physicalSurfaces: true,
+        symmetryMirror: 'none',
+        tempMode: true,
+      });
+
+      if (!meshResult.success) throw new Error(meshResult.error);
+      progressBar.style.width = '40%';
+      statusDiv.textContent = 'Applying preview parameters...';
+
+      // Step 2: Build physicalConfig from saved state
+      const isMirrorEnabled = state.mirrorAxis === 'H' || state.mirrorAxis === 'V';
+      const defaultMeshSize = config.defaultMeshSize || 50;
+      const defaultCurveMeshSize = config.defaultCurveMeshSize || defaultMeshSize;
+
+      const groups = (state.surfaceParams || []).map((param, index) => ({
+        name: `S${index + 1}`,
+        isInterface: isMirrorEnabled && Boolean(param.mergeAtSymmetry),
+        meshSize: param.meshSize || defaultMeshSize,
+        curveMeshSize: param.curveMeshSize || defaultCurveMeshSize,
+        shellIndices: [index],
+      }));
+
+      const mirrorArgs = isMirrorEnabled ? {
+        axis: state.mirrorAxis,
+        interfaceTags: [],
+      } : null;
+
+      // Step 3: Remesh with the saved parameters
+      const remeshResult = await window.electronAPI.remeshPreview({
+        mshPath: meshResult.outputPath,
+        mirror: mirrorArgs,
+        physicalConfig: {
+          gmshPath,
+          sourceFilePath: meshResult.sourceFilePath,
+          defaultMeshSize,
+          defaultCurveMeshSize,
+          groups,
+        },
+      });
+
+      if (!remeshResult.success) throw new Error(remeshResult.error);
+      progressBar.style.width = '80%';
+      statusDiv.textContent = 'Exporting...';
+
+      // Step 4: Export to final destination
+      const destPath = config.destPath || (settings.paths.dataRoot + '/Mesh-out');
+      const exportResult = await window.electronAPI.exportMesh({
+        mshPath: remeshResult.mshPath,
+        destPath,
+      });
+
+      if (!exportResult.success) throw new Error(exportResult.error);
+      progressBar.style.width = '100%';
+      statusDiv.textContent = '✓ Physical remesh + export done!';
+      statusDiv.style.color = 'var(--theme-accent)';
+    } catch (error) {
+      console.error('[Mesh Mini] Remesh Physical error:', error);
+      statusDiv.textContent = '✗ ' + error.message;
+      statusDiv.style.color = '#ef4444';
+      progressBar.style.width = '0%';
+    } finally {
+      remeshPhysicalBtn.disabled = false;
+      remeshPhysicalBtn.textContent = 'Remesh Physical';
+      setTimeout(() => { progressDiv.style.display = 'none'; }, 2000);
     }
   });
 }

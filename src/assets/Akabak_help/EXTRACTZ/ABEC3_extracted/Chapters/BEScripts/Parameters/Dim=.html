@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Dim=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Dim=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Dim=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>[3D, 2D, CircSym]</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Dimension of boundary elements</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Sections/Control_Solver.html">Control_Solver</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="Sym=.html">Sym=</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Dim=</i> specifies the dimension of the <i>Helmholtz Integral</i> of the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Method</a>.</p>
+
+  <p>By default <i>Dim=3D</i>. However, calculation time can be quicken if part of the
+  integrations can be done analytically. In this case we make assumptions on
+  the expected sound pressure distribution. For example, if the structure is circular-
+  symmetric then we expect that the sound pressure is also circular-symmetric.
+  Hence, physically it is still a 3D-problem but from the point of nummerical integration
+  it is a quasi 2D-calculation.</p>
+
+
+  <p><i>Dim=</i> is specified in section <a href="../Sections/Control_Solver.html">Control_Solver</a>,
+  for example</p>
+
+  <pre>
+  <b>Control_Solver</b>
+    f1=500;  f2=10000;  NumFrequencies=30;  Abscissa=log;
+    MeshFrequency=10000Hz
+    <font color="#800000">Dim=3D</font>
+    Sym=xy
+  </pre>
+
+  <p><i>Dim=3D</i> is the default mode and enables full 3D-fields
+  of sound pressure distribution. 3D-symmetries can be exploited with the
+  help of parameter <a href="Sym=.html">Sym=</a>. In the far-field the sound
+  pressure drops typically by 1/Distance.</p>
+
+  <table width=30% align=right><tr>
+  <td class=c width=200><img src="../../../_Images/Coordinates%20-%20CircSym.jpg"></td>
+  </tr><tr height=250>
+  <td class=c width=200><img src="../../../_Images/Dim=2D.jpg"></td>
+  </tr></table>
+
+
+  <br />
+  <p>
+  <i>Dim=CircSym</i> assumes a field of a circular symmetry.
+  This means pressures are identical along concentric rings.
+  Because of this also boundaries should be of a circular symmetric
+  design and need to be entered as described in chapter
+  <a href="../../Appendix/Coordinates.html">Coordinates</a>.
+  Under circular symmetry part of the analysis is carried out analytically,
+  which accelerates the calculation.
+  In the far-field the sound pressure drops by 1/Distance.</p>
+
+  <br />
+
+  <p><i>Dim=2D</i> assumes that one dimension can be fully separated from
+  the Helmholtz Equation and we assume wave-propagation only in the
+  x- and y-plane. In the other plane we assume no excitation of waves.
+  In the far-field the sound pressure drops only by 1/sqrt(Distance). This is an
+  artefact, which stems from the assumption of infinite extension in the
+  z-direction. Pressure is understood as per meter: "SPL/m"</p>
+
+  <p>Strange - yes - but useful in cases. First, the <i>Dim=2D</i> approach is
+  quick in terms of calculation time. Further, geometry is easily specified because
+  boundaries are line-segments. <i>Dim=2D</i> is mostly used to obtain an
+  impression or a clue about the wave-field in a room or in the presence of
+  scatteres. Absolute SPL-values need to be considered in practical
+  applications because the <i>Dim=2D</i> assumes infinite long wakes of waves
+  which in reality are spherical.</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

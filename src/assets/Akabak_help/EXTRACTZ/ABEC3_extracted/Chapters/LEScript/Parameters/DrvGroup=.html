@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>DrvGroup=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>DrvGroup=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>DrvGroup=A=B</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Integer%20values.html">Integer numbers</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Reference to
+                                       <a href="../../BEScripts/Parameters/DrvGroup=.html">DrvGroup=</a>
+                                       of the solving script of the
+                                       <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Part</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Sections/Driver.html">Driver</a>,
+                                                        <a href="../Sections/Speaker.html">Speaker</a>,
+                                                        <a href="../Sections/Enclosure.html">Enclosure</a>,
+                                                        <a href="../Sections/RadImp.html">RadImp</a>
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="../../Appendix/Driving%20Groups.html">Driving Groups</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>DrvGroup=</i> expects one or two integer values. Component
+  <a href="../Sections/Driver.html">Driver</a> has two numbers, all other
+  components expect only a single value. These values establish
+  links to the solving and direct sound scripts as explained in chapter
+  <a href="../../Appendix/Driving%20Groups.html">Driving Groups</a>.</p>
+
+  <p>In LE-Scripts <i>DrvGroup=</i> makes sure that a component is supplied
+  with diaphragm dimensions in order to calculate the mechano-acoustic
+  transformations. Further, the LE-component is supplied with the
+  radiation impedance at it cross-section area, which is linked to
+  the boundary element part. Conversely, the Boundary Element part
+  is supplied with the volume velocity in order to make calculations
+  at the observation stage, see technical details in paper
+  [<a href="../../Appendix/Literature.html">9</a>].</p>
+
+
+  <h4>Driver</h4>
+
+  <p>Because the <a href="../Sections/Driver.html">Driver</a> has two
+  diaphragm sides it needs two links. In this case <i>DrvGroup=</i> has
+  two numbers, for example:</p>
+
+  <pre>
+  <b>Driver</b>  'Drv1'  Def='SP38'
+    Node=2=0=10=20
+    <span style="color: #800000">DrvGroup=1001,1002</span>
+  </pre>
+
+  <p>In this example the first number of DrvGroup=1001=1002 links to a
+  <a href="../../BEScripts/Sections/Diaphragm.html">Diaphragm-section</a>
+  with DrvGroup=1001, and the second to another <i>Diaphragm</i>-section with
+  DrvGroup=1002.</p>
+
+  <p>Note, that via DrvGroup= a <i>Driver</i> can have different membrane area
+  for the front and the rear.</p>
+
+  <p>Note, that for a <i>Driver</i>, where only one side is modeled by
+  the Boundary Element Method and the other by the Lumped Element Method
+  the diaphragm area for the LE-part is identical to the other side
+  (unless specified differently).</p>
+
+
+  <br>
+  <br>
+</body>
+</html>

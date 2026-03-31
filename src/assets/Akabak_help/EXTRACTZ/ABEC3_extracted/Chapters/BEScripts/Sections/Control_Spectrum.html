@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Control_Spectrum</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Control_Spectrum</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Output control of spectral analysis</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../ObSpectrum.html">Spectral observation script</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>Control_Spectrum</b>
+    <a href="../Parameters/Name=.html">Name=</a>
+    <a href="../Parameters/ID=.html">ID=</a>
+
+    <a href="../Parameters/f1=f2=.html">f1=</a>
+    <a href="../Parameters/f1=f2=.html">f2=</a>
+    <a href="../Parameters/NumFrequs=.html">NumFrequencies=</a>
+    <a href="../Parameters/Absc=.html">Abscissa=</a>
+    <a href="../Parameters/Frequs=.html">Frequencies=</a>
+
+    <a href="../Parameters/rho=.html">rho=</a>
+    <a href="../Parameters/c=.html">c=</a>
+    <a href="../Parameters/Altitude=.html">Altitude=</a>
+    <a href="../Parameters/StaticPressure=.html">StaticPressure=</a>
+  </pre>
+
+
+  <p>During observation any spectral curve is rendered with the help of the
+  application <a href="../../Appendix/VacsViewer.html"><i>VACS</i></a>.
+  <i>ABEC</i> sends its spectral data to <i>VACS</i> for display.</p>
+
+  <p><i>ID=</i> provides the link between <i>ABEC</i> and <i>VACS</i> so that
+  curves can be updated. Details see at chapter
+  <a href="../Parameters/ID=.html">ID=</a>.</p>
+
+
+  <h4>Frequency Abscissa</h4>
+
+  <p><i>Control_Spectrum</i> is the place where to specify the frequency-abscissa of the
+  observation-spectra of a script. There can be only one definition of <i>Control_Spectrum</i>
+  in an observation-script. Hence all spectral simulations of a script
+  share the same abscissa.</p>
+
+  <p>For observation scripts, which relate to solving scripts of the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Method</a>,
+  basically, only frequencies for which the acoustic field has been solved for can be
+  rendered in the observation-stage. However, an advance interpolation scheme makes
+  it possible to render at a higher resolution as at the solving-stage. In order to
+  avoid aliasing a certain density of solved frequency samples needs to be provided.
+  More on this topic see <a href="../../Appendix/Interpolation.html">Interpolation Technique</a>.</p>
+
+  <p>For <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound</a>- and
+  pure <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element</a>-Analysis
+  the specification of frequency parameters is always necessary.</p>
+
+
+  <h4>VACS Folder-Label</h4>
+
+  <p><img src="../../../_Images/Control_Spectrum%20Vacs%20Folder.jpg" align=right />
+  <i>Control_Spectrum</i> manages also the folder-label
+  in <i>VACS</i> as can be seen in the tree-view of <i>VACS</i>, for example: <p>
+
+  <pre>
+  <b>Control_Spectrum</b>
+    <font color="#800000">Name="ABEC-ABEC21"</font>
+    ID=ABEC21
+    NumFrequencies=200;   Abscissa=log;</pre>
+
+
+  <h4>Acoustic Parameters</h4>
+
+  <p><a href="../../Appendix/Acoustic%20Parameters.html">Acoustic parameters</a>
+  (&rho;, c, etc) can be specified for the <i>Direct Sound Analysis</i>
+  but are ignored if the script is used for the <i>Boundary Element Method</i>.</p>
+
+  <br>
+  <br>
+</body>
+</html>

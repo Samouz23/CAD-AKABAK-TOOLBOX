@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Driving_Values</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Driving_Values</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Actual driving values for observation.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Observation.html">Observation scripts</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>Driving_Values</b> "Any name"
+    <a href="../Parameters/DrvType=.html">DrvType=</a>
+    <a href="../Parameters/DrvDelay=.html">DrvDelay=</a>
+    <a href="../Parameters/Value=.html">Value=</a>
+    <a href="../Parameters/DataFileAlias=.html">DataFileAlias=</a>
+    <a href="../Parameters/List%20of%20Driving%20Values.html"><b>List of driving values</b></a>
+  </pre>
+
+  <p>The <i>Driving_Value</i>-section enables fixed or static driving.
+  It assigns physical values to specified driving-groups of the
+  <a href="../BEScript.html">boundary element script</a> or
+  <a href="../Direct%20Sound.html">direct sound script</a>,
+  as explained in chapter
+  <a href="../../Appendix/Driving%20Groups.html">Driving Groups</a>.
+
+  <p>If there is a section <i>Driving_Values</i> in an observation script then the
+  Lumped Element script is ignored. This applies for an individual script.
+  For example you can use <i>Driving_Values</i> in scripts for Field-analysis,
+  and for spectral-analysis you may enable coupling to the LE-network.</p>
+
+
+  <h4>Fixed Driving</h4>
+
+  <p>This mode enables if there is a section <i>Driving_Values</i> in the observation
+  script.
+  <i>Fixed</i> driving means that the driven boundary element
+  is enforced to have the specified motion regardless the sound-pressure
+  it creates in return.
+  Obviously this is an ideal condition but often useful
+  for principal investigations or if the only thing you want to do is to
+  observe the
+  <a href="Radiation_Impedance.html">radiation impedance</a>.</p>
+
+  <p>For static driving the <i>Driving_Value</i>-section is mandatory for each
+  <a href="../Observation.html">observation-script</a>, otherwise
+  all driving values would be zero or supplied by the Lumped Element script.</p>
+
+  <p>The driving-value can be specified as a single value at parameter
+  <a href="../Parameters/Value=.html">Value=</a>, which can be weighted
+  by <a href="../Parameters/Weight=.html">Weight=</a> in the
+  <a href="../Parameters/List%20of%20Driving%20Values.html">List of Driving Values</a>.
+  Further a time-delay can be specified at
+  <a href="../Parameters/DrvDelay=.html">DrvDelay=</a>.</p>
+
+  <p>Additionally, a transfer-function can be specified with the help of
+  <a href="../Parameters/DataFileAlias=.html">DataFileAlias=</a>. The total
+  driving value is</p>
+
+  <p class=formula>v = Value&middot;Weight&middot;H(j&omega;)&middot;exp(-j&omega;&middot;(DrvDelay + Delay))</p>
+
+  <p>H(j&omega;) is the transfer-function given by a data-file as explained in
+  <a href="../../Appendix/Data%20Files%20-%20Spectrum.html">Data Files - Spectrum</a>.</p>
+
+  <h4>Coupled</h4>
+
+  <p><i>Coupled</i> driving means that the sound pressure field affects
+  the motion of the driven boundary element. This case is more natural,
+  because any physical driving system has some kind of
+  (electro-) mechanical feedback,
+  for example a loudspeaker. <i>Coupled</i> driving is possible only
+  for driven boundary elements, see at sections
+  <a href="Driving.html">Driving</a> and <a href="Diaphragm.html">Diaphragm</a>.</p>
+
+  <p><i>Coupling</i> is established with the help of a
+  <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Network</a>.
+  An observation script, which couples to a LE-Script, should be <b>void</b> of
+  <i>Driving_Value</i>-sections. Further, the LE-Script needs to be registered
+  with the project, see <a href="../../GUI/Project/Add%20LE%20Script.html">Add LE-Script</a>.</p>
+  <p>See chapter <a href="../../Appendix/Driving%20Groups.html">Driving Groups</a>
+  for more details of the workings of coupling.</p>
+
+  <br>
+  <br>
+</body>
+</html>

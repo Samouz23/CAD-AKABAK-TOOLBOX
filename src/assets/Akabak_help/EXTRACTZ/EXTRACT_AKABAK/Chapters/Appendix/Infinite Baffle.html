@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Infinite Baffle in General</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Infinite Baffle in General</h1>
+
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <hr>
+
+  <table width=30% align=right>
+  <tr><td class=c width=200><img src="../../_Images/IB-Dome.jpg"></td></tr>
+  <tr><td class=c width=200>&nbsp;</tr>
+  <tr><td class=c width=200><img src="../../_Images/IB-Mirror%20Dome.jpg"></td></tr>
+  </table>
+
+  <p>See also, <a href="../BEM-Part/Form-Infinite-Baffle.html">Form - Infinite Baffle</a>.</p>
+
+  <p>Mathematically, boundary conditions of the IB are satisfied by using a
+  special type of Green-function for the Helmholtz Integral
+  <a href="Literature.html">[15]</a>.
+  This special Green-function yields for the velocity:</p>
+
+    <p class=formula>v<sub>n</sub> = 0</p>
+
+  <p>for all points at the surface of the Infinite Baffle and in normal direction.
+  In this way there is no need to model the infinite plane (... well, at least approximately ...).</p>
+
+  <p>The workings of the trick with the special Green-function can be explained by
+  imagining a mirrored source behind the Infinite Baffle. At receiving point
+  P1 the sound pressure is the sum of the original source and its
+  mirrored image. However, in the plane of the IB the normal velocity
+  yields zero everywhere.</p>
+
+  <br />
+  <h4>Note on Concave Shaped Boundaries</h4>
+
+  <p>The trick with the special Green-function works fine, as long all elements
+  are in front of the Infinite Baffle. However, as soon as there are elements
+  behind the Infinite Baffle then the mirror-technique runs into difficulties.
+  This becomes clear if we look at the left picture below. The new Green-function
+  yields v<sub>n</sub>=0 everywhere in the plane. However, it should make an
+  exception at the aperture, where the normal velocity is likely anything than zero.</p>
+
+  <p>AKABAKs' solution is to divide the structure
+  into two
+  <a href="Sub-Domain%20Modelling.html">subdomains</a>
+  in such a way that the exterior structure exhibits only
+  elements in front of the Infinite Baffle.</p>
+
+  <p><img src="../../_Images/IB-Subdomain.jpg"></p>
+  <br>
+  <p>An example-simulation may demonstrate this and also that results are
+  different for without and with using the interface-technique:</p>
+
+  <br />
+  <table align=center><tr>
+  <td class=c width=200><img src="../../_Images/IB%20Diaph1.jpg"></td>
+  <td class=c width=200><img src="../../_Images/IB%20Diaph2.jpg"></td>
+  <td class=c width=200><img src="../../_Images/IB%20Diaph3.jpg"></td>
+  <td class=c width=200><img src="../../_Images/IB%20Diaph4.jpg"></td>
+  </tr></table>
+  <br />
+
+  <p>The above picture shows a cone-shaped diaphragm in an Infinite Baffle.
+  The transparent gasket forms the interface, ie a virtual boundary with
+  continuity of pressure and velocity. The Infinite Baffle is at the level
+  of the cone. The interface couples two subdomains, one with
+  <i>Element Type=Interior</i>
+  and one with <i>Element Type=Exterior</i>. The interior subdomain is bounded by
+  the diaphragm and by the interface. The exterior side of the interface
+  is convex and will be mirrored automatically in order to satisfy boundary conditions
+  on the Infinite Baffle. If you check
+  <a href="../Desktop/Page-Views.html">Views/Structure/IB Mirrors</a>
+  AKABAK displays also the mirrored elements (last picture above).</p>
+
+  <br />
+
+  <h4>Experiment</h4>
+
+  <table width=80% align=center>
+  <tr>
+  <td class=c width=350><img src="../../_Images/IB-Graph11.jpg"></td>
+  <td class=c width=350><img src="../../_Images/IB-Graph12.jpg"></td>
+  </tr>
+  <tr>
+  <td class=c width=350><img src="../../_Images/IB-Graph21.jpg"></td>
+  <td class=c width=350><img src="../../_Images/IB-Graph22.jpg"></td>
+  </tr>
+  <tr>
+  <td class=c width=350>Wrong model, non-interfaced</td>
+  <td class=c width=350>Correct model, interfaces used</td>
+  </tr>
+  </table>
+  <br />
+
+  <p>The above spectra display the results of simulations. On the left column
+  are the results of the non-interfaced model and on the right side are those
+  using subdomain-modeling. The spectra of the top row are radiation impedance curves rendered as
+  real- and imaginary parts. The bottom row displays the sound pressure level
+  in front of the diaphragm some distance away.</p>
+
+  <p>The spectra display different results. The correct
+  model is on the right side, which employs interfaces. The radiation impedance
+  is more pronounced as it should be for a concave shape. Also visible is a
+  slight amplification in the sound pressure curve exactly in the frequency band
+  where the real part of the radiation impedance has its main-peak. Note, that
+  this simulation was not coupled to the mechanical domain, otherwise this
+  amplification can be even more pronounced.</p>
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

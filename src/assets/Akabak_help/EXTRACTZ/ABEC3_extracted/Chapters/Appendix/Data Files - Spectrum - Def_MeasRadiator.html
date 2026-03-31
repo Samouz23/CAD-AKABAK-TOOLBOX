@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Data Files - Spectrum - Def_MeasRadiator</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Data Files - Spectrum - Def_MeasRadiator</h1>
+  <p class=navi><a href="../Index.html">Home</a> &raquo;
+                <a href="Data%20Files%20-%20Spectrum.html">Data Files - Spectrum</a> </p>
+  <hr>
+
+  <p>The <a href="../LEScript/Sections/Def_MeasRadiator.html">Def_MeasRadiator</a>
+  defines a radiating lumped element based on measurements. Here we have
+  two specifications of <i>DataFileAlias=</i> because <i>Def_MeasRadiator</i>
+  needs an impedance-file and a sound pressure-file.
+  For <i>Def_MeasRadiator</i> the type of data is derived from
+  the <i>Import Control Settings</i>. These settings are part of the file as exported
+  by <a href="VacsViewer.html">VACS</a> and are documented
+  in the help-system of VACS at <i>Import Control Settings</i>.</p>
+
+  <p>For example the definition in the
+  <a href="../LEScript/LEScripts.html">Lumped Element Script</a> is</p>
+
+  <pre>
+  <b>Def_MeasRadiator</b>  'Tweeter'
+    <font color="#800000">DataFileAlias='Imp_Tweeter'
+    DataFileAlias='SPL_Tweeter'</font>
+    DataDistance=1m,1m
+    DataDriving=1V</pre>
+
+
+  <br />
+
+  <p>The data-file should have basic <i>Import Control Settings</i>
+  in order to be able interpreting the dataset. For example the impedance
+  data-file could look like this:</p>
+
+  <br />
+  <hr />
+  <pre><font color="#800000">
+  Data_Domain=Frequency
+  Data_Format=Complex
+  Data_LevelType=Impedance10</font>
+    98.5719             4.91222           0.479163
+   101.099              4.90695           0.47749
+   103.69               4.8745            0.425568
+   ...</pre>
+  <br />
+  <hr />
+
+  <p><i>Data_Domain=Frequency</i> indicates a frequency abscissa, which forms the
+  first column of numbers. <i>Data_Format=Complex</i> specifies that
+  the second column is the real-part and the third column the imaginary part.
+  <i>Data_LevelType=Impedance10</i> is used to indicate that these
+  data are forming an impedance-spectrum.</p>
+
+  <br />
+
+  <br />
+  <hr />
+  <pre><font color="#800000">
+  Data_Domain=Frequency
+  Data_Format=LeveldB_Phase
+  Data_LevelType=SoundPressure</font>
+   100            -30.2386            -163.612
+   102.556        -22.9868            -129.838
+   105.177        -15.9197             -63.1628
+   ...</pre>
+  <br />
+  <hr />
+
+  <p>The sound pressure file has a different number-format than the file for impedance
+  data (not necessarily but here for demonstration purpose).
+  <i>Data_Format=LeveldB_Phase</i> specifies
+  the second column to be level-dB and the third column hosts phase-values in
+  degree. Because of <i>Data_LevelType=SoundPressure</i> we know that
+  the level is to be read as SPL-values.</p>
+
+  <br>
+  <br>
+</body>
+</html>
+
+

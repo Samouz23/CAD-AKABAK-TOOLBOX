@@ -2,6 +2,8 @@
 // FICHIER :  src/js/panels/hornscript.js (VERSION AVEC MISE À JOUR EN TEMPS RÉEL)
 // ====================================================================================================
 
+import { defaultTemplates } from '../utils/formulaTemplates.js';
+
 // --- HTML DU PANNEAU ---
 export function getHornscriptPanelHtml() {
     const segmentRowsHtml = Array.from({ length: 20 }, (_, i) => `
@@ -374,9 +376,33 @@ export function initializeHornscriptPanel(rootElement) {
         });
 
         if (tFactorPrefix) {
-            scriptLines.push(`\n// T-Factor (${tFactorPrefix})`);
-            for (let i = 0; i < segmentsData.length - 1; i++) { 
-                scriptLines.push(`${tFactorPrefix}${i + 1} = 10`); 
+            // Salmon horn function: S(z) = S_th * (cosh(k0*z) + T*sinh(k0*z))^2
+            // => T_i = (η_i - cosh(k0*L_i)) / sinh(k0*L_i)  where η_i = sqrt(S_mo_i / S_th_i)
+            // k0 derived from total horn expansion (exponential): k0 = ln(sqrt(S_mouth/S_throat)) / L_total
+            const S_throat_total = segmentsData[0].w * segmentsData[0].h;
+            const S_mouth_total = segmentsData[segmentsData.length - 1].w * segmentsData[segmentsData.length - 1].h;
+            const L_total = segmentsData.reduce((sum, seg, idx) => idx < segmentsData.length - 1 ? sum + seg.l : sum, 0);
+
+            let k0 = 0;
+            if (S_throat_total > 0 && S_mouth_total > S_throat_total && L_total > 0) {
+                k0 = Math.log(Math.sqrt(S_mouth_total / S_throat_total)) / L_total;
+            }
+
+            scriptLines.push(`\n// T-Factor Salmon (${tFactorPrefix})`);
+            for (let i = 0; i < segmentsData.length - 1; i++) {
+                const S_th = segmentsData[i].w * segmentsData[i].h;
+                const S_mo = segmentsData[i + 1].w * segmentsData[i + 1].h;
+                const L_i = segmentsData[i].l;
+                let T = 1.0;
+                if (S_th > 0 && S_mo > 0 && L_i > 0 && k0 > 0) {
+                    const eta = Math.sqrt(S_mo / S_th);
+                    const k0L = k0 * L_i;
+                    const sinhVal = Math.sinh(k0L);
+                    if (Math.abs(sinhVal) > 1e-10) {
+                        T = (eta - Math.cosh(k0L)) / sinhVal;
+                    }
+                }
+                scriptLines.push(`${tFactorPrefix}${i + 1} = ${T.toFixed(2)}`);
             }
         }
         
@@ -598,17 +624,12 @@ export function initializeHornscriptPanel(rootElement) {
     async function loadDrivers() { try { allDrivers = await window.electronAPI.getAllDrivers(); } catch (error) { console.error("Failed to load drivers:", error); allDrivers = []; } }
     
     const refreshSettings = (newSettings) => {
-        const defaultTemplates = {
-            hornSegmentConstH: 'HTh = @H\nHMo = @H\nWTh = @S{i}\nWMo = @S{i+1}\nLen = @L{i}\nT   = @T{i}',
-            hornSegmentVarH: 'HTh = @H{i}\nHMo = @H{i+1}\nWTh = @S{i}\nWMo = @S{i+1}\nLen = @L{i}\nT   = @T{i}',
-            hornTlAmorce: 'WD  = @S1\nHD  = @H\nLen = @L{type}\neta = @WOOD',
-        };
         templates = { ...defaultTemplates, ...newSettings?.templates };
-        console.log("Horn-Script templates have been updated.");
     };
 
     copyFormulaBtn.addEventListener('click', (e) => handleCopyFormula(e.currentTarget));
     clearBtn.addEventListener('click', clearAll);
+
     segmentCountInput.addEventListener('input', () => { segmentCount = Math.max(1, Math.min(20, parseInt(segmentCountInput.value, 10) || 1)); segmentCountInput.value = segmentCount; updateVisibleSegments(); });
     
     tableBody.addEventListener('input', e => {

@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Rs=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Rs=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Rs=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">ohm</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Series resistance</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Capacitor.html">Capacitor</a>,
+                                                        <a href="../Sections/Coil.html">Coil</a>
+                                                        </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><img src="../../../_Images/LE-Capacitor%20Rp%20Ls%20Rs.jpg" align=right />
+  <i>Rs=</i> is a loss resistance in series with the
+  capacitance of the Capacitor element
+  or with the inductance of the Coil element.
+  Units [Rs] = &Omega;</p>
+
+  <p>By default Rs = 0.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Capacitor</b>  'C1'
+    Node=10=20
+    C=1uF  Ls=1uH  Rs=0.5ohm</pre>
+
+  <br>
+  <br>
+</body>
+</html>

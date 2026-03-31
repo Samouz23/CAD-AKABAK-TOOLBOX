@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Subdomain=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Subdomain=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Subdomain=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1>Integer number</td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Index (name) of a sub-domain</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Subdomain_Properties.html">Subdomain_Properties</a>,
+                                                        <a href="../Sections/Elements.html">Elements</a>,
+                                                        <a href="../Sections/Baffle.html">Baffle</a>,
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a>,
+                                                        <a href="../Sections/Shell.html">Shell</a>,
+                                                        <a href="../Sections/Pressure_Points.html">Pressure_Points</a>,
+                                                        <a href="../Sections/Pressure_Box.html">Pressure_Box</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1>
+                                          <a href="../../Appendix/Sub-Domain%20Modelling.html">Subdomain Modelling</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><i>Subdomain=</i> is the "name" in form of a number of a certain subdomain.
+  If <a href="../../Appendix/Sub-Domain%20Modelling.html">Subdomain Modelling</a>
+  is enabled then each section of the <a href="../BEScript.html">Boundary Element Script</a>
+  should provide the parameter <i>Subdomain=</i>.</p>
+
+  <p><i>Subdomain Modelling</i> is enabled if there are at least two different
+  subdomains specified.</p>
+
+  <p>Typically each subdomain is headed by a section
+  <a href="../Sections/Subdomain_Properties.html">Subdomain_Properties</a>,
+  which allows to specify additional properties and default settings
+  of a subdomain.</p>
+
+  <br />
+
+  <p>For example</p>
+
+  <pre>
+  <b>SubDomain_Properties</b> 'Enclosure'
+    <font color="#800000">SubDomain=1</font>
+    ElType=Interior
+    Color=0.3,0.3,0.3
+
+  <b>SubDomain_Properties</b> 'Vent'
+    <font color="#800000">SubDomain=2</font>
+    ElType=Interior
+
+  <b>SubDomain_Properties</b> 'Exterior'
+    <font color="#800000">SubDomain=3</font>
+    ElType=Exterior
+    IBPlane=z
+
+  <b>Elements</b> "Enclosure-Interior"
+    RefNodes="NF"
+    <font color="#800000">SubDomain=1</font>
+    101   12201  12204  12203  12202
+    ...
+
+  <b>Diaphragm</b>  "Cone front"
+    Side=Front
+    DrvGroup=1001
+    <font color="#800000">SubDomain=3</font>
+    ... </pre>
+
+  <p>In this example from "Speaker Cabinet SP38" we have three subdomains.
+  <i>Subdomain=1</i> forms the interior of the loudspeaker cabinet.
+  <i>Subdomain=2</i> is the interior of the vent.
+  <i>Subdomain=3</i> is the exterior domain.</p>
+
+  <br>
+  <br>
+</body>
+</html>

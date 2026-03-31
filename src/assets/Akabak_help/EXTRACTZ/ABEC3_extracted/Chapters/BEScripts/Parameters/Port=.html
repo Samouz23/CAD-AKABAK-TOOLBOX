@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Port=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Port=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../ObSpectrum.html">Spectrum-Observation-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Port=</td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Integer%20values.html">Integer</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Identification of port of <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Analysis</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/LE_Spectrum.html">LE_Spectrum</a>
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1>
+                                         <a href="System=.html">System=</a>,
+                                         <a href="ElName=.html">ElName=</a>,
+                                         <a href="Node=.html">Node=</a>,
+                                         <a href="AnalysisType=.html">AnalysisType=</a>
+                                         </td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table align=right>
+  <tr><img src="../../../_Images/LE_Spectrum%20Port%204Pole.jpg" /></tr>
+  <br />
+  <tr><img src="../../../_Images/LE_Spectrum%20Port%206Pole.jpg" /></tr>
+  </table>
+  <p><i>Port=</i> identifies a particular port of a Lumped Element component
+  for observation of spectra.</p>
+
+  <p><i>Port=</i> is only necessary for components with more than two poles
+  such as the
+  <a href="../../LEScript/Sections/Driver.html">Driver</a>,
+  <a href="../../LEScript/Sections/Transformer.html">Transformer</a>,
+  <a href="../../LEScript/Sections/OpAmp.html">OpAmp</a>, etc.
+  For two-poles, such as the
+  <a href="../../LEScript/Sections/Resistor.html">Resistor</a>,
+  <i>Port=</i> is ignored. However, some components appear
+  only in the script as a two-pole, whereas internally they are expanded to
+  multi-poles. Such components are the
+  <a href="../../LEScript/Sections/Duct.html">Duct</a>,
+  <a href="../../LEScript/Sections/Waveguide.html">Waveguide</a>,
+  <a href="../../LEScript/Sections/OpAmp.html">OpAmp</a> and
+  <a href="../../LEScript/Sections/Transistor.html">Transistor</a>.</p>
+
+  <p><i>Port=</i> is only necessary for inspecting flow-parameters
+  such as <i>AnalysisType=[Current, Excursion, Velocity, Acceleration, VolVelocity]</i>
+  and <i>AnalysisType=Power</i>. Otherwise, for inspecting potentials,
+  <i>LE_Spectrum</i> expects the specification of a network-node with the help of
+  <a href="Node=.html">Node=</a>.</p>
+
+  <br />
+
+  <h4>Port=0</h4>
+
+  <p><i>Port=0</i> yields special inspection for some components:</p>
+
+  <p>For <i>AnalysisType=Power</i> the electrical power in the voice-coils resistance(s)
+  <a href="../../LEScript/Parameters/Re2=Re21=Re22=.html">Re=</a> is calculated.</p>
+
+  <p>For <i>AnalysisType=[Excursion, Velocity, Acceleration]</i>
+  the motion of the diaphragm is calculated for components
+  <a href="../../LEScript/Sections/Driver.html">Driver</a>,
+  <a href="../../LEScript/Sections/Speaker.html">Speaker</a> and
+  <a href="../../LEScript/Sections/Diaphragm.html">Diaphragm</a>.</p>
+
+  <br />
+
+  <h4>Example</h4>
+
+  <p>If the Lumped Element script defines a Transformer and
+  you want to inspect the current into the secondary coil then</p>
+
+  <pre>
+  <b>LE_Spectrum</b> 'I into Tr1'
+    AnalysisType=Current
+    System=S1
+    101  ElName='Tr'  <font color="#800000">Port=2</font>   ID=Tr2</pre>
+
+  <br />
+  <p>The associate LE-script could look like this:</p>
+
+  <pre>
+  <b>System</b>  'S1'
+    <b>Resistor</b>    'R1'
+      Node=100=200
+      R=5ohm
+    <font color="#800000"><b>Transformer</b> 'Tr'</font>
+      Node=200=0=300=400
+      L1=2mH  L2=5mH  R1=1.2ohm  R2=3ohm
+    ...</pre>
+
+
+  <br>
+  <br>
+</body>
+</html>

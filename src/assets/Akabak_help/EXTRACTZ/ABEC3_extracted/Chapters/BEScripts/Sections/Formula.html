@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Formula</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Formula</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Formula system providing global variables</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Scripts.html">Scripts</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>Formula</b>   "Any Name"
+  {
+  // Driver diaphragm
+  dD=0.2;                          // Outer diameter
+  dD1=0.06;                        // Dustcap diameter
+  tD1=0.01;                        // Cone depth
+  hD2=0.02;                        // Cone height outside
+  dVC=0.05;                        // Voice coil diameter
+  dM=0.1;                          // Magnet diameter
+  hM=0.02;                         // Magnet thickness
+
+  // Compression chamber front
+  ShellFront_z=0.1;                // Position compression chamber
+  ShellFront_Len1=0.01;            // Height of chamber cylinder
+  ShellFront_Len2=0.01;            // Height of chamber cap
+
+  ...
+  // Calculations
+  InterfacFront_z =  ShellFront_Len1 + ShellFront_Len2 + DuctFront_Len;
+  InterfacRear_z  = -ShellRear_Len1 - ShellRear_Len2 - DuctRear_Len;
+  MotorWall_z     =  InterfacRear_z - MotorWall_Distance;
+  }</pre>
+
+  <br />
+  <p>Section <i>Formula</i> provides the specification and calculation of
+  global variables, which can be used to parameterize your scripts.</p>
+
+  <p>The above is only an example. Each item is regarded as a formula.
+  Each identifier becomes a parameter, which can be used in scripts
+  sub-sequentially.</p>
+
+  <p>Details are given in chapter
+  <a href="../../Appendix/Parameterization%20of%20Scripts.html">
+  Parameterization of Scripts</a>.</p>
+
+  <p>All <i>Formula</i>-sections of a script are combined to one.
+  This means identifiers should be unique, even across sections.</p>
+
+
+
+  <br />
+  <p>You can specify section <i>Formula</i> in a file of it self, which
+  can be embedded into other scripts, which take reference to the
+  parameters of the <i>Formula</i>-section, see
+  <a href="../Parameters/File=.html">File=</a>. In this way it is possible
+  to encapsulate the details of the scripts and provide only the
+  script with the Formula to a potential user. Also this structure of
+  using the Formula-section provides an easy path to design a dedicated
+  GUI-application.</p>
+
+  <p>Tip: Often you need parameters from one <i>Formula</i>-section within another.
+  For example, parameters may be used for the solving-script as well as for the
+  observation script. However, in this case a change of the Formula-system
+  would trigger the update mechanism of the solving script.
+  You can circumvent this problem by providing two or more files
+  with <i>Formula</i>-sections, some of them dedicated exclusively to the
+  observation stage. As all <i>Formula</i>-sections get combined
+  a change in the observation related formula keeps the solving stage.</p>
+
+  <p></p>
+  <br>
+  <br>
+</body>
+</html>

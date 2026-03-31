@@ -112,7 +112,11 @@ function createGeometryFromProfile(config, profileData, totalLength, domRoot) {
 
     // --- Fonctions utilitaires internes ---
     const clamp = (val, min, max) => Math.max(min, Math.min(val, max));
-    const ease = (t, g = 0.65) => clamp(t, 0, 1) ** g;
+    // Smoothstep easing: starts slowly (avoids throat pinch when morphing
+    // circle→rectangle), accelerates in the middle, and decelerates at the mouth.
+    // The old t^0.65 (concave) caused immediate shape change at the throat,
+    // which contracted the shorter axis before the area could compensate.
+    const ease = (t) => { const c = clamp(t, 0, 1); return c * c * (3 - 2 * c); };
 
     // Formule de la superformule
     const superformula = (theta, opts) => {
@@ -175,43 +179,95 @@ function createGeometryFromProfile(config, profileData, totalLength, domRoot) {
     // --- ÉTAPE 2: Générer les vertices ---
     const vertices = [];
     const useShapeControl = config.useShapeControl && config.shapeLength > 0 && totalLength > config.shapeLength;
+    
+    // Fonction pour générer les points d'un rectangle strict (coins à 90°)
+    const generateStrictRectanglePoints = (numPoints, w, h) => {
+        const points = [];
+        for (let j = 0; j < numPoints; j++) {
+            const angle = (j / numPoints) * 2 * Math.PI;
+            const cos_a = Math.cos(angle);
+            const sin_a = Math.sin(angle);
+            
+            // Détermine si on va vers un côté X ou Y
+            // En utilisant la formule : r_rect = 1 / max(|cos(θ)|/w, |sin(θ)|/h)
+            const r = 1.0 / Math.max(Math.abs(cos_a) / w, Math.abs(sin_a) / h);
+            points.push({ x: r * cos_a, y: r * sin_a });
+        }
+        return points;
+    };
 
     for (let i = 0; i < axialPoints; i++) { // <-- CORRECTION : Boucle sur les points du profil
         const z = profileData[i].point.y; // <-- CORRECTION : On prend le Z directement
         const t_axial = totalLength > 0 ? z / totalLength : 0; // <-- CORRECTION : On recalcule t_axial
         const targetArea = Math.PI * profileData[i].point.x ** 2; // <-- CORRECTION : On prend le rayon directement
 
-        // a) Calcule la super-ellipse de base (interpolation gorge -> bouche)
-        const w_base = ease(t_axial);
-        const n_base = n_in * (1 - w_base) + n_out * w_base;
-        const ratio_base = ratio_in * (1 - w_base) + ratio_out * w_base;
-        const a_base_unit = Math.sqrt(Math.PI / ratio_base); // 'a' pour une super-ellipse d'aire PI
-        const b_base_unit = a_base_unit * ratio_base;
-
-        // b) Calcule l'amplitude de la déformation par la superformule
-        let effective_amplitude = 0;
-        if (useShapeControl && z <= config.shapeLength) {
-             const shape_influence = Math.sin(Math.PI * z / config.shapeLength);
-             effective_amplitude = config.superformula.amplitude * shape_influence;
-        }
+        let blended_unit_points;
         
-        // c) Génère la forme finale en fusionnant la super-ellipse et la superformule
-        const blended_unit_points = Array.from({ length: N }, (_, j) => {
-            const angle = (j / N) * 2 * Math.PI;
+        // Si c'est un rectangle en entrée ET en sortie -> utilise le rectangle strict comme base
+        if (config.inputShape === 'rectangle' && config.outputShape === 'rectangle') {
+            // Interpolation du ratio entre gorge et bouche
+            const ratio_base = ratio_in * (1 - t_axial) + ratio_out * t_axial;
+            // On génère des points de rectangle strict
+            const w_rect = Math.sqrt(Math.PI / ratio_base);
+            const h_rect = w_rect * ratio_base;
+            const rect_points = generateStrictRectanglePoints(N, w_rect, h_rect);
             
-            // Rayon de la super-ellipse unitaire
-            const term1 = Math.abs(Math.cos(angle)) ** n_base;
-            const term2 = Math.abs(Math.sin(angle)) ** n_base;
-            const r_base_unit = (term1 / (a_base_unit ** n_base) + term2 / (b_base_unit ** n_base)) ** (-1 / n_base);
+            // b) Calcule l'amplitude de la déformation par la superformule
+            let effective_amplitude = 0;
+            if (useShapeControl && z <= config.shapeLength) {
+                 const shape_influence = Math.sin(Math.PI * z / config.shapeLength);
+                 effective_amplitude = config.superformula.amplitude * shape_influence;
+            }
+            
+            // c) Fusionne le rectangle strict avec la superformula pour le shaping
+            blended_unit_points = Array.from({ length: N }, (_, j) => {
+                const angle = (j / N) * 2 * Math.PI;
+                
+                // Rayon du rectangle strict
+                const r_rect = Math.hypot(rect_points[j].x, rect_points[j].y);
+                
+                // Rayon de la superformule unitaire
+                const r_sf_unit = Math.hypot(sf_unit_points[j].x, sf_unit_points[j].y);
+                
+                // Fusion : garde le rectangle comme base, modifie avec superformula
+                const r_blended = r_rect * (1 - effective_amplitude) + r_sf_unit * effective_amplitude;
+                
+                return { x: r_blended * Math.cos(angle), y: r_blended * Math.sin(angle) };
+            });
+        } else {
+            // Cas standard : super-ellipse + superformule
+            // a) Calcule la super-ellipse de base (interpolation gorge -> bouche)
+            const w_base = ease(t_axial);
+            const n_base = n_in * (1 - w_base) + n_out * w_base;
+            const ratio_base = ratio_in * (1 - w_base) + ratio_out * w_base;
+            const a_base_unit = Math.sqrt(Math.PI / ratio_base); // 'a' pour une super-ellipse d'aire PI
+            const b_base_unit = a_base_unit * ratio_base;
 
-            // Rayon de la superformule unitaire
-            const r_sf_unit = Math.hypot(sf_unit_points[j].x, sf_unit_points[j].y);
+            // b) Calcule l'amplitude de la déformation par la superformule
+            let effective_amplitude = 0;
+            if (useShapeControl && z <= config.shapeLength) {
+                 const shape_influence = Math.sin(Math.PI * z / config.shapeLength);
+                 effective_amplitude = config.superformula.amplitude * shape_influence;
+            }
+            
+            // c) Génère la forme finale en fusionnant la super-ellipse et la superformule
+            blended_unit_points = Array.from({ length: N }, (_, j) => {
+                const angle = (j / N) * 2 * Math.PI;
+                
+                // Rayon de la super-ellipse unitaire
+                const term1 = Math.abs(Math.cos(angle)) ** n_base;
+                const term2 = Math.abs(Math.sin(angle)) ** n_base;
+                const r_base_unit = (term1 / (a_base_unit ** n_base) + term2 / (b_base_unit ** n_base)) ** (-1 / n_base);
 
-            // Fusion des deux rayons
-            const r_blended = r_base_unit * (1 - effective_amplitude) + r_sf_unit * effective_amplitude;
+                // Rayon de la superformule unitaire
+                const r_sf_unit = Math.hypot(sf_unit_points[j].x, sf_unit_points[j].y);
 
-            return { x: r_blended * Math.cos(angle), y: r_blended * Math.sin(angle) };
-        });
+                // Fusion des deux rayons
+                const r_blended = r_base_unit * (1 - effective_amplitude) + r_sf_unit * effective_amplitude;
+
+                return { x: r_blended * Math.cos(angle), y: r_blended * Math.sin(angle) };
+            });
+        }
 
         // d) Normalise la forme fusionnée pour qu'elle ait l'aire requise
         const blended_area = calculatePolygonArea(blended_unit_points);
@@ -366,51 +422,40 @@ function validateGeometryAndGetPointColors(vertices, profileData, pointsPerSlice
     const numProfilePoints = Math.floor(vertices.length / 3 / pointsPerSlice);
     const pointsColors = [];
     const colorValid = new THREE.Color(0x00ff00), colorInvalid = new THREE.Color(0xff0000);
-    let lastSliceRadii = new Array(pointsPerSlice).fill(profileData[0]?.rawRadius || 0);
 
-    // Tolérances plus robustes pour éviter les faux positifs (mm et relatif)
+    // Tolérance pour bruit numérique (mm et relatif)
     const tolAbs = 0.05; // 5/100 mm
     const tolRel = 0.001; // 0.1 %
 
-    // Estime la longueur totale en Z à partir des vertices
-    const firstZ = vertices.length >= 3 ? vertices[2] : 0;
-    const lastSliceStart = (numProfilePoints - 1) * pointsPerSlice * 3;
-    const lastZ = vertices.length >= lastSliceStart + 3 ? vertices[lastSliceStart + 2] : firstZ;
-    const totalZ = Math.max(0, lastZ - firstZ);
+    // Enveloppe max : pour chaque angle j, le plus grand rayon vu jusqu'ici.
+    // Si un rayon tombe sous cette enveloppe, la surface est concave à cet angle.
+    const maxRadii = new Array(pointsPerSlice).fill(0);
 
     for (let i = 0; i < numProfilePoints; i++) {
-        // Meilleur mappage entre l'indice de tranche et les points du profil
         const profileIndex = Math.max(0, Math.min(
             profileData.length - 1,
             Math.round(i * (profileData.length - 1) / Math.max(1, (numProfilePoints - 1)))
         ));
         const isProfileMonotonic = !!profileData[profileIndex].isValid;
         let decreases = 0;
-        const currentSliceRadii = [];
         const startIndex = i * pointsPerSlice * 3;
-        const zCurr = vertices[startIndex + 2] || 0;
 
         for (let j = 0; j < pointsPerSlice; j++) {
             const r = Math.hypot(vertices[startIndex + j * 3], vertices[startIndex + j * 3 + 1]);
-            currentSliceRadii.push(r);
             if (i > 0) {
-                const eps = Math.max(tolAbs, tolRel * Math.abs(lastSliceRadii[j]));
-                if (r + eps < lastSliceRadii[j]) decreases++;
+                const eps = Math.max(tolAbs, tolRel * maxRadii[j]);
+                if (r + eps < maxRadii[j]) decreases++;
             }
+            maxRadii[j] = Math.max(maxRadii[j], r);
         }
 
-        // Ignorer les faux positifs proches de la gorge (<=10% de la longueur ou <=10 mm)
-        const nearThroat = totalZ > 0 ? ((zCurr - firstZ) <= Math.max(10, 0.1 * totalZ)) : (i <= Math.max(1, Math.floor(numProfilePoints * 0.1)));
+        // Flag concave dès qu'un seul rayon angulaire est sous son enveloppe max
+        const isSliceConcave = (decreases >= 1);
 
-        // On ne déclare la concavité que si une fraction significative des lignes diminue
-        const concavityThreshold = Math.max(1, Math.floor(pointsPerSlice * 0.1)); // >= 10% des lignes
-        const isSliceConcaveLongitudinally = !nearThroat && (decreases >= concavityThreshold);
-
-        const sliceColor = (isProfileMonotonic && !isSliceConcaveLongitudinally) ? colorValid : colorInvalid;
+        const sliceColor = (isProfileMonotonic && !isSliceConcave) ? colorValid : colorInvalid;
         for (let j = 0; j < pointsPerSlice; j++) {
             pointsColors.push(sliceColor.r, sliceColor.g, sliceColor.b);
         }
-        lastSliceRadii = currentSliceRadii;
     }
     return pointsColors;
 }
@@ -438,7 +483,8 @@ function mergeGeometries(geometries) {
 
 function createInterfaceGeometry(config, numProfilePoints, totalLength, vertices) {
     const pointsPerSlice = config.numLines;
-    const interfaceAngularPoints = config.interfaceAngularPoints || config.numLines;
+    // Maillage conforme : même résolution angulaire que le pavillon à la jonction
+    const interfaceAngularPoints = config.numLines;
     const interfaceAxialPoints = config.interfaceAxialPoints || 10;
     const mouthZ = totalLength;
     
@@ -453,22 +499,11 @@ function createInterfaceGeometry(config, numProfilePoints, totalLength, vertices
     const cubicBezier = (t, p0, p1, p2, p3) => (1-t)**3*p0 + 3*(1-t)**2*t*p1 + 3*(1-t)*t**2*p2 + t**3*p3;
     const gridPoints = [];
     
-    // On génère les points avec le nombre personnalisé de points angulaires et axiaux
     for (let i = 0; i <= interfaceAxialPoints; i++) {
         const t = i / interfaceAxialPoints;
         for (let j = 0; j < interfaceAngularPoints; j++) {
-            // Interpolation angulaire pour mapper les points de la bouche
-            const angleFrac = j / interfaceAngularPoints;
-            const mouthIndex = Math.floor(angleFrac * pointsPerSlice);
-            const mouthIndexNext = (mouthIndex + 1) % pointsPerSlice;
-            const localT = (angleFrac * pointsPerSlice) - mouthIndex;
-            
-            // Interpolation linéaire entre deux points de la bouche
-            const startV = new THREE.Vector3(
-                mouthVertices[mouthIndex].x * (1 - localT) + mouthVertices[mouthIndexNext].x * localT,
-                mouthVertices[mouthIndex].y * (1 - localT) + mouthVertices[mouthIndexNext].y * localT,
-                mouthVertices[mouthIndex].z * (1 - localT) + mouthVertices[mouthIndexNext].z * localT
-            );
+            // Indexation directe — maillage conforme, pas d'interpolation
+            const startV = mouthVertices[j];
             
             const hypot = Math.hypot(startV.x, startV.y);
             const bulgeFactor = hypot > 1e-6 ? 1 + config.interface.bulgeRadius / hypot : 1;
@@ -482,15 +517,13 @@ function createInterfaceGeometry(config, numProfilePoints, totalLength, vertices
         }
     }
     
-    // Création du mesh avec les paramètres personnalisés
-    const interfaceConfig = { ...config, numLines: interfaceAngularPoints };
-    return createMeshFromVertices(interfaceConfig, gridPoints.flatMap(p => [p.x, p.y, p.z]), interfaceAxialPoints + 1);
+    return createMeshFromVertices(config, gridPoints.flatMap(p => [p.x, p.y, p.z]), interfaceAxialPoints + 1);
 }
 
 function createThroatCapGeometry(config, throatVertices) {
-    const sourceAngularPoints = config.sourceAngularPoints || config.numLines;
+    // Maillage conforme : même résolution angulaire que le pavillon à la jonction
+    const sourceAngularPoints = config.numLines;
     const sourceAxialPoints = config.sourceAxialPoints || 5;
-    const originalNumLines = config.numLines;
     
     if (!throatVertices || throatVertices.length === 0) return new THREE.BufferGeometry();
 
@@ -498,7 +531,7 @@ function createThroatCapGeometry(config, throatVertices) {
     
     // Extraire les points du contour de la gorge depuis throatVertices
     const throatContour = [];
-    for (let j = 0; j < originalNumLines; j++) {
+    for (let j = 0; j < config.numLines; j++) {
         const idx = j * 3;
         throatContour.push(new THREE.Vector3(
             throatVertices[idx],
@@ -511,20 +544,11 @@ function createThroatCapGeometry(config, throatVertices) {
     for (let i = 1; i <= sourceAxialPoints; i++) {
         const scale = i / sourceAxialPoints;
         for (let j = 0; j < sourceAngularPoints; j++) {
-            // Interpolation angulaire pour mapper les points du contour de la gorge
-            const angleFrac = j / sourceAngularPoints;
-            const throatIndex = Math.floor(angleFrac * originalNumLines);
-            const throatIndexNext = (throatIndex + 1) % originalNumLines;
-            const localT = (angleFrac * originalNumLines) - throatIndex;
-            
-            // Interpolation linéaire entre deux points du contour
-            const interpolatedX = throatContour[throatIndex].x * (1 - localT) + throatContour[throatIndexNext].x * localT;
-            const interpolatedY = throatContour[throatIndex].y * (1 - localT) + throatContour[throatIndexNext].y * localT;
-            
+            // Indexation directe — maillage conforme, pas d'interpolation
             gridPoints.push(new THREE.Vector3(
-                interpolatedX * scale,
-                interpolatedY * scale,
-                0 // Tous les points sont sur le plan Z=0
+                throatContour[j].x * scale,
+                throatContour[j].y * scale,
+                0
             ));
         }
     }
@@ -533,7 +557,5 @@ function createThroatCapGeometry(config, throatVertices) {
     const centerPoints = Array(sourceAngularPoints).fill(new THREE.Vector3(0, 0, 0));
     gridPoints.unshift(...centerPoints);
     
-    // Le nombre de "cercles" est sourceAxialPoints + le point central
-    const sourceConfig = { ...config, numLines: sourceAngularPoints };
-    return createMeshFromVertices(sourceConfig, gridPoints.flatMap(p => [p.x, p.y, p.z]), sourceAxialPoints + 1);
+    return createMeshFromVertices(config, gridPoints.flatMap(p => [p.x, p.y, p.z]), sourceAxialPoints + 1);
 }

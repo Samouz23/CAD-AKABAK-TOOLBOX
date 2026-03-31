@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>LE_Spectrum</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>LE_Spectrum</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../ObSpectrum.html">Spectrum Observation Script</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Spectrum of various lumped element parameter.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1> <a href="../ObSpectrum.html">Spectral observation scripts</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>LE_Spectrum</b>  "Any Name"
+    <a href="../Parameters/AnalysisType=.html">AnalysisType=</a>
+    <a href="../Parameters/DrvGroups=.html">DrvGroups=</a>
+    <a href="../Parameters/BodeType=.html">BodeType=</a>
+    <a href="../Parameters/Range=.html">Range=</a>
+    <a href="../Parameters/GraphHeader=.html">GraphHeader=</a>
+    <a href="../Parameters/ID=.html">ID=</a>
+    <a href="../Parameters/System=.html">System=</a>
+    <a href="../Parameters/List%20of%20LE_Spectrum%20Items.html"><b>List of LE Spectrum Items</b></a>
+  </pre>
+
+
+  <p>Section <i>LE_Spectrum</i> calculates power, impedance, flow and
+  potentials of the
+  <a href="../../Appendix/Lumped%20Element%20Analysis.html">lumped element network</a>
+  and its components.</p>
+
+  <p><a href="../Parameters/AnalysisType=.html">AnalysisType=</a>
+  specifies, which parameter you want to observe.</p>
+
+  <p>Each item of <a href="../Parameters/List%20of%20LE_Spectrum%20Items.html">List of LE Spectrum Items</a>
+  defines the component or node number and
+  yields a curve in <a href="../../Appendix/VacsViewer.html"><i>VACS</i></a>.</p>
+
+  <p>If no <i>List of LE Spectrum Items</i> is specified then ABEC
+  calculates a parameter of the total <i>System=</i> at its driving port.
+  The driving node is the one, which has the smallest node-number.
+  In this case specify only <a href="../Parameters/ID=.html">ID=</a> and
+  <a href="../Parameters/System=.html">System=</a>.</p>
+
+  <br />
+  <h4>Examples</h4>
+
+
+  <p align=center><img src="../../../_Images/LE_Spectrum%20Network.jpg" ></p>
+
+
+  <table width=70%>
+  <td>
+  <p>The total input power at node 1 is</p>
+
+  <pre>
+  <b>LE_Spectrum</b>
+    AnalysisType=Power
+    System=S1
+    ID=101</pre>
+
+
+  <br />
+  <p>The driving voltage at node 1 to ground is</p>
+
+  <pre>
+  <b>LE_Spectrum</b>
+    AnalysisType=Voltage
+    System=S1
+    ID=201</pre>
+
+
+  <br />
+  <p>The voltage-difference across nodes 1 and 4 is</p>
+
+  <pre>
+  <b>LE_Spectrum</b>
+    AnalysisType=Voltage
+    System=S1
+    101  Node=1=4  ID=301</pre>
+
+
+  <br />
+  <p>The current I1 into Driver "Drv1" at node 3 is</p>
+
+  <pre>
+  <b>LE_Spectrum</b>
+    AnalysisType=Current
+    System=S1
+    101  ElName=Drv1  Port=1  ID=401</pre>
+
+
+  <br />
+  <p>The volume-velocity V1 is either the negative of
+  the flow into <i>Driver</i> "Drv1" at node 5 or the in-flux of
+  <i>RadImp</i> "Rad1".</p>
+
+  <pre>
+  <b>LE_Spectrum</b>
+    AnalysisType=VolVelocity
+    System=S1
+    101  ElName=Rad1  ID=501</pre>
+  </td>
+
+  <td VALIGN=Top>
+  <p>Excerpt of a Lumped Element Script:</p>
+
+  <br />
+  <pre>
+  <b>System</b>  'S1'
+    Coil      'L1'    Node=1=2      L=1mH
+    Capacitor 'C1'    Node=2=3      C=1uF
+    Coil      'L2'    Node=3=4      L=1mH
+    Driver    'Drv1'  Node=3=4=5=6  Def=X1  DrvGroup=1001
+    Driver    'Drv2'  Node=4=0=7=6  Def=X1  DrvGroup=2001
+    Enclosure 'E1'    Node=6        Vb=100L fb=50Hz  DrvGroup=3001
+    RadImp    'Rad1'  Node=5        DrvGroup=1001
+    RadImp    'Rad2'  Node=7        DrvGroup=2001
+  </pre>
+
+  </td>
+  </td>
+  </table>
+
+  <br>
+  <br>
+</body>
+</html>

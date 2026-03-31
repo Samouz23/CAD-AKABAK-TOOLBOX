@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Nodes</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Nodes</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../Scripts.html">Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Coordinates of points</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../BEScript.html">BE Solving Script</a>,
+                                       <a href="../ObField.html">Field-</a> and
+                                       <a href="../ObSpectrum.html">Spectral Observation Scripts</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <pre>
+  <b>Nodes</b>  "Any name"
+    <a href="../Parameters/Scale=.html">Scale=</a>
+    <a href="../Parameters/Shift=.html">Shift=</a>
+    <a href="../Parameters/Rotate=.html">Rotate=</a>
+    <a href="../Parameters/Mirror=.html">Mirror=</a>
+    <a href="../Parameters/List%20of%20nodes.html"><b>List of Nodes</b></a>
+  </pre>
+
+  <h4>Naming</h4>
+
+  <p>Because of the <a href="../../Appendix/Nodes%20and%20Elements.html">Nodes and Elements</a>
+  approach, the key-word <i>Nodes</i> should always be followed by a unique name.
+  Other sections will take reference
+  to one of the <i>Nodes</i> sections via <a href="../Parameters/RefNodes=.html">RefNodes=</a>.
+  There can be as many <i>Nodes</i>-sections as you like.</p>
+
+
+  <h4>List of Nodes</h4>
+
+  <p>The essential part of the <i>Nodes</i>-section is the
+  <a href="../Parameters/List%20of%20nodes.html">List of Nodes</a>,
+  which should follow any other parameter. Each line represents a point
+  in <a href="../Parameters/Dim=.html">Dim=3D</a>
+  or a line in 2D simulations. For example:</p>
+
+  <pre>
+  <b>Nodes</b> "N"
+    Scale=1mm
+    1000    0.0  -12.5   0.0
+    1001    0.0  -42.5   0.0
+    2001   -3.0  -12.0   0.0
+    ...</pre>
+
+
+  <h4>Transformations</h4>
+
+  <p>Optional controlling parameters can be placed between the keyword and
+  the <i>List of Nodes</i>. These controlling parameters are coordinate transformations.
+  Note, that the order of application matters here.
+  There is a difference whether a point is first rotated and then translated
+  versus the case where the point is translated first.</p>
+
+  <p>Note, that each coordinate can be entered with <a href="../../Appendix/Units.html">units</a>
+  otherwise <i>meter</i> is assumed.</p>
+
+  <p>Tip: Use <i>Scale=</i> if you want to enter all coordinates in different
+  units, for example:</p>
+
+  <pre>
+  Millimeter: Scale=1mm
+  Inch:       Scale=1in      // 1in = 25.4mm
+  Feet:       Scale=1ft      // 1ft = 12in  </pre>
+
+  <p>Tip: Spread-sheet applications are particular useful for the generation of
+  nodal positions. This is also a simple way to parameterize the script.</p>
+
+
+  <h4>Parameterization</h4>
+
+  <p>ABEC allows to specify formulae for any floating-point parameter,
+  which is particularly useful for parameterizing your coordinate-values.
+  For example, you can specify global variables in section
+  <a href="Formula.html">Formula</a>
+  and use these variables for coordinate specification of nodes. </p>
+
+  <pre>
+  <b>Nodes</b>   "NF"
+    2201   {-Dc - 2*tc}      0.0           {Hc + 2*tc}
+    2202   {-Dc - 2*tc}    {Wc/2 + tc}     {Hc + 2*tc}
+    ... </pre>
+
+   <p>In the above example x-, y- and z-coordinates are specified by expressions
+   in curly brackets. The variables Dc, Hc and tc are specified in an embedded
+   script, which contains only a <i>Formula</i>-section. For example:</p>
+
+   <pre>
+   <b>Formula</b>
+      Hc = 0.7            // Cabinet height 0.7
+      Wc = 0.43           // Cabinet width 0.43
+      Dc = 0.436          // Cabinet depth 0.436
+      tc = 0.012          // Cabinet wall thickness 0.012
+      ...</pre>
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Diaphragm - Modeling</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1 class=param>Diaphragm - Modeling</h1>
+  
+  <p class=navi><a href="../Index.html">Home</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>A simplified meshing is applied</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                         <a href="../BEM-Part/Form-Diaphragm.html">Diaphragm</a>,
+                                         <a href="../BEM-Part/Form-Shell.html">Shell</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <h4>Simplified Model</h4>
+
+  <p>In this case a simpler shape is produced by
+  the <i>Diaphragm</i>- or <i>Shell</i>-factory, which often is sufficient, especially at
+  low frequencies.</p>
+
+  <table align=right>
+  <tr><td><img src="../../_Images/Diaphragm%20Mesh%20Simple=true.jpg" /></td></tr>
+  <tr><td><img src="../../_Images/Diaphragm%20Mesh%20Simple=false.jpg" /></td></tr>
+  </table>
+
+  <p>In this mode only Meshing=Bifu is possible. More on meshing see at
+  <a href="../Desktop/Form-Meshing.html">Form-Meshing</a>
+  Also only circular shapes will be meshed.</p>
+
+  <p>The specification of the width of the suspension is ignored and
+  assumed to be part of the outer dimension of the diaphragm. It is common practice to add
+  half of the suspension-width on both sides, or in other words
+  dD&nbsp;=&nbsp;dD<sub>0</sub> + ws</p>
+
+  <p>Also magnet details are not available in this mode.</p>
+
+  <p>Note, the Simplified Model makes a correction internally. This correction has
+  to do with the coupling between the BEM- and LEM-parts. The idea is to
+  produce an approximation to a circular diaphragm which yields quick calculation
+  for the BE-part. However, in order to get correct mechano-acoustic driving
+  the coupling factor is deduced not from the mesh but from the
+  specified diameter.</p>
+
+
+  <h4>Standard Model</h4>
+
+  <p>The standard way of modeling creates a mesh taking into account all
+  specified details of Diaphragm or Shell. This includes the width of the suspension,
+  poles, exclusions as well as the magnet (if Side=Rear).</p>
+
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

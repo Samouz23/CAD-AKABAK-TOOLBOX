@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Add LE Script</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Add LE Script</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+    <a href="Project.html">Project</a></p>
+  <hr>
+
+  <p><img src="../../../_Images/Project%20-%20Add%20LEScript.jpg" align=right>
+  <i>Add LE-Script</i> registers a script for
+  <a href="../../Appendix/Lumped%20Element%20Analysis.html">Lumped Element Analysis</a>
+  with the project.</p>
+
+  <p>The Lumped Element Network
+  of this script is used to drive the
+  <a href="../../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Structure</a>
+  or the <a href="../../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Sources</a>
+  at observation stage. Hence, you can alter the LE-Script without the need
+  to re-solve the BE-part.</p>
+
+  <p>The coupling to the Boundary Element or Direct Sound domains is
+  via <a href="../../Appendix/Driving%20Groups.html">Driving Groups</a>.</p>
+
+  <p>If a LE-Script is registered, it will form the default driving for all
+  observations, unless you declared a section
+  <a href="../../BEScripts/Sections/Driving_Values.html">Driving_Values</a>
+  in an <a href="../../BEScripts/Observation.html">observation script</a>.
+  In the latter case the LE-Script is ignored for this script and fixed values of
+  section <i>Driving_Values</i> are used.</p>
+
+  <p>There can be only a single LE-Script for a project.</p>
+
+  <br>
+  <br>
+</body>
+</html>

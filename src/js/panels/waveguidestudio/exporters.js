@@ -90,6 +90,7 @@ export function generateMSHString(geometries) {
 
 export async function exportFileInDirectory(content, directory, fileName, statusButton) {
     const showStatus = (message, isError = false) => {
+        if (!statusButton) return;
         const originalText = statusButton.textContent;
         statusButton.textContent = message;
         statusButton.classList.toggle('text-red-400', isError);

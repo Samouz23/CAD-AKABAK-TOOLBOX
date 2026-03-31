@@ -73,12 +73,6 @@
   /* Blanc au survol */
 }
 
-/* Option 4: Icônes dans les listes de fichiers */
-#nas-file-list img[src*="folder.svg"],
-#nas-file-list img[src*="file.svg"] {
-  filter: var(--icon-filter-primary);
-}
-
 /* Option 5: Icône de copie */
 .copy-btn img {
   filter: brightness(0) saturate(100%) invert(63%) sepia(9%) saturate(435%) hue-rotate(176deg) brightness(92%) contrast(87%);

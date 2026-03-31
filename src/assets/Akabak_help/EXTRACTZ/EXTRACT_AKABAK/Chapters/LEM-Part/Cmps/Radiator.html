@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Radiator</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Radiator</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  <td class="header">Acoustic</td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=100><td width=200><center><img src="../../../_Images/LE-Radiator.jpg"  /></center></td></tr>
+  </table>
+
+
+  <p>The <i>Radiator</i>-component is an acoustic two-pole component and represents
+  radiation.</p>
+  <br>
+  <br>
+
+  <!-- ------------------------------------------------------------------ -->
+  <h3>Parameters</h3>
+  <!-- ------------------------------------------------------------------ -->
+
+  <p class=indent><table>
+    <tr height=23><td width=150><a href="../Parameters/LE%20Params%20Editors.html">Caption</a></td>    <td width=250>Name of component</td></tr>
+    <tr height=23><td width=150>Application</td>         <td colspan=2>[BEM Boundaries, Pressure Source, Lumped Element]</td>  </tr>
+    <tr height=00><td width=150>Ref to BEM</td>          <td width=250>Link to vibrating BEM boundaries</td>    <td>Application=[BEM Boundaries]</td></tr>
+    <tr height=00><td width=150>Ref to P-Source</td>     <td width=250>Link to BEM pressure sources</td>        <td>Application=[Pressure Source, Lumped Element]</td></tr>
+    <tr height=00><td width=150>Ref to LE-cmp</td>       <td width=250>Link to other LE-component</td>          <td>Application=[Lumped Element]</td></tr>
+  </table>
+
+
+  <!-- ------------------------------------------------------------------ -->
+  <h4>Application</h4>
+
+  <p><i>Application</i> means here the way we model.</p>
+
+  <p><i>BEM Boundaries</i> installs a radiation impedance of vibrating boundaries of the BEM-part.
+  The model is fully coupled. The BEM-part provides the radiation impedance for the Radiator.
+  Eventually, after solving the LE-network, the Radiator provides volume velocity values
+  for radiation observations. Within a network mutual coupling is taken care of.
+  Technical details of the coupling are explained in [<a href="../../Appendix/Literature.html">9</a>].
+  In this mode of application we need to provide a link to a vibrating boundary,
+  for example to a <a href="../../BEM-Part/Form-Diaphragm.html">Diaphragm</a> component.</p>
+
+  <p><i>Pressure Source</i> means that Radiator is used as a simple measurement point of
+  sound pressure inside the lumped element network.
+  There is no radiation impedance. An example of application is the driving of a
+  pressure source in a room. In this mode we need to provide a link to
+  either <a href="../../BEM-Part/Form-Pressure-Points.html">Pressure-Points</a> or
+  <a href="../../BEM-Part/Form-Pressure-Box.html">Pressure Box</a>.</p>
+
+  <p><i>Lumped Element</i> indicates that Radiator is used to provide radiation impedance
+  and radiation to a lumped element model without BEM. The radiation impedance is approximated
+  with the help of the text-book function of a circular disc in an infinite baffle.
+  In this mode of application we need to provide a link to another lumped element,
+  which can provide the radiating area (<i>Ref to LE-cmp</i>). This can be a transducer
+  or a waveguide component. If we want to observe radiation then we also need to provide
+  a link to either <a href="../../BEM-Part/Form-Pressure-Points.html">Pressure-Points</a> or
+  <a href="../../BEM-Part/Form-Pressure-Box.html">Pressure Box</a>.</p>
+
+  <h4>Note</h4>
+
+  <p>Radiator is similar to the component "RadImp" which is used in the
+  LE-script of ABEC. On converting scripts to AKABAKs' schematic simply replace
+  RadImp by Radiator components.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

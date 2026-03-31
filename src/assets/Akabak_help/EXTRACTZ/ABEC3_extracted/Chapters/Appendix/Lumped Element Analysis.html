@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Lumped Element Analysis</title>
+  <link href="../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Lumped Element Analysis</h1>
+  <p class=navi><a href="../Index.html">Home</a> </p>
+  <hr>
+
+  <p>The <i>Lumped Element Analysis</i> (LE) calculates flows and potentials
+  of a network of components, such as resistors, capacitors, etc.
+  In ABEC this analysis is extended to the mechanical and acoustical
+  domain, where you have components, such as the
+  Driver and Waveguide component.</p>
+
+  <p>Basically the LE solver assumes Voltage, Force and Pressure as potentials
+  and Current, Velocity and Volume-Velocity as flows. The product of potential
+  and flow yield the power</p>
+
+  <p class=formula>P&nbsp;&nbsp;=&nbsp;&nbsp;1/2&middot;pot&middot;flow'</p>
+
+  <p>with assuming peak-values, and flow’ means conjugate complex.</p>
+
+  <p>Because it is easier to model the mechanical domain with the help of the
+  mobility analogy, the LE-Analyzer provides also special components and observation
+  modes for the case where the force is regarded as a flow and the velocity as
+  a potential. See chapter <a href="LE-Mobility%20Analysis.html">LE-Mobility Analysis</a>.</p>
+
+  <br />
+
+  <p>The LE-Network is specified in a dedicated
+  <a href="../LEScript/LEScripts.html">LE-Script</a>
+  as a text-file.</p>
+
+  <p>As a first step this file needs to be registered with the project
+  at <i>LE Scripts</i> in the project tree-list, see
+  <a href="../GUI/Project/Add%20LE%20Script.html">Adding Lumped Element Script</a>.
+  Then all observation scripts, which do <b>not</b> have a section
+  <a href="../BEScripts/Sections/Driving_Values.html">Driving_Values</a>
+  will couple to the Lumped Element Network by default.</p>
+
+  <p>The <i>LE-Analysis</i> is part of the observation stage.
+  Changing the LE-Script will maintain the solving stage,
+  which means that only the related observations need to be
+  re-calculated.</p>
+
+  <br />
+  <p>The LE-Analysis is assuming a certain
+  <a href="../LEScript/Systems.html">System</a>,
+  <a href="../LEScript/Network.html">Network</a> and
+  <a href="../LEScript/Components.html">Component</a> hierarchy.</p>
+
+
+  <h4>Observation</h4>
+
+  <p>Use <a href="../BEScripts/Sections/LE_Spectrum.html">LE_Spectrum-Sections</a>
+  in order to observe parameters of
+  the LE-Networks, such as voltage, current, pressures, excursion etc.
+  For example, in order to get a curve of the electrical driving point impedance
+  of <i>System</i> with name "S1" specify:</p>
+
+  <pre>
+  <b>LE_Spectrum</b>  "Drv Point Impedance"
+    AnalysisType=Impedance
+    System="S1"
+    ID=101</pre>
+
+  <h4>Coupling LE and BE</h4>
+
+  <p>Coupling to the Boundary Element part is established with the
+  help of parameter <a href="../BEScripts/Parameters/DrvGroup=.html">DrvGroup=</a>,
+  which exists on both sides, ie at the BE and at the LE part.
+  In the BE-part <i>DrvGroup=</i> is used to mark a "driving-channel", i.e.
+  at the solving-stage there are no driving values yet.
+  In the LE-part <i>DrvGroup=</i> is also used. Here
+  <i>DrvGroup=</i> is used at network-components in
+  order to exchange diaphragm-dimensions, radiation-impedance and
+  driving-values values with elements of the BE-part.</p>
+
+  <p>Fully coupled means that
+  on the one hand side the driving values for the Boundary Element analysis are
+  taken from network-parameters of the LE-simulation, for example the velocity of a
+  driver-diaphragm. On the other hand, the LE implements radiation impedance
+  elements, which are calculated during solving of the radiation-field. The
+  implementation of the Boundary Element method is done in such a way that changes to the
+  LE-network do not make necessary a resolving of the Helmholtz Integral. The effect
+  of this is that calculations are fast as long as the acoustic structure is not
+  altered. A detailed paper is available at [<a href="Literature.html">9</a>]</p>
+
+  <p>The <i>LE-Analysis</i> is fully coupled to the
+  <a href="Boundary%20Element%20Analysis.html">Boundary Element Analysis</a>.
+  However, it is also possible to make simulations only with the LE-network
+  or together with <a href="Direct%20Sound%20Analysis.html">Direct Sound Analysis</a>.</p>
+
+  <br>
+  <br>
+</body>
+</html>
+
+

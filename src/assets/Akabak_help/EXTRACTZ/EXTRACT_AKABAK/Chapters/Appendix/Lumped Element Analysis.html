@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Lumped Element Analysis</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>Lumped Element Analysis</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  <td class="header"><a href="../Observation-Part/_Index.html">Observation</a></td>
+  </tr></table>
+  <hr>
+
+  <p>Modeling is a calculation technique, which in our context yields transfer functions
+  in the frequency domain such as the sound pressure response or the electrical driving
+  point impedance. Modeling with lumped parameters involves using building blocks or
+  symbols, which represent dominant properties of the device, such as the mass and
+  stiffness of a fundamental resonator.</p>
+
+  <p><center><img src="../../_Images/LEM-FlowChart.jpg"></center></p>
+
+
+  <p>In AKABAK the LE-networks are embedded in the schema which can be regarded as a large
+  transducer as pictured above. The signal goes from left to right.
+  First there may be abstract Filter components. Then the signal is altered by electric
+  components which drive mechanic forces and velocities. These in turn cause
+  acoustic parameters such as sound pressure and volume velocity.
+  Eventually these are the cause for radiation which is managed by the
+  <a href="Boundary%20Element%20Analysis.html">BE</a> or <a href="Direct%20Sound%20Analysis.html">Direct Sound</a>
+  methods. Of course there is full coupling. There is also coupling from the radiation
+  part into the acoustical network with the help of radiation impedance components
+  [<a href="Literature.html#9">9</a>].</p>
+
+  <p></p>
+
+
+  <table class=pic>
+    <tr height=220><td><center><img src="../../_Images/LEM-Kirchhoff-E.jpg"><br>Electrical</center></td></tr>
+    <tr height=220><td><center><img src="../../_Images/LEM-Kirchhoff-M.jpg"><br>Mechanical</center></td></tr>
+    <tr height=180><td><center><img src="../../_Images/LEM-Kirchhoff-A.jpg"><br>Acoustical</center></td></tr>
+  </table>
+
+
+  <p>Lumped elements result from forming mean-values of parameters such as
+  potentials and flows by means of spatial integration. For example, the lumped pressure
+  inside a waveguide can be regarded as a mean-value of the cross-section.
+  In the frequency range, where the wavelength is much larger than the device, the
+  lumped parameter features an approximation of this mean-value. In the mechanical domain
+  lumped parameters refer to the rigid body motion in a certain direction.</p>
+
+  <p>A lumped parameter is either a potential or a flow. There are the voltage V, the
+  current I, the velocity v, the force F, the sound-pressure p and the volume-velocity q.
+  The lumped parameters are selected in such a way that the product yields power:</p>
+
+  <p class=formula>
+  <table>
+  <tr> <td width=120>Electrical</td>                    <td width=120>Mechanical</td>                    <td width=150>Acoustical</td>                    <td width=120>General</td> </tr>
+  <tr> <td>P<sub>e</sub> = 1/2&middot;V&middot;I'</td>  <td>P<sub>m</sub> = 1/2&middot;F&middot;v'</td>  <td>P<sub>a</sub> = 1/2&middot;p&middot;q'</td>  <td>P<sub>e</sub> = 1/2&middot;Potential&middot;Flow'</td></tr>
+  </table></p>
+
+  <p>From the math point of view it does not matter which physical parameter form the
+  potential and which the flow. However, for engineering it is of advantage to
+  use following assignment:</p>
+
+  <p class=formula>
+  <table>
+  <tr> <td width=120></td>  <td width=120>Electrical</td>  <td width=120>Mobility</td>  <td width=120>Acoustical</td> </tr>
+  <tr> <td>Potential</td>            <td>Voltage</td>               <td>Velocity</td>            <td>Sound Pressure</td></tr>
+  <tr> <td>Flow</td>                 <td>Current</td>               <td>Force</td>               <td>Volume Velocity</td></tr>
+  </table></p>
+
+  <p>A lumped element network features nodes and branches. At a node the sum of
+  all in and out flows should be zero. Inside a node there is no flow.
+  This is called Kirchhoff rule and pictured by the graphs.</p>
+
+  <p>Branches connect nodes by components, and if there is a potential difference then
+  there would be a flow. This flow can be calculated with the help of Ohms' law:</p>
+
+  <p class=formula>Impedance = Potential/Flow</p>
+
+  <p>In the mechanical domain there are two types of physical networks in use:
+  For the <i>Mobility Network</i> the potential is the velocity and the flow is the force.
+  This type of network is preferred for modeling.
+  Alternatively there is the <i>Impedance Network</i>. Here the potential is the force
+  and the flow is the velocity. Modeling turns out to be difficult, however if there is
+  no transformer analysis may be easier.</p>
+
+  <p>In between the electrical, mechanical and acoustical domains there
+  are transducers. For example the electro dynamic motor or the diaphragm
+  of a loudspeaker.</p>
+
+  <p><center><img src="../../_Images/LEM-Sources.jpg"></center></p>
+
+  <p>Further there are the <a href="../LEM-Part/Cmps/Source.html">sources</a>.
+  These can be regarded as special transducers. They
+  drive the network either by a fixed potential or a fixed flow. Fixed means that
+  the parameter of the source is independent of what is wired to it. Hence,
+  the generator resistance of a potential source is zero and of a flow source it is infinite.</p>
+
+
+  <h4>Examples</h4>
+
+  <p>For modeling we typically first identify the potentials. These become the nodes
+  of the network. In a second step we would identify the components between the nodes
+  which form the branches of the network. Inside a branch there is a flow.</p>
+
+  <br>
+  <br>
+  <p><center><img src="../../_Images/LEM-LCR.jpg"></center></p>
+
+  <p>For example, in the electrical domain as shown above, we look for voltages with respect to
+  ground. These form the nodal potentials. V1 is the voltage of the source and V2 is the
+  voltage measured at resistor R. In between these nodes there is the flow which is the electric
+  current I. This flow can be calculated with the help of Ohms law:
+  I = (V1 - V2)/(j&omega;L + 1/(j&omega;C)) with Ze(L) = j&omega;L and Ye(C) = j&omega;C
+  with inductance L and capacitance C.</p>
+
+  <br>
+  <br>
+  <br>
+  <p><center><img src="../../_Images/LEM-MechSensor.jpg"></center></p>
+
+  <p>For example, in the mechanical domain as shown above, we look for velocities.
+  A point of velocity makes a node of the mobility network. Then we identify components
+  which are connected to these velocities. For example the mass M is moving with
+  velocity v2, whereas the spring is deformed by two velocities, which are v1 and v2.
+  In the mobility network the flow is the force which can be calculated with the help
+  of Ohms law:
+  F = (v1 - v2)&middot;(R + K/j&omega;)
+  with Y<sub>mob</sub>(K) = K/j&omega; and Y<sub>mob</sub>(R) = R
+  with stiffness K and mechanic resistance R.</p>
+
+  <br>
+  <br>
+  <br>
+  <p><center><img src="../../_Images/LEM-CaMaCa.jpg">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="../../_Images/LEM-CaMaCa-2.jpg"></center></p>
+
+  <p>For example, in the acoustical domain as shown above, we look for
+  areas of approximately the same sound pressure. The first chamber of compliance Ca1
+  shares the sound pressure p1 with the source and the acoustic mass Ma of the constriction.
+  There is a flow "through" the mass Ma. The second chamber of compliance Ca2 features
+  the same sound pressure p2 with mass Ma. The volume velocity q2 can be calculated with
+  the help of Ohms' law: q2 = (p1 - p2)/j&omega;Ma with Za(Ma) = j&omega;Ma.</p>
+
+
+  </p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>
+
+

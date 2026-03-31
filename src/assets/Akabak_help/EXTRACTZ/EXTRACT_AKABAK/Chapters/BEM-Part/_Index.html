@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>BEM - Part</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>BEM - Part</h1>
+
+  <table class=header><tr>
+    <td class="header"><a href="../Index.html">Home</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20BEM-Part.jpg" /></td></tr>
+    <tr height=500><td><img src="../../_Images/Desktop%20-%20New%20Component%20-%20Sel%20Subdomain%20Form.jpg" /></td></tr>
+    <tr height=400><td><img src="../../_Images/Desktop%20-%20BEM-Part-DS.jpg" /></td></tr>
+  </table>
+
+  <p>The <i>BEM-Part</i> of the desktop manages and displays components of radiation,
+  either for the
+  <a href="../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Analysis</a> or
+  <a href="../Appendix/Direct%20Sound%20Analysis.html">Direct Sound Calculation</a>.</p>
+
+  <p>The table at the side of the desktop lists all components which take part
+  in the radiation. Chapter <a href="../Appendix/List%20Editors.html">Lists Editors</a> explains the navigation.</p>
+
+  <p>If you want to temporarily disable a component you have to move it
+  to the <a href="../Desktop/Page-Repository.html">Repository</a>.</p>
+
+  <p>The check-boxes are for controlling the visibility of the component and its parts.
+  Note, that also invisible components take part in the calculation.
+  This is contrarily to page <i>Observation</i> where un-checking means disabling and hiding.</p>
+
+  <p>A new component is created by issuing menu <a href="../Desktop/Form-NewComponent.html">Edit/New Component</a>,
+  by the desktop button, by dbl-clicking into the blank area of the
+  <a href="../Desktop/Treelist%20Controls.html">list</a> or via the right-click-menu.</p>
+
+  <p>For editing a component, first select its entry in the list then
+  issue menu <i>Edit/Parameter</i> or dbl-click the entry.</p>
+
+
+  <h4>Structure</h4>
+
+  <p>There is a particular structure for the BEM-components. Mainly there are two levels.
+  At the top level we have
+  <a href="Form-Subdomain.html">Subdomains</a> and <a href="Form-Interface.html">Interfaces</a>.
+  At the lower level there are components of acoustic boundaries and pressure-points.
+  Hence each component belongs to either a Subdomain or to an Interface.
+  This reflects the principal of <a href="../Appendix/Sub-Domain%20Modelling.html">subdomain-modeling</a>.</p>
+
+  <p>You create a new component via menu <i>Edit/New Component</i>
+  (or dbl-clicking in the white space of the table). This will open
+  the <a href="../Desktop/Form-NewComponent.html">New Component Form</a>.
+  There go to page BEM and select the component you wish to create.
+  Eventually you will be asked to which Subdomain or to which Interface you want to
+  assign the new component.</p>
+
+
+  <h4>BEM settings</h4>
+
+  <p>For applying the <a href="../Appendix/Boundary%20Element%20Analysis.html">Boundary Element Method</a>
+  we need to create a mesh, which elements provide the actual boundary conditions.
+  The mesh generation can be controlled globally at menu
+  <a href="../Desktop/Form-Meshing.html">Global/Meshing</a>. These are default values.
+  You can over-write these settings at Subdomain or Interface level or at
+  individual components.</p>
+
+  <p>There are also certain fundamental BEM-parameters, which we should set up before hand.
+  See at chapter menu <a href="../Desktop/Form-BEM-Parameters.html">Global/BEM Parameters</a>.</p>
+
+  <p>For a BEM model firstly we create the <a href="Form-Subdomain.html">Subdomain</a> and
+  <a href="Form-Interface.html">Interface</a> sections. Eventually, we use components
+  to create the geometry for the acoustic boundaries. There are basic components
+  such as<a href="Form-Elements%20(Nodes).html"> Elements (Nodes)</a> and
+  <a href="Form-Elements%20(Mesh-File).html">Elements (Mesh File)</a>.
+  A set of particular shapes can be generated with the help of components
+  <a href="Form-Shell.html">Shell</a>,
+  <a href="Form-Duct.html">Duct</a> or others.
+  All components provide a reflective, an impedance or a vibrating boundary condition.
+  The components <a href="Form-Diaphragm.html">Diaphragm</a> and
+  <a href="Form-VibFile.html">Vib File</a>
+  conveniently create a set of boundaries of typical vibrating loudspeaker membranes.<br>
+  A pressure source is not a boundary condition, rather an abstract concept of "something"
+  creating sound at a point. For BEM pressure sources are practical for mimicking a
+  loudspeaker inside a room, for example. Components such as
+  <a href="Form-Pressure-Points.html">Pressure Points</a> and
+  <a href="Form-Pressure-Box.html">Pressure Box</a> need to be assigned to one
+  of the Subdomains.</p>
+
+
+  <h4>Direct Sound Settings</h4>
+
+  <p>A Subdomain can be made <a href="../Appendix/Direct%20Sound%20Analysis.html">Direct Sound</a>
+  simply by omitting any component which otherwise would create an acoustic boundary.
+  Hence, if a Subdomain hosts only <a href="Form-Pressure-Points.html">Pressure Points</a> and
+  <a href="Form-Pressure-Box.html">Pressure Box</a> components then the BEM-solver is
+  skipped and there would be left to do only the observation stage.
+  The only boundary component allowed is the <a href="Form-Infinite-Baffle.html">Infinite Baffle</a>.
+  For Direct Sound there is no meshing. However, symmetries are taken into account,
+  see chapter menu <a href="../Desktop/Form-BEM-Parameters.html">Global/BEM Parameters</a>.</p>
+
+
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

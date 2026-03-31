@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Def_Driver</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Def_Driver</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-Def_Driver.jpg"  />
+  </td></tr></table>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Electro-dynamic loudspeaker driver</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>Electric - acoustic</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1><a href="../Defs.html">Definition part</a></td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>     <td class=param1><a href="Driver.html">Driver</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <table><tr>
+  <td width=200 valign=top><pre>
+  <b>Def_Driver</b>  "Any Name"
+    <a href="../Parameters/fs=.html">fs=</a>
+    <a href="../Parameters/Mms=.html">Mms=</a>
+    <a href="../Parameters/Cms=.html">Cms=</a>
+    <a href="../Parameters/Kms=.html">Kms=</a>
+    <a href="../Parameters/Rms=.html">Rms=</a>
+    <a href="../Parameters/Qms=.html">Qms=</a>
+    <a href="../Parameters/Lamda=.html">Lamda=</a>
+  </pre></td>
+  <td width=200 valign=top><pre>
+
+    <a href="../Parameters/Bl=Bl1=Bl2=.html">BL=</a>
+    <a href="../Parameters/Qes=Qes1=Qes2=.html">Qes=</a>
+
+    <a href="../Parameters/Re=Re1=Re2=.html">Re=</a>
+    <a href="../Parameters/Le=Le1=Le2=.html">Le=</a>
+    <a href="../Parameters/ExpoLe=ExpoLe1=ExpoLe2=.html">ExpoLe=</a>
+    <a href="../Parameters/ExpoRe=ExpoRe1=ExpoRe2=.html">ExpoRe=</a>
+    <a href="../Parameters/fre=fre1=fre2=.html">fre=</a>
+
+    <a href="../Parameters/Re2=Re21=Re22=.html">Re2=</a>
+    <a href="../Parameters/Le2=Le21=Le22=.html">Le2=</a>
+    </pre>
+  </td><td width=200 valign=top><pre>
+
+    <a href="../Parameters/dD=.html">dD=</a>
+    <a href="../Parameters/SD=.html">SD=</a>
+    <a href="../Parameters/WD=HD=.html">WD=; HD=</a>
+    <a href="../Parameters/dD1=.html">dD1=</a>
+    <a href="../Parameters/SD1=.html">SD1=</a>
+    Elliptical
+    </pre></td>
+  </tr></table>
+
+  <p><i>Def_Driver</i> defines an electro-dynamic driver with one voice-coil.
+  It is referenced by the four-pole network-element <a href="Driver.html">Driver</a>.</p>
+
+  <p><img src="../../../_Images/Def_Driver%20Example.jpg" align=right>
+  The electro-dynamic driver is documented by following chapters</p>
+  <ul>
+    <li><a href="../../Appendix/Electro-Dyn-Model.html">Electro Dynamic Driver</a></li>
+    <li><a href="../../Appendix/Electro-Dyn-Model-VC.html">Voice Coil Model</a></li>
+    <li><a href="../../Appendix/Mechanics%20of%20Driver.html">Mechanics of Driver</a></li>
+    <li><a href="../../Appendix/Lumped%20Element%20Diaphragms.html">Lumped Element Diaphragms</a></li>
+    <li><a href="../../Appendix/Electro-Dyn-Qts.html">Qts</a></li>
+    <li><a href="../../Appendix/Electro-Dyn-Standard-Model.html">Electro Dynamic Standard Model</a></li>
+  </ul>
+
+  <p>The combination of <i>Def_Driver</i> - <a href="Driver.html"><i>Driver</i></a>
+  forms a practical component, which encapsulates basic lumped elements as demonstrated
+  in example
+  <a href="../../Appendix/Electro-Dyn-Components.html">Components</a>.</p>
+
+  <p><i>Def_Driver</i> can be used with multiple <a href="Driver.html"><i>Driver</i></a>
+  components. In this combination <i>Def_Driver</i> specifies the parameters and
+  <i>Driver</i> the network wiring. See further example at
+  <a href="../Systems-Example2.html">Boundary Element with Def_Driver</a>.</p>
+
+  <br>
+  <h3>Example</h3>
+
+  <p>
+  This example is taken from example:</p>
+
+  <p class=indent><span style="font-family: 'Courier New', Courier, monospace">/Loudspeakers/45Tower - BEM Exterior/</span></p>
+
+  <p><img src="../../../_Images/Def_Driver%20-%2045Tower%20Pic.jpg" align=right>
+  It models a complete 2-way loudspeaker system, with 4 woofers and a horn as tweeter.
+  Included is also a passive cross-over. In this version we modeled the
+  exterior with the help of BEM and the interior acoustics with the help of
+  <a href="Duct.html">Duct</a> components. See sketch below.</p>
+
+  <p>This example demonstrates assignment of diaphragms.
+  In <i>System</i> 'Woofers' all diaphragm specification is done in the
+  associated BEM-script. The rear of the diaphragm is automatically assigned
+  the same diaphragm-area as the front (case (3.1)  in chapter
+  <a href="../../Appendix/Lumped%20Element%20Diaphragms.html#DM">Lumped Element Diaphragms</a>).
+  In <i>System</i>
+  'Tweeter', on the other hand, the BEM starts with the outlet of the
+  compression driver, which is not the diaphragm of the tweeter-driver.
+  Hence, we have case (4) in chapter
+  <a href="../../Appendix/Lumped%20Element%20Diaphragms.html#DM">Lumped Element Diaphragms</a>
+  where the diaphragm of the driver is not part of the BEM-system.</p>
+
+  <br>
+  <pre>
+  <b>Def_Driver</b> 'W1'
+    // Generator resistance at measurement  Rg=0.6ohm, mass estimated
+    Re=6ohm       Le=0.545mH
+    fre=9.106kHz  ExpoRe=1.258  ExpoLe=0.734
+    Mms=5.77g     Cms=1.576e-3m/N  Rms=1.141Ns/m  Bl=4.13N/A
+    //  fs=52.778Hz  Qms=1.677  Qes=0.673
+
+  <b>Def_Driver</b> 'T1'
+    dD=35mm                  // Diameter of diaphragm
+    Re=4.7ohm  Le=0.046mH
+    fre=4.3kHz  ExpoRe=0.22  ExpoLe=0.379
+    Mms=1000mg   fs=1.95kHz  Rms=7Ns/m  Bl=6.5N/A
+
+
+  <b>Def_Driving</b>
+    Value={ dB(-15 + 6) }
+    IsRms
+
+
+  <b>System</b> 'Woofers'
+    ...
+    // Transducers
+    <b>Driver</b> "Drv1" Def='W1'  Node=10=20=101=201      DrvGroup=1001  // Top
+    <b>Driver</b> "Drv2" Def='W1'  Node=10=20=102=202      DrvGroup=1002
+    <b>Driver</b> "Drv3" Def='W1'  Node=20=0=103=203       DrvGroup=1003
+    <b>Driver</b> "Drv4" Def='W1'  Node=20=0=104=204       DrvGroup=1004
+    // Radiation impedance front diaphragm
+    <b>RadImp</b> "F1"    Node=101    DrvGroup=1001
+    <b>RadImp</b> "F2"    Node=102    DrvGroup=1002
+    <b>RadImp</b> "F3"    Node=103    DrvGroup=1003
+    <b>RadImp</b> "F4"    Node=104    DrvGroup=1004
+    ...
+
+
+  <b>System</b> "Tweeter"
+    ...
+    <b>Driver</b> "Drv5"
+      Def='T1'
+      Node=50=0=100=0
+
+    // Compression chamber of height H.
+    // Modelled with the help of an acoustical compliance. Mass ignored.
+    // Using inline-formula. Value of last formula gets assigned to Vb=.
+    <b>Enclosure</b> 'Ef'
+      Node=100
+      Vb={ dD=35e-3; H=0.2e-3; SD=pi*sqr(dD/2); Vb=SD*H }
+
+    // Phase-plug between compression chamber and horn-stub.
+    // Normally phase-plugs are a complicated system of slits.
+    // Here we simplify by lumping all pathes into a single waveguide.
+    // Note that Waveguide provides modal response along the waveguide.
+    <b>Waveguide</b>  'W1'
+      Node=100=300
+      STh={ dD=35e-3; SD=pi*sqr(dD/2); r=0.8;  STh=(1 - r)*SD }
+      dMo=1in
+      Len=45mm
+      Conical
+
+    // Radiation impedance horn throat
+    <b>RadImp</b> "HTh"
+      Node=300
+      DrvGroup=1005  // Outlet of compression driver
+  </pre>
+
+  <center>
+  <p><img src="../../../_Images/Def_Driver%20-%20Example1.jpg"></p>
+  <p><i>System</i> 'Woofer'</p>
+
+  <br>
+  <br>
+  <p><img src="../../../_Images/Def_Driver%20-%20Example2.jpg"></p>
+  <p><i>System</i> 'Tweeter'</p>
+  <center>
+
+  <br>
+  <br>
+</body>
+</html>

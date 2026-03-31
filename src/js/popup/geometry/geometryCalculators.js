@@ -5,7 +5,7 @@
 // =======================================================
 
 import { getWindowControlsHtml, initializeWindowControls, getWindowControlsStyles } from '../common/windowControls.js';
-import { safeEvaluateMath } from '../../panels/horn.js';
+import { safeEvaluateMath } from '../../panels/horn/formulas.js';
 
 /**
  * Génère le HTML pour le calculateur rectangulaire

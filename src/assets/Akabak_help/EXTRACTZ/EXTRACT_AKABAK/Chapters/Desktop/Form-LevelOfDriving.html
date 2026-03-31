@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Form - Level of Driving (6100)</title>
+  <link href="../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+
+  <h1>Form - Level of Driving</h1>
+  <table class=header><tr>
+  <td class="header"><a href="../Index.html">Home</a></td>
+  </tr></table>
+  <hr>
+
+  <p><img src="../../_Images/Desktop%20-%20LevelOfDriving.jpg" align=right>
+  This form lets you scale the level of driving globally.
+  No recalculation is necessary. The application simply scales the output-values
+  which is feasible because we assume a linear system response.</p>
+
+  <p>In AKABAK all values are peak-values.<br>
+  For convenience you can check <i>Is rms</i>. If checked the specified value will internally be
+  multiplied by the crest factor of sinoidal signal &radic;2 &asymp; 1.4142.</p>
+
+  <br>
+  <p>Here some relations for convenience:</p>
+
+  <table>
+    <tr height=20>  <td width=100>V<sub>peak</sub></td>    <td width=100>V<sub>rms</sub></td>     <td width=100>Power</td>   <td width=100>Resistance</td></tr>
+    <tr height=20>  <td width=100>1</td>                   <td width=100>0.7071</td>              <td width=100>1</td>       <td width=100>0.5</td></tr>
+    <tr height=20>  <td width=100>1.4142</td>              <td width=100>1</td>                   <td width=100>1</td>       <td width=100>1</td></tr>
+    <tr height=20>  <td width=100>2</td>                   <td width=100>1.4142</td>              <td width=100>1</td>       <td width=100>2</td></tr>
+    <tr height=20>  <td width=100>2.8284</td>              <td width=100>2</td>                   <td width=100>1</td>       <td width=100>4</td></tr>
+    <tr height=20>  <td width=100>4</td>                   <td width=100>2.8284</td>              <td width=100>1</td>       <td width=100>8</td></tr>
+    <tr height=20>  <td width=100>5.6568</td>              <td width=100>4</td>                   <td width=100>1</td>       <td width=100>16</td></tr>
+    <tr height=20>  <td width=100>8</td>                   <td width=100>5.6568</td>              <td width=100>1</td>       <td width=100>32</td></tr>
+  </table>
+
+  <p>These values are calculated from V<sub>rms</sub> = &radic;(P &middot; R)
+  with V<sub>rms</sub> as root-mean-square (rms) voltage across resistor R
+  of power P.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

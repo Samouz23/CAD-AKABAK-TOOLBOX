@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>LE Kms Parameters</title>
+  <link href="../../../_styles/AKABAK_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body><table><tr><td width=1000>
+
+  <h1>LE Kms Parameters</h1>
+
+  <table class=header><tr>
+  <td class="header"><a href="../../Index.html">Home</a></td>
+  <td class="header"><a href="../_Index.html">LE-Part</a></td>
+  <td class="header"><a href="LE%20Params%20Editors.html">Param Editors</a></td>
+  </tr></table>
+  <hr>
+
+  <table class=pic>
+  <tr height=270><td><img src="../../../_Images/Desktop%20-%20LEM%20Part%20Form%20Kms.jpg"></td></tr>
+  </table>
+
+  <p>This form lets you input Kms as explained in
+  <a href="LE%20Mech%20Parameters.html">LE Mech Parameters</a>.</p>
+
+  <p>Additional there is in-build a little calculator for
+  common equivalent parameters. These can be entered in this form.
+  However they would be converted to Kms after applying the OK-button.</p>
+
+
+  <h4>Kms</h4>
+
+  <p><i>Kms</i> is the effective stiffness of all suspensions and possible other
+  springiness. The unit of <i>Kms</i> is N/m.</p>
+
+
+  <h4>Cms</h4>
+
+  <p>Cms is the mechanic compliance: Kms = 1/Cms.
+  The unit of <i>Cms</i> is m/N.</p>
+
+
+  <h4>Vas</h4>
+
+  <p>Vas is called the <i>equivalent volume</i> of unit m<sup>3</sup>.
+  It is an informal parameter. Here the idea is to express
+  the stiffness of the transducer-suspension as a volume of air,
+  which would have the same stiffness if compressed.
+  In this way it is convenient to select the acoustic enclosure for this
+  speaker. This is so because </p>
+
+  <table>
+    <tr>
+      <td width=120>fc  = &gamma; &middot; fs</td>
+      <td width=120>Qtc = &gamma; &middot; Qts</td>
+      <td width=150>&gamma; = &radic;(1 + Vas/Vb)</td>
+    </tr>
+  </table>
+
+  <p>with fc system resonance frequency of speaker in closed enclosure,
+  Qtc total quality factor and Vb volume of enclosure
+  [<a href="../../Appendix/Literature.html#33">33</a>].</p>
+
+  <p>Vas is deduced from the equivalent acoustic compliance of a
+  closed enclosure of volume Vas:</p>
+
+  <table>
+    <tr>
+      <td width=150>Cas = Vas/(&rho;<sub>0</sub>&middot;c<sub>0</sub><sup>2</sup>)</td>
+      <td width=150>Kms = 1/(Cas &middot; S<sub>D</sub><sup>2</sup>)</td>
+    </tr>
+  </table>
+
+  <p>with &rho;<sub>0</sub> density of air and c<sub>0</sub> speed of sound.
+  Of course, for conversion, values for &rho;<sub>0</sub> and c<sub>0</sub>
+  should be those at the time of measurement of Vas.
+  This calculator uses fixed values for the conversion of Vas to Kms of
+  &rho;<sub>0</sub> = 1.2 kg/m<sup>3</sup> and c<sub>0</sub> = 343 m/s.<br>
+  S<sub>D</sub> is the effective radiating area of the membrane, which is
+  typically the area projected in axial direction. From the suspension only half
+  its width is taken into account.</p>
+
+
+  <h4>Mutual Calculation</h4>
+
+  <p>As expalined in chapter <a href="LE%20Mech%20Parameters.html">LE Mech Parameters</a>
+  there is a mutual dependence between Kms, Mms and fs.
+  Specify here which parameter should be changed with Kms.</p>
+
+  <br>
+  <br>
+</td></tr></table></body>
+</html>

@@ -1,0 +1,340 @@
+
+/* Global variables  (unfortunately not working inside *.chm files) */
+:root {
+  --BKColor:   rgb(248,245,192);
+  --FontSize:  10pt;
+  --FontHelv:  Verdana, Helvetica, sans-serif;
+  --FontFixed: consolas, courier new, courier;
+  --MarginRight: 200px;   /* fits well to page-mirror of width=1000px */
+}
+
+
+body
+{
+background-color: rgb(248,245,192);
+background-image: none;
+/*font-family: Georgia, "Palatino Linotype", "Times New Roman", serif;*/
+/*font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;*/
+font-family:   Verdana, Helvetica, sans-serif;
+font-size:     10pt;
+color:         black;
+margin-bottom: 0px;
+margin-left:   6px;
+margin-top:    6px
+}
+
+a  /* Anchors */
+{
+color: #009000;  /*#4d874d #669999 Should fit to color of headers*/
+text-decoration:none;
+}
+
+
+/* Pre-formatted --------------------------------------- */
+
+pre
+{
+font-family: var(--FontFixed);
+font-size: 10pt;
+margin-bottom: 0px;     margin-left: 6px;  margin-top: 6px
+}
+
+pre.fixed
+{
+font-family: var(--FontFixed);
+font-size: 10pt;
+margin-bottom: -12px;     margin-left: 6px;  margin-top: 6px
+}
+
+pre.fixedsmall
+{
+font-family: var(--FontFixed);
+font-size: 6pt;
+margin-bottom: -12px;     margin-left: 6px;  margin-top: 6px
+}
+
+pre.diagram
+{
+font-family: verdana, tahoma, arial, helvetica, sans-serif;
+font-size: 6pt;
+margin-bottom: 0px;     margin-left: 6px;  margin-top: 6px
+}
+
+
+/* Paragraphs ---------------------------------------------- */
+
+p
+{
+margin-left: 6px;    margin-right:  200px;
+margin-top: 6px;     margin-bottom: 0px;
+/* line-height: 155% */
+line-height: 1.6em;  /* EU setting */
+}
+
+
+p.indent
+{
+margin-left:2em;
+}
+
+p.formula
+{
+margin-left:3em;   margin-bottom: 12px;  margin-top: 12px;
+}
+
+p.formula1
+{
+margin-left:3em;   margin-bottom: 6px;  margin-top: 12px;
+}
+
+p.formula2
+{
+margin-left:3em;   margin-bottom: 6px;  margin-top: 6px;
+}
+
+p.narrow
+{
+margin-bottom: 0px;   margin-top: 0px;
+line-height: 1.4em;  /* EU setting */
+}
+
+p.gray
+{
+font-size: 6pt;
+color: gray;
+}
+
+
+/* Lists ---------------------------------------------- */
+
+li
+{
+margin-bottom: 0px;     margin-left: 0px;   margin-top: 3px;
+line-height: 1.6em;  /* EU setting */
+}
+
+/* Note, "margin-left: 3em;" should give proper display of lists
+   in HelpViewer (albeit it does indent too strong in IE and Firefox ??? */
+
+ol
+{
+list-style-type: decimal;
+margin: 0;    padding-left: 25px;   /* NOTE, without this there are no bullets shown in Help */
+margin-bottom: 6px;     margin-left: 6px;       margin-top: 3px;
+line-height: 1.6em;  /* EU setting */
+}
+
+ol li {
+  list-style-type: decimal;
+  display: list-item;
+  }
+
+ul
+{
+margin: 0;    padding-left: 25px;   /* NOTE, same as ol */
+margin-bottom: 6px;     margin-left: 6px;       margin-top: 3px;
+line-height: 1.6em;  /* EU setting */
+}
+
+
+/* Headers ----------------------------------*/
+
+H1
+{font-family: Verdana, Helvetica, sans-serif;
+font-weight: bold;     font-size: 14pt;    color: rgb(250,255,250);
+margin-left: 6px;      margin-right: 6px;
+margin-top: 16px;      margin-bottom: 12px;
+padding-left: 6px;     padding-top: 6px;      padding-bottom: 6px;
+background-color: rgb(96,0,0)/*#600000*/;
+border-style: double;
+display: flex;  align-items: center;  /* vertically centered  */
+}
+
+H2
+{font-family: Verdana, Helvetica, sans-serif;
+font-weight: bold;     font-size: 12pt;    color: rgb(50,50,50);
+margin-left: 6px;      margin-right: 6px;
+margin-top: 36px;      margin-bottom: 12px;
+padding-left: 3px;     padding-top: 3px;      padding-bottom: 3px;
+background-color: rgb(200,200,150);
+border-radius: 4px
+}
+
+H3  /* Gray background, inverted font-color */
+{font-family: Verdana, Helvetica, sans-serif;
+font-weight: bold;     font-size: 11pt;    color:rgb(250,255,250);
+margin-left: 6px;      margin-right: 6px;
+margin-top: 30px;      margin-bottom: 12px;
+padding-left: 3px;     padding-top: 3px;      padding-bottom: 3px;
+background-color: rgb(130,150,105); /*  rgb(0,48,0)#003000*/
+border-radius: 4px
+}
+
+H4
+{font-family: Verdana, Helvetica, sans-serif;
+font-weight: bold;     font-size: 10pt;     color: rgb(0,48,0) /*#003000*/;
+margin-left: 6px;      margin-right: 6px;
+margin-top: 24px;      margin-bottom: 0px;
+}
+
+H4.fixed
+{font-family: var(--FontFixed);
+font-weight: bold;     font-size: 10pt;     color: rgb(0,48,0) /*#003000*/;
+margin-left: 6px;      margin-right: 6px;
+margin-top: 24px;      margin-bottom: 6px}
+
+H4.fixed2  /*Used for a second header line below H4.fixed*/
+{font-family: var(--FontFixed);
+font-weight: bold;     font-size: 10pt;     color: rgb(0,48,0) /*#003000*/;
+margin-left: 6px;      margin-right: 6px;
+margin-top: 0px;       margin-bottom: 6px}
+
+H5
+{font-family: Verdana, Helvetica, sans-serif;
+font-style: italic;
+font-weight: normal;  font-size: 10pt;     color: rgb(0,48,0) /*#003000*/;
+margin-left: 6px;     margin-right: 6px;
+margin-top: 18px;     margin-bottom: 0px}
+
+
+HR
+{width:98%;  height:1px;   color:black;
+margin-bottom: 12px}
+
+HR.short
+{width: 30%;  height:1px;   color:black}
+
+
+
+/* For parameters  */
+
+H1.param /* Used for headers of parameters say f1= */
+{
+color: rgb(255,255,255);
+margin-left: 6px;
+margin-top: 16px;      margin-bottom: 12px;
+background-color: #336600;
+border-style: double
+}
+
+H1.item /* Used for headers of items say Baffle items, 101  d= xc=  */
+{
+color: rgb(255,255,255);
+margin-left: 6px;
+margin-top: 16px;      margin-bottom: 12px;
+background-color: #000055;
+border-style: double
+}
+
+/* IMAGE ------------------------------------*/
+
+img
+{
+ padding: 6px;
+}
+
+/* TABLE ------------------------------------*/
+
+table
+{
+border-collapse: collapse;  /* Otherwise each cell is framed */
+empty-cells: show;
+color: black;
+margin: 6px;
+font-size: 10pt;
+text-align: left;
+}
+
+table.pic
+{
+background-color: rgb(248,245,192);
+width: auto;
+float: right;
+align-content: center
+}
+
+table.header
+{
+background-color: rgb(248,245,192);
+}
+
+th
+{
+margin-bottom: 0px;   margin-left: 0px;    margin-top: 0px;
+text-align: left;
+line-height: 1.6em;  /* EU setting */
+}
+
+tr.h     /* slightly higher line-height as tr */
+{
+margin-bottom: 0px;   margin-left: 0px;    margin-top: 0px;
+line-height: 2em;
+font-weight: bold;
+color: #808080;
+}
+
+tr.narrow
+{
+margin-bottom: 0px;   margin-left: 0px;    margin-top: 0px;
+line-height: 1em;
+}
+
+td
+{
+margin-bottom: 0px;   margin-left: 6px;    margin-top: 6px;
+/*line-height: 100%; */
+text-align: left;
+vertical-align: top;
+}
+
+td.m
+{
+vertical-align: middle;
+}
+
+td.c
+{
+text-align: center;
+}
+
+td.header    /* Used at top of page */
+{
+width: 100px;
+}
+
+/* Math ------------------------------------*/
+
+  .vector {
+    position: relative;
+    }
+    .vector:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        border: 1px solid #000;
+        width: 6px;
+        height: 100%;
+        right: -6px;
+        border-left: 0;
+    }
+
+
+  .matrix {
+    position: relative;
+    }
+    .matrix:before, .matrix:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        border: 1px solid #000;
+        width: 6px;
+        height: 100%;
+    }
+    .matrix:before {
+        left: -6px;
+        border-right: 0;
+    }
+    .matrix:after {
+        right: -6px;
+        border-left: 0;
+    }

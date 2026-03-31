@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Gyrator</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1>Gyrator</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table width=300 align=right><tr><td>
+  <img src="../../../_Images/LE-Gyrator.jpg"  />
+  </td></tr></table>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Flow-potential converter</td>
+  </tr>
+  <tr>
+    <td class=param0>Type</td>         <td class=param1>Network element (4 pole)</td>
+  </tr>
+  <tr>
+    <td class=param0>Domain</td>       <td class=param1>All</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1> <a href="../Systems.html">System</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <br>
+  <pre>
+  <b>Gyrator</b>  'Any Name'
+    <a href="../Parameters/R=.html">R=</a>
+    <a href="../Parameters/Bl=Bl1=Bl2=.html">BL=</a>
+  </pre>
+
+
+  <p>The <i>Gyrator</i> is a four-pole lumped component, which
+  converts flows and potentials.</p>
+
+  <p class=formula><img src="../../../_Formulae/Gyrator%20matrix.jpg" ></p>
+
+  <p>with I1 and I2 flow into the first and second port (Is, Iu),
+  and with U1 and U2 potential differences across first and second
+  ports (U1 = Ut - Us and U2 = Uv - Uu).</p>
+
+  <p>G is the <i>Gyrator</i> Conductance.</p>
+
+  <p>In ABEC the <i>Gyrator</i> parameter is either R = 1/G or BL = 1/G.
+  The unit of [R] = &Omega; and of [BL] = Tm.</p>
+
+  <h4>Used as Flow Source</h4>
+
+  <p>In ABEC the source of the
+  <a href="../Network.html">lumped element network</a> is assumed
+  to be a potential source. However, in case you need to implement
+  a flow-source the <i>Gyrator</i> provides the trick.</p>
+
+  <br>
+  <center><table>
+  <tr>
+    <td width=300><img src="../../../_Images/LE-CurrentSource1.jpg"></td>
+    <td width=300><img src="../../../_Images/LE-CurrentSource2.jpg"></td>
+  </tr><tr>
+    <td width=300>Volume Velocity-source in the acoustical domain.</td>
+    <td width=300>Equivalent circuit using Gyrator with R=1. Hence V = U.</td>
+  </tr>
+  </table></center>
+
+  <br>
+  <pre>
+  <b>System</b> 'S1'
+    <b>Gyrator</b>       Node=1=0=10=0
+    <b>Duct</b>   'D1'   Node=10=20    Len=100mm WD=40mm  HD=40mm
+    <b>RadImp</b> 'Rad1' Node=20       Def='D1'</pre>
+
+  <br>
+  <p>In the above example we have effectively a flow-source because the
+  the first component is a <i>Gyrator</i>, which
+  by nature swaps network-parameters. Conveniently the <i>Gyrator</i>-
+  parameter defaults to R=1. This makes the flow on the right hand side
+  equal to the potential difference on the left and vice versa.</p>
+
+
+  <h4>Used as Motor</h4>
+
+  <p>The <i>Gyrator</i> can be used to symbolize the basic properties
+  of the electro-dynamic loudspeaker motor, as explained in
+  more detail <a href="../../Appendix/Electro-Dyn-Model.html">here...</a>.
+  Therefore the <i>Gyrator</i> accepts also the
+  <a href="../Parameters/Bl=Bl1=Bl2=.html">BL=</a> parameter.</p>
+
+  <br>
+  <br>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <title>Mms=</title>
+  <link href="../../../_styles/ABEC3_Help.css" type="text/css" rel="StyleSheet">
+</head>
+
+<body>
+  <h1 class=param>Mms=</h1>
+  <p class=navi><a href="../../Index.html">Home</a> &raquo;
+                <a href="../LEScripts.html">LE-Scripts</a></p>
+  <hr>
+
+  <table class=param>
+  <tr>
+    <td class=param0>Identifier</td>   <td class=paramID>Mms=</td>
+  </tr>
+  <tr>
+    <td class=param0>Units</td>       <td class=param1><a href="../../Appendix/Units.html">kg</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Format</td>       <td class=param1><a href="../../Appendix/Floating%20point%20values.html">Floating point number</a></td>
+  </tr>
+  <tr>
+    <td class=param0>Purpose</td>      <td class=param1>Mass of moving assembly.</td>
+  </tr>
+  <tr>
+    <td class=param0>Used in</td>      <td class=param1 COLSPAN=2>
+                                                        <a href="../Sections/Def_Driver.html">Def_Driver</a>,
+                                                        <a href="../Sections/Def_TwoCoilsDriver.html">Def_TwoCoilsDriver</a>,
+                                                        <a href="../Sections/Def_PiezoDriver.html">Def_PiezoDriver</a>,
+                                                        <a href="../Sections/Def_Speaker.html">Def_Speaker</a>,
+                                                        <a href="../Sections/Diaphragm.html">Diaphragm</a>
+                                                        </td>
+  </tr>
+  <tr>
+    <td class=param0>See also</td>      <td class=param1><a href="../../Appendix/Mechanics%20of%20Driver.html">Mechanics of Driver</a></td>
+  </tr>
+  </table>
+
+  <hr>
+
+  <p><img src="../../../_Images/Electro-Dyn-Model-Standard2.jpg" align=right>
+  <i>Mms</i> is the total in-vacuum mass of the vibrating assembly of the transducer.
+  The lumped element mass, <i>Mms</i> is used in the
+  <a href="../../Appendix/Electro-Dyn-Standard-Model.html">Standard Model of the Electro-Dyn-Model</a>.</p>
+
+  <p>For example</p>
+
+  <pre>
+  <b>Def_Driver</b> 'SP38'
+    Re=5.82ohm   Le=2.9mH   fre=1.1kHz  ExpoRe=0.824  ExpoLe=0.756
+    BL=21Tm
+    <span style="color: #800000">Mms=70g</span>  Cms=81e-6m/N  Rms=1Ns/m</pre>
+
+
+  <br>
+  <br>
+</body>
+</html>
