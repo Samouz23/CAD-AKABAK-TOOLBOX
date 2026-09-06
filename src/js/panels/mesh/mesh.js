@@ -4,6 +4,7 @@
 // MISSION :  Mise à jour du format de sortie de la "Frequency List".
 // =======================================================
 import { getSettings } from '../mainsettings/mainsettings.js';
+import { getMeshPreviewPopupHtml, initializeMeshPreviewPopup } from '../../popup/mesh/meshPreviewPopup.js';
 
 // --- Preset colors for frequency presets ---
 const PRESET_COLORS = [
@@ -110,7 +111,7 @@ export function getMeshPanelHtml() {
 
             <div id="batch-clmax-container" class="hidden space-y-2 border-t border-gray-700 pt-3">
                 <label class="font-semibold text-white">Mesh sizes for batch</label>
-                <p class="text-xs text-gray-400 mb-2">Laissez vide les valeurs non utilisées</p>
+                <p class="text-xs text-gray-400 mb-2">Leave unused values empty</p>
                 <div class="grid grid-cols-3 gap-3">
                     <div><label class="block mb-1">clmax 1</label><input type="text" id="clmax-1" class="form-input" value="10" placeholder="Ex: 10"></div>
                     <div><label class="block mb-1">clmax 2</label><input type="text" id="clmax-2" class="form-input" value="20" placeholder="Ex: 20"></div>
@@ -124,8 +125,8 @@ export function getMeshPanelHtml() {
             </div>
 
             <div class="text-center pt-4 pb-4" style="display:flex; gap:8px;">
-              <button id="open-preview-btn" class="action-btn btn--secondary h-12 font-bold" style="flex:1; font-size:13px; display:none;">Open Preview</button>
               <button id="start-mesh-btn" class="action-btn btn--primary h-12 text-lg font-bold" style="flex:1;">Start Meshing</button>
+              <button id="open-preview-btn" class="action-btn btn--secondary h-12 font-bold" style="flex:1; font-size:13px; display:none;">Open Preview</button>
             </div>
             <div id="mesh-status" class="pt-2 pb-4 text-center min-h-[2.5rem]"></div>
             <div id="mesh-progress" class="w-full bg-gray-700 rounded-full h-2.5 hidden">
@@ -179,7 +180,25 @@ export function getMeshPanelHtml() {
       
       </div>
     </div>
+
+    <!-- PREVIEW TOAST OVERLAY (Modal) -->
+    <div id="preview-toast-overlay" style="display:none; position:fixed; inset:0; z-index:1040; background:rgba(0,0,0,0.65); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); align-items:center; justify-content:center;">
+      <div id="preview-toast" style="position:relative; width:92vw; height:92vh; background:#111827; border-radius:10px; box-shadow:0 25px 60px rgba(0,0,0,0.7); border:1px solid rgba(236,72,153,0.3); display:flex; flex-direction:column; overflow:hidden;">
+        <!-- Header avec croix -->
+        <div class="flex justify-between items-center p-4 border-b border-gray-700">
+          <h2 class="text-xl font-bold text-white">Physical Mesh Preview</h2>
+          <button id="preview-toast-close-btn" class="text-gray-400 hover:text-white hover:bg-gray-800 p-2 rounded transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <div id="preview-embedded-root" class="flex-1 min-h-0 bg-gray-950"></div>
+      </div>
+    </div>
   `;
+
 }
 
 export function initializeMeshPanel(rootElement) {
@@ -234,6 +253,37 @@ export function initializeMeshPanel(rootElement) {
   const clearManualFileBtn = document.getElementById('clear-manual-file-btn');
   let manualMeshFilePath = null;
 
+  // --- PREVIEW TOAST OVERLAY (Modal) ---
+  const previewToastOverlay = document.getElementById('preview-toast-overlay');
+  const previewToastCloseBtn = document.getElementById('preview-toast-close-btn');
+  const previewEmbeddedRoot = document.getElementById('preview-embedded-root');
+  let previewEmbeddedInitialized = false;
+
+  function closePreviewToast() {
+    previewToastOverlay.style.display = 'none';
+  }
+
+  function displayPreviewToast() {
+    previewToastOverlay.style.display = 'flex';
+    if (!previewEmbeddedInitialized) {
+      previewEmbeddedRoot.innerHTML = getMeshPreviewPopupHtml({ embedded: true });
+      initializeMeshPreviewPopup({ embedded: true });
+      previewEmbeddedInitialized = true;
+    }
+  }
+
+  previewToastCloseBtn.addEventListener('click', closePreviewToast);
+  previewToastOverlay.addEventListener('click', (e) => {
+    if (e.target === previewToastOverlay) closePreviewToast();
+  });
+
+  // Listen for preview data from main process
+  if (window.electronAPI?.onShowMeshPreviewToast) {
+    window.electronAPI.onShowMeshPreviewToast(() => {
+      displayPreviewToast();
+    });
+  }
+
   manualSelectFileBtn.addEventListener('click', async () => {
       const result = await window.electronAPI.selectMeshFile();
       if (result && !result.canceled && result.filePaths.length > 0) {
@@ -278,14 +328,13 @@ export function initializeMeshPanel(rootElement) {
     });
 
   openPreviewBtn.addEventListener('click', async () => {
-    const hasState = await window.electronAPI.getLastPreviewState();
-    if (!hasState) {
+    if (!previewEmbeddedInitialized) {
       statusEl.textContent = 'No preview session. Click "Mesh Preview" first.';
       statusEl.className = 'text-yellow-400';
       return;
     }
-    window.electronAPI.showMeshPreview();
-    statusEl.textContent = 'Preview window opened.';
+    displayPreviewToast();
+    statusEl.textContent = 'Preview opened.';
     statusEl.className = 'text-blue-400';
   });
 
@@ -382,8 +431,10 @@ export function initializeMeshPanel(rootElement) {
             gmshPath: paths.gmsh,
             sourceFilePath: result.sourceFilePath,
             shellTagMap: result.shellTagMap,
-            defaultMeshSize: result.defaultMeshSize || Number(clmax),
-            defaultCurveMeshSize: result.defaultCurveMeshSize || Number(clmax),
+            // Always forward the values the user typed in the panel so the
+            // preview reflects the main panel settings (mesh size + curvature).
+            defaultMeshSize: Number(clmax),
+            defaultCurveMeshSize: Number(curv),
           });
           statusEl.textContent = 'Physical preview window opened.';
           statusEl.className = 'text-blue-400';

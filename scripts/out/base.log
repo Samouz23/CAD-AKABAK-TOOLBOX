@@ -1,0 +1,30 @@
+﻿.msh : 733 triangles ÔÇö Segment_1=134 Segment_2=51 Itf_Throat=22 Itf_H1_H2=18 Itf_Mouth=38 Baffle_Outer=200 Compression_Chamber=32 Baffle_Front=108 Baffle_Back=108 Itf_Diaphragm=22
+diaphragme g├®n├®r├® : 305 triangles
+
+mesh: 730 ├®l├®ments, 480 inconnues, sym=hv
+domaines: Subdomain 1[interior]=435 closed=true Subdomain 2[interior]=76 closed=true Subdomain 3[interior]=174 closed=true Subdomain 4[interior]=107 closed=true Subdomain 5[exterior,baffle]=38 closed=false
+volumes: Subdomain 1=0.493L Subdomain 2=0.048L Subdomain 3=3.506L Subdomain 4=5.684L total=9.731L
+solve: 26.73 s pour 17 fr├®quences (1573 ms/f)
+
+couplage : RATIO=area  Sd=220.0 cm┬▓  U=2.83 V
+
+   f(Hz)   Sgeom     Za.re      Za.im       v(m/s)   SPL     Akabak     ╬ö   mismatch
+   100.0   324.5       0.17     -16.32    1.96e-1   90.28    88.85    1.43     0.1%
+   115.5   324.5       0.26     -19.61    1.94e-1   92.18    89.48    2.70     0.1%
+   133.4   324.5       0.44     -23.96    1.89e-1   94.18    90.22    3.96     0.2%
+   154.0   324.5       0.79     -30.04    1.77e-1   96.28    91.16    5.11     0.5%
+   177.8   324.5       1.66     -39.35    1.55e-1   98.39    92.43    5.96     0.7%
+   205.4   324.5       4.46     -55.87    1.17e-1  100.31    94.17    6.13     0.9%
+   237.1   324.5      19.57     -94.20    6.52e-2  101.76    96.66    5.11     1.1%
+   273.8   324.5     205.30    -111.05    2.23e-2  102.76   100.20    2.56     1.2%
+   316.2   324.5      70.73      55.54    4.18e-2  103.79   104.59   -0.80     1.2%
+   365.2   324.5      40.33      15.03    6.46e-2  105.34   106.11   -0.76     1.0%
+   421.7   324.5      56.85      -7.28    6.07e-2  106.57   104.83    1.74     0.7%
+   487.0   324.5      90.11      37.78    3.70e-2  104.66   105.34   -0.68     0.4%
+   562.3   324.5      35.42      56.84    4.04e-2  101.87   107.80   -5.93     0.3%
+   649.4   324.5      19.28      39.20    4.48e-2  100.76   107.96   -7.20     0.4%
+   749.9   324.5      17.29      32.08    4.33e-2  100.78   106.81   -6.02     0.7%
+   866.0   324.5      10.83      29.89    4.02e-2   99.05   104.48   -5.44     1.2%
+  1000.0   324.5       6.78      22.76    3.80e-2   97.55   101.31   -3.76     1.3%
+
+offset moyen = 0.24 dB ┬À RMS = 4.40 dB ┬À RMS de FORME (offset retir├®) = 4.39 dB ┬À max|╬ö| = 7.20 dB

@@ -70,6 +70,17 @@ export function getGeometryPanelHtml() {
         </section>
 
         <section class="calc-section">
+          <h2 class="calc-title">Trapezoidal prism volume calculator</h2>
+          <div class="space-y-2">
+            <div><label>Height 1 (<span class="unit-label">mm</span>)</label><input type="text" id="trap-h1" class="form-input calculable-input"></div>
+            <div><label>Height 2 (<span class="unit-label">mm</span>)</label><input type="text" id="trap-h2" class="form-input calculable-input"></div>
+            <div><label>Width (<span class="unit-label">mm</span>)</label><input type="text" id="trap-w" class="form-input calculable-input"></div>
+            <div><label>Depth (<span class="unit-label">mm</span>)</label><input type="text" id="trap-d" class="form-input calculable-input"></div>
+            <div class="pt-2"><label>Total Volume (L)</label><span id="trap-v" class="form-output">0.000</span></div>
+          </div>
+        </section>
+
+        <section class="calc-section">
           <h2 class="calc-title">Diameter ⇄ Area</h2>
           <div class="space-y-2">
             <div><label>Diameter (<span class="unit-label">mm</span>)</label><input type="text" id="dia-d" class="form-input calculable-input"></div>
@@ -135,6 +146,23 @@ export function initializeGeometryPanel() {
     });
   });
 
+  // --- CALCULATEUR 3: PRISME À SECTION TRAPÉZOÏDALE ---
+  const trapInputs = {
+    h1: document.getElementById('trap-h1'),
+    h2: document.getElementById('trap-h2'),
+    w: document.getElementById('trap-w'),
+    d: document.getElementById('trap-d')
+  };
+  const trapVolume = document.getElementById('trap-v');
+  const calculateTrapVolume = () => {
+    const factor = (currentUnit === 'cm') ? 10 : 1;
+    const h1 = (parseFloat(trapInputs.h1.value) || 0) * factor;
+    const h2 = (parseFloat(trapInputs.h2.value) || 0) * factor;
+    const w = (parseFloat(trapInputs.w.value) || 0) * factor;
+    const d = (parseFloat(trapInputs.d.value) || 0) * factor;
+    trapVolume.textContent = (((h1 + h2) / 2 * w * d) / 1e6).toFixed(3);
+  };
+
   // --- CALCULATEUR 3: DIAMÈTRE <-> AIRE <-> RAYON ---
   const diaD = document.getElementById('dia-d'), diaA = document.getElementById('dia-a'), diaR = document.getElementById('dia-r');
   const calculateDiaFromD = () => {
@@ -171,6 +199,7 @@ export function initializeGeometryPanel() {
     const targetId = e.target.id;
     if (targetId.startsWith('para-')) calculateParaVolume();
     else if (targetId.startsWith('prism-')) calculatePrismVolume();
+    else if (targetId.startsWith('trap-')) calculateTrapVolume();
     else if (targetId === 'dia-d') calculateDiaFromD();
     else if (targetId === 'dia-a') calculateDiaFromA();
     else if (targetId === 'dia-r') calculateDiaFromR();
@@ -182,6 +211,7 @@ export function initializeGeometryPanel() {
     updateUnitLabels();
     calculateParaVolume();
     calculatePrismVolume();
+    calculateTrapVolume();
     calculateMetricToInch();
   });
   

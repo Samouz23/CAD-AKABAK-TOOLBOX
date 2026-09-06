@@ -304,7 +304,7 @@ function initializeMeshingTool() {
             sourceFilePath: lastResult.sourceFilePath,
             shellTagMap: lastResult.shellTagMap,
             defaultMeshSize: lastResult.defaultMeshSize || Number(clmaxList[0]),
-            defaultCurveMeshSize: lastResult.defaultCurveMeshSize || Number(clmaxList[0]),
+            defaultCurveMeshSize: lastResult.defaultCurveMeshSize ?? Number(clmaxList[0]),
           });
           statusEl.textContent = 'Physical preview window opened.';
           statusEl.style.color = '#60a5fa';

@@ -9,8 +9,9 @@ src/js/panels/physics/
 ├── power.js                  # Fichier principal avec système d'onglets
 ├── basicCalculators.js       # Calculateurs de base (Ohm, résistances, fréquence)
 ├── splCalculator.js          # Calculateur SPL avec graphique
-├── crossoverCalculator.js    # Calculateur de filtres passifs
-└── history.js                # Système d'historique avec import/export
+├── crossoverCalculator.js    # Calculateur de filtres passifs (+ presets save/load)
+└── database/
+    └── crossoverPresets.json # Presets crossover sauvegardés
 ```
 
 ## 🎯 Fonctionnalités
@@ -59,23 +60,11 @@ SPL = Sensitivity + 10*log10(Power) - 20*log10(Distance) + 3*log2(Speakers)
 - Inductances à noyau d'air pour les tweeters
 - Vérifier les valeurs de puissance pour les composants
 
-### 4. History Tab
-**Système d'historique complet** pour sauvegarder et gérer vos calculs :
-
-- **Sauvegarde automatique** dans localStorage
-- **Recherche/filtrage** en temps réel
-- **Export/Import** au format JSON
-- **Favoris** pour marquer les calculs importants
-- **Statistiques** : total, aujourd'hui, semaine, plus utilisé
-- **Copie** vers presse-papiers
-- **Limite** : 500 entrées max (conservation des plus récentes)
-
-**Actions disponibles :**
-- ⭐ Favori : Marquer/démarquer
-- 📋 Copier : Vers presse-papiers
-- 🗑️ Supprimer : Effacer une entrée
-- 📥 Export : Sauvegarder en JSON
-- 📤 Import : Fusionner depuis JSON
+**Presets (sauvegarde/chargement) :**
+- Bouton bookmark en haut de la section (même style que Waveguide Studio)
+- Ouvre une modale listant les configurations enregistrées (nom, charger, supprimer)
+- Sauvegarde tous les champs du formulaire (type de filtre, topologie, fréquences, impédance, ordre) sous un nom donné
+- Persisté côté disque via IPC (`crossover-presets:get-all/save/delete`) dans `database/crossoverPresets.json`
 
 ## 🎨 Interface
 
@@ -83,8 +72,7 @@ SPL = Sensitivity + 10*log10(Power) - 20*log10(Distance) + 3*log2(Speakers)
 Navigation par onglets en haut du panneau :
 - **Basic** : Calculateurs essentiels
 - **SPL** : Pression sonore
-- **Crossover** : Filtres passifs
-- **History** : Historique
+- **Crossover** : Filtres passifs (+ presets)
 
 ### Cohérence UX
 - **Même style** que les autres modules (Geometry, Settings)
@@ -94,10 +82,11 @@ Navigation par onglets en haut du panneau :
 
 ## 🔧 Utilisation
 
-### Sauvegarde dans l'historique
-Chaque calculateur possède un bouton **"💾 Save to History"** :
+### Sauvegarde d'un preset Crossover
 ```javascript
-window.physicsAddToHistory('Type de calcul', 'Détails du résultat');
+await window.electronAPI.saveCrossoverPreset({ name, values, savedAt });
+const presets = await window.electronAPI.getCrossoverPresets();
+await window.electronAPI.deleteCrossoverPreset(name);
 ```
 
 ### Calculs inline
@@ -106,20 +95,6 @@ Tous les champs d'entrée supportent les calculs :
 Tapez : 2000/4
 Appuyez : Entrée
 Résultat : 500
-```
-
-### Export de l'historique
-Le fichier exporté contient :
-```json
-[
-  {
-    "id": 1703346000000,
-    "type": "SPL Calculator",
-    "details": "95.3 dB - At 3m with 100W × 2 speakers",
-    "timestamp": "2025-12-23T10:00:00.000Z",
-    "favorite": false
-  }
-]
 ```
 
 ## 📊 Graphiques

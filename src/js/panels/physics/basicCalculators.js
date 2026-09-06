@@ -34,10 +34,6 @@ export function getBasicCalculatorsHtml() {
             <input type="text" id="ohm-u" class="form-input" disabled>
           </div>
 
-          <button id="save-ohm-calc" class="action-btn mt-2 w-full flex items-center justify-center space-x-2">
-            ${PhysicsIcons.save}
-            <span>Save to History</span>
-          </button>
         </div>
       </section>
       
@@ -57,37 +53,32 @@ export function getBasicCalculatorsHtml() {
             <span id="para-r-total" class="form-output">0.00</span>
           </div>
 
-          <button id="save-parallel-calc" class="action-btn mt-2 w-full flex items-center justify-center space-x-2">
-            ${PhysicsIcons.save}
-            <span>Save to History</span>
-          </button>
         </div>
       </section>
 
       <section class="calc-section">
-        <h2 class="calc-title">Frequency & Wavelength</h2>
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="calc-title mb-0">Frequency & Wavelength</h2>
+          <button id="wave-unit-toggle" style="background: color-mix(in srgb, var(--border-primary) 18%, transparent); color: var(--border-primary); font-size: 1rem; font-family: monospace; font-weight: bold; padding: 3px 14px; border-radius: 20px; border: none; cursor: pointer; transition: background 0.2s, color 0.2s;">m</button>
+        </div>
         <div class="space-y-2">
           <div>
             <label>Frequency (Hz)</label>
             <input type="text" id="wave-freq" class="form-input">
           </div>
           <div>
-            <label>Wavelength (m)</label>
+            <label id="wave-lambda-label">Wavelength (m)</label>
             <input type="text" id="wave-lambda" class="form-input">
           </div>
           <div>
-            <label>1/2 Wave (m)</label>
+            <label id="wave-half-label">1/2 Wave (m)</label>
             <input type="text" id="wave-half" class="form-input">
           </div>
           <div>
-            <label>1/4 Wave (m)</label>
+            <label id="wave-quarter-label">1/4 Wave (m)</label>
             <input type="text" id="wave-quarter" class="form-input">
           </div>
 
-          <button id="save-wave-calc" class="action-btn mt-2 w-full flex items-center justify-center space-x-2">
-            ${PhysicsIcons.save}
-            <span>Save to History</span>
-          </button>
         </div>
       </section>
 
@@ -206,16 +197,6 @@ export function initializeBasicCalculators() {
     });
   });
 
-  // Save to history
-  document.getElementById('save-ohm-calc')?.addEventListener('click', () => {
-    const P = p_input.value;
-    const U = u_input.value;
-    const R = r_input.value;
-    if (window.physicsAddToHistory) {
-      window.physicsAddToHistory('Ohm\'s Law', `P=${P}W, U=${U}V, R=${R}Ω`);
-    }
-  });
-
   // === CALCULATEUR 2: RÉSISTANCES EN PARALLÈLE ===
   const count = document.getElementById('para-count');
   const rIndiv = document.getElementById('para-r-indiv');
@@ -256,25 +237,45 @@ export function initializeBasicCalculators() {
     }
   });
 
-  document.getElementById('save-parallel-calc')?.addEventListener('click', () => {
-    const numHP = count.value;
-    const rHP = rIndiv.value;
-    const total = rTotal.textContent;
-    if (window.physicsAddToHistory) {
-      window.physicsAddToHistory('Parallel Resistors', `${numHP} speakers @ ${rHP}Ω = ${total}Ω total`);
-    }
-  });
-
   // === CALCULATEUR 3: FRÉQUENCE / LONGUEUR D'ONDE ===
   const freqInput = document.getElementById('wave-freq');
   const lambdaInput = document.getElementById('wave-lambda');
   const halfInput = document.getElementById('wave-half');
   const quarterInput = document.getElementById('wave-quarter');
+  const waveUnitToggle = document.getElementById('wave-unit-toggle');
   const SPEED_OF_SOUND = 343;
+  let waveInMm = false;
+
+  const updateWaveLabels = () => {
+    const unit = waveInMm ? 'mm' : 'm';
+    waveUnitToggle.textContent = unit;
+    waveUnitToggle.style.background = waveInMm
+      ? 'var(--border-primary)'
+      : 'color-mix(in srgb, var(--border-primary) 18%, transparent)';
+    waveUnitToggle.style.color = waveInMm ? '#000' : 'var(--border-primary)';
+    document.getElementById('wave-lambda-label').textContent = `Wavelength (${unit})`;
+    document.getElementById('wave-half-label').textContent = `1/2 Wave (${unit})`;
+    document.getElementById('wave-quarter-label').textContent = `1/4 Wave (${unit})`;
+  };
+
+  waveUnitToggle.addEventListener('click', () => {
+    waveInMm = !waveInMm;
+    const factor = waveInMm ? 1000 : 1 / 1000;
+    [lambdaInput, halfInput, quarterInput].forEach(input => {
+      const val = parseFloat(input.value);
+      if (!isNaN(val) && val > 0) {
+        input.value = waveInMm ? (val * 1000).toFixed(1) : (val / 1000).toFixed(3);
+      }
+    });
+    updateWaveLabels();
+  });
 
   const calculateWavelength = (event) => {
     const sourceId = event.target.id;
     const value = parseFloat(event.target.value);
+    const decimals = waveInMm ? 1 : 3;
+    const toM = (v) => waveInMm ? v / 1000 : v;
+    const fromM = (v) => waveInMm ? v * 1000 : v;
 
     if (isNaN(value) || value <= 0) {
       if (sourceId !== 'wave-freq') freqInput.value = '';
@@ -284,18 +285,18 @@ export function initializeBasicCalculators() {
       return;
     }
 
-    let lambda = 0;
+    let lambda = 0; // always in meters internally
     switch (sourceId) {
       case 'wave-freq': lambda = SPEED_OF_SOUND / value; break;
-      case 'wave-lambda': lambda = value; break;
-      case 'wave-half': lambda = value * 2; break;
-      case 'wave-quarter': lambda = value * 4; break;
+      case 'wave-lambda': lambda = toM(value); break;
+      case 'wave-half': lambda = toM(value) * 2; break;
+      case 'wave-quarter': lambda = toM(value) * 4; break;
     }
 
     if (sourceId !== 'wave-freq') freqInput.value = (SPEED_OF_SOUND / lambda).toFixed(2);
-    if (sourceId !== 'wave-lambda') lambdaInput.value = lambda.toFixed(3);
-    if (sourceId !== 'wave-half') halfInput.value = (lambda / 2).toFixed(3);
-    if (sourceId !== 'wave-quarter') quarterInput.value = (lambda / 4).toFixed(3);
+    if (sourceId !== 'wave-lambda') lambdaInput.value = fromM(lambda).toFixed(decimals);
+    if (sourceId !== 'wave-half') halfInput.value = fromM(lambda / 2).toFixed(decimals);
+    if (sourceId !== 'wave-quarter') quarterInput.value = fromM(lambda / 4).toFixed(decimals);
   };
 
   [freqInput, lambdaInput, halfInput, quarterInput].forEach(input => {
@@ -303,11 +304,4 @@ export function initializeBasicCalculators() {
     enableInlineCalculation(input);
   });
 
-  document.getElementById('save-wave-calc')?.addEventListener('click', () => {
-    const freq = freqInput.value;
-    const lambda = lambdaInput.value;
-    if (window.physicsAddToHistory) {
-      window.physicsAddToHistory('Wavelength', `${freq}Hz = ${lambda}m (λ)`);
-    }
-  });
 }

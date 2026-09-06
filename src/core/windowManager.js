@@ -26,11 +26,17 @@ function createMainWindow() {
         icon: path.join(__dirname, '..', 'assets', 'icon', 'icon.ico'),
         webPreferences: {
             // Le chemin du preload est maintenant relatif à la racine (src)
-            preload: path.join(__dirname, '..', 'preload.js') 
+            preload: path.join(__dirname, '..', 'preload.js'),
+            contextIsolation: true,
+            nodeIntegration: false
         }
     });
 
-mainWindow.webContents.openDevTools(); //CETTE LIGNE DOIT RESTER COMMENTÉE EN PRODUCTION ET NE DOIT PAS ETRE SUPPRIMÉE
+    const preloadPath = path.join(__dirname, '..', 'preload.js');
+    console.log('[WindowManager] Preload path:', preloadPath);
+    console.log('[WindowManager] __dirname:', __dirname);
+
+    // mainWindow.webContents.openDevTools(); //CETTE LIGNE DOIT RESTER COMMENTÉE EN PRODUCTION ET NE DOIT PAS ETRE SUPPRIMÉE
 
     // [DÉSACTIVÉ] Pour enlever complètement la barre de menu (File, Edit, View, etc.)
      mainWindow.setMenuBarVisibility(true);

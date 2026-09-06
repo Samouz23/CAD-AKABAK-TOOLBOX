@@ -226,13 +226,13 @@ export function initializeMeshMiniPopup() {
       // Step 2: Build physicalConfig from saved state
       const isMirrorEnabled = state.mirrorAxis === 'H' || state.mirrorAxis === 'V';
       const defaultMeshSize = config.defaultMeshSize || 50;
-      const defaultCurveMeshSize = config.defaultCurveMeshSize || defaultMeshSize;
+      const defaultCurveMeshSize = config.defaultCurveMeshSize ?? defaultMeshSize;
 
       const groups = (state.surfaceParams || []).map((param, index) => ({
         name: `S${index + 1}`,
         isInterface: isMirrorEnabled && Boolean(param.mergeAtSymmetry),
         meshSize: param.meshSize || defaultMeshSize,
-        curveMeshSize: param.curveMeshSize || defaultCurveMeshSize,
+        curveMeshSize: param.curveMeshSize ?? defaultCurveMeshSize,
         shellIndices: [index],
       }));
 

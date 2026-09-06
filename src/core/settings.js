@@ -22,11 +22,22 @@ const defaultSettings = {
     export: "",
     togglePanels: "",
     buildInterface: "",
+    bemToggleElements: "",
+    bemToggleFields: "",
     escape: "escape",
-    minimize: ""
+    minimize: "",
+    saveModule: "ctrl+s"
   },
   popupsAlwaysOnTop: false,
   showStartupInfo: true,
+  enableScaling: false,
+  zoomLevel: 1,
+  ui: {
+    theme: 'default',
+    reducedMotion: false,
+    buttonSkin: 'striped',
+    moduleOrder: ['geometry', 'power', 'mesh', 'drivers', 'notes', 'horn', 'akabak_lem', 'hornstudio', 'directivity', 'waveguide', 'settings']
+  },
   abec: {
     lem: { eta: 0.001, etab: 0.001, etaD: 0.001, Rg: 0.1 },
     bem: {
@@ -36,6 +47,9 @@ const defaultSettings = {
       basePlane: 'xz', normalized: true, normType: 'PosPolar',
       bodeType: 'LeveldB', rho: 1.21, c: 344
     }
+  },
+  waveguideStudio: {
+    mshDelaunay: { maxSections: 50, clmax: 50 }
   }
 };
 
@@ -43,10 +57,19 @@ const defaultSettings = {
 const store = new Store();
 let appSettings = store.get('settings', defaultSettings);
 
+// --- MIGRATION : version des templates de formules ---
+// Incrémenter TEMPLATES_VERSION à chaque fois que les templates par défaut changent.
+// Cela force la suppression des templates sauvegardés pour que les nouveaux défauts s'appliquent.
+const TEMPLATES_VERSION = 2;
+if (appSettings.templatesVersion !== TEMPLATES_VERSION) {
+  appSettings = { ...appSettings, templates: undefined, templatesVersion: TEMPLATES_VERSION };
+}
+
 // --- FUSION ET MISE À JOUR ---
 store.set('settings', { 
     ...defaultSettings, 
     ...appSettings, 
+    templatesVersion: TEMPLATES_VERSION,
     paths: { 
         ...defaultSettings.paths, 
         ...(appSettings.paths || {}) 
@@ -55,9 +78,17 @@ store.set('settings', {
         ...defaultSettings.hotkeys,
         ...(appSettings.hotkeys || {})
     },
+    ui: {
+      ...defaultSettings.ui,
+      ...(appSettings.ui || {}),
+      moduleOrder: Array.isArray(appSettings.ui?.moduleOrder) ? appSettings.ui.moduleOrder : defaultSettings.ui.moduleOrder
+    },
     abec: {
         lem: { ...defaultSettings.abec.lem, ...(appSettings.abec?.lem || {}) },
         bem: { ...defaultSettings.abec.bem, ...(appSettings.abec?.bem || {}) }
+    },
+    waveguideStudio: {
+        mshDelaunay: { ...defaultSettings.waveguideStudio.mshDelaunay, ...(appSettings.waveguideStudio?.mshDelaunay || {}) }
     }
 });
 

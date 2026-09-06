@@ -1,0 +1,6 @@
+# DOSC harness summary
+Run: smoke
+Variants: 1
+
+Rank  Score   Iso(σmm)  H°(mean±std)  V°(mean±std)  HFflat   Tag
+  1.  78.28     16.36    180± 0°       155±41°    1.00    smoke_smoketest

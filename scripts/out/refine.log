@@ -1,0 +1,22 @@
+﻿.msh : 2932 triangles ÔÇö Segment_1=536 Segment_2=204 Itf_Throat=88 Itf_H1_H2=72 Itf_Mouth=152 Baffle_Outer=800 Compression_Chamber=128 Baffle_Front=432 Baffle_Back=432 Itf_Diaphragm=88
+diaphragme g├®n├®r├® : 1326 triangles
+
+mesh: 3026 ├®l├®ments, 1839 inconnues, sym=hv
+domaines: Subdomain 1[interior]=1846 closed=true Subdomain 2[interior]=304 closed=true Subdomain 3[interior]=696 closed=true Subdomain 4[interior]=428 closed=true Subdomain 5[exterior,baffle]=152 closed=false
+volumes: Subdomain 1=0.495L Subdomain 2=0.048L Subdomain 3=3.506L Subdomain 4=5.684L total=9.732L
+solve: 174.00 s pour 9 fr├®quences (19333 ms/f)
+
+couplage : RATIO=area  Sd=220.0 cm┬▓  U=2.83 V
+
+   f(Hz)   Sgeom     Za.re      Za.im       v(m/s)   SPL     Akabak     ╬ö   mismatch
+   100.0   330.9       0.17     -16.45    1.95e-1   90.26    88.85    1.41     0.4%
+   133.4   330.9       0.44     -24.16    1.88e-1   94.16    90.22    3.94     0.5%
+   177.8   330.9       1.68     -39.76    1.54e-1   98.35    92.43    5.92     0.7%
+   237.1   330.9      20.14     -95.94    6.39e-2  101.69    96.66    5.04     0.9%
+   316.2   330.9      69.72      55.94    4.20e-2  103.74   104.59   -0.85     0.8%
+   421.7   330.9      57.48      -6.85    6.02e-2  106.54   104.83    1.70     0.5%
+   562.3   330.9      34.66      56.49    4.06e-2  101.81   107.80   -5.99     0.3%
+   749.9   330.9      17.28      32.22    4.33e-2  100.72   106.81   -6.09     0.4%
+  1000.0   330.9       6.66      22.59    3.80e-2   97.38   101.31   -3.93     0.9%
+
+offset moyen = 0.13 dB ┬À RMS = 4.35 dB ┬À RMS de FORME (offset retir├®) = 4.34 dB ┬À max|╬ö| = 6.09 dB

@@ -96,7 +96,7 @@ class NotificationSystem {
   }
 
   // Dialogue de confirmation moderne
-  async confirm(message, title = 'Confirmation') {
+  async confirm(message, title = 'Confirmation', { cancelLabel = 'Cancel', confirmLabel = 'Confirm' } = {}) {
     return new Promise((resolve) => {
       const modal = document.createElement('div');
       modal.className = 'notification-modal';
@@ -106,8 +106,8 @@ class NotificationSystem {
           <h3 class="notification-modal__title">${title}</h3>
           <p class="notification-modal__message">${message}</p>
           <div class="notification-modal__actions">
-            <button class="btn btn--ghost notification-modal__btn-cancel">Annuler</button>
-            <button class="btn btn--primary notification-modal__btn-confirm">Confirmer</button>
+            <button class="btn btn--ghost notification-modal__btn-cancel">${cancelLabel}</button>
+            <button class="btn btn--primary notification-modal__btn-confirm">${confirmLabel}</button>
           </div>
         </div>
       `;

@@ -18,11 +18,13 @@ const { registerFileSystemHandlers } = require('./ipc/fileSystemHandlers');
 const { registerMeshHandlers } = require('./ipc/meshHandlers');
 const { registerSettingsHandlers } = require('./ipc/mainsettingsHandlers.js');
 const { registerAkabakLemHandlers } = require('./ipc/akabakLemHandlers');
+const { registerFoamHandlers } = require('./ipc/foamHandlers');
 
 registerFileSystemHandlers();
 registerMeshHandlers();
 registerSettingsHandlers();
 registerAkabakLemHandlers();
+registerFoamHandlers();
 
 
 // --- 3. GESTIONNAIRES IPC GLOBAUX ---
@@ -44,26 +46,17 @@ let pendingMeshPreviewData = null;
 let lastPreviewState = null;
 let lastPreviewConfig = null;
 let meshPreviewWindow = null;
+let mainAppWindow = null;
 
 ipcMain.on('open-mesh-preview', (event, data) => {
-    // Merge saved state into new data if available
-    if (lastPreviewState) {
-        data.savedState = lastPreviewState;
-    }
-    pendingMeshPreviewData = data;
-    // Keep a copy of the config for quick-remesh
+    // Fresh preview request from main mesh panel.
     lastPreviewConfig = { ...data };
-    delete lastPreviewConfig.savedState;
-
-    // Reuse existing window if still open
-    if (meshPreviewWindow && !meshPreviewWindow.isDestroyed()) {
-        meshPreviewWindow.webContents.send('reload-preview', data);
-        meshPreviewWindow.focus();
-        return;
+    pendingMeshPreviewData = { ...data };
+    if (mainAppWindow && !mainAppWindow.isDestroyed()) {
+        mainAppWindow.webContents.send('show-mesh-preview-toast', data);
+        // If the embedded preview is already initialized, force it to reload.
+        mainAppWindow.webContents.send('reload-preview', data);
     }
-
-    meshPreviewWindow = createToolWindow({ toolName: 'mesh-preview', title: 'Physical Preview' });
-    meshPreviewWindow.on('closed', () => { meshPreviewWindow = null; });
 });
 ipcMain.handle('get-mesh-preview-data', () => {
     const data = pendingMeshPreviewData;
@@ -78,11 +71,6 @@ ipcMain.handle('get-last-preview-state', () => {
     return { state: lastPreviewState, config: lastPreviewConfig };
 });
 ipcMain.on('show-mesh-preview', () => {
-    if (meshPreviewWindow && !meshPreviewWindow.isDestroyed()) {
-        meshPreviewWindow.focus();
-        return;
-    }
-    // Reopen with last config + saved state
     if (lastPreviewConfig) {
         const data = { ...lastPreviewConfig };
         if (lastPreviewState) {
@@ -92,8 +80,10 @@ ipcMain.on('show-mesh-preview', () => {
             }
         }
         pendingMeshPreviewData = data;
-        meshPreviewWindow = createToolWindow({ toolName: 'mesh-preview', title: 'Physical Preview' });
-        meshPreviewWindow.on('closed', () => { meshPreviewWindow = null; });
+        if (mainAppWindow && !mainAppWindow.isDestroyed()) {
+            mainAppWindow.webContents.send('show-mesh-preview-toast', data);
+            mainAppWindow.webContents.send('reload-preview', data);
+        }
     }
 });
 
@@ -132,10 +122,26 @@ ipcMain.on('window-action', (event, action) => {
 
 app.whenReady().then(() => {
     const splashWindow = createSplashWindow();
-    const mainWindow = createMainWindow();
+    mainAppWindow = createMainWindow();
 
     const windowReadyPromise = new Promise(resolve => {
-        mainWindow.once('ready-to-show', resolve);
+        let resolved = false;
+        const resolveWindowReady = () => {
+            if (resolved) return;
+            resolved = true;
+            resolve();
+        };
+
+        // did-finish-load is reliable even when ready-to-show is not emitted.
+        mainAppWindow.webContents.once('did-finish-load', resolveWindowReady);
+        mainAppWindow.once('ready-to-show', resolveWindowReady);
+        mainAppWindow.webContents.once('did-fail-load', (event, errorCode, errorDescription) => {
+            console.error(`[Main] Échec du chargement de la fenêtre (${errorCode}): ${errorDescription}`);
+            resolveWindowReady();
+        });
+
+        // Prevent the splash screen from remaining open indefinitely.
+        setTimeout(resolveWindowReady, 10000);
     });
 
     const minDelayPromise = new Promise(resolve => {
@@ -146,8 +152,8 @@ app.whenReady().then(() => {
         if (splashWindow && !splashWindow.isDestroyed()) {
             splashWindow.close();
         }
-        if (mainWindow && !mainWindow.isDestroyed()) {
-            mainWindow.show();
+        if (mainAppWindow && !mainAppWindow.isDestroyed()) {
+            mainAppWindow.show();
         }
     });
 });

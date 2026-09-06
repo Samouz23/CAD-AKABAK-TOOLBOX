@@ -248,7 +248,7 @@ export function drawFoldedHorn(canvas, segments, foldingState, genDom, rootEleme
     // =========================================================================
     // Baffle du haut-parleur
     // =========================================================================
-    drawBaffle(ctx, segments, positions, directions, foldingState, genState, toScreen, scale, halfWidths);
+    drawBaffle(ctx, segments, positions, directions, foldingState, genDom, toScreen, scale, halfWidths);
 
     // =========================================================================
     // Courbes d'expansion idéale en pointillé à chaque angle
@@ -414,7 +414,7 @@ export function drawFoldedHorn(canvas, segments, foldingState, genDom, rootEleme
 // DESSIN DU BAFFLE (PLANCHE DU HP)
 // ====================================================================================================
 
-function drawBaffle(ctx, segments, positions, directions, foldingState, genState, toScreen, scale, halfWidths) {
+function drawBaffle(ctx, segments, positions, directions, foldingState, genDom, toScreen, scale, halfWidths) {
     if (!positions.length || !segments.length) return;
 
     const dir0 = directions[0] || 0;
@@ -424,8 +424,9 @@ function drawBaffle(ctx, segments, positions, directions, foldingState, genState
 
     // Dimensions du baffle : doit couvrir au moins la gorge
     const throatW = halfWidths[0] * 2;
-    const hasDriver = genState?.selectedDriverData?.diameterMm > 0;
-    const baffleMm = hasDriver ? genState.selectedDriverData.diameterMm + 50 : throatW + 80;
+    const autoBaffleMm = throatW + 80;
+    const manualBaffleMm = parseFloat(genDom?.genMeshBaffleDiameter?.value);
+    const baffleMm = (manualBaffleMm > 0) ? manualBaffleMm : autoBaffleMm;
     const halfBaffle = baffleMm / 2;
     const baffleThickness = 18; // mm
 
@@ -480,7 +481,7 @@ function drawBaffle(ctx, segments, positions, directions, foldingState, genState
     ctx.setLineDash([]);
 
     // Label
-    const label = hasDriver ? `Baffle ${baffleMm.toFixed(0)}mm` : 'Baffle';
+    const label = `Baffle ${baffleMm.toFixed(0)}mm`;
     const sLabel = toScreen(
         pos0.x + (halfBaffle * 1.15) * Math.cos(perpAngle) + (baffleThickness / 2) * Math.cos(backDir),
         pos0.y + (halfBaffle * 1.15) * Math.sin(perpAngle) + (baffleThickness / 2) * Math.sin(backDir)

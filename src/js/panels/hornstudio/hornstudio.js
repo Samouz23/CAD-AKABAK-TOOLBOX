@@ -8,53 +8,145 @@ import { generateHornSegments, generateHornSegmentsHV, generateIdealExpansionCur
 import { enableMouseWheelAdjustment } from '../horn/eventHandlers.js';
 import { expansionFormulas } from '../horn/formulas.js';
 import { getSettings } from '../mainsettings/mainsettings.js';
+import { importBemMeshContent, initializeBemSolverPanel, hasCompletedBemSimulation, rerunBemSolver, refreshBemGraphs } from '../bemsolver/bemSolver.js';
 import * as THREE from '../../lib/three.module.js';
 import { OrbitControls } from '../../lib/OrbitControls.js';
 import { createFoldingState, drawFoldedHorn, attachFoldingEvents, detachFoldingEvents, resetFoldingState } from './foldingEditor.js';
+import { getChartThemeColors } from '../../utils/chartThemeHelper.js';
 
 export { getHornStudioPanelHtml };
 
+// --- Palette sobre du profil 2D, dérivée du thème actif de l'app ---
+
+function withAlpha(color, alpha) {
+    const hex = color?.match(/^#([a-f\d]{3}|[a-f\d]{6})$/i)?.[1];
+    if (hex) {
+        const full = hex.length === 3 ? hex.split('').map(c => c + c).join('') : hex;
+        const r = parseInt(full.slice(0, 2), 16), g = parseInt(full.slice(2, 4), 16), b = parseInt(full.slice(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    const rgb = color?.match(/^rgba?\(([^)]+)\)$/i)?.[1]?.split(',').slice(0, 3).map(v => parseFloat(v.trim()));
+    if (rgb?.length === 3 && rgb.every(Number.isFinite)) return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+    return color;
+}
+
+function getHorn2DPalette() {
+    const theme = getChartThemeColors();
+    const accent = theme.primary || '#ec4899';
+    return {
+        accent,
+        accentSoft: withAlpha(accent, 0.55),
+        accentFaint: withAlpha(accent, 0.12),
+        bgTop: '#0d0f14',
+        bgBottom: '#090b0f',
+        grid: 'rgba(100,112,132,.22)',
+        gridStrong: 'rgba(120,132,150,.4)',
+        text: '#8b93a3',
+        textStrong: '#c3c9d4',
+        plank: '#3a3f4a',
+        plankBorder: '#565d6b',
+        outline: '#c7cdd6',
+        joint: 'rgba(15,17,22,.85)'
+    };
+}
+
 // --- Affichage du tableau de segments générés ---
 
+const LOCK_SVG_OPEN = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 5-5 5 5 0 0 1 5 5"/></svg>';
+const LOCK_SVG_CLOSED = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+
+function dimColorClass(val, minVal, maxVal) {
+    const t = maxVal > minVal ? (val - minVal) / (maxVal - minVal) : 0;
+    if (t < 0.25) return 'hs-dim-sky';
+    if (t < 0.5)  return 'hs-dim-emerald';
+    if (t < 0.75) return 'hs-dim-amber';
+    return 'hs-dim-orange';
+}
+
+function areaColorClass(val, minVal, maxVal) {
+    const t = maxVal > minVal ? (val - minVal) / (maxVal - minVal) : 0;
+    if (t < 0.25) return 'hs-dim-sky';
+    if (t < 0.5)  return 'hs-dim-emerald';
+    if (t < 0.75) return 'hs-dim-amber';
+    return 'hs-dim-orange';
+}
+
 function displayGeneratedSegments(segments, genState, genDom, rootElement) {
+    const container = genDom.genSegmentsTableContainer;
+    if (!container) return;
     const lockedSet = genState.lockedLengths || new Set();
-    genDom.genSegmentsTableBody.innerHTML = segments.map((seg, i) => {
+
+    const minW = Math.min(...segments.map(s => s.w));
+    const maxW = Math.max(...segments.map(s => s.w));
+    const minH = Math.min(...segments.map(s => s.h));
+    const maxH = Math.max(...segments.map(s => s.h));
+    const areas = segments.map(s => Math.round(s.w * s.h));
+    const minArea = Math.min(...areas);
+    const maxArea = Math.max(...areas);
+
+    const rowsHtml = segments.map((seg, i) => {
         const isLast = i === segments.length - 1;
         const isLocked = lockedSet.has(i);
+        const area = areas[i];
+        const rowCls = isLast ? 'hs-mouth-row' : '';
+        const idxLabel = isLast
+            ? `#${i + 1} <span class="hs-badge">MOUTH</span>`
+            : (i === 0 ? `#${i + 1} <span class="hs-badge" style="background:rgba(59,130,246,.2);color:#93c5fd">THROAT</span>` : `#${i + 1}`);
+        const wCls = dimColorClass(seg.w, minW, maxW);
+        const hCls = dimColorClass(seg.h, minH, maxH);
+        const aCls = areaColorClass(area, minArea, maxArea);
+
         return `
-        <tr class="border-b border-gray-800 text-xs" data-seg-idx="${i}">
-            <td class="text-center px-2 py-1.5 text-gray-500">${i + 1}</td>
-            <td class="text-center px-2 py-1.5">${seg.w.toFixed(1)}</td>
-            <td class="text-center px-2 py-1.5">${seg.h.toFixed(1)}</td>
-            <td class="px-2 py-1.5">${isLast ? '' : `<input type="text" class="gen-seg-length form-input form-input-sm w-full text-center" data-idx="${i}" value="${seg.l.toFixed(1)}">`}</td>
-            <td class="text-center px-2 py-1.5">${isLast ? '' : `<button class="gen-seg-lock w-5 h-5 text-xs rounded ${isLocked ? 'bg-yellow-600 text-white' : 'bg-gray-700 text-gray-400'} hover:bg-yellow-500" data-idx="${i}" title="${isLocked ? 'Unlock' : 'Lock'} length">${isLocked ? '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' : '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 5-5 5 5 0 0 1 5 5"/></svg>'}</button>`}</td>
-            <td class="text-center px-2 py-1.5">${seg.s}</td>
-        </tr>`;
+            <tr class="${rowCls}" data-seg-idx="${i}">
+                <td class="hs-idx">${idxLabel}</td>
+                <td class="${wCls}">${seg.w.toFixed(1)}</td>
+                <td class="${hCls}">${seg.h.toFixed(1)}</td>
+                <td>${isLast
+                    ? '<span style="color:#4b5563">—</span>'
+                    : `<input type="text" class="gen-seg-length hs-len-input" data-idx="${i}" value="${seg.l.toFixed(1)}">`}</td>
+                <td>${isLast
+                    ? ''
+                    : `<button class="gen-seg-lock hs-lock-btn ${isLocked ? 'locked' : ''}" data-idx="${i}" title="${isLocked ? 'Unlock' : 'Lock'} length">${isLocked ? LOCK_SVG_CLOSED : LOCK_SVG_OPEN}</button>`}</td>
+                <td class="${aCls}">${area.toLocaleString()}</td>
+            </tr>`;
     }).join('');
 
+    container.innerHTML = `
+        <table class="hs-table">
+            <thead>
+                <tr>
+                    <th>Segment</th>
+                    <th>Width <span class="hs-unit">mm</span></th>
+                    <th>Height <span class="hs-unit">mm</span></th>
+                    <th>Length <span class="hs-unit">mm</span></th>
+                    <th>Lock</th>
+                    <th>Area <span class="hs-unit">mm²</span></th>
+                </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+        </table>`;
+
     // --- Lock buttons ---
-    genDom.genSegmentsTableBody.querySelectorAll('.gen-seg-lock').forEach(btn => {
+    container.querySelectorAll('.gen-seg-lock').forEach(btn => {
         btn.addEventListener('click', () => {
             const idx = parseInt(btn.dataset.idx);
             if (!genState.lockedLengths) genState.lockedLengths = new Set();
             if (genState.lockedLengths.has(idx)) {
                 genState.lockedLengths.delete(idx);
-                btn.classList.remove('bg-yellow-600', 'text-white');
-                btn.classList.add('bg-gray-700', 'text-gray-400');
-                btn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 5-5 5 5 0 0 1 5 5"/></svg>';
+                btn.classList.remove('locked');
+                btn.innerHTML = LOCK_SVG_OPEN;
                 btn.title = 'Lock length';
             } else {
                 genState.lockedLengths.add(idx);
-                btn.classList.add('bg-yellow-600', 'text-white');
-                btn.classList.remove('bg-gray-700', 'text-gray-400');
-                btn.innerHTML = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+                btn.classList.add('locked');
+                btn.innerHTML = LOCK_SVG_CLOSED;
                 btn.title = 'Unlock length';
             }
         });
     });
 
     // --- Editable length inputs ---
-    genDom.genSegmentsTableBody.querySelectorAll('.gen-seg-length').forEach(input => {
+    container.querySelectorAll('.gen-seg-length').forEach(input => {
         let applied = false;
         const applyChange = () => {
             if (applied) return;
@@ -71,6 +163,7 @@ function displayGeneratedSegments(segments, genState, genDom, rootElement) {
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); applyChange(); input.blur(); }
         });
+        enableMouseWheelAdjustment(input);
     });
 }
 
@@ -203,17 +296,19 @@ function updateGenExpansionChart(segments, genState, genDom, rootElement) {
         return;
     }
 
+    const pal = getHorn2DPalette();
     genState.genExpansionChart = new Chart(chartCanvas, {
         type: 'line',
         data: {
             datasets: [
                 {
                     label: 'Ideal Expansion', data: idealCurve,
-                    borderColor: '#ff00eaff', borderWidth: 2, pointRadius: 0, tension: 0.1, fill: false,
+                    borderColor: pal.accentSoft, borderDash: [5, 4], borderWidth: 1.6, pointRadius: 0, tension: 0.1, fill: false,
                 },
                 {
                     label: 'Generated Segments', data: genPoints,
-                    borderColor: '#00ffa2ff', borderWidth: 2, pointRadius: 4, pointStyle: 'circle', tension: 0, fill: false,
+                    borderColor: pal.outline, backgroundColor: pal.outline,
+                    borderWidth: 2, pointRadius: 4, pointStyle: 'circle', tension: 0, fill: false,
                 }
             ]
         },
@@ -221,11 +316,11 @@ function updateGenExpansionChart(segments, genState, genDom, rootElement) {
             responsive: true, maintainAspectRatio: false,
             parsing: { xAxisKey: 'x', yAxisKey: 'y' },
             scales: {
-                x: { type: 'linear', title: { display: true, text: 'Length (mm)', color: '#aaa' }, ticks: { color: '#888' }, grid: { color: '#333' } },
-                y: { type: 'linear', title: { display: true, text: 'Area (mm²)', color: '#aaa' }, ticks: { color: '#888' }, grid: { color: '#333' }, beginAtZero: true }
+                x: { type: 'linear', title: { display: true, text: 'Length (mm)', color: pal.text }, ticks: { color: pal.text }, grid: { color: pal.grid } },
+                y: { type: 'linear', title: { display: true, text: 'Area (mm²)', color: pal.text }, ticks: { color: pal.text }, grid: { color: pal.grid }, beginAtZero: true }
             },
             plugins: {
-                legend: { labels: { color: '#ccc', usePointStyle: true, pointStyle: 'line' } },
+                legend: { labels: { color: pal.textStrong, usePointStyle: true, pointStyle: 'line' } },
                 tooltip: { mode: 'nearest', intersect: false }
             }
         }
@@ -234,37 +329,49 @@ function updateGenExpansionChart(segments, genState, genDom, rootElement) {
 
 // --- Dessin 2D du profil ---
 
+// Manual override (mm) from Mesh Settings; falls back to an auto value derived from the throat.
+function getBaffleDiameterMm(genDom, autoMm) {
+    const v = parseFloat(genDom.genMeshBaffleDiameter?.value);
+    return (v > 0) ? v : autoMm;
+}
+
 function drawHorn2D(segments, genDom, rootElement, genState) {
     const canvas = genDom.genHornCanvas;
     const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+    if (rect.width < 10 || rect.height < 10) return; // not laid out yet
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
 
     const ctx = canvas.getContext('2d');
-    const cw = canvas.width;
-    const ch = canvas.height;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const cw = rect.width;
+    const ch = rect.height;
+    const pal = getHorn2DPalette();
 
-    ctx.fillStyle = '#111827';
+    // --- Background: flat, sober vertical gradient ---
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, ch);
+    bgGrad.addColorStop(0, pal.bgTop);
+    bgGrad.addColorStop(1, pal.bgBottom);
+    ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, cw, ch);
 
     if (!segments || segments.length < 2) return;
 
-    // Determine view mode: surface (default), width, height
+    // --- View mode ---
     const viewMode = (genState && genState.gen2dView) ? genState.gen2dView : 'surface';
-
-    // Get the value to display per segment based on view mode
     const getVal = (seg) => {
         if (viewMode === 'width') return seg.w;
         if (viewMode === 'height') return seg.h;
         return seg.s;
     };
-    const valLabel = viewMode === 'width' ? 'Width' : viewMode === 'height' ? 'Height' : 'Surface';
+    const valLabel = viewMode === 'width' ? 'Width (H)' : viewMode === 'height' ? 'Height (V)' : 'Surface';
     const valUnit = viewMode === 'surface' ? 'mm²' : 'mm';
 
     const maxVal = Math.max(...segments.map(s => getVal(s)));
     if (maxVal <= 0) return;
 
-    // Ideal curve (only for surface mode, or generate dimension curves for W/H)
+    // Ideal curve (surface mode only)
     let idealCurve = [];
     if (viewMode === 'surface') {
         idealCurve = generateIdealExpansionCurve(genDom, rootElement);
@@ -273,11 +380,13 @@ function drawHorn2D(segments, genDom, rootElement, genState) {
     const globalMax = Math.max(maxVal, idealMax);
 
     const n = segments.length;
-    const margin = 30;
-    const drawW = cw - 2 * margin;
-    const drawH = ch - 2 * margin;
+    const marginL = 72, marginR = 28, marginT = 38, marginB = 46;
+    const BAFFLE_W = 22;                      // on-canvas baffle thickness (px)
+    const plotL = marginL + BAFFLE_W;         // horn plot starts AFTER the baffle
+    const drawW = cw - plotL - marginR;
+    const drawH = ch - marginT - marginB;
 
-    // Positions X basees sur les longueurs reelles de chaque segment
+    // X positions based on real segment lengths
     const totalL = segments.reduce((sum, s) => sum + s.l, 0);
     const segXPositions = [0];
     let cumLen = 0;
@@ -287,111 +396,248 @@ function drawHorn2D(segments, genDom, rootElement, genState) {
     }
     const scaleX = totalL > 0 ? drawW / totalL : 1;
 
-    const t = 24;
-    const scaleY = (drawH / 2 - t) / (globalMax * 1.08);
-    const centerY = ch / 2;
+    const plankT = 22; // plank thickness in px
+    const scaleY = (drawH / 2 - plankT - 6) / (globalMax * 1.08);
+    const centerY = marginT + drawH / 2;
 
-    // Axe central
-    ctx.strokeStyle = '#333';
+    // --- Helper: nice tick interval ---
+    function niceStep(range, targetTicks) {
+        const raw = range / targetTicks;
+        const pow = Math.pow(10, Math.floor(Math.log10(raw)));
+        const n = raw / pow;
+        const step = (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * pow;
+        return step;
+    }
+
+    // --- Grid (length + value axis) ---
+    ctx.save();
+    ctx.font = '10px "Segoe UI", system-ui, sans-serif';
+    ctx.fillStyle = pal.text;
+    ctx.strokeStyle = pal.grid;
+    ctx.lineWidth = 1;
+
+    // vertical grid lines (length)
+    if (totalL > 0) {
+        const stepX = niceStep(totalL, 8);
+        for (let x = 0; x <= totalL + 0.001; x += stepX) {
+            const px = plotL + x * scaleX;
+            ctx.beginPath();
+            ctx.moveTo(px, marginT);
+            ctx.lineTo(px, marginT + drawH);
+            ctx.stroke();
+            ctx.textAlign = 'center';
+            ctx.fillStyle = pal.text;
+            ctx.fillText(x.toFixed(0), px, marginT + drawH + 14);
+        }
+        ctx.textAlign = 'center';
+        ctx.fillStyle = pal.textStrong;
+        ctx.fillText('Length (mm)', plotL + drawW / 2, marginT + drawH + 30);
+    }
+
+    // horizontal grid (symmetric about center)
+    const stepY = niceStep(globalMax, 5);
+    for (let v = 0; v <= globalMax * 1.05; v += stepY) {
+        const halfPx = v * scaleY;
+        for (const y of [centerY - halfPx, centerY + halfPx]) {
+            if (y < marginT || y > marginT + drawH) continue;
+            ctx.strokeStyle = v === 0 ? pal.gridStrong : pal.grid;
+            ctx.beginPath();
+            ctx.moveTo(plotL, y);
+            ctx.lineTo(plotL + drawW, y);
+            ctx.stroke();
+            if (v > 0) {
+                ctx.fillStyle = pal.text;
+                ctx.textAlign = 'right';
+                ctx.fillText(v.toFixed(0), marginL - 8, y + 3);
+            }
+        }
+    }
+    // Y axis label (rotated)
+    ctx.save();
+    ctx.translate(14, centerY);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillStyle = pal.textStrong;
+    ctx.textAlign = 'center';
+    ctx.fillText(`${valLabel} (${valUnit})`, 0, 0);
+    ctx.restore();
+    ctx.restore();
+
+    // --- Center axis (dashed) ---
+    ctx.save();
+    ctx.strokeStyle = pal.gridStrong;
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 5]);
     ctx.beginPath();
-    ctx.moveTo(margin, centerY);
-    ctx.lineTo(cw - margin, centerY);
+    ctx.moveTo(plotL, centerY);
+    ctx.lineTo(plotL + drawW, centerY);
     ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.restore();
 
-    const plankStroke = '#c8915a';
-    const plankFill = 'rgba(200, 145, 90, 0.15)';
-    const idealColor = 'rgba(255, 50, 50, 0.8)';
-
-    // Courbe idéale (surface mode only)
+    // --- Ideal curve (smooth) ---
     if (idealCurve.length > 1) {
+        ctx.save();
         const idealScaleX = totalL > 0 ? drawW / totalL : 1;
-        ctx.strokeStyle = idealColor;
-        ctx.lineWidth = 2;
+        const drawSmooth = (sign) => {
+            ctx.beginPath();
+            for (let i = 0; i < idealCurve.length; i++) {
+                const px = plotL + idealCurve[i].x * idealScaleX;
+                const py = centerY + sign * idealCurve[i].y * scaleY;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+        };
+        ctx.strokeStyle = pal.accentSoft;
+        ctx.lineWidth = 1.4;
         ctx.setLineDash([6, 4]);
-        ctx.beginPath();
-        for (let i = 0; i < idealCurve.length; i++) {
-            const px = margin + idealCurve[i].x * idealScaleX;
-            const py = centerY - idealCurve[i].y * scaleY;
-            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }
-        ctx.stroke();
-        ctx.beginPath();
-        for (let i = 0; i < idealCurve.length; i++) {
-            const px = margin + idealCurve[i].x * idealScaleX;
-            const py = centerY + idealCurve[i].y * scaleY;
-            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }
-        ctx.stroke();
+        drawSmooth(-1);
+        drawSmooth(1);
         ctx.setLineDash([]);
+        ctx.restore();
     }
 
-    // Planches trapézoïdales
+    // --- Smooth top/bottom profile curves through segment endpoints ---
+    // Use monotone cubic interpolation for silky smoothness
+    const topPts = [], botPts = [];
+    for (let i = 0; i < n; i++) {
+        const x = plotL + segXPositions[i] * scaleX;
+        const half = getVal(segments[i]) * scaleY;
+        topPts.push({ x, y: centerY - half });
+        botPts.push({ x, y: centerY + half });
+    }
+
+    function drawCatmullRom(pts) {
+        if (pts.length < 2) return;
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (let i = 0; i < pts.length - 1; i++) {
+            const p0 = pts[i - 1] || pts[i];
+            const p1 = pts[i];
+            const p2 = pts[i + 1];
+            const p3 = pts[i + 2] || p2;
+            const cp1x = p1.x + (p2.x - p0.x) / 6;
+            const cp1y = p1.y + (p2.y - p0.y) / 6;
+            const cp2x = p2.x - (p3.x - p1.x) / 6;
+            const cp2y = p2.y - (p3.y - p1.y) / 6;
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+        }
+    }
+
+    // --- Filled horn body (subtle envelope) ---
+    ctx.save();
+    ctx.fillStyle = pal.accentFaint;
+    ctx.beginPath();
+    drawCatmullRom(topPts);
+    for (let i = botPts.length - 1; i >= 0; i--) {
+        ctx.lineTo(botPts[i].x, botPts[i].y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // --- Planches (sober flat slate trapezoidal planks) ---
     for (let i = 0; i < n - 1; i++) {
-        const x1 = margin + segXPositions[i] * scaleX;
-        const x2 = margin + segXPositions[i + 1] * scaleX;
+        const x1 = plotL + segXPositions[i] * scaleX;
+        const x2 = plotL + segXPositions[i + 1] * scaleX;
         const halfL = getVal(segments[i]) * scaleY;
         const halfR = getVal(segments[i + 1]) * scaleY;
 
         // TOP PLANK
-        ctx.fillStyle = plankFill;
+        ctx.fillStyle = pal.plank;
         ctx.beginPath();
-        ctx.moveTo(x1, centerY - halfL - t);
-        ctx.lineTo(x2, centerY - halfR - t);
+        ctx.moveTo(x1, centerY - halfL - plankT);
+        ctx.lineTo(x2, centerY - halfR - plankT);
         ctx.lineTo(x2, centerY - halfR);
         ctx.lineTo(x1, centerY - halfL);
         ctx.closePath();
         ctx.fill();
 
-        ctx.strokeStyle = plankStroke;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath(); ctx.moveTo(x1, centerY - halfL - t); ctx.lineTo(x2, centerY - halfR - t); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x1, centerY - halfL); ctx.lineTo(x2, centerY - halfR); ctx.stroke();
+        ctx.strokeStyle = pal.plankBorder;
+        ctx.lineWidth = 1.2;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(x1, centerY - halfL - plankT); ctx.lineTo(x2, centerY - halfR - plankT);
+        ctx.moveTo(x1, centerY - halfL); ctx.lineTo(x2, centerY - halfR);
+        ctx.stroke();
 
         // BOTTOM PLANK
-        ctx.fillStyle = plankFill;
+        ctx.fillStyle = pal.plank;
         ctx.beginPath();
         ctx.moveTo(x1, centerY + halfL);
         ctx.lineTo(x2, centerY + halfR);
-        ctx.lineTo(x2, centerY + halfR + t);
-        ctx.lineTo(x1, centerY + halfL + t);
+        ctx.lineTo(x2, centerY + halfR + plankT);
+        ctx.lineTo(x1, centerY + halfL + plankT);
         ctx.closePath();
         ctx.fill();
 
-        ctx.strokeStyle = plankStroke;
-        ctx.beginPath(); ctx.moveTo(x1, centerY + halfL); ctx.lineTo(x2, centerY + halfR); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x1, centerY + halfL + t); ctx.lineTo(x2, centerY + halfR + t); ctx.stroke();
+        ctx.strokeStyle = pal.plankBorder;
+        ctx.beginPath();
+        ctx.moveTo(x1, centerY + halfL); ctx.lineTo(x2, centerY + halfR);
+        ctx.moveTo(x1, centerY + halfL + plankT); ctx.lineTo(x2, centerY + halfR + plankT);
+        ctx.stroke();
 
-        // Faces verticales
+        // Side joints (thin darker lines)
+        ctx.strokeStyle = pal.joint;
+        ctx.lineWidth = 1;
         if (i === 0) {
-            ctx.beginPath(); ctx.moveTo(x1, centerY - halfL - t); ctx.lineTo(x1, centerY - halfL); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(x1, centerY + halfL); ctx.lineTo(x1, centerY + halfL + t); ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x1, centerY - halfL - plankT); ctx.lineTo(x1, centerY - halfL);
+            ctx.moveTo(x1, centerY + halfL); ctx.lineTo(x1, centerY + halfL + plankT);
+            ctx.stroke();
         }
-        ctx.beginPath(); ctx.moveTo(x2, centerY - halfR - t); ctx.lineTo(x2, centerY - halfR); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(x2, centerY + halfR); ctx.lineTo(x2, centerY + halfR + t); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x2, centerY - halfR - plankT); ctx.lineTo(x2, centerY - halfR);
+        ctx.moveTo(x2, centerY + halfR); ctx.lineTo(x2, centerY + halfR + plankT);
+        ctx.stroke();
 
-        // Angle annotation pour chaque planche (H+V mode)
+        // Angle label (when in W/H view)
         if (viewMode !== 'surface' && segments[i].l > 0) {
             const dx = x2 - x1;
             const dy = halfR - halfL;
             const angleDeg = Math.atan2(Math.abs(dy), dx) * (180 / Math.PI);
-            ctx.font = '9px monospace';
-            ctx.fillStyle = '#8bf';
+            const lx = (x1 + x2) / 2;
+            const ly = centerY - Math.max(halfL, halfR) - plankT - 10;
+            const text = `${angleDeg.toFixed(1)}°`;
+            ctx.font = '10px "Segoe UI", system-ui, sans-serif';
+            const w = ctx.measureText(text).width + 10;
+            ctx.fillStyle = 'rgba(20,22,28,.85)';
+            ctx.strokeStyle = pal.plankBorder;
+            ctx.lineWidth = 1;
+            const rx = lx - w / 2, ry = ly - 11;
+            roundRect(ctx, rx, ry, w, 15, 4);
+            ctx.fill(); ctx.stroke();
+            ctx.fillStyle = pal.textStrong;
             ctx.textAlign = 'center';
-            ctx.fillText(`${angleDeg.toFixed(1)}°`, (x1 + x2) / 2, centerY - Math.max(halfL, halfR) - t - 6);
+            ctx.fillText(text, lx, ly);
         }
     }
 
-    // --- Baffle du haut-parleur (toujours affiché) ---
+    // --- Smooth profile outline on top of planks ---
+    ctx.save();
+    ctx.strokeStyle = pal.outline;
+    ctx.lineWidth = 1.6;
+    drawCatmullRom(topPts); ctx.stroke();
+    drawCatmullRom(botPts); ctx.stroke();
+    ctx.restore();
+
+    // --- Segment endpoint dots ---
+    for (let i = 0; i < n; i++) {
+        for (const pts of [topPts, botPts]) {
+            ctx.fillStyle = pal.accent;
+            ctx.strokeStyle = pal.bgBottom;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(pts[i].x, pts[i].y, 2.6, 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+        }
+    }
+
+    // --- Baffle du haut-parleur ---
     {
-        // Si un driver est sélectionné, baffle = diamètre + 5cm, sinon on utilise la gorge × 2
-        const hasDriver = genState && genState.selectedDriverData && genState.selectedDriverData.diameterMm > 0;
         const throatW = segments[0].w;
         const throatH = segments[0].h;
         const defaultBaffleMm = Math.max(throatW, throatH) * 2;
-        const baffleMm = hasDriver ? genState.selectedDriverData.diameterMm + 50 : defaultBaffleMm;
+        const baffleMm = getBaffleDiameterMm(genDom, defaultBaffleMm);
 
         const throatVal = getVal(segments[0]);
         const throatHalfPx = throatVal * scaleY;
@@ -406,53 +652,102 @@ function drawHorn2D(segments, genDom, rootElement, genState) {
         }
         const halfBaffle = throatHalfPx * baffleRatio;
 
-        const baffleX = margin + segXPositions[0] * scaleX;
-        const baffleThickness = 18;
+        const baffleX = plotL + segXPositions[0] * scaleX;
+        const baffleThickness = BAFFLE_W;
 
-        // Remplissage bois
-        ctx.fillStyle = 'rgba(139, 90, 43, 0.4)';
+        // Slate baffle, flat sober fill
+        ctx.fillStyle = pal.plank;
         ctx.fillRect(baffleX - baffleThickness, centerY - halfBaffle, baffleThickness, halfBaffle * 2);
 
         // Contour
-        ctx.strokeStyle = '#c0522d';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = pal.plankBorder;
+        ctx.lineWidth = 1.2;
         ctx.strokeRect(baffleX - baffleThickness, centerY - halfBaffle, baffleThickness, halfBaffle * 2);
 
-        // Hachures bois horizontales
-        ctx.strokeStyle = 'rgba(160, 82, 45, 0.4)';
-        ctx.lineWidth = 0.7;
-        for (let yy = centerY - halfBaffle + 6; yy < centerY + halfBaffle; yy += 6) {
+        // Subtle horizontal hatching
+        ctx.strokeStyle = pal.joint;
+        ctx.lineWidth = 0.6;
+        for (let yy = centerY - halfBaffle + 6; yy < centerY + halfBaffle; yy += 8) {
             ctx.beginPath();
-            ctx.moveTo(baffleX - baffleThickness + 1, yy);
-            ctx.lineTo(baffleX - 1, yy);
+            ctx.moveTo(baffleX - baffleThickness + 2, yy);
+            ctx.lineTo(baffleX - 2, yy);
             ctx.stroke();
         }
 
-        // Trou de la gorge (outline pointillé)
-        ctx.strokeStyle = '#00ffa2';
-        ctx.lineWidth = 1;
+        // Throat hole (horn entrance)
+        ctx.strokeStyle = pal.accent;
         ctx.setLineDash([3, 3]);
-        ctx.strokeRect(baffleX - baffleThickness / 2 - 2, centerY - throatHalfPx, 4, throatHalfPx * 2);
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(baffleX - baffleThickness - 0.5, centerY - throatHalfPx, baffleThickness + 1, throatHalfPx * 2);
         ctx.setLineDash([]);
 
         // Label
-        const label = hasDriver ? `Baffle ${baffleMm.toFixed(0)}mm` : `Baffle (default)`;
-        ctx.font = '9px monospace';
-        ctx.fillStyle = '#c0522d';
-        ctx.textAlign = 'center';
-        ctx.save();
-        ctx.translate(baffleX - baffleThickness / 2, centerY - halfBaffle - 6);
-        ctx.fillText(label, 0, 0);
-        ctx.restore();
+        const label = `Baffle ⌀${baffleMm.toFixed(0)}mm`;
+        ctx.font = '10px "Segoe UI", system-ui, sans-serif';
+        ctx.fillStyle = pal.text;
+        ctx.textAlign = 'left';
+        ctx.fillText(label, baffleX - baffleThickness, centerY - halfBaffle - 6);
     }
 
-    // Légende
-    ctx.font = '10px monospace';
-    ctx.textAlign = 'left';
-    ctx.fillStyle = plankStroke; ctx.fillText(`— ${valLabel} (gen)`, cw - 150, 15);
-    if (idealCurve.length > 1) {
-        ctx.fillStyle = idealColor; ctx.fillText(`--- ${valLabel} (ideal)`, cw - 150, 28);
+    // --- Legend card ---
+    {
+        const items = [
+            { color: pal.outline, label: `Planks (${valLabel})` },
+            ...(idealCurve.length > 1 ? [{ color: pal.accentSoft, label: `Ideal (${valLabel})`, dashed: true }] : []),
+            { color: pal.accent, label: 'Throat' },
+        ];
+
+        const pad = 8;
+        ctx.font = '10.5px "Segoe UI", system-ui, sans-serif';
+        const maxW = Math.max(...items.map(it => ctx.measureText(it.label).width)) + 28;
+        const lineH = 15;
+        const boxH = items.length * lineH + pad * 2;
+        const boxW = maxW + pad * 2;
+        const bx = cw - marginR - boxW;
+        const by = marginT - 8;
+        ctx.fillStyle = 'rgba(13,15,20,.85)';
+        ctx.strokeStyle = pal.plankBorder;
+        ctx.lineWidth = 1;
+        roundRect(ctx, bx, by, boxW, boxH, 6);
+        ctx.fill(); ctx.stroke();
+        items.forEach((it, i) => {
+            const y = by + pad + i * lineH + 8;
+            ctx.strokeStyle = it.color;
+            ctx.lineWidth = 2;
+            if (it.dashed) ctx.setLineDash([4, 3]);
+            ctx.beginPath();
+            ctx.moveTo(bx + pad, y); ctx.lineTo(bx + pad + 16, y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = pal.textStrong;
+            ctx.textAlign = 'left';
+            ctx.fillText(it.label, bx + pad + 22, y + 3);
+        });
     }
+
+    // --- Title ---
+    ctx.fillStyle = pal.textStrong;
+    ctx.font = '12px "Segoe UI", system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Horn Profile — ${valLabel}`, plotL, marginT - 14);
+    ctx.fillStyle = pal.text;
+    ctx.font = '10px "Segoe UI", system-ui, sans-serif';
+    ctx.fillText(`${n} segments · ${totalL.toFixed(0)} mm total`, plotL + 180, marginT - 14);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    const rr = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.lineTo(x + w - rr, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + rr);
+    ctx.lineTo(x + w, y + h - rr);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+    ctx.lineTo(x + rr, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - rr);
+    ctx.lineTo(x, y + rr);
+    ctx.quadraticCurveTo(x, y, x + rr, y);
+    ctx.closePath();
 }
 
 // ====================================================================================================
@@ -549,15 +844,15 @@ function drawHorn3D(segments, genDom, genState) {
     }
     const sf = doSplit ? splitFilter : null;
 
-    // --- Surface color palette ---
+    // --- Surface color palette: wood tones (each section a distinct shade) ---
     const SURFACE_COLORS = [
-        0x00e676, 0xffea00, 0x2979ff, 0xff1744, 0xd500f9,
-        0xff9100, 0x00e5ff, 0xff6d00, 0x76ff03, 0xf50057,
-        0x00b0ff, 0xc6ff00, 0x651fff, 0xff3d00, 0x1de9b6,
-        0xff4081, 0x00bfa5, 0xffd740, 0x536dfe, 0xef5350
+        0x8b5a2b, 0xa9713f, 0x6f4522, 0xc08a4e, 0x7a4d27,
+        0x9c6b3e, 0x5c3a1e, 0xb8895a, 0x8a5a34, 0x734423,
+        0xd1a06b, 0x63401f, 0xa6764a, 0x54331a, 0xbd9463,
+        0x89623a, 0x996633, 0x714f2c, 0xc79b6a, 0x674328
     ];
-    const wireColor = 0x000000;
-    const wireOpacity = 0.16;
+    const wireColor = 0x1a1208;
+    const wireOpacity = 0.85;
     let colorIdx = 0;
     function nextColor() { return SURFACE_COLORS[colorIdx++ % SURFACE_COLORS.length]; }
     // Separate color counter for interfaces so toggling doesn't shift subdomain colors
@@ -566,16 +861,19 @@ function drawHorn3D(segments, genDom, genState) {
 
     // Named geometries for MSH export
     const namedGeometries = [];
+    const edgeMaterial = new THREE.LineBasicMaterial({ color: wireColor, transparent: true, opacity: wireOpacity });
 
     function addSurface(geom, color, name) {
         const solid = new THREE.MeshPhongMaterial({
-            color, side: THREE.DoubleSide, flatShading: true
-        });
-        const wire = new THREE.MeshBasicMaterial({
-            color: wireColor, wireframe: true, transparent: true, opacity: wireOpacity
+            color,
+            side: THREE.DoubleSide,
+            flatShading: false,
+            shininess: 12,
+            specular: 0x1a1208
         });
         threeState.hornGroup.add(new THREE.Mesh(geom, solid));
-        threeState.hornGroup.add(new THREE.Mesh(geom.clone(), wire));
+        // Black contour lines separating each section
+        threeState.hornGroup.add(new THREE.LineSegments(new THREE.EdgesGeometry(geom, 25), edgeMaterial));
         if (name) namedGeometries.push({ geometry: geom, name });
     }
 
@@ -724,54 +1022,29 @@ function drawHorn3D(segments, genDom, genState) {
         return geom;
     }
 
-    // ========================
-    // BAFFLE: circular disc (diameter = SD) with rectangular horn throat cutout
-    // ========================
-    const hasDriver = genState?.selectedDriverData?.diameterMm > 0;
-    const throat = segBounds[0];
-    const defaultRadius = Math.max(throat.hw, throat.hh) * 2;
-    const baffleRadius = hasDriver
-        ? genState.selectedDriverData.diameterMm / 2
-        : defaultRadius;
-    const bx = offsetX; // throat plane
-    const cutHW = throat.hw;
-    const cutHH = throat.hh;
-
-    // Find point on rectangle boundary at angle theta
-    function rectBoundary(hw, hh, theta) {
-        const sy = Math.sin(theta);
-        const sz = Math.cos(theta);
-        let t = 1e9;
-        if (Math.abs(sy) > 1e-9) t = Math.min(t, Math.abs(hh / sy));
-        if (Math.abs(sz) > 1e-9) t = Math.min(t, Math.abs(hw / sz));
-        return { y: sy * t, z: sz * t };
-    }
-
-    // Build baffle annular face (rect cutout → circle) + optional sector filter
-    function buildBaffleFace(faceX, sectorFilter) {
+    // Helper: annular face between an inner ring and outer ring (both at same X)
+    // Radially subdivided into baffleMeshPts rings; filter by angular midpoint.
+    function buildAnnularFace(faceX, innerRing, outerRing, angPts, sectorFilter) {
         const verts = [];
         const idx = [];
         const rings = baffleMeshPts + 1;
         for (let ri = 0; ri < rings; ri++) {
             const t = ri / (rings - 1);
-            for (let ai = 0; ai < angularPts; ai++) {
-                const theta = (ai / angularPts) * Math.PI * 2;
-                const rp = rectBoundary(cutHW, cutHH, theta);
-                const cy = Math.sin(theta) * baffleRadius;
-                const cz = Math.cos(theta) * baffleRadius;
-                verts.push(faceX, rp.y + (cy - rp.y) * t, rp.z + (cz - rp.z) * t);
+            for (let ai = 0; ai < angPts; ai++) {
+                const iy = innerRing[ai].y, iz = innerRing[ai].z;
+                const oy = outerRing[ai].y, oz = outerRing[ai].z;
+                verts.push(faceX, iy + (oy - iy) * t, iz + (oz - iz) * t);
             }
         }
         for (let ri = 0; ri < rings - 1; ri++) {
-            const b0 = ri * angularPts;
-            const b1 = (ri + 1) * angularPts;
-            for (let ai = 0; ai < angularPts; ai++) {
-                const nxt = (ai + 1) % angularPts;
+            const b0 = ri * angPts;
+            const b1 = (ri + 1) * angPts;
+            for (let ai = 0; ai < angPts; ai++) {
+                const nxt = (ai + 1) % angPts;
                 if (sectorFilter) {
-                    const t0 = (ai / angularPts) * Math.PI * 2;
-                    const t1 = ((ai + 1) / angularPts) * Math.PI * 2;
-                    const mt = (t0 + t1) / 2;
-                    if (!sectorFilter({ y: Math.sin(mt), z: Math.cos(mt) })) continue;
+                    const midY = (innerRing[ai].y + innerRing[nxt].y) / 2;
+                    const midZ = (innerRing[ai].z + innerRing[nxt].z) / 2;
+                    if (!sectorFilter({ y: midY, z: midZ })) continue;
                 }
                 idx.push(b0 + ai, b0 + nxt, b1 + nxt);
                 idx.push(b0 + ai, b1 + nxt, b1 + ai);
@@ -785,77 +1058,92 @@ function drawHorn3D(segments, genDom, genState) {
         return geom;
     }
 
-    // --- Baffle surfaces (Compression Chamber) — always visible ---
-    const frontGeom = buildBaffleFace(bx - woodThick, sf);
+    // Helper: loft a tube between two rings at xA and xB with axial subdivision
+    function buildLoftTube(ringA, xA, ringB, xB, axialSteps, angPts, sectorFilter) {
+        const verts = [];
+        const idx = [];
+        for (let si = 0; si <= axialSteps; si++) {
+            const t = si / axialSteps;
+            const x = xA + (xB - xA) * t;
+            for (let ai = 0; ai < angPts; ai++) {
+                const y = ringA[ai].y + (ringB[ai].y - ringA[ai].y) * t;
+                const z = ringA[ai].z + (ringB[ai].z - ringA[ai].z) * t;
+                verts.push(x, y, z);
+            }
+        }
+        for (let si = 0; si < axialSteps; si++) {
+            const b0 = si * angPts;
+            const b1 = (si + 1) * angPts;
+            for (let ai = 0; ai < angPts; ai++) {
+                const nxt = (ai + 1) % angPts;
+                if (sectorFilter) {
+                    // average over 4 corners
+                    const midY = (ringA[ai].y + ringA[nxt].y + ringB[ai].y + ringB[nxt].y) / 4;
+                    const midZ = (ringA[ai].z + ringA[nxt].z + ringB[ai].z + ringB[nxt].z) / 4;
+                    if (!sectorFilter({ y: midY, z: midZ })) continue;
+                }
+                idx.push(b0 + ai, b0 + nxt, b1 + nxt);
+                idx.push(b0 + ai, b1 + nxt, b1 + ai);
+            }
+        }
+        if (idx.length === 0) return null;
+        const geom = new THREE.BufferGeometry();
+        geom.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+        geom.setIndex(idx);
+        geom.computeVertexNormals();
+        return geom;
+    }
+
+    // ========================
+    // BAFFLE / COMPRESSION CHAMBER
+    // The baffle plank remains flat: throat hole (rectangular) is identical
+    // on front and back faces, so the inner chamber walls form a straight
+    // rectangular extrusion through the wood thickness.
+    // ========================
+    const throat = segBounds[0];
+    const throatMax = Math.max(throat.hw, throat.hh);
+
+    // Outer baffle radius: manual override from Mesh Settings, else comfortably
+    // encloses the rectangular throat.
+    const baffleRadius = getBaffleDiameterMm(genDom, throatMax * 4) / 2;
+
+    const bx = offsetX; // back face (horn-side)
+    const fx = bx - woodThick; // front face (driver-side)
+
+    // Angular-sampled rings (same angPts → coherent topology for loft).
+    // Front and back inner rings are identical so the plank stays straight.
+    const backInnerRing = makeRing(throat.hw, throat.hh, angularPts);
+    const frontInnerRing = makeRing(throat.hw, throat.hh, angularPts);
+    const outerRing = makeCircle(baffleRadius, angularPts);
+
+    // --- Annular faces (front & back of the baffle plank) ---
+    const frontGeom = buildAnnularFace(fx, frontInnerRing, outerRing, angularPts, sf);
     if (frontGeom) addSurface(frontGeom, nextColor(), 'Compression chamber');
-    const backGeom = buildBaffleFace(bx, sf);
+    const backGeom = buildAnnularFace(bx, backInnerRing, outerRing, angularPts, sf);
     if (backGeom) addSurface(backGeom, nextColor(), 'Compression chamber');
 
-    // --- CC-H1 interface ---
+    // --- CC-H1 interface (acoustic source at diaphragm plane) ---
     if (showInterfaces) {
-        const throatRing = makeRing(throat.hw, throat.hh, angularPts);
-        const ccItf = buildCapGeom(throatRing, bx - woodThick, angularPts, sf);
+        const ccItf = buildCapGeom(frontInnerRing, fx, angularPts, sf);
         if (ccItf) addSurface(ccItf, nextItfColor(), 'CC-H1');
     }
 
-    // Outer edge wall (circular, front→back)
+    // --- Outer cylindrical edge (circle → circle, straight cylinder) ---
     {
-        const sVerts = [];
-        const sIdx = [];
-        for (let ai = 0; ai < angularPts; ai++) {
-            const theta = (ai / angularPts) * Math.PI * 2;
-            const y = Math.sin(theta) * baffleRadius;
-            const z = Math.cos(theta) * baffleRadius;
-            sVerts.push(bx - woodThick, y, z);
-            sVerts.push(bx, y, z);
-        }
-        for (let ai = 0; ai < angularPts; ai++) {
-            const nxt = (ai + 1) % angularPts;
-            if (sf) {
-                const t0 = (ai / angularPts) * Math.PI * 2;
-                const t1 = ((ai + 1) / angularPts) * Math.PI * 2;
-                const mt = (t0 + t1) / 2;
-                if (!sf({ y: Math.sin(mt), z: Math.cos(mt) })) continue;
-            }
-            const f0 = ai * 2, f1 = ai * 2 + 1;
-            const f2 = nxt * 2, f3 = nxt * 2 + 1;
-            sIdx.push(f0, f2, f3);
-            sIdx.push(f0, f3, f1);
-        }
-        if (sIdx.length > 0) {
-            const sGeom = new THREE.BufferGeometry();
-            sGeom.setAttribute('position', new THREE.Float32BufferAttribute(sVerts, 3));
-            sGeom.setIndex(sIdx);
-            sGeom.computeVertexNormals();
-            addSurface(sGeom, nextColor(), 'Compression chamber');
-        }
+        const axSteps = Math.max(1, Math.min(8, Math.ceil(woodThick / 6)));
+        const outerWall = buildLoftTube(outerRing, fx, outerRing, bx, axSteps, angularPts, sf);
+        if (outerWall) addSurface(outerWall, nextColor(), 'Compression chamber');
     }
 
-    // Inner cutout walls (rectangular hole)
+    // --- Inner chamber walls: lofted front inner ring → back inner ring ---
     {
-        const hw = cutHW, hh = cutHH;
-        const xF = bx - woodThick, xB = bx;
-        // [y0, z0, y1, z1] for each wall quad + midpoint for split test
-        const walls = [
-            { y0: hh, z0: -hw, y1: hh, z1: hw, my: hh, mz: 0 },   // top
-            { y0: -hh, z0: hw, y1: -hh, z1: -hw, my: -hh, mz: 0 }, // bottom
-            { y0: -hh, z0: -hw, y1: hh, z1: -hw, my: 0, mz: -hw }, // left
-            { y0: hh, z0: hw, y1: -hh, z1: hw, my: 0, mz: hw },    // right
-        ];
-        for (const w of walls) {
-            if (sf && !sf({ y: w.my, z: w.mz })) continue;
-            const wVerts = [xF, w.y0, w.z0, xB, w.y0, w.z0, xF, w.y1, w.z1, xB, w.y1, w.z1];
-            const wIdx = [0, 2, 3, 0, 3, 1];
-            const wGeom = new THREE.BufferGeometry();
-            wGeom.setAttribute('position', new THREE.Float32BufferAttribute(wVerts, 3));
-            wGeom.setIndex(wIdx);
-            wGeom.computeVertexNormals();
-            addSurface(wGeom, nextColor(), 'Compression chamber');
-        }
+        const chamberSteps = Math.max(2, baffleMeshPts);
+        const chamberWall = buildLoftTube(frontInnerRing, fx, backInnerRing, bx, chamberSteps, angularPts, sf);
+        if (chamberWall) addSurface(chamberWall, nextColor(), 'Compression chamber');
     }
 
     // Outline of circular edge (front)
-    const circOutline = makeCircle(baffleRadius, angularPts).map(p => new THREE.Vector3(bx - woodThick, p.y, p.z));
+    const circOutline = outerRing.map(p => new THREE.Vector3(fx, p.y, p.z));
     circOutline.push(circOutline[0].clone());
     threeState.hornGroup.add(new THREE.Line(
         new THREE.BufferGeometry().setFromPoints(circOutline),
@@ -906,9 +1194,9 @@ function drawHorn3D(segments, genDom, genState) {
         if (extGeom) addSurface(extGeom, nextItfColor(), `H${n - 1}-Ext`);
     }
 
-    // Segment boundary outlines
+    // Segment boundary outlines (subtle)
     if (showInterfaces) {
-        const edgeMat = new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.4 });
+        const edgeMat = new THREE.LineBasicMaterial({ color: wireColor, transparent: true, opacity: wireOpacity });
         for (let bi = 0; bi < n; bi++) {
             const sb = segBounds[bi];
             const ring = makeRing(sb.hw, sb.hh, angularPts);
@@ -941,56 +1229,22 @@ function drawHorn3D(segments, genDom, genState) {
     function addExp(geom, name) { if (geom && name) exportGeometries.push({ geometry: geom, name }); }
 
     // Baffle faces (quarter)
-    addExp(buildBaffleFace(bx - woodThick, qf), 'Compression chamber');
-    addExp(buildBaffleFace(bx, qf), 'Compression chamber');
+    addExp(buildAnnularFace(fx, frontInnerRing, outerRing, angularPts, qf), 'Compression chamber');
+    addExp(buildAnnularFace(bx, backInnerRing, outerRing, angularPts, qf), 'Compression chamber');
 
-    // CC-H1 interface (quarter)
-    const expThroatRing = makeRing(throat.hw, throat.hh, angularPts);
-    addExp(buildCapGeom(expThroatRing, bx - woodThick, angularPts, qf), 'CC-H1');
+    // CC-H1 interface (quarter) — at diaphragm plane
+    addExp(buildCapGeom(frontInnerRing, fx, angularPts, qf), 'CC-H1');
 
-    // Outer edge wall (quarter)
+    // Outer cylindrical edge (quarter)
     {
-        const eVerts = [];
-        const eIdx = [];
-        for (let ai = 0; ai < angularPts; ai++) {
-            const theta = (ai / angularPts) * Math.PI * 2;
-            eVerts.push(bx - woodThick, Math.sin(theta) * baffleRadius, Math.cos(theta) * baffleRadius);
-            eVerts.push(bx, Math.sin(theta) * baffleRadius, Math.cos(theta) * baffleRadius);
-        }
-        for (let ai = 0; ai < angularPts; ai++) {
-            const nxt = (ai + 1) % angularPts;
-            const t0 = (ai / angularPts) * Math.PI * 2;
-            const t1 = ((ai + 1) / angularPts) * Math.PI * 2;
-            const mt = (t0 + t1) / 2;
-            if (!qf({ y: Math.sin(mt), z: Math.cos(mt) })) continue;
-            const f0 = ai * 2, f1 = ai * 2 + 1, f2 = nxt * 2, f3 = nxt * 2 + 1;
-            eIdx.push(f0, f2, f3); eIdx.push(f0, f3, f1);
-        }
-        if (eIdx.length > 0) {
-            const eGeom = new THREE.BufferGeometry();
-            eGeom.setAttribute('position', new THREE.Float32BufferAttribute(eVerts, 3));
-            eGeom.setIndex(eIdx);
-            addExp(eGeom, 'Compression chamber');
-        }
+        const axSteps = Math.max(1, Math.min(8, Math.ceil(woodThick / 6)));
+        addExp(buildLoftTube(outerRing, fx, outerRing, bx, axSteps, angularPts, qf), 'Compression chamber');
     }
 
-    // Inner cutout walls (quarter)
+    // Inner lofted chamber wall (quarter)
     {
-        const hw = cutHW, hh = cutHH;
-        const xF = bx - woodThick, xB = bx;
-        const expWalls = [
-            { y0: hh, z0: -hw, y1: hh, z1: hw, my: hh, mz: 0 },
-            { y0: -hh, z0: hw, y1: -hh, z1: -hw, my: -hh, mz: 0 },
-            { y0: -hh, z0: -hw, y1: hh, z1: -hw, my: 0, mz: -hw },
-            { y0: hh, z0: hw, y1: -hh, z1: hw, my: 0, mz: hw },
-        ];
-        for (const w of expWalls) {
-            if (!qf({ y: w.my, z: w.mz })) continue;
-            const wG = new THREE.BufferGeometry();
-            wG.setAttribute('position', new THREE.Float32BufferAttribute([xF, w.y0, w.z0, xB, w.y0, w.z0, xF, w.y1, w.z1, xB, w.y1, w.z1], 3));
-            wG.setIndex([0, 2, 3, 0, 3, 1]);
-            addExp(wG, 'Compression chamber');
-        }
+        const chamberSteps = Math.max(2, baffleMeshPts);
+        addExp(buildLoftTube(frontInnerRing, fx, backInnerRing, bx, chamberSteps, angularPts, qf), 'Compression chamber');
     }
 
     // Horn walls & all interfaces (quarter)
@@ -1043,6 +1297,8 @@ function runGenerate(genState, genDom, rootElement) {
         }
         drawFoldedHorn(genDom.genFoldingCanvas, segments, genState.foldingState, genDom, rootElement, genState);
     }
+
+    scheduleSolverSync(genState, genDom, rootElement);
 }
 
 // --- Système d'onglets ---
@@ -1074,11 +1330,14 @@ function switchGenTab(tabName, genState, genDom) {
     requestAnimationFrame(() => {
         if (tabName === 'expansion' && genState.genExpansionChart) genState.genExpansionChart.resize();
         if (tabName === 'profile' && genState.lastGenSegments.length) {
-            if (genState.foldingActive) {
-                drawFoldedHorn(genDom.genFoldingCanvas, genState.lastGenSegments, genState.foldingState, genDom, genDom.rootElement, genState);
-            } else {
-                drawHorn2D(genState.lastGenSegments, genDom, genDom.rootElement, genState);
-            }
+            // Small delay to ensure layout has computed dimensions after unhiding
+            setTimeout(() => {
+                if (genState.foldingActive) {
+                    drawFoldedHorn(genDom.genFoldingCanvas, genState.lastGenSegments, genState.foldingState, genDom, genDom.rootElement, genState);
+                } else {
+                    drawHorn2D(genState.lastGenSegments, genDom, genDom.rootElement, genState);
+                }
+            }, 50);
         }
         if (tabName === 'view3d') {
             const container = genDom.gen3dContainer;
@@ -1094,7 +1353,100 @@ function switchGenTab(tabName, genState, genDom) {
                 }, 50);
             }
         }
+        if (tabName === 'graph') {
+            refreshBemGraphs(genDom.rootElement.querySelector('#gen-tab-graph'));
+        }
     });
+}
+
+// --- Pont vers le BEM Solver (maillage + SYNC), calqué sur Waveguide Studio ---
+
+function getStandaloneSolverRoot() {
+    return document.querySelector('#tool-wrapper-directivity #directivity-root');
+}
+
+function setSolverSyncStatus(genDom, message, isError = false) {
+    const status = genDom.rootElement?.querySelector('#gen-solver-sync-status');
+    if (!status) return;
+    status.textContent = message || '';
+    status.classList.toggle('text-red-400', isError);
+    status.classList.toggle('text-gray-400', !isError);
+}
+
+function confirmSyncBreakingChange() {
+    if (!window.notify?.confirm) return Promise.resolve(true);
+    return window.notify.confirm(
+        'Sync is enabled: changing the Interface or Split setting now will invalidate the current BEM solution and it will need to be solved again. '
+        + 'To remove the interface or a split without losing your results, disable Sync first, revert the setting, then re-enable Sync to re-solve.',
+        'This will invalidate the BEM solution'
+    );
+}
+
+// Intercepts a checkbox's "change" event while Sync is on, reverts it until the
+// user confirms, then re-dispatches it so meshRedraw/hotkeys run normally.
+function guardSyncSensitiveCheckbox(checkbox, isSyncActive) {
+    if (!checkbox) return;
+    checkbox.addEventListener('change', (e) => {
+        if (!isSyncActive() || checkbox.dataset.syncGuardBypass) return;
+        const attemptedChecked = checkbox.checked;
+        checkbox.checked = !attemptedChecked;
+        e.stopImmediatePropagation();
+        confirmSyncBreakingChange().then(ok => {
+            if (!ok) return;
+            checkbox.checked = attemptedChecked;
+            checkbox.dataset.syncGuardBypass = '1';
+            checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+            delete checkbox.dataset.syncGuardBypass;
+        });
+    }, true);
+}
+
+async function generateHornSolverMesh(segs, genDom, rootElement, fileName) {
+    const { geoContent, gmshPath } = await buildHornGeoForExport(segs, genDom, rootElement);
+    const result = await window.electronAPI.exportWaveguideStep({
+        gmshPath,
+        geoContent,
+        fileName,
+        mode: 'mesh',
+        returnContent: true,
+    });
+    if (!result.success || !result.content) {
+        throw new Error((result.error || 'GMSH failed to generate the solver mesh.').substring(0, 200));
+    }
+    return result.content;
+}
+
+function scheduleSolverSync(genState, genDom, rootElement) {
+    if (!genState.solverSync) return;
+    genState.solverSyncPending = true;
+    clearTimeout(genState.solverSyncTimer);
+    genState.solverSyncTimer = setTimeout(() => runSolverSync(genState, genDom, rootElement), 600);
+}
+
+async function runSolverSync(genState, genDom, rootElement) {
+    if (!genState.solverSync || genState.solverSyncRunning || !genState.solverSyncPending) return;
+    if (!genState.lastGenSegments || genState.lastGenSegments.length < 2) return;
+    genState.solverSyncPending = false;
+    genState.solverSyncRunning = true;
+    try {
+        setSolverSyncStatus(genDom, 'Generating mesh...');
+        const content = await generateHornSolverMesh(genState.lastGenSegments, genDom, rootElement, 'horn_sync.msh');
+        const solverRoot = getStandaloneSolverRoot();
+        await importBemMeshContent(solverRoot, content, 'horn_sync.msh');
+        setSolverSyncStatus(genDom, 'Solving...');
+        await rerunBemSolver(solverRoot);
+        setSolverSyncStatus(genDom, 'Graph up to date');
+        refreshBemGraphs(rootElement.querySelector('#gen-tab-graph'));
+    } catch (error) {
+        console.error('[Horn Studio Solver SYNC] failed', error);
+        setSolverSyncStatus(genDom, error.message || String(error), true);
+    } finally {
+        genState.solverSyncRunning = false;
+        if (genState.solverSyncPending && genState.solverSync) {
+            clearTimeout(genState.solverSyncTimer);
+            genState.solverSyncTimer = setTimeout(() => runSolverSync(genState, genDom, rootElement), 0);
+        }
+    }
 }
 
 // --- Mise à jour des paramètres d'expansion du générateur ---
@@ -1115,30 +1467,693 @@ function updateGenExpansionParams(genDom, genState, rootElement) {
     });
 }
 
-// --- Shape fields ---
-
-function updateShapeFields(which, genDom) {
-    if (which === 'throat') {
-        const mode = genDom.genThroatShape.value;
-        genDom.genThroatFields.className = mode === 'rectangular' ? 'contents' : 'hidden contents';
-        genDom.genThroatCircular.className = mode === 'circular' ? 'contents' : 'hidden contents';
-        genDom.genThroatSurface.className = mode === 'surface' ? 'contents' : 'hidden contents';
-    } else {
-        const mode = genDom.genMouthShape.value;
-        genDom.genMouthFields.className = mode === 'rectangular' ? 'contents' : 'hidden contents';
-        genDom.genMouthCircular.className = mode === 'circular' ? 'contents' : 'hidden contents';
-        genDom.genMouthSurface.className = mode === 'surface' ? 'contents' : 'hidden contents';
-    }
-}
-
 // --- Export des segments générés vers d'autres panneaux ---
 
-function handleGenExport(target, genState, genDom, rootElement) {
+// --- GMSH .geo generator for Horn Studio MSH export ---
+// Mirrors the 3D preview exactly: horn segments with sharp rectangular corners,
+// compression chamber (wood thickness), baffle plate, and the diaphragm cap.
+// Supports split H / V / H+V.
+//
+// Horn segments: one ThruSections loft per segment → all lateral rectangular
+// quad faces kept (those with dz > ε and not lying on a symmetry plane) and
+// emitted as a single Physical Surface per segment.
+//
+// Baffle: outer circle is emitted as a split-aware sector polyline (full,
+// half, or quarter arc with radial closing lines), lofted to produce the outer
+// cylindrical wall. Compression chamber inner wall is a straight rectangular
+// prism lofted between the inner-front rect (at fx) and the throat rect (at
+// bx). Front/back annular plates are emitted as Plane Surfaces: a single
+// closed loop in split mode (outer arc → bridge → inner rect → bridge),
+// outer+inner loops in non-split mode.
+// Adaptive throat sizing tuning (mirrors Waveguide Studio's exporters.js):
+// throat element size = clmax / ADAPTIVE_MIN_FACTOR, ramping back up to clmax
+// over ADAPTIVE_DIST_MIN_FRAC..ADAPTIVE_DIST_MAX_FRAC of the horn's length.
+const ADAPTIVE_MIN_FACTOR = 4;
+const ADAPTIVE_DIST_MIN_FRAC = 0.08;
+const ADAPTIVE_DIST_MAX_FRAC = 0.6;
+
+// Emits a flat `Constant` size field scoped to `surfaceExpr` (a Gmsh surface
+// tag/list expression, e.g. `_s0_keep(), _s1_keep()`).
+function emitGroupSizeField(lines, clmax, surfaceExpr, fieldIdStart) {
+    const constId = fieldIdStart;
+    lines.push(`Field[${constId}] = Constant;`);
+    lines.push(`Field[${constId}].VIn = ${clmax};`);
+    if (surfaceExpr) lines.push(`Field[${constId}].SurfacesList = {${surfaceExpr}};`);
+    return { fieldId: constId, nextFieldId: constId + 1 };
+}
+
+// Wraps `inFieldId` in a `Restrict` field scoped to `surfaceExpr`.
+function emitRestrictField(lines, inFieldId, surfaceExpr, fieldIdStart) {
+    if (!surfaceExpr) return { fieldId: inFieldId, nextFieldId: fieldIdStart };
+    const restrictId = fieldIdStart;
+    lines.push(`Field[${restrictId}] = Restrict;`);
+    lines.push(`Field[${restrictId}].InField = ${inFieldId};`);
+    lines.push(`Field[${restrictId}].SurfacesList = {${surfaceExpr}};`);
+    return { fieldId: restrictId, nextFieldId: restrictId + 1 };
+}
+
+// Horn group sizing: adaptive Distance/Threshold (fine at throat, coarser
+// toward mouth) restricted to the horn's own lateral surfaces when enabled,
+// otherwise a flat Constant field — same tuning as Waveguide Studio.
+function emitHornSizeField(lines, groupConfig, throatCurveIds, hornLength, fieldIdStart, surfaceExpr) {
+    let nextFieldId = fieldIdStart;
+    if (groupConfig.adaptive && throatCurveIds && throatCurveIds.length && hornLength > 0) {
+        const sizeMin = groupConfig.clmax / ADAPTIVE_MIN_FACTOR;
+        const distMin = hornLength * ADAPTIVE_DIST_MIN_FRAC;
+        const distMax = hornLength * ADAPTIVE_DIST_MAX_FRAC;
+        const distId = nextFieldId++;
+        const threshId = nextFieldId++;
+        lines.push('// --- Adaptive mesh sizing (fine at throat, coarser toward mouth) ---');
+        lines.push(`Field[${distId}] = Distance;`);
+        lines.push(`Field[${distId}].CurvesList = {${throatCurveIds.join(', ')}};`);
+        lines.push(`Field[${distId}].Sampling = 100;`);
+        lines.push(`Field[${threshId}] = Threshold;`);
+        lines.push(`Field[${threshId}].InField = ${distId};`);
+        lines.push(`Field[${threshId}].SizeMin = ${sizeMin};`);
+        lines.push(`Field[${threshId}].SizeMax = ${groupConfig.clmax};`);
+        lines.push(`Field[${threshId}].DistMin = ${distMin};`);
+        lines.push(`Field[${threshId}].DistMax = ${distMax};`);
+        return emitRestrictField(lines, threshId, surfaceExpr, nextFieldId);
+    }
+    return emitGroupSizeField(lines, groupConfig.clmax, surfaceExpr, fieldIdStart);
+}
+
+function buildHornGeo(slices, split, meshConfig, baffle, showInterfaces) {
+    const hasSplit = split && (split.horizontal || split.vertical);
+    const splitH = !!(split && split.horizontal);
+    const splitV = !!(split && split.vertical);
+    const quarter = splitH && splitV;
+    const emitInterfaces = showInterfaces !== false;
+    const out = ['SetFactory("OpenCASCADE");', ''];
+    const n = slices.length;
+
+    // Per-group Delaunay mesh sizing targets (Source / Horn / Interface),
+    // populated as physical surfaces are emitted below.
+    const hornSurfaceExprs = [];
+    const sourceSurfaceIds = [];
+    const interfaceSurfaceIds = [];
+
+    let pointId = 1;
+    const sliceRanges = [];
+
+    // Phase 1: horn slice points
+    for (const s of slices) {
+        const first = pointId;
+        for (const p of s.points3D) {
+            out.push(`Point(${pointId}) = {${p.x.toFixed(6)}, ${p.y.toFixed(6)}, ${p.z.toFixed(6)}, 0};`);
+            pointId++;
+        }
+        sliceRanges.push({ first, count: s.points3D.length });
+    }
+
+    // Phase 1b: symmetry corner points at origin (for quarter split closures)
+    const cornerPts = [];
+    if (quarter) {
+        for (let si = 0; si < n; si++) {
+            const z = slices[si].points3D[0].z;
+            const cp = pointId++;
+            out.push(`Point(${cp}) = {0, 0, ${z.toFixed(6)}, 0};`);
+            cornerPts.push(cp);
+        }
+    }
+    out.push('');
+
+    let nextCurve = pointId + 100000;
+
+    // Phase 2: slice contour lines (straight = sharp corners)
+    const sliceLines = [];
+    for (let si = 0; si < n; si++) {
+        const r = sliceRanges[si];
+        const cls = [];
+        for (let j = 0; j < r.count - 1; j++) {
+            const lId = nextCurve++;
+            out.push(`Line(${lId}) = {${r.first + j}, ${r.first + j + 1}};`);
+            cls.push(lId);
+        }
+        if (!hasSplit) {
+            const lId = nextCurve++;
+            out.push(`Line(${lId}) = {${r.first + r.count - 1}, ${r.first}};`);
+            cls.push(lId);
+        }
+        sliceLines.push(cls);
+    }
+    out.push('');
+
+    // Phase 2b: closing lines along symmetry planes (split mode)
+    const closingLines = [];
+    if (hasSplit) {
+        for (let si = 0; si < n; si++) {
+            const r = sliceRanges[si];
+            const firstPt = r.first;
+            const lastPt = r.first + r.count - 1;
+            const cls = [];
+            if (quarter) {
+                const l1 = nextCurve++;
+                const l2 = nextCurve++;
+                out.push(`Line(${l1}) = {${lastPt}, ${cornerPts[si]}};`);
+                out.push(`Line(${l2}) = {${cornerPts[si]}, ${firstPt}};`);
+                cls.push(l1, l2);
+            } else {
+                const lId = nextCurve++;
+                out.push(`Line(${lId}) = {${lastPt}, ${firstPt}};`);
+                cls.push(lId);
+            }
+            closingLines.push(cls);
+        }
+        out.push('');
+    }
+
+    // Phase 2c: per-slice wires (closed)
+    let nextWire = nextCurve + 1000000;
+    const wires = [];
+    for (let si = 0; si < n; si++) {
+        const wId = nextWire++;
+        const curves = hasSplit ? [...sliceLines[si], ...closingLines[si]] : sliceLines[si];
+        out.push(`Wire(${wId}) = {${curves.join(', ')}};`);
+        wires.push(wId);
+    }
+    out.push('');
+
+    // --- Helper emitted verbatim into .geo: keep lateral faces, drop caps and symmetry walls ---
+    // Loops through the boundary surfaces of the volume just before us and
+    // keeps those with dz > tol AND not entirely on an active symmetry plane.
+    const emitLateralKeep = (pfx, volTag, physicalName) => {
+        out.push(`${pfx}bnd() = Boundary{ Volume{${volTag}}; };`);
+        out.push(`Delete{ Volume{${volTag}}; }`);
+        out.push(`${pfx}keep() = {};`);
+        out.push(`For ${pfx}i In {0 : #${pfx}bnd()-1}`);
+        out.push(`  ${pfx}bb() = BoundingBox Surface{Abs(${pfx}bnd(${pfx}i))};`);
+        out.push(`  ${pfx}dz = ${pfx}bb(5) - ${pfx}bb(2);`);
+        out.push(`  ${pfx}onSymY = ((Fabs(${pfx}bb(1)) < 0.01) && (Fabs(${pfx}bb(4)) < 0.01)) ? 1 : 0;`);
+        out.push(`  ${pfx}onSymX = ((Fabs(${pfx}bb(0)) < 0.01) && (Fabs(${pfx}bb(3)) < 0.01)) ? 1 : 0;`);
+        out.push(`  ${pfx}drop = 0;`);
+        out.push(`  If (${pfx}dz < 0.001) ${pfx}drop = 1; EndIf`);
+        out.push(`  If (${splitH ? 1 : 0} == 1 && ${pfx}onSymY == 1) ${pfx}drop = 1; EndIf`);
+        out.push(`  If (${splitV ? 1 : 0} == 1 && ${pfx}onSymX == 1) ${pfx}drop = 1; EndIf`);
+        out.push(`  If (${pfx}drop == 1)`);
+        out.push(`    Delete{ Surface{Abs(${pfx}bnd(${pfx}i))}; }`);
+        out.push(`  Else`);
+        out.push(`    ${pfx}keep() = {${pfx}keep(), Abs(${pfx}bnd(${pfx}i))};`);
+        out.push(`  EndIf`);
+        out.push(`EndFor`);
+        out.push(`Physical Surface("${physicalName}") = {${pfx}keep()};`);
+    };
+
+    // Phase 3: per-segment loft → keep all lateral faces, drop caps + symmetry walls
+    for (let s = 0; s < n - 1; s++) {
+        const pfx = `_s${s}_`;
+        const volTag = s + 1;
+        out.push(`// --- Segment ${s + 1} ---`);
+        // Ruled = straight (linear) lateral faces between the two rectangular
+        // wires. The default (non-ruled) ThruSections fits a smooth spline
+        // surface even between just 2 sections, which bulges near strongly
+        // tapered segments (typically the throat) and produces a dense/fan
+        // triangulation there instead of the intended flat sides.
+        out.push(`Ruled ThruSections(${volTag}) = {${wires[s]}, ${wires[s + 1]}};`);
+        emitLateralKeep(pfx, volTag, `Segment_${s + 1}`);
+        hornSurfaceExprs.push(`${pfx}keep()`);
+        out.push('');
+    }
+
+    // Phase 4: interface caps (one Physical Surface per slice)
+    let nextLoop = nextWire + 1000000;
+    let nextSurf = nextLoop + 1000000;
+    for (let si = 0; si < n; si++) {
+        const curves = hasSplit ? [...sliceLines[si], ...closingLines[si]] : sliceLines[si];
+        const clId = nextLoop++;
+        out.push(`Curve Loop(${clId}) = {${curves.join(', ')}};`);
+        if (emitInterfaces) {
+            const sfId = nextSurf++;
+            let name;
+            if (si === 0) name = 'Itf_Throat';
+            else if (si === n - 1) name = 'Itf_Mouth';
+            else name = `Itf_H${si}_H${si + 1}`;
+            out.push(`Plane Surface(${sfId}) = {${clId}};`);
+            out.push(`Physical Surface("${name}") = {${sfId}};`);
+            (si === 0 ? sourceSurfaceIds : interfaceSurfaceIds).push(sfId);
+        }
+    }
+    out.push('');
+
+    // Phase 5: baffle + compression chamber (split-aware)
+    if (baffle) {
+        // OpenCASCADE's ThruSections above auto-allocates new curve/wire tags
+        // at runtime starting from max(existing)+1 in the shared Line/Wire/
+        // CurveLoop tag space. Bump our JS counters well above anything it
+        // could possibly have consumed so baffle lines/wires/loops don't
+        // collide with loft-internal edges.
+        const curveSafe = Math.max(nextCurve, nextWire, nextLoop) + 1_000_000;
+        nextCurve = curveSafe;
+        nextWire = curveSafe + 200_000;
+        nextLoop = curveSafe + 400_000;
+        nextSurf = Math.max(nextSurf, curveSafe) + 600_000;
+
+        const { woodThick, baffleRadius, angularPts } = baffle;
+        const throatZ = slices[0].points3D[0].z;
+        const bx = throatZ;                 // back face of baffle = horn throat plane
+        const fx = throatZ - woodThick;     // front face of baffle (driver side)
+        const R = baffleRadius;
+
+        // --- Outer arc sector points (front + back) ---
+        // Split-aware: full circle, half-arc, or quarter-arc.
+        let aStart, aEnd;
+        if (!hasSplit) { aStart = 0; aEnd = 2 * Math.PI; }
+        else if (quarter) { aStart = 0; aEnd = Math.PI / 2; }
+        else if (splitH) { aStart = 0; aEnd = Math.PI; }
+        else /* splitV */ { aStart = -Math.PI / 2; aEnd = Math.PI / 2; }
+
+        // Number of arc polyline segments
+        const arcFraction = hasSplit ? (quarter ? 0.25 : 0.5) : 1.0;
+        const arcSegCount = Math.max(4, Math.ceil(angularPts * arcFraction));
+        // Points along arc: (arcSegCount) segments → (arcSegCount+1) points for open arc;
+        // for closed (non-split), arcSegCount points with wrap-around.
+        const arcFrontPts = [];
+        const arcBackPts = [];
+        if (!hasSplit) {
+            // Closed circle: arcSegCount distinct points, wrap via lines
+            for (let i = 0; i < arcSegCount; i++) {
+                const a = aStart + (aEnd - aStart) * (i / arcSegCount);
+                const cx = Math.cos(a) * R;
+                const cy = Math.sin(a) * R;
+                const pF = pointId++;
+                out.push(`Point(${pF}) = {${cx.toFixed(6)}, ${cy.toFixed(6)}, ${fx.toFixed(6)}, 0};`);
+                arcFrontPts.push(pF);
+                const pB = pointId++;
+                out.push(`Point(${pB}) = {${cx.toFixed(6)}, ${cy.toFixed(6)}, ${bx.toFixed(6)}, 0};`);
+                arcBackPts.push(pB);
+            }
+        } else {
+            // Open arc: arcSegCount+1 points, endpoints lie exactly on symmetry planes
+            for (let i = 0; i <= arcSegCount; i++) {
+                const a = aStart + (aEnd - aStart) * (i / arcSegCount);
+                const cx = Math.cos(a) * R;
+                const cy = Math.sin(a) * R;
+                const pF = pointId++;
+                out.push(`Point(${pF}) = {${cx.toFixed(6)}, ${cy.toFixed(6)}, ${fx.toFixed(6)}, 0};`);
+                arcFrontPts.push(pF);
+                const pB = pointId++;
+                out.push(`Point(${pB}) = {${cx.toFixed(6)}, ${cy.toFixed(6)}, ${bx.toFixed(6)}, 0};`);
+                arcBackPts.push(pB);
+            }
+        }
+
+        // --- Origin corner points (quarter only) at fx and bx ---
+        let originFrontPt = -1, originBackPt = -1;
+        if (quarter) {
+            originFrontPt = pointId++;
+            out.push(`Point(${originFrontPt}) = {0, 0, ${fx.toFixed(6)}, 0};`);
+            originBackPt = pointId++;
+            out.push(`Point(${originBackPt}) = {0, 0, ${bx.toFixed(6)}, 0};`);
+        }
+
+        // --- Inner rectangle points at fx (same xy as throat slice) ---
+        const innerFrontPts = [];
+        for (let j = 0; j < sliceRanges[0].count; j++) {
+            const p = slices[0].points3D[j];
+            const pF = pointId++;
+            out.push(`Point(${pF}) = {${p.x.toFixed(6)}, ${p.y.toFixed(6)}, ${fx.toFixed(6)}, 0};`);
+            innerFrontPts.push(pF);
+        }
+        // Inner-front symmetry corner point (quarter: same origin as outer)
+        // already available via originFrontPt.
+
+        // --- Build arc edges (front and back) ---
+        const arcFrontLines = [];
+        const arcBackLines = [];
+        if (!hasSplit) {
+            for (let i = 0; i < arcFrontPts.length; i++) {
+                const a = arcFrontPts[i];
+                const b = arcFrontPts[(i + 1) % arcFrontPts.length];
+                const l = nextCurve++;
+                out.push(`Line(${l}) = {${a}, ${b}};`);
+                arcFrontLines.push(l);
+            }
+            for (let i = 0; i < arcBackPts.length; i++) {
+                const a = arcBackPts[i];
+                const b = arcBackPts[(i + 1) % arcBackPts.length];
+                const l = nextCurve++;
+                out.push(`Line(${l}) = {${a}, ${b}};`);
+                arcBackLines.push(l);
+            }
+        } else {
+            for (let i = 0; i < arcFrontPts.length - 1; i++) {
+                const l = nextCurve++;
+                out.push(`Line(${l}) = {${arcFrontPts[i]}, ${arcFrontPts[i + 1]}};`);
+                arcFrontLines.push(l);
+            }
+            for (let i = 0; i < arcBackPts.length - 1; i++) {
+                const l = nextCurve++;
+                out.push(`Line(${l}) = {${arcBackPts[i]}, ${arcBackPts[i + 1]}};`);
+                arcBackLines.push(l);
+            }
+        }
+
+        // --- Inner rectangle edges at fx (front) --- (mirror of sliceLines[0] topology)
+        const innerFrontLines = [];
+        for (let j = 0; j < innerFrontPts.length - 1; j++) {
+            const l = nextCurve++;
+            out.push(`Line(${l}) = {${innerFrontPts[j]}, ${innerFrontPts[j + 1]}};`);
+            innerFrontLines.push(l);
+        }
+        if (!hasSplit) {
+            const l = nextCurve++;
+            out.push(`Line(${l}) = {${innerFrontPts[innerFrontPts.length - 1]}, ${innerFrontPts[0]}};`);
+            innerFrontLines.push(l);
+        }
+        // Inner-front closing lines (split mode) — mirror of throat's closingLines[0]
+        const innerFrontClosing = [];
+        if (hasSplit) {
+            const firstPt = innerFrontPts[0];
+            const lastPt = innerFrontPts[innerFrontPts.length - 1];
+            if (quarter) {
+                const l1 = nextCurve++;
+                const l2 = nextCurve++;
+                out.push(`Line(${l1}) = {${lastPt}, ${originFrontPt}};`);
+                out.push(`Line(${l2}) = {${originFrontPt}, ${firstPt}};`);
+                innerFrontClosing.push(l1, l2);
+            } else {
+                const lId = nextCurve++;
+                out.push(`Line(${lId}) = {${lastPt}, ${firstPt}};`);
+                innerFrontClosing.push(lId);
+            }
+        }
+
+        // --- Outer arc wire (closed sector) ---
+        // Non-split: wrap-around circle. Split: arc + symmetry radial lines.
+        const buildOuterSectorWire = (arcLines, arcPts, originPt) => {
+            const cls = [...arcLines];
+            if (!hasSplit) return cls; // already closed
+            if (quarter) {
+                // arcPts[0] = (R,0), arcPts[last] = (0,R)
+                const lA = nextCurve++; // (0,R) -> origin
+                const lB = nextCurve++; // origin -> (R,0)
+                out.push(`Line(${lA}) = {${arcPts[arcPts.length - 1]}, ${originPt}};`);
+                out.push(`Line(${lB}) = {${originPt}, ${arcPts[0]}};`);
+                cls.push(lA, lB);
+            } else {
+                // Single closing line: last arc point back to first
+                const l = nextCurve++;
+                out.push(`Line(${l}) = {${arcPts[arcPts.length - 1]}, ${arcPts[0]}};`);
+                cls.push(l);
+            }
+            return cls;
+        };
+        const outerFrontWireLines = buildOuterSectorWire(arcFrontLines, arcFrontPts, originFrontPt);
+        const outerBackWireLines = buildOuterSectorWire(arcBackLines, arcBackPts, originBackPt);
+
+        // --- Inner wires (closed) ---
+        const innerFrontWireLines = hasSplit
+            ? [...innerFrontLines, ...innerFrontClosing]
+            : innerFrontLines;
+        const innerBackWireLines = hasSplit
+            ? [...sliceLines[0], ...closingLines[0]]
+            : sliceLines[0];
+
+        // --- Wires ---
+        const wOF = nextWire++;
+        out.push(`Wire(${wOF}) = {${outerFrontWireLines.join(', ')}};`);
+        const wOB = nextWire++;
+        out.push(`Wire(${wOB}) = {${outerBackWireLines.join(', ')}};`);
+        const wIF = nextWire++;
+        out.push(`Wire(${wIF}) = {${innerFrontWireLines.join(', ')}};`);
+        const wIB = nextWire++;
+        out.push(`Wire(${wIB}) = {${innerBackWireLines.join(', ')}};`);
+        out.push('');
+
+        // --- Outer cylindrical wall: loft → keep lateral strip ---
+        const ocTag = n + 10;
+        out.push('// --- Baffle outer wall ---');
+        out.push(`Ruled ThruSections(${ocTag}) = {${wOF}, ${wOB}};`);
+        emitLateralKeep('_bo_', ocTag, 'Baffle_Outer');
+        hornSurfaceExprs.push('_bo_keep()');
+        out.push('');
+
+        // --- Compression chamber inner wall: loft between inner-front rect and throat rect ---
+        const icTag = n + 11;
+        out.push('// --- Compression chamber inner wall ---');
+        out.push(`Ruled ThruSections(${icTag}) = {${wIF}, ${wIB}};`);
+        emitLateralKeep('_bi_', icTag, 'Compression_Chamber');
+        hornSurfaceExprs.push('_bi_keep()');
+        out.push('');
+
+        // Bump tag counters again: the two ThruSections above auto-allocate
+        // curve/wire/loop/surface tags in the shared OpenCASCADE tag space,
+        // starting from max(existing)+1. If we don't bump, the bridge Line()
+        // calls below (split mode) collide with those auto-allocated curves
+        // ("curve with tag N already exists" → curve loop not closed).
+        {
+            const bump = Math.max(nextCurve, nextWire, nextLoop, nextSurf) + 1_000_000;
+            nextCurve = bump;
+            nextWire = bump + 200_000;
+            nextLoop = bump + 400_000;
+            nextSurf = bump + 600_000;
+        }
+
+        // --- Baffle annular faces (front + back) ---
+        if (!hasSplit) {
+            // Closed outer ring + inner hole
+            const ofLoop = nextLoop++;
+            out.push(`Curve Loop(${ofLoop}) = {${outerFrontWireLines.join(', ')}};`);
+            const ifLoop = nextLoop++;
+            out.push(`Curve Loop(${ifLoop}) = {${innerFrontWireLines.join(', ')}};`);
+            const frontSurf = nextSurf++;
+            out.push(`Plane Surface(${frontSurf}) = {${ofLoop}, ${ifLoop}};`);
+            out.push(`Physical Surface("Baffle_Front") = {${frontSurf}};`);
+
+            const obLoop = nextLoop++;
+            out.push(`Curve Loop(${obLoop}) = {${outerBackWireLines.join(', ')}};`);
+            const ibLoop = nextLoop++;
+            out.push(`Curve Loop(${ibLoop}) = {${innerBackWireLines.join(', ')}};`);
+            const backSurf = nextSurf++;
+            out.push(`Plane Surface(${backSurf}) = {${obLoop}, ${ibLoop}};`);
+            out.push(`Physical Surface("Baffle_Back") = {${backSurf}};`);
+            interfaceSurfaceIds.push(frontSurf, backSurf);
+        } else {
+            // Single closed loop: outer arc → bridge → reversed inner rect → bridge
+            // We need two bridge lines joining outer endpoints to inner endpoints
+            // along the active symmetry plane(s).
+            // Outer endpoints: arcPts[0] (start) and arcPts[last] (end).
+            // Inner endpoints: innerRectPts[0] and innerRectPts[last].
+            const innerRectStart = innerFrontPts[0];
+            const innerRectEnd = innerFrontPts[innerFrontPts.length - 1];
+            const innerThroatStart = sliceRanges[0].first;
+            const innerThroatEnd = sliceRanges[0].first + sliceRanges[0].count - 1;
+
+            const buildAnnular = (arcLines, arcPts, innerLines, innerStart, innerEnd) => {
+                // Bridge lines: from arc endpoints to inner endpoints along symmetry axes
+                // Arc goes from arcPts[0] to arcPts[last] (CCW in kept sector)
+                // Inner rect goes from innerStart to innerEnd (also angularly sorted CCW)
+                // Loop (CCW of annulus region): arcLines (→) + bridgeEnd + reverse(innerLines) + bridgeStart
+                const bridgeEnd = nextCurve++;
+                out.push(`Line(${bridgeEnd}) = {${arcPts[arcPts.length - 1]}, ${innerEnd}};`);
+                const bridgeStart = nextCurve++;
+                out.push(`Line(${bridgeStart}) = {${innerStart}, ${arcPts[0]}};`);
+                // Loop curve ids with signs (positive = as defined, negative = reversed)
+                const loopCurves = [
+                    ...arcLines,            // forward
+                    bridgeEnd,              // forward
+                    ...innerLines.slice().reverse().map(l => -l), // reversed inner
+                    bridgeStart             // forward
+                ];
+                return loopCurves;
+            };
+
+            const frontLoopCurves = buildAnnular(arcFrontLines, arcFrontPts, innerFrontLines, innerRectStart, innerRectEnd);
+            const ofLoop = nextLoop++;
+            out.push(`Curve Loop(${ofLoop}) = {${frontLoopCurves.join(', ')}};`);
+            const frontSurf = nextSurf++;
+            out.push(`Plane Surface(${frontSurf}) = {${ofLoop}};`);
+            out.push(`Physical Surface("Baffle_Front") = {${frontSurf}};`);
+
+            const backLoopCurves = buildAnnular(arcBackLines, arcBackPts, sliceLines[0], innerThroatStart, innerThroatEnd);
+            const obLoop = nextLoop++;
+            out.push(`Curve Loop(${obLoop}) = {${backLoopCurves.join(', ')}};`);
+            const backSurf = nextSurf++;
+            out.push(`Plane Surface(${backSurf}) = {${obLoop}};`);
+            out.push(`Physical Surface("Baffle_Back") = {${backSurf}};`);
+            interfaceSurfaceIds.push(frontSurf, backSurf);
+        }
+        out.push('');
+
+        // --- Diaphragm cap (front inner rect face = driver position) ---
+        const diaLoop = nextLoop++;
+        out.push(`Curve Loop(${diaLoop}) = {${innerFrontWireLines.join(', ')}};`);
+        const diaSurf = nextSurf++;
+        out.push(`Plane Surface(${diaSurf}) = {${diaLoop}};`);
+        out.push(`Physical Surface("Itf_Diaphragm") = {${diaSurf}};`);
+        sourceSurfaceIds.push(diaSurf);
+        out.push('');
+    }
+
+    // Mesh parameters — per-group Delaunay sizing (Source / Horn / Interface),
+    // mirrors Waveguide Studio's exporters.js emitMeshSizingLines/emitGroupSizeField.
+    if (meshConfig) {
+        out.push('// --- Mesh parameters ---');
+        const throatZ = slices[0].points3D[0].z;
+        const mouthZ = slices[n - 1].points3D[0].z;
+        const hornLength = Math.abs(mouthZ - throatZ);
+        const throatCurveIds = hasSplit ? [...sliceLines[0], ...closingLines[0]] : sliceLines[0];
+
+        let fieldId = 1;
+        const bgFieldIds = [];
+
+        // Horn group (segments + baffle/compression-chamber lateral walls):
+        // adaptive fine-at-throat sizing when enabled, restricted to its own surfaces.
+        const hornExpr = hornSurfaceExprs.join(', ');
+        const { fieldId: hornFieldId, nextFieldId: fid1 } =
+            emitHornSizeField(out, meshConfig.horn, throatCurveIds, hornLength, fieldId, hornExpr);
+        fieldId = fid1;
+        bgFieldIds.push(hornFieldId);
+
+        // Source group (throat cap / diaphragm)
+        if (sourceSurfaceIds.length) {
+            const { fieldId: srcFieldId, nextFieldId: fid2 } =
+                emitGroupSizeField(out, meshConfig.source.clmax, sourceSurfaceIds.join(', '), fieldId);
+            fieldId = fid2;
+            bgFieldIds.push(srcFieldId);
+        }
+
+        // Interface group (mouth / mid-section interfaces / baffle plate)
+        if (interfaceSurfaceIds.length) {
+            const { fieldId: ifFieldId, nextFieldId: fid3 } =
+                emitGroupSizeField(out, meshConfig.interface.clmax, interfaceSurfaceIds.join(', '), fieldId);
+            fieldId = fid3;
+            bgFieldIds.push(ifFieldId);
+        }
+
+        const minId = fieldId;
+        out.push(`Field[${minId}] = Min;`);
+        out.push(`Field[${minId}].FieldsList = {${bgFieldIds.join(', ')}};`);
+        out.push(`Background Field = ${minId};`);
+        // Disable boundary-size extension: sizes must stay local to the
+        // surface each field targets, not bleed into neighbours.
+        out.push('Mesh.CharacteristicLengthExtendFromBoundary = 0;');
+        out.push(`Mesh.CharacteristicLengthMax = ${Math.max(meshConfig.source.clmax, meshConfig.horn.clmax, meshConfig.interface.clmax)};`); // safety cap
+        const maxCurv = Math.max(meshConfig.source.curvature || 0, meshConfig.horn.curvature || 0, meshConfig.interface.curvature || 0);
+        if (maxCurv > 0) out.push(`Mesh.MeshSizeFromCurvature = ${maxCurv};`);
+        out.push('Mesh.Algorithm = 6;'); // Frontal-Delaunay
+        out.push('');
+    }
+
+    return out.join('\n');
+}
+
+// Reads the per-group Delaunay mesh settings (Source / Horn / Interface) from
+// the Mesh Settings panel — mirrors Waveguide Studio's getMeshSettings().
+function getHornMeshSettings(genDom) {
+    const profile = (clmaxEl, curvEl, adaptiveEl, defaults) => {
+        const clmax = parseFloat(clmaxEl?.value);
+        const curvature = parseFloat(curvEl?.value);
+        return {
+            clmax: Number.isFinite(clmax) && clmax > 0 ? clmax : defaults.clmax,
+            curvature: Number.isFinite(curvature) ? Math.max(0, curvature) : defaults.curvature,
+            adaptive: !!adaptiveEl?.checked,
+        };
+    };
+    return {
+        source: profile(genDom.genMshSourceClmax, genDom.genMshSourceCurv, genDom.genMshSourceAdaptive, { clmax: 20, curvature: 12 }),
+        horn: profile(genDom.genMshHornClmax, genDom.genMshHornCurv, genDom.genMshHornAdaptive, { clmax: 40, curvature: 16 }),
+        interface: profile(genDom.genMshInterfaceClmax, genDom.genMshInterfaceCurv, genDom.genMshInterfaceAdaptive, { clmax: 30, curvature: 12 }),
+    };
+}
+
+// Construit le .geo GMSH du pavillon courant — partagé par l'export fichier .MSH
+// et l'import direct dans le module BEM Solver.
+async function buildHornGeoForExport(segs, genDom, rootElement) {
+    const settings = await getSettings();
+    const gmshPath = settings.paths?.gmsh;
+    if (!gmshPath) throw new Error('GMSH path missing!');
+    const basePath = settings.paths?.dataRoot ? `${settings.paths.dataRoot}\\Mesh-out` : '';
+
+    // --- Read mesh parameters from UI ---
+    const meshConfig = getHornMeshSettings(genDom);
+
+    // Wood thickness comes from the horn's own mesh settings (same
+    // value used by the 3D preview).
+    const woodThick = parseFloat(genDom.genMeshWoodThick?.value) || 0;
+
+    // --- Build axial slices using exact rectangle corners ---
+    // MSH export mirrors the 3D preview: split H / V / H+V from the
+    // UI is propagated to the generated geometry.
+    const splitH = genDom.genMeshSplitH?.checked === true;
+    const splitV = genDom.genMeshSplitV?.checked === true;
+    const split = { horizontal: splitH, vertical: splitV };
+    const showInterfaces = genDom.genMeshInterfaces?.checked !== false;
+
+    const n = segs.length;
+    const segBounds = [];
+    let cumX = 0;
+    for (let i = 0; i < n; i++) {
+        segBounds.push({ x: cumX, hw: segs[i].w / 2, hh: segs[i].h / 2 });
+        if (i < n - 1) cumX += Number(segs[i].l) || 0;
+    }
+    const totalLen = cumX;
+
+    // Rectangle corners in (x, y) plane, CCW viewed from +Z.
+    // Coordinate mapping: x = width direction, y = height direction,
+    // z = axial (throat at -totalLen, mouth at 0).
+    // In split mode we inject the rectangle's intersections with the
+    // active symmetry plane(s) so the kept sector always has ≥ 3
+    // points, then filter to the kept half/quarter and sort CCW.
+    const buildSliceContour = (hw, hh) => {
+        let pts = [
+            { x:  hw, y:  hh },
+            { x: -hw, y:  hh },
+            { x: -hw, y: -hh },
+            { x:  hw, y: -hh }
+        ];
+        if (splitH) pts.push({ x:  hw, y: 0 }, { x: -hw, y: 0 });
+        if (splitV) pts.push({ x: 0, y:  hh }, { x: 0, y: -hh });
+        if (splitH) pts = pts.filter(p => p.y >= -0.001);
+        if (splitV) pts = pts.filter(p => p.x >= -0.001);
+        // Dedupe (tolerance)
+        const unique = [];
+        for (const p of pts) {
+            if (!unique.some(q => Math.abs(q.x - p.x) < 0.001 && Math.abs(q.y - p.y) < 0.001)) {
+                unique.push(p);
+            }
+        }
+        // Sort CCW by angle around origin
+        unique.sort((a, b) => Math.atan2(a.y, a.x) - Math.atan2(b.y, b.x));
+        return unique;
+    };
+
+    const slices = [];
+    for (let i = 0; i < n; i++) {
+        const contour2D = buildSliceContour(segBounds[i].hw, segBounds[i].hh);
+        const zAxial = segBounds[i].x - totalLen;
+        const points3D = contour2D.map(p => ({ x: p.x, y: p.y, z: zAxial }));
+        if (points3D.length >= 3) slices.push({ points3D });
+    }
+    if (slices.length < 2) throw new Error('Not enough sections');
+
+    // --- Baffle / compression chamber config (matches drawHorn3D) ---
+    let baffle = null;
+    if (woodThick > 0) {
+        const throatHw = segBounds[0].hw;
+        const throatHh = segBounds[0].hh;
+        const throatMax = Math.max(throatHw, throatHh);
+        const baffleRadius = getBaffleDiameterMm(genDom, throatMax * 4) / 2;
+        baffle = {
+            woodThick,
+            baffleRadius,
+            angularPts: parseInt(genDom.genMeshAngular?.value) || 24
+        };
+    }
+
+    return {
+        geoContent: buildHornGeo(slices, split, meshConfig, baffle, showInterfaces),
+        gmshPath,
+        basePath,
+    };
+}
+
+async function handleGenExport(target, genState, genDom, rootElement) {
     const segs = genState.lastGenSegments;
     if (!segs || segs.length === 0) return;
 
-    if (target === 'hornscript') {
-        // Format identique à l'export principal : { segments, count, unit:'mm' }
+    if (target === 'akabak_lem') {
+        // Same format as the Horn Expansion export: N rows = N nodes, last row = mouth (l=0)
         const segments = segs.map((seg, i) => ({
             index: i, w: seg.w, h: seg.h,
             l: (i === segs.length - 1) ? 0 : seg.l,
@@ -1147,8 +2162,11 @@ function handleGenExport(target, genState, genDom, rootElement) {
         let cum = 0;
         segments.forEach((s, i) => { s.cumulativeL = cum; cum += s.l; });
 
-        const payload = { segments, count: segs.length, unit: 'mm' };
-        window.showTool('hornscript', 'Horn-Script LEM');
+        const wave = await askWaveSelection(rootElement);
+        if (!wave) return false;
+
+        const payload = { segments, count: segs.length, unit: 'mm', wave };
+        window.showTool('akabak_lem', 'Akabak LEM');
         setTimeout(() => {
             window.panelEvents.dispatchEvent(new CustomEvent('export-to-hornscript', { detail: payload }));
         }, 100);
@@ -1185,123 +2203,114 @@ function handleGenExport(target, genState, genDom, rootElement) {
             });
         }, 200);
     }
-    else if (target === 'directivity') {
-        if (segs.length < 2) return;
-        const last = segs[segs.length - 1];
-        const prev = segs[segs.length - 2];
-        const deltaW = last.w - prev.w;
-        const deltaH = last.h - prev.h;
-        const len = prev.l;
+    else if (target === 'bemsolver') {
+        // Génère le maillage en mémoire puis l'injecte directement dans le
+        // panneau BEM Solver — même flux que Waveguide Studio.
+        if (segs.length < 2) return false;
+        const btn = rootElement.querySelector('#gen-export-bemsolver-btn');
+        const originalText = btn?.textContent || 'BEM Solver';
 
-        const halfAngleRadH = Math.atan((deltaW / 2) / len);
-        const wallAngleH = (halfAngleRadH * 180 / Math.PI) * 2;
-        const halfAngleRadV = Math.atan((deltaH / 2) / len);
-        const wallAngleV = (halfAngleRadV * 180 / Math.PI) * 2;
-
-        const expansionType = genDom.genExpansionType.value || 'Conical';
-        const s0 = segs[0].w * segs[0].h;
-        const s0M = s0 / 1000000;
-        const cutoffFrequency = 344 / (4 * Math.sqrt(s0M));
-
-        const payload = {
-            lastSegmentWidth: last.w,
-            lastSegmentHeight: last.h,
-            calculatedWallAngleH: wallAngleH,
-            calculatedWallAngleV: wallAngleV,
-            expansionType,
-            cutoffFrequency
-        };
-
-        window.showTool('directivity', 'Directivity Calculator');
-        setTimeout(() => {
-            window.panelEvents.dispatchEvent(new CustomEvent('export-to-directivity', { detail: payload }));
-        }, 100);
-    }
-    else if (target === 'msh') {
-        // Export MSH — always 1/4 horn (split H+V) with all interfaces
-        const geometries = genState.exportMeshGeometries;
-        if (!geometries || geometries.length === 0) return;
-
-        // Merge geometries by name (same name = same physical tag)
-        const tagMap = new Map();
-        for (const g of geometries) {
-            if (!g.geometry || !g.name) continue;
-            if (!tagMap.has(g.name)) tagMap.set(g.name, []);
-            tagMap.get(g.name).push(g.geometry);
-        }
-
-        // Build merged geometry list
-        const merged = [];
-        for (const [name, geoms] of tagMap) {
-            // Merge all BufferGeometries under same tag into one
-            const allVerts = [];
-            const allIdx = [];
-            let vOffset = 0;
-            for (const geo of geoms) {
-                const pos = geo.attributes.position;
-                for (let i = 0; i < pos.count; i++) {
-                    allVerts.push(pos.getX(i), pos.getY(i), pos.getZ(i));
-                }
-                if (geo.index) {
-                    for (let i = 0; i < geo.index.count; i++) {
-                        allIdx.push(geo.index.array[i] + vOffset);
-                    }
-                }
-                vOffset += pos.count;
-            }
-            const mergedGeom = new THREE.BufferGeometry();
-            mergedGeom.setAttribute('position', new THREE.Float32BufferAttribute(allVerts, 3));
-            if (allIdx.length) mergedGeom.setIndex(allIdx);
-            merged.push({ geometry: mergedGeom, name });
-        }
-
-        // Generate MSH string (Gmsh 2.2 format)
-        let totalNodes = 0, totalElements = 0;
-        merged.forEach(g => {
-            totalNodes += g.geometry.attributes.position.count;
-            if (g.geometry.index) totalElements += g.geometry.index.count / 3;
-        });
-        if (totalNodes === 0 || totalElements === 0) return;
-
-        let msh = '$MeshFormat\n2.2 0 8\n$EndMeshFormat\n$PhysicalNames\n' + merged.length + '\n';
-        merged.forEach((g, i) => { msh += `2 ${i + 1} "${g.name}"\n`; });
-        msh += `$EndPhysicalNames\n$Nodes\n${totalNodes}\n`;
-        let nodeIndex = 1;
-        merged.forEach(g => {
-            const vertices = g.geometry.attributes.position;
-            for (let i = 0; i < vertices.count; i++) {
-                msh += `${nodeIndex++} ${vertices.getX(i)} ${vertices.getY(i)} ${vertices.getZ(i)}\n`;
-            }
-        });
-        msh += '$EndNodes\n$Elements\n' + totalElements + '\n';
-        let elementIndex = 1, nodeOffset = 0;
-        merged.forEach((g, i) => {
-            if (g.geometry.index) {
-                const indices = g.geometry.index.array;
-                const tag = i + 1;
-                for (let j = 0; j < indices.length; j += 3) {
-                    msh += `${elementIndex++} 2 2 ${tag} ${tag} ${indices[j] + 1 + nodeOffset} ${indices[j + 1] + 1 + nodeOffset} ${indices[j + 2] + 1 + nodeOffset}\n`;
-                }
-                nodeOffset += g.geometry.attributes.position.count;
-            }
-        });
-        msh += '$EndElements\n';
-
-        // Save file
-        (async () => {
-            const settings = await getSettings();
-            const meshPath = settings.paths?.dataRoot ? `${settings.paths.dataRoot}\\Mesh-out` : '';
-            if (!meshPath) return;
-            const result = await window.electronAPI.saveFileInDirectory({ directory: meshPath, fileName: 'horn_sim.msh', content: msh });
-            const btn = rootElement.querySelector('#gen-export-msh-btn');
-            if (btn) {
-                const orig = btn.textContent;
-                btn.textContent = result.success ? 'Exported!' : 'Error!';
-                btn.classList.add(result.success ? 'text-green-400' : 'text-red-400');
-                setTimeout(() => { btn.textContent = orig; btn.classList.remove('text-green-400', 'text-red-400'); }, 3000);
+        return (async () => {
+            if (btn) { btn.disabled = true; btn.textContent = 'Generating mesh...'; }
+            try {
+                const content = await generateHornSolverMesh(segs, genDom, rootElement, 'horn_solver.msh');
+                window.showTool?.('directivity', 'BEM Solver');
+                const solverRoot = getStandaloneSolverRoot();
+                await importBemMeshContent(solverRoot, content, 'horn_solver.msh');
+                if (btn) btn.textContent = 'Imported';
+                return true;
+            } catch (e) {
+                console.error('[HornStudio→Solver] export failed', e);
+                if (btn) btn.textContent = `Error: ${e.message}`;
+                return false;
+            } finally {
+                setTimeout(() => {
+                    if (!btn) return;
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }, 1800);
             }
         })();
     }
+    else if (target === 'msh') {
+        // Export MSH — GMSH ThruSections loft, Delaunay surface mesh.
+        // Each horn segment becomes its own Physical Surface; each slice (throat,
+        // inter-segment, mouth) becomes a distinct Physical Surface interface.
+        const btn = rootElement.querySelector('#gen-export-msh-btn');
+        const showStatus = (msg, isError = false) => {
+            if (!btn) return;
+            const orig = btn.dataset.origText || btn.textContent;
+            btn.dataset.origText = orig;
+            btn.textContent = msg;
+            btn.classList.toggle('text-red-400', isError);
+            btn.classList.toggle('text-green-400', !isError);
+            setTimeout(() => {
+                btn.textContent = orig;
+                btn.classList.remove('text-red-400', 'text-green-400');
+                delete btn.dataset.origText;
+            }, 4000);
+        };
+
+        (async () => {
+            try {
+                const { geoContent, gmshPath, basePath } = await buildHornGeoForExport(segs, genDom, rootElement);
+                if (!basePath) { showStatus('Path missing!', true); return; }
+
+                showStatus('Meshing...', false);
+
+                const result = await window.electronAPI.exportWaveguideStep({
+                    gmshPath,
+                    geoContent,
+                    outputDir: basePath,
+                    fileName: 'horn_delaunay.msh',
+                    mode: 'mesh'
+                });
+
+                if (result.success) {
+                    showStatus('MSH → Mesh-out');
+                } else {
+                    const errMsg = (result.error || '').substring(0, 200);
+                    console.error('Horn MSH Delaunay error:', result.error);
+                    showStatus(`MSH Error: ${errMsg}`, true);
+                }
+            } catch (e) {
+                console.error('Horn MSH JS error:', e);
+                showStatus(`JS Error: ${e.message}`, true);
+            }
+        })();
+    }
+}
+
+// Same wave selection modal as Horn Expansion for Akabak LEM export.
+function askWaveSelection(rootElement) {
+    return new Promise((resolve) => {
+        const modal = rootElement.querySelector('#wave-select-modal-overlay');
+        const frontBtn = rootElement.querySelector('#wave-select-front-btn');
+        const backBtn = rootElement.querySelector('#wave-select-back-btn');
+        const cancelBtn = rootElement.querySelector('#wave-select-cancel-btn');
+
+        if (!modal || !frontBtn || !backBtn || !cancelBtn) {
+            resolve(null);
+            return;
+        }
+
+        modal.classList.remove('hidden');
+
+        const cleanup = () => {
+            modal.classList.add('hidden');
+            frontBtn.removeEventListener('click', handleFront);
+            backBtn.removeEventListener('click', handleBack);
+            cancelBtn.removeEventListener('click', handleCancel);
+        };
+
+        const handleFront = () => { cleanup(); resolve('front'); };
+        const handleBack = () => { cleanup(); resolve('back'); };
+        const handleCancel = () => { cleanup(); resolve(null); };
+
+        frontBtn.addEventListener('click', handleFront);
+        backBtn.addEventListener('click', handleBack);
+        cancelBtn.addEventListener('click', handleCancel);
+    });
 }
 
 // --- Hotkeys ---
@@ -1347,6 +2356,26 @@ function createHotkeyHandler(genState, genDom, rootElement) {
 
         const actions = {};
         if (hk.hsTogglePanels) actions[hk.hsTogglePanels.toLowerCase()] = toggleAllPanels;
+        if (hk.hsSplit) actions[hk.hsSplit.toLowerCase()] = () => {
+            if (!genDom.genMeshSplitH || !genDom.genMeshSplitV) return;
+            const applyToggle = () => {
+                const newVal = !genDom.genMeshSplitH.checked;
+                [genDom.genMeshSplitH, genDom.genMeshSplitV].forEach(cb => {
+                    cb.checked = newVal;
+                    cb.dataset.syncGuardBypass = '1';
+                    cb.dispatchEvent(new Event('change', { bubbles: true }));
+                    delete cb.dataset.syncGuardBypass;
+                });
+            };
+            if (genState.solverSync) {
+                confirmSyncBreakingChange().then(ok => { if (ok) applyToggle(); });
+            } else {
+                applyToggle();
+            }
+        };
+        if (hk.hsInterface) actions[hk.hsInterface.toLowerCase()] = () => {
+            if (genDom.genMeshInterfaces) genDom.genMeshInterfaces.click();
+        };
         if (hk.hsExport) actions[hk.hsExport.toLowerCase()] = () => {
             const overlay = rootElement.querySelector('#gen-export-modal-overlay');
             if (overlay) overlay.classList.toggle('hidden');
@@ -1354,9 +2383,6 @@ function createHotkeyHandler(genState, genDom, rootElement) {
         if (hk.hsReset) actions[hk.hsReset.toLowerCase()] = () => {
             const resetBtn = rootElement.querySelector('#gen-reset-btn');
             if (resetBtn) resetBtn.click();
-        };
-        if (hk.hsGenerate) actions[hk.hsGenerate.toLowerCase()] = () => {
-            runGenerate(genState, genDom, rootElement);
         };
 
         const action = actions[keyCombo.toLowerCase()];
@@ -1374,21 +2400,11 @@ async function loadAndApplyHotkeys(genState, genDom, rootElement) {
 // --- Initialisation du panneau Horn Studio ---
 
 export function initializeHornStudioPanel(rootElement) {
-    let allDrivers = [];
-    let selectedDriver = null;
-
     const genDom = {
         rootElement,
-        genDriverSearch: rootElement.querySelector('#gen-driver-search'),
-        genDriverList: rootElement.querySelector('#gen-driver-list'),
-        genDriverToggle: rootElement.querySelector('#gen-driver-toggle'),
-        genDriverInfo: rootElement.querySelector('#gen-driver-info'),
         genExpansionType: rootElement.querySelector('#gen-expansion-type'),
         genExpansionParams: rootElement.querySelector('#gen-expansion-params'),
         genHornType: rootElement.querySelector('#gen-horn-type'),
-        genHvFields: rootElement.querySelector('#gen-hv-fields'),
-        genDirectivityH: rootElement.querySelector('#gen-directivity-h'),
-        genDirectivityV: rootElement.querySelector('#gen-directivity-v'),
         genMouthSection: rootElement.querySelector('#gen-mouth-section'),
         genHornLength: rootElement.querySelector('#gen-horn-length'),
         genThroatWidth: rootElement.querySelector('#gen-throat-width'),
@@ -1400,18 +2416,7 @@ export function initializeHornStudioPanel(rootElement) {
         genGenerateBtn: rootElement.querySelector('#gen-generate-btn'),
         genHornCanvas: rootElement.querySelector('#gen-horn-canvas'),
         genSegmentsTableBody: rootElement.querySelector('#gen-segments-table-body'),
-        genThroatShape: rootElement.querySelector('#gen-throat-shape'),
-        genThroatFields: rootElement.querySelector('#gen-throat-fields'),
-        genThroatCircular: rootElement.querySelector('#gen-throat-circular'),
-        genThroatSurface: rootElement.querySelector('#gen-throat-surface'),
-        genThroatDiameter: rootElement.querySelector('#gen-throat-diameter'),
-        genThroatArea: rootElement.querySelector('#gen-throat-area'),
-        genMouthShape: rootElement.querySelector('#gen-mouth-shape'),
-        genMouthFields: rootElement.querySelector('#gen-mouth-fields'),
-        genMouthCircular: rootElement.querySelector('#gen-mouth-circular'),
-        genMouthSurface: rootElement.querySelector('#gen-mouth-surface'),
-        genMouthDiameter: rootElement.querySelector('#gen-mouth-diameter'),
-        genMouthArea: rootElement.querySelector('#gen-mouth-area'),
+        genSegmentsTableContainer: rootElement.querySelector('#gen-segments-table-container'),
         genConstantHeight: rootElement.querySelector('#gen-constant-height'),
         genConstantHeightField: rootElement.querySelector('#gen-constant-height-field'),
         genConstantHeightValue: rootElement.querySelector('#gen-constant-height-value'),
@@ -1421,8 +2426,18 @@ export function initializeHornStudioPanel(rootElement) {
         genMeshAngular: rootElement.querySelector('#gen-mesh-angular'),
         genMeshAxial: rootElement.querySelector('#gen-mesh-axial'),
         genMeshBaffle: rootElement.querySelector('#gen-mesh-baffle'),
+        genMeshBaffleDiameter: rootElement.querySelector('#gen-mesh-baffle-diameter'),
         genMeshWoodThick: rootElement.querySelector('#gen-mesh-wood-thick'),
         genMeshItf: rootElement.querySelector('#gen-mesh-itf'),
+        genMshSourceClmax: rootElement.querySelector('#gen-msh-source-clmax'),
+        genMshSourceCurv: rootElement.querySelector('#gen-msh-source-curv'),
+        genMshSourceAdaptive: rootElement.querySelector('#gen-msh-source-adaptive'),
+        genMshHornClmax: rootElement.querySelector('#gen-msh-horn-clmax'),
+        genMshHornCurv: rootElement.querySelector('#gen-msh-horn-curv'),
+        genMshHornAdaptive: rootElement.querySelector('#gen-msh-horn-adaptive'),
+        genMshInterfaceClmax: rootElement.querySelector('#gen-msh-interface-clmax'),
+        genMshInterfaceCurv: rootElement.querySelector('#gen-msh-interface-curv'),
+        genMshInterfaceAdaptive: rootElement.querySelector('#gen-msh-interface-adaptive'),
         genMeshInterfaces: rootElement.querySelector('#gen-mesh-interfaces'),
         genMeshSplitH: rootElement.querySelector('#gen-mesh-split-h'),
         genMeshSplitV: rootElement.querySelector('#gen-mesh-split-v'),
@@ -1443,27 +2458,44 @@ export function initializeHornStudioPanel(rootElement) {
         activeGenTab: 'expansion',
         isGenerateMode: false,
         gen2dView: 'surface',
-        selectedDriverData: null,
         // Folding editor state
         foldingState: createFoldingState(),
         foldingActive: false,
+        // Pont BEM Solver (onglet Graph)
+        solverSync: false,
+        solverSyncTimer: null,
+        solverSyncRunning: false,
+        solverSyncPending: false,
     };
+
+    initializeBemSolverPanel(rootElement);
+
+    const solverSyncToggle = rootElement.querySelector('#gen-solver-sync');
+    solverSyncToggle?.addEventListener('change', () => {
+        if (solverSyncToggle.checked && !hasCompletedBemSimulation()) {
+            solverSyncToggle.checked = false;
+            setSolverSyncStatus(genDom, 'Run the first simulation manually in Solver.', true);
+            return;
+        }
+        genState.solverSync = solverSyncToggle.checked;
+        setSolverSyncStatus(genDom, genState.solverSync ? 'Sync enabled' : '');
+        if (genState.solverSync) scheduleSolverSync(genState, genDom, rootElement);
+    });
+    // Interface/split changes while synced silently invalidate the BEM mesh topology,
+    // so warn before letting them through (registered before the meshRedraw
+    // 'change' listeners added further below).
+    [genDom.genMeshInterfaces, genDom.genMeshSplitH, genDom.genMeshSplitV].forEach(el => guardSyncSensitiveCheckbox(el, () => genState.solverSync));
 
     // --- Horn type selector logic ---
     function updateHornTypeUI() {
         const isConstantH = genDom.genHornType.value === 'constantH';
         genDom.genConstantHeight.checked = isConstantH;
         genDom.genConstantHeightField.className = isConstantH ? 'contents' : 'hidden contents';
-        genDom.genHvFields.className = isConstantH ? 'hidden contents' : 'contents';
         // Mouth section: toggle the whole control-group
         genDom.genMouthSection.classList.toggle('hidden', isConstantH);
     }
     genDom.genHornType.addEventListener('change', updateHornTypeUI);
     updateHornTypeUI();
-
-    // Shape selectors
-    genDom.genThroatShape.addEventListener('change', () => updateShapeFields('throat', genDom));
-    genDom.genMouthShape.addEventListener('change', () => updateShapeFields('mouth', genDom));
 
     // 2D view mode switcher
     genDom.gen2dViewBtns.forEach(btn => {
@@ -1599,16 +2631,16 @@ export function initializeHornStudioPanel(rootElement) {
 
     // Real-time regeneration on any parameter change
     const regenInputIds = [
-        '#gen-directivity-h', '#gen-directivity-v', '#gen-constant-height-value',
-        '#gen-throat-width', '#gen-throat-height', '#gen-throat-diameter', '#gen-throat-area',
-        '#gen-mouth-width', '#gen-mouth-height', '#gen-mouth-diameter', '#gen-mouth-area',
+        '#gen-constant-height-value',
+        '#gen-throat-width', '#gen-throat-height',
+        '#gen-mouth-width', '#gen-mouth-height',
         '#gen-segment-count'
     ];
     regenInputIds.forEach(sel => {
         const el = rootElement.querySelector(sel);
         if (el) el.addEventListener('input', () => runGenerate(genState, genDom, rootElement));
     });
-    const regenSelectIds = ['#gen-horn-type', '#gen-throat-shape', '#gen-mouth-shape'];
+    const regenSelectIds = ['#gen-horn-type'];
     regenSelectIds.forEach(sel => {
         const el = rootElement.querySelector(sel);
         if (el) el.addEventListener('change', () => runGenerate(genState, genDom, rootElement));
@@ -1620,7 +2652,7 @@ export function initializeHornStudioPanel(rootElement) {
             drawHorn3D(genState.lastGenSegments, genDom, genState);
         }
     };
-    ['#gen-mesh-angular', '#gen-mesh-axial', '#gen-mesh-baffle', '#gen-mesh-wood-thick', '#gen-mesh-itf'].forEach(sel => {
+    ['#gen-mesh-angular', '#gen-mesh-axial', '#gen-mesh-baffle', '#gen-mesh-baffle-diameter', '#gen-mesh-wood-thick', '#gen-mesh-itf'].forEach(sel => {
         const el = rootElement.querySelector(sel);
         if (el) el.addEventListener('input', meshRedraw);
     });
@@ -1647,11 +2679,23 @@ export function initializeHornStudioPanel(rootElement) {
         if (e.target === genExportOverlay) closeExportModal();
     });
     genExportOverlay.querySelectorAll('[data-gen-target]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            handleGenExport(btn.dataset.genTarget, genState, genDom, rootElement);
+        btn.addEventListener('click', async () => {
+            const ok = await handleGenExport(btn.dataset.genTarget, genState, genDom, rootElement);
+            if (ok === false) return;
             setTimeout(closeExportModal, 500);
         });
     });
+
+    // MSH collapsible sub-panel (same UX as Waveguide Studio)
+    const mshToggleBtn = rootElement.querySelector('#gen-msh-toggle-btn');
+    const mshSubPanel = rootElement.querySelector('#gen-msh-sub-panel');
+    if (mshToggleBtn && mshSubPanel) {
+        mshToggleBtn.addEventListener('click', () => {
+            const arrow = mshToggleBtn.querySelector('svg');
+            mshSubPanel.classList.toggle('hidden');
+            if (arrow) arrow.style.transform = mshSubPanel.classList.contains('hidden') ? '' : 'rotate(180deg)';
+        });
+    }
 
     // --- Reset button ---
     const genResetBtn = rootElement.querySelector('#gen-reset-btn');
@@ -1660,30 +2704,14 @@ export function initializeHornStudioPanel(rootElement) {
             // Reset form values to defaults
             genDom.genExpansionType.value = 'Exponential';
             genDom.genHornType.value = 'hv';
-            genDom.genDirectivityH.value = '90';
-            genDom.genDirectivityV.value = '40';
             genDom.genConstantHeightValue.value = '200';
-            genDom.genThroatShape.value = 'rectangular';
             genDom.genThroatWidth.value = '100';
             genDom.genThroatHeight.value = '56';
-            genDom.genThroatDiameter.value = '84';
-            genDom.genThroatArea.value = '5600';
-            genDom.genMouthShape.value = 'rectangular';
             genDom.genMouthWidth.value = '400';
             genDom.genMouthHeight.value = '226';
-            genDom.genMouthDiameter.value = '340';
-            genDom.genMouthArea.value = '90400';
             genDom.genHornLength.value = '500';
             genDom.genFc.value = '';
             genDom.genSegmentCount.value = '6';
-
-            // Reset driver selection
-            selectedDriver = null;
-            genState.selectedDriverData = null;
-            genDom.genDriverToggle.textContent = '[ None ]';
-            genDom.genDriverSearch.value = '';
-            genDom.genDriverInfo.classList.add('hidden');
-            genDom.genDriverInfo.textContent = '';
 
             // Reset state
             genState.lockedLengths = new Set();
@@ -1702,69 +2730,146 @@ export function initializeHornStudioPanel(rootElement) {
 
             // Refresh UI
             updateHornTypeUI();
-            updateShapeFields('throat', genDom);
-            updateShapeFields('mouth', genDom);
             updateGenExpansionParams(genDom, genState, rootElement);
             autoCalcFcFromLength(genDom);
             runGenerate(genState, genDom, rootElement);
         });
     }
 
-    // --- Driver search/select ---
-    async function loadDrivers() {
-        try {
-            allDrivers = await window.electronAPI.getAllDrivers();
-        }
-        catch (e) { console.error('Failed to load drivers:', e); allDrivers = []; }
-    }
-    loadDrivers();
-
-    genDom.genDriverSearch.addEventListener('input', () => {
-        const term = genDom.genDriverSearch.value.toLowerCase();
-        if (!term) { genDom.genDriverList.classList.add('hidden'); return; }
-        const filtered = allDrivers.filter(d => d.name.toLowerCase().includes(term));
-        genDom.genDriverList.innerHTML = filtered
-            .map(d => `<div class="p-2 hover:bg-green-700 cursor-pointer text-white" data-name="${d.name}">${d.name}</div>`)
-            .join('');
-        genDom.genDriverList.classList.remove('hidden');
-    });
-
-    genDom.genDriverList.addEventListener('click', async (e) => {
-        const target = e.target.closest('[data-name]');
-        if (!target) return;
-        const name = target.dataset.name;
-        selectedDriver = { name };
-        genDom.genDriverToggle.textContent = `[ ${name} ]`;
-        genDom.genDriverList.classList.add('hidden');
-        genDom.genDriverSearch.value = '';
-        try {
-            const params = await window.electronAPI.getDriverById(name);
-            if (params) {
-                const sd = params.SD || params.SDf || params.SDr || 0;
-                const diamMm = sd > 0 ? 2 * Math.sqrt((sd * 100) / Math.PI) : 0;
-                genState.selectedDriverData = { name, sd, diameterMm: diamMm, params };
-                genDom.genDriverInfo.classList.remove('hidden');
-                genDom.genDriverInfo.textContent = `SD: ${sd} cm² — ⌀ ${diamMm.toFixed(1)} mm`;
-            }
-        } catch (err) { console.error('Driver load error:', err); }
-        if (genState.lastGenSegments.length) {
-            drawHorn2D(genState.lastGenSegments, genDom, rootElement, genState);
-            drawHorn3D(genState.lastGenSegments, genDom, genState);
-        }
-    });
-
-    genDom.genDriverToggle.addEventListener('click', () => {
-        selectedDriver = null;
-        genState.selectedDriverData = null;
-        genDom.genDriverToggle.textContent = '[ None ]';
-        genDom.genDriverInfo.classList.add('hidden');
-        genDom.genDriverInfo.textContent = '';
-        if (genState.lastGenSegments.length) {
-            drawHorn2D(genState.lastGenSegments, genDom, rootElement, genState);
-            drawHorn3D(genState.lastGenSegments, genDom, genState);
-        }
-    });
-
     // --- Hotkeys ---
     loadAndApplyHotkeys(genState, genDom, rootElement);
+
+    // --- Presets (Load/Save, same UX as Waveguide Studio) ---
+    initHornPresetListeners(rootElement);
+
+    // --- Auto-redraw 2D canvas on resize ---
+    if (genDom.genHornCanvas && typeof ResizeObserver !== 'undefined') {
+        const ro = new ResizeObserver(() => {
+            if (genState.activeGenTab === 'profile' && genState.lastGenSegments.length && !genState.foldingActive) {
+                drawHorn2D(genState.lastGenSegments, genDom, rootElement, genState);
+            }
+        });
+        ro.observe(genDom.genHornCanvas.parentElement);
+    }
+
+    // --- Import depuis Horn Expansion ---
+    window.panelEvents.addEventListener('export-to-hornstudio', (e) => {
+        const { throatW, throatH, mouthW, mouthH, length, segmentCount } = e.detail;
+        genDom.genHornType.value = 'hv';
+        updateHornTypeUI();
+        genDom.genThroatWidth.value = String(Math.round(throatW));
+        genDom.genThroatHeight.value = String(Math.round(throatH));
+        genDom.genMouthWidth.value = String(Math.round(mouthW));
+        genDom.genMouthHeight.value = String(Math.round(mouthH));
+        genDom.genHornLength.value = String(Math.round(length));
+        genDom.genSegmentCount.value = String(segmentCount);
+        autoCalcFcFromLength(genDom);
+        runGenerate(genState, genDom, rootElement);
+    });
+}
+
+// ====================================================================================================
+// PRESETS : Save / Load / Delete Horn Studio configurations (mirrors Waveguide Studio)
+// ====================================================================================================
+
+function collectHornFormValues(root) {
+    const values = {};
+    root.querySelectorAll('input[type="text"], input[type="number"], select, input[type="checkbox"]').forEach(el => {
+        if (!el.id) return;
+        if (el.type === 'checkbox') values[el.id] = el.checked;
+        else values[el.id] = el.value;
+    });
+    return values;
+}
+
+function applyHornFormValues(root, values) {
+    if (!values) return;
+    for (const [id, val] of Object.entries(values)) {
+        const el = root.querySelector(`#${CSS.escape(id)}`);
+        if (!el) continue;
+        if (el.type === 'checkbox') el.checked = val;
+        else el.value = val;
+        el.dispatchEvent(new Event(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true }));
+    }
+}
+
+function initHornPresetListeners(rootElement) {
+    const presetsBtn = rootElement.querySelector('#gen-presets-btn');
+    const modalOverlay = rootElement.querySelector('#gen-presets-modal-overlay');
+    const closeBtn = rootElement.querySelector('#gen-presets-panel-close');
+    const saveBtn = rootElement.querySelector('#gen-preset-save-btn');
+    const nameInput = rootElement.querySelector('#gen-preset-name-input');
+    if (!presetsBtn || !modalOverlay) return;
+
+    presetsBtn.addEventListener('click', () => {
+        const isHidden = modalOverlay.classList.contains('hidden');
+        modalOverlay.classList.toggle('hidden', !isHidden);
+        if (isHidden) refreshHornPresetList(rootElement);
+    });
+
+    closeBtn?.addEventListener('click', () => modalOverlay.classList.add('hidden'));
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.add('hidden'); });
+
+    saveBtn?.addEventListener('click', async () => {
+        const name = nameInput.value.trim();
+        if (!name) return;
+        const values = collectHornFormValues(rootElement);
+        const preset = { name, values, savedAt: new Date().toISOString() };
+        const result = await window.electronAPI.saveHornPreset(preset);
+        if (result.success) {
+            nameInput.value = '';
+            refreshHornPresetList(rootElement);
+        }
+    });
+
+    // Block ALL keyboard events from propagating when input is focused (avoid triggering hotkeys)
+    ['keydown', 'keyup', 'keypress'].forEach(evtType => {
+        nameInput?.addEventListener(evtType, (e) => {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            if (evtType === 'keydown' && e.key === 'Enter') saveBtn.click();
+        }, true);
+    });
+}
+
+async function refreshHornPresetList(rootElement) {
+    const listEl = rootElement.querySelector('#gen-presets-list');
+    const presets = await window.electronAPI.getHornPresets();
+
+    if (!presets || presets.length === 0) {
+        listEl.innerHTML = '<div class="wg-presets-empty">No saved presets</div>';
+        return;
+    }
+
+    listEl.innerHTML = presets.map(p => `
+        <div class="wg-preset-item" data-preset-name="${p.name.replace(/"/g, '&quot;')}">
+            <span class="wg-preset-item-name" title="${p.name.replace(/"/g, '&quot;')}">${p.name}</span>
+            <button class="wg-preset-load-btn" data-load-name="${p.name.replace(/"/g, '&quot;')}" title="Load preset">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Load
+            </button>
+            <button class="wg-preset-delete-btn" data-delete-name="${p.name.replace(/"/g, '&quot;')}" title="Delete">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+        </div>
+    `).join('');
+
+    listEl.querySelectorAll('.wg-preset-load-btn').forEach(loadBtn => {
+        loadBtn.addEventListener('click', () => {
+            const presetName = loadBtn.dataset.loadName;
+            const preset = presets.find(p => p.name === presetName);
+            if (!preset) return;
+            applyHornFormValues(rootElement, preset.values);
+            rootElement.querySelector('#gen-presets-modal-overlay').classList.add('hidden');
+        });
+    });
+
+    listEl.querySelectorAll('.wg-preset-delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const name = btn.dataset.deleteName;
+            await window.electronAPI.deleteHornPreset(name);
+            refreshHornPresetList(rootElement);
+        });
+    });
 }

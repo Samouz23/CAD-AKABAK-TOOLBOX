@@ -99,6 +99,51 @@ export function getGeometryPrismHtml() {
 }
 
 /**
+ * Génère le HTML pour le calculateur de prisme à section trapézoïdale
+ */
+export function getGeometryTrapezoidalHtml() {
+  return `
+    ${getWindowControlsStyles()}
+    ${getWindowControlsHtml('Trapezoidal Prism')}
+      <div class="calc-content flex-grow">
+        <div class="space-y-4">
+          <div class="calc-field">
+            <label style="color: var(--text-subtitle); font-size: 13px; font-weight: 500; display: block; margin-bottom: 6px;">Height 1 (<span class="unit-label">mm</span>)</label>
+            <input type="text" id="popup-trap-h1" class="calc-input" placeholder="0">
+          </div>
+          <div class="calc-field">
+            <label style="color: var(--text-subtitle); font-size: 13px; font-weight: 500; display: block; margin-bottom: 6px;">Height 2 (<span class="unit-label">mm</span>)</label>
+            <input type="text" id="popup-trap-h2" class="calc-input" placeholder="0">
+          </div>
+          <div class="calc-field">
+            <label style="color: var(--text-subtitle); font-size: 13px; font-weight: 500; display: block; margin-bottom: 6px;">Width (<span class="unit-label">mm</span>)</label>
+            <input type="text" id="popup-trap-w" class="calc-input" placeholder="0">
+          </div>
+          <div class="calc-field">
+            <label style="color: var(--text-subtitle); font-size: 13px; font-weight: 500; display: block; margin-bottom: 6px;">Depth (<span class="unit-label">mm</span>)</label>
+            <input type="text" id="popup-trap-d" class="calc-input" placeholder="0">
+          </div>
+          <div class="calc-result" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background-color: var(--bg-control-group); border-radius: 4px; border: 1px solid var(--theme-accent-dark); margin-top: 8px;">
+            <label style="color: var(--text-subtitle); font-size: 13px; font-weight: 600;">Total Volume (L)</label>
+            <span id="popup-trap-v" class="result-value" style="color: var(--theme-accent); font-size: 18px; font-weight: 700; font-family: 'Courier New', monospace;">0.000</span>
+          </div>
+        </div>
+      </div>
+      <div class="calc-footer" style="padding-top: 16px; border-top: 1px solid var(--border-secondary); display: flex; justify-content: center; margin-top: auto;">
+        <div class="unit-toggle-container" style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 12px; color: var(--text-muted);">MM</span>
+          <label class="unit-toggle" style="position: relative; display: inline-block; width: 48px; height: 24px;">
+            <input type="checkbox" id="popup-unit-toggle" style="opacity: 0; width: 0; height: 0;">
+            <div class="unit-toggle-slider"></div>
+          </label>
+          <span style="font-size: 12px; color: var(--text-muted);">CM</span>
+        </div>
+      </div>
+    ${getCommonStyles()}
+  `;
+}
+
+/**
  * Génère le HTML pour le calculateur diamètre
  */
 export function getGeometryDiameterHtml() {
@@ -295,6 +340,7 @@ export function initializeGeometryCalculator() {
   let calculatorId = null;
   if (document.getElementById('popup-para-s')) calculatorId = 'rectangular';
   else if (document.getElementById('popup-prism-v')) calculatorId = 'prism';
+  else if (document.getElementById('popup-trap-h1')) calculatorId = 'trapezoidal';
   else if (document.getElementById('popup-dia-d')) calculatorId = 'diameter';
   else if (document.getElementById('popup-conv-metric')) calculatorId = 'conversion';
 
@@ -327,6 +373,9 @@ export function initializeGeometryCalculator() {
     case 'prism':
       initPrismCalculator(() => currentUnit);
       break;
+    case 'trapezoidal':
+      initTrapezoidalCalculator(() => currentUnit);
+      break;
     case 'diameter':
       initDiameterCalculator();
       break;
@@ -334,6 +383,27 @@ export function initializeGeometryCalculator() {
       initConversionCalculator(() => currentUnit);
       break;
   }
+}
+
+function initTrapezoidalCalculator(getCurrentUnit) {
+  const inputs = {
+    h1: document.getElementById('popup-trap-h1'),
+    h2: document.getElementById('popup-trap-h2'),
+    w: document.getElementById('popup-trap-w'),
+    d: document.getElementById('popup-trap-d')
+  };
+  const volume = document.getElementById('popup-trap-v');
+
+  const calculate = () => {
+    const factor = (getCurrentUnit() === 'cm') ? 10 : 1;
+    const h1 = (parseFloat(inputs.h1.value) || 0) * factor;
+    const h2 = (parseFloat(inputs.h2.value) || 0) * factor;
+    const w = (parseFloat(inputs.w.value) || 0) * factor;
+    const d = (parseFloat(inputs.d.value) || 0) * factor;
+    volume.textContent = (((h1 + h2) / 2 * w * d) / 1e6).toFixed(3);
+  };
+
+  Object.values(inputs).forEach(input => input.addEventListener('input', calculate));
 }
 
 /**

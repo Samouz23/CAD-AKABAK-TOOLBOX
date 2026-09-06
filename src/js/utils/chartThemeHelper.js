@@ -9,21 +9,47 @@
  */
 export function getChartThemeColors() {
   const root = document.documentElement;
+  const body = document.body;
   const getColor = (varName, fallback) => {
-    const value = getComputedStyle(root).getPropertyValue(varName).trim();
+    const value = getComputedStyle(body).getPropertyValue(varName).trim()
+      || getComputedStyle(root).getPropertyValue(varName).trim();
     return value || fallback;
   };
+  const primary = getColor('--border-primary', getColor('--accent-500', getColor('--chart-primary', 'rgb(236, 72, 153)')));
+  const primaryGlow = toAlphaColor(primary, 0.22)
+    || getColor('--accent-300', getColor('--chart-primary-glow', 'rgba(236, 72, 153, 0.2)'));
 
   return {
-    primary: getColor('--chart-primary', 'rgb(236, 72, 153)'),
-    primaryGlow: getColor('--chart-primary-glow', 'rgba(236, 72, 153, 0.2)'),
-    secondary: getColor('--chart-secondary', 'rgb(244, 114, 182)'),
+    primary,
+    primaryGlow,
+    secondary: getColor('--accent-400', getColor('--chart-secondary', 'rgb(244, 114, 182)')),
     bg: getColor('--chart-bg', '#0f0f0f'),
-    grid: getColor('--chart-grid', 'rgba(156, 163, 175, 0.1)'),
+    grid: getColor('--accent-300', getColor('--chart-grid', 'rgba(156, 163, 175, 0.1)')),
     text: getColor('--chart-text', '#9ca3af'),
     axis: getColor('--chart-axis', '#9ca3af'),
-    borderPrimary: getColor('--border-primary', '#e91e8c')
+    borderPrimary: primary
   };
+}
+
+function toAlphaColor(color, alpha) {
+  const hex = color.match(/^#([a-f\d]{3}|[a-f\d]{6})$/i)?.[1];
+  if (hex) {
+    const fullHex = hex.length === 3 ? hex.split('').map(value => value + value).join('') : hex;
+    const red = parseInt(fullHex.slice(0, 2), 16);
+    const green = parseInt(fullHex.slice(2, 4), 16);
+    const blue = parseInt(fullHex.slice(4, 6), 16);
+    return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+  }
+
+  const rgb = color.match(/^rgba?\(([^)]+)\)$/i)?.[1]
+    ?.split(',')
+    .slice(0, 3)
+    .map(value => Number.parseFloat(value.trim()));
+  if (rgb?.length === 3 && rgb.every(Number.isFinite)) {
+    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+  }
+
+  return null;
 }
 
 /**

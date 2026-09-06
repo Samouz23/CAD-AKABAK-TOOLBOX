@@ -73,7 +73,7 @@ export function showBasicCalculatorSelector() {
   toast.innerHTML = `
     <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-secondary); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
       <div>
-        <h2 style="color: var(--text-title); font-size: 18px; font-weight: 600; margin: 0 0 4px 0;">Open Physics Calculator</h2>
+        <h2 style="color: var(--text-title); font-size: 18px; font-weight: 600; margin: 0 0 4px 0;">Open Calculator</h2>
         <p style="color: var(--text-muted); font-size: 13px; margin: 0;">Choose which calculator to open in a new window</p>
       </div>
       <button data-close-toast style="color: var(--text-muted); cursor: pointer; background: transparent; border: none; font-size: 24px; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: color 0.2s;">

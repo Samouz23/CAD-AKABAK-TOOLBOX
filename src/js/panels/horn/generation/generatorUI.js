@@ -487,8 +487,6 @@ function handleGenExport(target, genState, genDom, rootElement) {
             // Revenir en mode édition
             rootElement.querySelector('#generate-view').classList.add('hidden');
             rootElement.querySelector('#edit-view').classList.remove('hidden');
-            const toggleGraphBtn = rootElement.querySelector('#toggle-graph-btn');
-            if (toggleGraphBtn) toggleGraphBtn.classList.remove('hidden');
             // Déclencher une mise à jour du graphe
             const firstInput = tableBody.querySelector('.segment-w');
             if (firstInput) firstInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -510,7 +508,14 @@ function handleGenExport(target, genState, genDom, rootElement) {
         const expansionType = genDom.genExpansionType.value || 'Conical';
         const s0 = segs[0].w * segs[0].h;
         const s0M = s0 / 1000000;
-        const cutoffFrequency = 344 / (4 * Math.sqrt(s0M));
+        // Cutoff frequency — Horn Studio formula: fc = 116 / L (L in meters).
+        const totalLengthMm = segs.reduce((acc, seg) => acc + (Number(seg.l) || 0), 0);
+        let cutoffFrequency;
+        if (totalLengthMm > 0) {
+            cutoffFrequency = 116 / (totalLengthMm / 1000);
+        } else {
+            cutoffFrequency = 344 / (4 * Math.sqrt(s0M));
+        }
 
         const payload = {
             lastSegmentWidth: last.w,
@@ -521,7 +526,7 @@ function handleGenExport(target, genState, genDom, rootElement) {
             cutoffFrequency
         };
 
-        window.showTool('directivity', 'Directivity Calculator');
+        window.showTool('directivity', 'BEM Solver');
         setTimeout(() => {
             window.panelEvents.dispatchEvent(new CustomEvent('export-to-directivity', { detail: payload }));
         }, 100);
@@ -584,7 +589,6 @@ export function initGenerateMode(rootElement, dom) {
     const backToEditBtn = rootElement.querySelector('#back-to-edit-btn');
     const mainView = rootElement.querySelector('#edit-view');
     const generateView = rootElement.querySelector('#generate-view');
-    const toggleGraphBtn = dom.toggleGraphBtn;
 
     // --- Horn type selector logic ---
     function updateHornTypeUI() {
@@ -620,7 +624,6 @@ export function initGenerateMode(rootElement, dom) {
     generateModeBtn.addEventListener('click', () => {
         mainView.classList.add('hidden');
         generateView.classList.remove('hidden');
-        toggleGraphBtn.classList.add('hidden');
         genState.isGenerateMode = true;
         updateGenExpansionParams(genDom, genState, rootElement);
         autoCalcFcFromLength(genDom);
@@ -644,7 +647,6 @@ export function initGenerateMode(rootElement, dom) {
     backToEditBtn.addEventListener('click', () => {
         generateView.classList.add('hidden');
         mainView.classList.remove('hidden');
-        toggleGraphBtn.classList.remove('hidden');
         genState.isGenerateMode = false;
     });
 

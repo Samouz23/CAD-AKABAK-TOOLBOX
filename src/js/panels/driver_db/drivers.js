@@ -11,40 +11,115 @@
 import { getSettings } from '../mainsettings/mainsettings.js';
 import { showImageImportView } from './imageImporter.js';
 import { renderScrapperView } from './scrapper/scrapper.js';
+function getDriversPanelStyles() {
+  return `
+    <style id="drv-panel-styles">
+      /* Modern checkbox chip (scoped to drivers panel) */
+      .drv-check { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; font-size: 13px; color: var(--text-body, #e5e7eb); padding: 6px 10px; border-radius: 8px; transition: background-color .18s ease; }
+      .drv-check:hover { background-color: rgba(255,255,255,0.04); }
+      .drv-check input { position: absolute; opacity: 0; pointer-events: none; }
+      .drv-check .drv-box { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border-secondary, #4b5563); background: rgba(0,0,0,0.25); display: inline-flex; align-items: center; justify-content: center; transition: all .18s ease; flex-shrink: 0; }
+      .drv-check:hover .drv-box { border-color: var(--border-primary, #e91e63); }
+      .drv-check .drv-box svg { opacity: 0; transform: scale(.6); transition: all .18s ease; color: white; }
+      .drv-check input:checked + .drv-box { background: var(--border-primary, #e91e63); border-color: var(--border-primary, #e91e63); box-shadow: 0 0 0 3px rgba(233,30,99,0.15); }
+      .drv-check input:checked + .drv-box svg { opacity: 1; transform: scale(1); }
+      .drv-check input:focus-visible + .drv-box { box-shadow: 0 0 0 3px rgba(233,30,99,0.35); }
+
+      /* Filter chip grid: evenly sized, card-like */
+      .drv-filter-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+
+      /* Compare modal */
+      @keyframes drvFadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes drvScaleIn { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      .compare-config-overlay { animation: drvFadeIn .18s ease-out; }
+      .compare-config-toast { animation: drvScaleIn .22s cubic-bezier(.2,.8,.2,1); }
+      .compare-config-toast .drv-param-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+      .compare-config-toast .drv-btn { padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .18s ease; font-family: inherit; border: 1px solid transparent; }
+      .compare-config-toast .drv-btn-ghost { background: transparent; color: var(--text-muted, #9ca3af); border-color: var(--border-secondary, #4b5563); }
+      .compare-config-toast .drv-btn-ghost:hover { color: var(--text-body, #fff); border-color: var(--text-muted, #9ca3af); }
+      .compare-config-toast .drv-btn-primary { background: var(--border-primary, #e91e63); color: white; box-shadow: 0 4px 12px rgba(233,30,99,0.25); }
+      .compare-config-toast .drv-btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(233,30,99,0.35); }
+      .compare-config-toast .drv-number-input { width: 100%; padding: 10px 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-secondary, #4b5563); border-radius: 8px; color: var(--text-body, #fff); font-size: 14px; font-family: inherit; transition: border-color .18s, box-shadow .18s; }
+      .compare-config-toast .drv-number-input:focus { outline: none; border-color: var(--border-primary, #e91e63); box-shadow: 0 0 0 3px rgba(233,30,99,0.2); }
+      .compare-config-toast .drv-close-btn { color: var(--text-muted, #9ca3af); cursor: pointer; background: transparent; border: none; padding: 0; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all .18s; }
+      .compare-config-toast .drv-close-btn:hover { color: var(--text-body, #fff); background: rgba(255,255,255,0.08); }
+
+      /* Similar drivers results panel */
+      .drv-compare-results { margin-top: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-secondary, #374151); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; max-height: 40vh; }
+      .drv-compare-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border-secondary, #374151); background: rgba(255,255,255,0.02); flex-shrink: 0; }
+      .drv-compare-header-title { display: inline-flex; align-items: center; gap: 8px; color: var(--text-title, #fff); font-size: 12.5px; font-weight: 600; letter-spacing: .3px; text-transform: uppercase; }
+      .drv-compare-header-title svg { color: var(--border-primary, #e91e63); }
+      .drv-compare-count { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 18px; padding: 0 7px; border-radius: 9px; background: var(--border-primary, #e91e63); color: white; font-size: 10px; font-weight: 700; letter-spacing: 0; text-transform: none; }
+      .drv-compare-count:empty { display: none; }
+      .drv-compare-clear { background: transparent; border: none; color: var(--text-muted, #9ca3af); font-size: 11.5px; font-weight: 600; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: all .18s; text-transform: uppercase; letter-spacing: .4px; }
+      .drv-compare-clear:hover { color: var(--text-body, #fff); background: rgba(255,255,255,0.06); }
+      .drv-compare-list { overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 4px; scrollbar-width: thin; scrollbar-color: var(--border-secondary, #4b5563) transparent; }
+      .drv-compare-list::-webkit-scrollbar { width: 8px; }
+      .drv-compare-list::-webkit-scrollbar-thumb { background: var(--border-secondary, #4b5563); border-radius: 4px; }
+      .drv-compare-empty { padding: 16px; text-align: center; color: var(--text-muted, #9ca3af); font-size: 12.5px; }
+
+      .drv-compare-item { width: 100%; text-align: left; background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all .18s ease; display: flex; flex-direction: column; gap: 8px; color: inherit; font: inherit; }
+      .drv-compare-item:hover { background: rgba(255,255,255,0.04); border-color: var(--border-secondary, #4b5563); }
+      .drv-compare-item.is-active { background: rgba(233,30,99,0.12); border-color: var(--border-primary, #e91e63); box-shadow: inset 0 0 0 1px rgba(233,30,99,0.3); }
+      .drv-compare-item-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .drv-compare-name { color: var(--text-body, #fff); font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .drv-compare-diff { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+      .drv-diff-bar { width: 60px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+      .drv-diff-bar-fill { display: block; height: 100%; background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%); transition: width .3s ease; }
+      .drv-diff-val { font-size: 11px; font-weight: 700; color: var(--text-muted, #9ca3af); font-variant-numeric: tabular-nums; min-width: 42px; text-align: right; }
+      .drv-compare-deltas { display: flex; flex-wrap: wrap; gap: 4px; }
+      .drv-delta-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 999px; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; border: 1px solid transparent; }
+      .drv-delta-chip .drv-delta-k { opacity: .75; font-weight: 500; }
+      .drv-delta-good { background: rgba(34,197,94,0.12); color: rgb(134,239,172); border-color: rgba(34,197,94,0.25); }
+      .drv-delta-mid  { background: rgba(234,179,8,0.12); color: rgb(253,224,71); border-color: rgba(234,179,8,0.25); }
+      .drv-delta-bad  { background: rgba(239,68,68,0.12); color: rgb(252,165,165); border-color: rgba(239,68,68,0.25); }
+      .drv-delta-na   { background: rgba(255,255,255,0.04); color: var(--text-muted, #9ca3af); border-color: rgba(255,255,255,0.08); }
+    </style>
+  `;
+}
+
+const CHECK_SVG = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
 function getDatabaseViewHtml() {
   const filterableParams = ['SD', 'Mms', 'fs', 'Qms', 'Re', 'BL', 'Le'];
   const filterCheckboxesHtml = filterableParams.map(param => `
-    <div class="flex items-center">
+    <label class="drv-check" for="check-${param}">
       <input type="checkbox" id="check-${param}" data-param="${param}" class="form-checkbox">
-      <label for="check-${param}" class="ml-2 text-white">${param}</label>
-    </div>
+      <span class="drv-box">${CHECK_SVG}</span>
+      <span>${param}</span>
+    </label>
   `).join('');
   return `
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow overflow-auto">
-      <div class="md:col-span-1 flex flex-col h-[80vh] bg-gray-900/50 p-4 rounded-md calc-section">
+    ${getDriversPanelStyles()}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full overflow-hidden">
+      <div class="md:col-span-1 flex flex-col h-full min-h-0 bg-gray-900/50 p-4 rounded-md calc-section">
         <input type="search" id="driver-search" placeholder="Search by name…" class="form-input mb-4 flex-shrink-0">
         <details class="flex-shrink-0 mb-4">
           <summary class="cursor-pointer text-white font-bold">Advanced Filters</summary>
           <div class="p-3 mt-2 rounded-md calc-section">
-            <div class="grid grid-cols-3 gap-2 mb-4">${filterCheckboxesHtml}</div>
+            <div class="drv-filter-chips mb-4">${filterCheckboxesHtml}</div>
             <div id="filter-inputs-container" class="space-y-2 border-t pt-2" style="border-color: var(--theme-accent-dark)"></div>
             <div class="text-center pt-2 mt-2"><button id="reset-filters-btn" class="text-link">Reset</button></div>
           </div>
         </details>
         <div id="driver-list-container" class="overflow-y-auto flex-grow"></div>
       </div>
-      <div class="md:col-span-2 flex flex-col h-full bg-gray-900/50 p-4 rounded-md calc-section">
+      <div class="md:col-span-2 flex flex-col h-full min-h-0 bg-gray-900/50 p-4 rounded-md calc-section">
         <div class="flex items-center justify-between border-b pb-2 mb-4 flex-shrink-0" style="border-color: var(--theme-accent-dark)">
           <h2 id="driver-preview-title" class="calc-title text-2xl">Select a driver</h2>
           <button id="compare-driver-btn" class="btn btn--accent btn--sm" disabled title="Find similar drivers based on parameters">Find Similar</button>
         </div>
-        <textarea id="driver-preview-content" class="flex-grow w-full bg-transparent text-white border-0 focus:ring-0 whitespace-pre font-mono" readonly></textarea>
-        <div id="compare-results" class="mt-3 hidden text-sm bg-black/30 border rounded-md p-3" style="border-color: var(--theme-accent-dark)">
-          <div class="flex justify-between items-center mb-2">
-            <span class="font-bold text-white">Similar drivers</span>
-            <button id="clear-compare-results" class="text-link text-xs">Clear</button>
+        <textarea id="driver-preview-content" class="flex-grow min-h-0 w-full bg-transparent text-white border-0 focus:ring-0 whitespace-pre font-mono" readonly></textarea>
+        <div id="compare-results" class="drv-compare-results hidden flex-shrink-0">
+          <div class="drv-compare-header">
+            <div class="drv-compare-header-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <span>Similar drivers</span>
+              <span class="drv-compare-count" id="compare-results-count"></span>
+            </div>
+            <button id="clear-compare-results" class="drv-compare-clear">Clear</button>
           </div>
-          <div id="compare-results-list" class="space-y-1 text-gray-200"></div>
+          <div id="compare-results-list" class="drv-compare-list"></div>
         </div>
         <div class="text-right pt-4 flex-shrink-0 space-x-4">
             <button id="delete-driver-btn" class="action-btn" disabled>Delete</button>
@@ -180,7 +255,7 @@ export function getDriversPanelHtml() {
           </button>
         </div>
       </div>
-      <div id="drivers-view-container" class="flex-grow overflow-auto"></div>
+      <div id="drivers-view-container" class="flex-grow overflow-hidden min-h-0"></div>
     </div>
   `;
 }
@@ -262,11 +337,11 @@ export function initializeDriversPanel() {
       }
     };
 
-    const selectDriverByName = (driverName) => {
+    const selectDriverByName = (driverName, opts = {}) => {
       const found = allParsedDrivers.find(d => d.name === driverName);
       if (!found) return;
       currentDriver = found;
-      clearCompareResults();
+      if (!opts.keepCompareResults) clearCompareResults();
       previewTitle.textContent = found.name;
       previewContent.value = found.content;
       deleteBtn.disabled = false;
@@ -317,25 +392,30 @@ export function initializeDriversPanel() {
 
     const renderCompareResults = (results, paramsUsed) => {
       if (!compareResultsContainer || !compareResultsList) return;
+      const countEl = document.getElementById('compare-results-count');
+      if (countEl) countEl.textContent = results.length ? String(results.length) : '';
       if (!results.length) {
-        compareResultsList.innerHTML = '<div class="text-xs text-gray-400">No close drivers with these parameters.</div>';
+        compareResultsList.innerHTML = '<div class="drv-compare-empty">No close drivers with these parameters.</div>';
         compareResultsContainer.classList.remove('hidden');
         return;
       }
+      const maxDist = Math.max(...results.map(r => r.distance), 0.0001);
       const lines = results.map(res => {
-        const summary = paramsUsed.map(param => {
+        const pct = res.distance * 100;
+        const fillPct = Math.min(100, (res.distance / maxDist) * 100);
+        const chips = paramsUsed.map(param => {
           const delta = res.deltas.find(d => d.param === param);
-          if (!delta) return `${param}: n/a`;
-          const sign = delta.percent >= 0 ? '+' : '';
-          return `${param}: ${sign}${delta.percent.toFixed(1)}%`;
-        }).join(' \u00b7 ');
-        const pctLabel = `${(res.distance * 100).toFixed(1)}% diff`;
-        return `<button class="w-full text-left px-2 py-2 rounded hover:bg-gray-800/70 border border-transparent hover:border-gray-700 flex items-start justify-between gap-3" data-driver-name="${res.driver.name}">
-            <div>
-              <div class="font-semibold text-white">${res.driver.name}</div>
-              <div class="text-xs text-gray-400">${summary}</div>
+          if (!delta) return `<span class="drv-delta-chip drv-delta-na">${param} —</span>`;
+          const pctTxt = delta.percent.toFixed(1);
+          const tone = delta.percent < 3 ? 'good' : delta.percent < 8 ? 'mid' : 'bad';
+          return `<span class="drv-delta-chip drv-delta-${tone}"><span class="drv-delta-k">${param}</span><span class="drv-delta-v">${pctTxt}%</span></span>`;
+        }).join('');
+        return `<button type="button" class="drv-compare-item" data-driver-name="${res.driver.name}">
+            <div class="drv-compare-item-head">
+              <span class="drv-compare-name">${res.driver.name}</span>
+              <span class="drv-compare-diff"><span class="drv-diff-bar"><span class="drv-diff-bar-fill" style="width: ${fillPct}%"></span></span><span class="drv-diff-val">${pct.toFixed(1)}%</span></span>
             </div>
-            <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-200">${pctLabel}</span>
+            <div class="drv-compare-deltas">${chips}</div>
           </button>`;
       }).join('');
       compareResultsList.innerHTML = lines;
@@ -355,51 +435,62 @@ export function initializeDriversPanel() {
       const defaults = availableParams.slice(0, 3);
       const paramCheckboxes = availableParams.map(param => {
         const checked = defaults.includes(param) ? 'checked' : '';
-        return `<label style="display: flex; align-items: center; gap: 8px; color: var(--text-body); font-size: 13px; cursor: pointer;"><input type="checkbox" class="form-checkbox" data-param="${param}" ${checked} style="accent-color: var(--border-primary); cursor: pointer;">${param}</label>`;
+        return `
+          <label class="drv-check" style="padding: 8px 10px;">
+            <input type="checkbox" data-param="${param}" ${checked}>
+            <span class="drv-box">${CHECK_SVG}</span>
+            <span>${param}</span>
+          </label>`;
       }).join('');
       const overlay = document.createElement('div');
       overlay.className = 'compare-config-overlay fixed inset-0 z-50 flex items-center justify-center';
-      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-      overlay.style.backdropFilter = 'blur(2px)';
+      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.55)';
+      overlay.style.backdropFilter = 'blur(6px)';
 
       const toast = document.createElement('div');
-      toast.className = 'compare-config-toast rounded-lg shadow-2xl';
-      toast.style.width = '480px';
-      toast.style.maxWidth = '90vw';
+      toast.className = 'compare-config-toast';
+      toast.style.width = '460px';
+      toast.style.maxWidth = '92vw';
       toast.style.backgroundColor = 'var(--bg-panel)';
-      toast.style.border = '2px solid var(--border-primary)';
+      toast.style.border = '1px solid var(--border-secondary)';
+      toast.style.borderRadius = '14px';
+      toast.style.boxShadow = '0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.03) inset';
       toast.style.display = 'flex';
       toast.style.flexDirection = 'column';
+      toast.style.overflow = 'hidden';
       toast.innerHTML = `
-        <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-secondary); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+        <div style="padding: 20px 24px 18px; border-bottom: 1px solid var(--border-secondary); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
           <div>
-            <h2 style="color: var(--text-title); font-size: 18px; font-weight: 600; margin: 0 0 4px 0;">Find Similar Drivers</h2>
-            <p style="color: var(--text-muted); font-size: 13px; margin: 0;">Find drivers with similar specifications</p>
+            <h2 style="color: var(--text-title); font-size: 17px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: .2px;">Find Similar Drivers</h2>
+            <p style="color: var(--text-muted); font-size: 12.5px; margin: 0;">Pick the parameters to compare against</p>
           </div>
-          <button data-close-toast style="color: var(--text-muted); cursor: pointer; background: transparent; border: none; font-size: 24px; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: color 0.2s;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <button data-close-toast class="drv-close-btn" aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
-        
-        <div style="padding: 20px 24px; display: flex; flex-direction: column; gap: 20px;">
+
+        <div style="padding: 20px 24px; display: flex; flex-direction: column; gap: 18px;">
           <div>
-            <label style="display: block; color: var(--text-subtitle); font-size: 13px; font-weight: 600; margin-bottom: 8px;">Max Results</label>
-            <input id="compare-count" type="number" min="1" max="10" value="3" style="width: 100%; padding: 10px 12px; background-color: var(--bg-control-group); border: 1px solid var(--border-secondary); border-radius: 4px; color: var(--text-body); font-size: 14px; font-family: inherit;">
+            <label style="display: block; color: var(--text-subtitle); font-size: 12px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .6px;">Max results</label>
+            <input id="compare-count" type="number" min="1" max="10" value="3" class="drv-number-input">
           </div>
-          
+
           <div>
-            <label style="display: block; color: var(--text-subtitle); font-size: 13px; font-weight: 600; margin-bottom: 12px;">Compare by</label>
-            <div style="display: grid; grid-cols-cols: repeat(3, 1fr); gap: 12px;">${paramCheckboxes || '<div style="color: var(--text-muted); font-size: 12px;">No comparable parameters</div>'}</div>
+            <label style="display: block; color: var(--text-subtitle); font-size: 12px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .6px;">Compare by</label>
+            <div class="drv-param-grid">${paramCheckboxes || '<div style="color: var(--text-muted); font-size: 12px;">No comparable parameters</div>'}</div>
           </div>
-          
-          <div id="compare-error" style="color: rgb(239, 68, 68); font-size: 13px; font-weight: 500; display: none;"></div>
+
+          <div id="compare-error" style="color: rgb(248, 113, 113); font-size: 12.5px; font-weight: 500; display: none; padding: 8px 12px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px;"></div>
         </div>
-        
-        <div style="padding: 16px 24px; border-top: 1px solid var(--border-secondary); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-          <span style="color: var(--text-muted); font-size: 11px;">Normalized difference scoring</span>
+
+        <div style="padding: 14px 20px; border-top: 1px solid var(--border-secondary); display: flex; justify-content: space-between; align-items: center; gap: 12px; background: rgba(0,0,0,0.15);">
+          <span style="color: var(--text-muted); font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Normalized difference scoring
+          </span>
           <div style="display: flex; gap: 8px;">
-            <button data-close-toast style="padding: 8px 16px; border-radius: 4px; border: 1px solid var(--border-secondary); background-color: transparent; color: var(--text-muted); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit;">Cancel</button>
-            <button id="run-compare-btn" style="padding: 8px 16px; border-radius: 4px; border: none; background-color: var(--btn-primary-border); color: white; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;">Find Drivers</button>
+            <button data-close-toast class="drv-btn drv-btn-ghost">Cancel</button>
+            <button id="run-compare-btn" class="drv-btn drv-btn-primary">Find Drivers</button>
           </div>
         </div>
       `;
@@ -408,6 +499,9 @@ export function initializeDriversPanel() {
 
       const closeButtons = toast.querySelectorAll('[data-close-toast]');
       closeButtons.forEach(btn => btn.addEventListener('click', removeCompareToast));
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) removeCompareToast(); });
+      const escHandler = (e) => { if (e.key === 'Escape') { removeCompareToast(); document.removeEventListener('keydown', escHandler); } };
+      document.addEventListener('keydown', escHandler);
       const runBtn = toast.querySelector('#run-compare-btn');
       const countInput = toast.querySelector('#compare-count');
       const errorLabel = toast.querySelector('#compare-error');
@@ -619,7 +713,9 @@ export function initializeDriversPanel() {
       compareResultsList.addEventListener('click', (e) => {
         const btn = e.target.closest('[data-driver-name]');
         if (!btn) return;
-        selectDriverByName(btn.dataset.driverName);
+        compareResultsList.querySelectorAll('.drv-compare-item.is-active').forEach(el => el.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        selectDriverByName(btn.dataset.driverName, { keepCompareResults: true });
       });
     }
     if (compareBtn) {

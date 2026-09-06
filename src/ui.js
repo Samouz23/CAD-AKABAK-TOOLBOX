@@ -4,14 +4,11 @@
 
 const KNOWN_THEMES = [
   'theme-dark-blue',
-  'theme-amber-matrix',
-  'theme-high-contrast',
-  'theme-arcade-purple'
+  'theme-high-contrast'
 ];
 
 export function applyUiSettings(uiSettings = {}) {
   const settings = {
-    scanlines: true,
     reducedMotion: false,
     buttonSkin: 'striped',
     theme: 'default',
@@ -24,7 +21,6 @@ export function applyUiSettings(uiSettings = {}) {
     document.body.classList.add(settings.theme);
   }
 
-  document.body.classList.toggle('no-scanlines', settings.scanlines === false);
   document.body.classList.toggle('reduced-motion', settings.reducedMotion === true);
   document.body.classList.toggle('btn-skin-solid', settings.buttonSkin === 'solid');
 
@@ -64,6 +60,14 @@ export function applyCustomColors(customColors) {
 }
 
 export async function initializeUi() {
+  // Attendre que window.electronAPI soit disponible
+  while (!window.electronAPI) {
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+  
   const settings = await window.electronAPI.getSettings();
   applyUiSettings(settings?.ui);
+  if (settings?.enableScaling && settings.zoomLevel) {
+    window.electronAPI.setZoom?.(settings.zoomLevel);
+  }
 }

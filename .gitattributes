@@ -1,0 +1,2 @@
+# Les scripts partent dans WSL : un CRLF y ferait échouer bash sur $'\r'.
+*.sh text eol=lf

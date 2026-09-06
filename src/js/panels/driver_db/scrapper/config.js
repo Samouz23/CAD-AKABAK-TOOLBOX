@@ -1,29 +1,47 @@
 export const SCRAPPER_BASE_URL = 'https://loudspeakerdatabase.com';
 
 // Brands disponibles - a mettre a jour avec discoverBrandsAndSizes.js
+// NOTE: loudspeakerdatabase.com recense 200+ marques. Cette liste ne couvre que les plus
+// courantes et verifiees manuellement (slug exact requis dans l'URL /search/brand=<slug>).
+// Si une marque recherchee n'apparait pas ici, utiliser le champ "Custom brand" du panneau
+// Search pour saisir directement le slug (visible dans l'URL de la marque sur le site).
 export const SCRAPPER_BRANDS = [
   { id: '18Sound', label: '18 Sound' },
+  { id: 'accuton', label: 'Accuton' },
+  { id: 'ALPINE', label: 'Alpine' },
+  { id: 'AudioSystem', label: 'Audio System' },
   { id: 'BC', label: 'B&C' },
   { id: 'Beyma', label: 'Beyma' },
   { id: 'BMS', label: 'BMS' },
   { id: 'Celestion', label: 'Celestion' },
   { id: 'CerwinVega', label: 'Cerwin Vega' },
-  { id: 'DAS', label: 'DAS' },
-  { id: 'Faital', label: 'Faital' },
-  { id: 'Eminence', label: 'Eminence' },
   { id: 'Ciare', label: 'Ciare' },
-  { id: 'Dayton', label: 'Dayton' },
+  { id: 'DAS', label: 'D.A.S. Audio' },
+  { id: 'Dayton', label: 'Dayton Audio' },
+  { id: 'Eminence', label: 'Eminence' },
+  { id: 'Faital', label: 'FaitalPRO' },
   { id: 'FANE', label: 'FANE' },
   { id: 'Focal', label: 'Focal' },
   { id: 'Fostex', label: 'Fostex' },
+  { id: 'JL', label: 'JL Audio' },
   { id: 'LaVoce', label: 'LaVoce' },
   { id: 'MONACOR', label: 'Monacor' },
+  { id: 'Morel', label: 'Morel' },
+  { id: 'Oberton', label: 'Oberton' },
+  { id: 'Peerless', label: 'Peerless' },
   { id: 'Pioneer', label: 'Pioneer' },
   { id: 'PrecisionDevices', label: 'Precision Devices' },
-  { id: 'RCF', label: 'RCF' },
+  { id: 'PURIFI', label: 'PURIFI' },
   { id: 'Radian', label: 'Radian' },
-  { id: 'SB', label: 'SB Acoustique' },
+  { id: 'RCF', label: 'RCF' },
+  { id: 'REDCATT', label: 'REDCATT' },
+  { id: 'RockfordFosgate', label: 'Rockford Fosgate' },
+  { id: 'SB', label: 'SB Acoustics' },
+  { id: 'SBAudience', label: 'SB Audience' },
+  { id: 'ScanSpeak', label: 'Scan-Speak' },
   { id: 'SEAS', label: 'SEAS' },
+  { id: 'SICA', label: 'SICA' },
+  { id: 'STX', label: 'STX' },
   { id: 'TangBand', label: 'Tang Band' },
   { id: 'VISATON', label: 'VISATON' }
 ];

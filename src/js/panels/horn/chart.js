@@ -262,32 +262,3 @@ export function setYAxisMode(mode, state, dom) {
     createChart(state, dom);
     updateChart(state, dom);
 }
-
-// --- Toggle visibilité graphique ---
-
-export function toggleGraphVisibility(state, dom) {
-    window.hornGraphVisible = !window.hornGraphVisible;
-
-    if (window.hornGraphVisible) {
-        dom.graphsContainer.style.display = 'flex';
-        dom.tableContainer.style.height = '280px';
-        dom.toggleGraphBtn.title = 'Hide Graph';
-        dom.toggleGraphArrow.style.transform = 'rotate(0deg)';
-    } else {
-        dom.graphsContainer.style.display = 'none';
-        dom.tableContainer.style.height = 'calc(100vh - 300px)';
-        dom.toggleGraphBtn.title = 'Show Graph';
-        dom.toggleGraphArrow.style.transform = 'rotate(180deg)';
-    }
-    if (dom.segmentControls) dom.segmentControls.style.display = 'flex';
-}
-
-export function applyInitialGraphState(dom) {
-    if (!window.hornGraphVisible) {
-        dom.graphsContainer.style.display = 'none';
-        dom.tableContainer.style.height = 'calc(100vh - 300px)';
-        dom.toggleGraphBtn.title = 'Show Graph';
-        dom.toggleGraphArrow.style.transform = 'rotate(180deg)';
-    }
-    if (dom.segmentControls) dom.segmentControls.style.display = 'flex';
-}

@@ -11,25 +11,22 @@ export const SEGMENT_TYPES = {
       { key: 'WD',  label: 'Width',  unitLabel: 'dim', suffix: 'mm' },
       { key: 'HD',  label: 'Height', unitLabel: 'dim', suffix: 'mm' },
       { key: 'Len', label: 'Length', unitLabel: 'dim', suffix: 'mm' },
-      { key: 'VF',  label: 'VF',     unitLabel: null,  suffix: 'L' },
     ],
-    defaults: { WD: '', HD: '', Len: '', VF: '' },
-    formulaTemplate: 'WD  = @{prefix}{i}\nHD  = @H\nLen = @{lenPrefix}{i}\neta = @WOOD',
+    defaults: { WD: '', HD: '', Len: '' },
+    formulaTemplate: 'WD  = @S{i}\nHD  = @H\nLen = @L{i}\neta = @WOOD',
     blobType: 'duct',
   },
 
   waveguide: {
     label: 'Waveguide',
     columns: [
-      { key: 'WTh', label: 'W Throat', unitLabel: 'dim', suffix: 'mm' },
-      { key: 'WMo', label: 'W Mouth',  unitLabel: 'dim', suffix: 'mm' },
-      { key: 'Len', label: 'Length',    unitLabel: 'dim', suffix: 'mm' },
-      { key: 'VF',  label: 'VF',       unitLabel: null,  suffix: 'L' },
+      { key: 'WD',  label: 'Width',  unitLabel: 'dim', suffix: 'mm' },
+      { key: 'HD',  label: 'Height', unitLabel: 'dim', suffix: 'mm' },
+      { key: 'Len', label: 'Length', unitLabel: 'dim', suffix: 'mm' },
     ],
-    // Column order priority for canonical ordering (lower = earlier)
     columnOrder: 20,
-    defaults: { WTh: '', WMo: '', Len: '', T: '', VF: '' },
-    formulaTemplate: 'HTh = @H\nHMo = @H\nWTh = @{prefix}{i}\nWMo = @{prefix}{i+1}\nLen = @{lenPrefix}{i}\nT   = @{tPrefix}{i}',
+    defaults: { WD: '', HD: '', Len: '', T: '' },
+    formulaTemplate: 'HTh = @H\nHMo = @H\nWTh = @S{i}\nWMo = @{mouth}\nLen = @L{i}\nT   = @T{i}',
     blobType: 'waveguide',
   },
 
@@ -71,16 +68,11 @@ export const SEGMENT_TYPES = {
 };
 
 /** Get all columns for a segment (including enclosure sub-type columns) */
-export function getColumnsForSegment(segment, options = {}) {
+export function getColumnsForSegment(segment /*, options */) {
   const type = SEGMENT_TYPES[segment.type];
   if (!type) return [];
 
   let cols = [...type.columns];
-
-  // Hide WTh/WMo when all waveguides in the wave are between ducts
-  if (segment.type === 'waveguide' && options.hideThroatMouth) {
-    cols = cols.filter(c => c.key !== 'WTh' && c.key !== 'WMo');
-  }
 
   if (segment.type === 'enclosure') {
     const mode = segment.params.ventedMode || 'sealed';
@@ -96,8 +88,10 @@ export function getColumnsForSegment(segment, options = {}) {
   return cols;
 }
 
-/** Generate a formula string for a segment at given index */
-export function generateSegmentFormula(segment, index) {
+/** Generate a formula string for a segment at given index (1-based).
+ * @param {object} options.mouthRef - for waveguide: the mouth section reference (e.g. 'S3' or 'END')
+ */
+export function generateSegmentFormula(segment, index, options = {}) {
   const type = SEGMENT_TYPES[segment.type];
   if (!type) return '';
 
@@ -117,57 +111,69 @@ export function generateSegmentFormula(segment, index) {
       }
       formula = formula.replace('{portFormula}', portFormula);
     }
-
     return formula;
   }
 
-  let formula = type.formulaTemplate;
-  formula = formula
-    .replace(/{prefix}/g, segment.type === 'duct' ? 'D' : 'S')
-    .replace(/{lenPrefix}/g, segment.type === 'duct' ? 'DL' : 'L')
-    .replace(/{tPrefix}/g, 'T')
-    .replace(/{i}/g, String(index))
-    .replace(/{i\+1}/g, String(index + 1));
+  if (segment.type === 'waveguide') {
+    const mouthRef = options.mouthRef ?? `S${index + 1}`;
+    return type.formulaTemplate
+      .replace(/{i}/g, String(index))
+      .replace(/{mouth}/g, mouthRef);
+  }
 
-  return formula;
+  // duct
+  return type.formulaTemplate
+    .replace(/{i}/g, String(index));
 }
 
-/** Create a default segment of given type */
+/** Create a default segment of given type (with empty transition to next node).
+ * Special pseudo-type 'empty' represents an unassigned node (no component, no columns).
+ */
 export function createDefaultSegment(type = 'duct') {
+  if (type === 'empty') {
+    return {
+      type: 'empty',
+      params: { WD: '', HD: '' },
+      transition: { mode: 'M', len: '' },
+    };
+  }
   const typeDef = SEGMENT_TYPES[type];
-  if (!typeDef) return { type: 'duct', params: { ...SEGMENT_TYPES.duct.defaults } };
-  return { type, params: { ...typeDef.defaults } };
+  const params = typeDef ? { ...typeDef.defaults } : { ...SEGMENT_TYPES.duct.defaults };
+  return {
+    type: typeDef ? type : 'duct',
+    params,
+    // Transition to NEXT node — only relevant for Duct→Duct junctions.
+    // mode: 'W' = waveguide transition (has own length), 'M' = acoustic mass (no length)
+    transition: { mode: 'M', len: '' },
+  };
 }
 
 /**
- * Calculate T-factors (Salmon) for all waveguide segments in a wave.
+ * Calculate T-factors (Salmon) for all waveguide components in a wave.
+ * New model: segment[i] represents the COMPONENT between node i and node i+1.
+ * Waveguide throat = WD[i], mouth = WD[i+1], length = Len[i].
+ * The last segment is the terminal node (no component following) — never processed.
+ *
  * Salmon horn: S(z) = S_th * (cosh(k0·z) + T·sinh(k0·z))²
  * T_i = (η_i − cosh(k0·L_i)) / sinh(k0·L_i)   where η_i = √(S_mo_i / S_th_i)
  * k0 = ln(√(S_mouth_total / S_throat_total)) / L_total
- * Height cancels out in the ratios, so only widths matter.
  */
 export function calculateWaveguideTFactors(segments, segmentCount) {
-  // Collect waveguide indices
+  // segmentCount = component count. Terminal is at segments[segmentCount].
+  // Iterate all component rows (0..segmentCount-1); mouth WD comes from segments[idx+1] (can be terminal).
   const wgIndices = [];
   for (let i = 0; i < segmentCount; i++) {
-    if (segments[i].type === 'waveguide') wgIndices.push(i);
+    if (segments[i]?.type === 'waveguide') wgIndices.push(i);
   }
   if (wgIndices.length === 0) return;
 
-  // Parse dimensions — resolve WTh/WMo from adjacent duct WD when hidden
   const dims = wgIndices.map(idx => {
-    let WTh = parseFloat(segments[idx].params.WTh) || 0;
-    let WMo = parseFloat(segments[idx].params.WMo) || 0;
-    // If WTh/WMo are empty (hidden between-duct columns), use adjacent duct widths
-    if (WTh === 0 && idx > 0 && segments[idx - 1].type === 'duct') {
-      WTh = parseFloat(segments[idx - 1].params.WD) || 0;
-    }
-    if (WMo === 0 && idx < segmentCount - 1 && segments[idx + 1].type === 'duct') {
-      WMo = parseFloat(segments[idx + 1].params.WD) || 0;
-    }
+    const WTh = parseFloat(segments[idx].params.WD) || 0;
+    const WMo = segments[idx + 1] ? (parseFloat(segments[idx + 1].params.WD) || 0) : 0;
     return { idx, WTh, WMo, Len: parseFloat(segments[idx].params.Len) || 0 };
   });
 
+  // k0 computed over the full chain of contiguous waveguides
   const firstWTh = dims[0].WTh;
   const lastWMo = dims[dims.length - 1].WMo;
   const Ltotal = dims.reduce((sum, d) => sum + d.Len, 0);
@@ -187,7 +193,6 @@ export function calculateWaveguideTFactors(segments, segmentCount) {
         T = (eta - Math.cosh(k0L)) / sinhVal;
       }
     }
-    // Store rounded value (empty string if dimensions incomplete)
     if (d.WTh > 0 && d.WMo > 0 && d.Len > 0) {
       segments[d.idx].params.T = T.toFixed(4);
     } else {

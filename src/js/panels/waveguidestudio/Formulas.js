@@ -12,8 +12,7 @@ const C_SOUND = 343000; // Vitesse du son en mm/s
 export const expansionLaws = {
     'OS-SE': {
         formula: (z, L, opts) => {
-            const t = 0.0;
-            const { k = 1.0, r0 = 12.7, a = 45.0, s = 0.7, q = 0.998, n = 5.0 } = opts;
+            const { k = 1.0, r0 = 12.7, a = 45.0, s = 0.7, q = 0.998, n = 5.0, t = 0.0 } = opts;
             const t_rad = t * (Math.PI / 180);
             const a_rad = a * (Math.PI / 180);
             const kr0 = k * r0;
@@ -66,6 +65,14 @@ export const expansionLaws = {
             if (r0 <= 0 || fc <= 0) return r0;
             const m = (4 * Math.PI * fc) / C_SOUND;
             return r0 * (Math.cosh(m * z / 2) + T * Math.sinh(m * z / 2));
+        }
+    },
+    'Bessel': {
+        formula: (z, L, opts) => {
+            const { r0 = 12.7, fc = 400, b = 1.0 } = opts;
+            if (r0 <= 0 || fc <= 0 || b <= 0) return r0;
+            const x0 = C_SOUND / (2 * Math.PI * fc);
+            return r0 * Math.pow(1 + z / x0, b);
         }
     }
 };

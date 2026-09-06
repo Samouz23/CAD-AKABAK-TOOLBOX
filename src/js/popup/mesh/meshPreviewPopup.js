@@ -16,43 +16,57 @@ const SURFACE_COLORS = [
 ];
 const INTERFACE_COLOR = 0xffffff;
 
-export function getMeshPreviewPopupHtml() {
+export function getMeshPreviewPopupHtml(options = {}) {
+  const { embedded = false } = options;
   return `
-    ${getWindowControlsStyles()}
-    ${getWindowControlsHtml('Physical Preview')}
-    <div style="display:flex; flex-direction:column; height:calc(100vh - 38px); overflow:hidden; background:#0f172a;">
-      <div id="preview-canvas-container" style="flex:1; min-height:200px; background:#111827; position:relative;">
-        <div id="preview-loading" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#9ca3af;">
-          Loading...
+    ${embedded ? '' : getWindowControlsStyles()}
+    ${embedded ? '' : getWindowControlsHtml('Physical Preview')}
+    <div class="mpp-shell" style="display:flex; flex-direction:column; height:${embedded ? '100%' : 'calc(100vh - 38px)'}; overflow:hidden; background:#0b1120;">
+
+      <!-- 3D Viewport -->
+      <div id="preview-canvas-container" style="flex:1 1 60%; min-height:320px; background:radial-gradient(ellipse at center, #172033 0%, #0b1120 80%); position:relative;">
+        <div id="preview-loading" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#9ca3af; font-size:13px; letter-spacing:0.04em;">
+          Loading mesh preview…
         </div>
       </div>
 
-      <div style="flex-shrink:0; max-height:52%; display:flex; flex-direction:column; border-top:1px solid #374151; background:#111827;">
-        <div style="padding:8px 12px; display:flex; justify-content:space-between; align-items:center; gap:12px; border-bottom:1px solid #374151;">
-          <span class="text-sm font-semibold text-white">Surface Parameters</span>
-          <div id="surface-summary" class="text-xs text-gray-400"></div>
-        </div>
+      <!-- Parameters panel -->
+      <div class="mpp-panel" style="flex:0 0 auto; max-height:55%; display:flex; flex-direction:column; background:linear-gradient(180deg,#0f172a 0%,#0b1120 100%); border-top:1px solid rgba(148,163,184,0.15);">
 
-        <div style="padding:8px 12px; border-bottom:1px solid #374151; display:flex; gap:10px; align-items:center;">
-          <button id="mirror-options-btn" class="action-btn btn--secondary" style="height:34px; min-width:120px;">Mirror</button>
-          <div id="mirror-options-panel" class="hidden" style="display:flex; align-items:center; gap:8px;">
-            <label for="preview-symmetry-mirror-select" class="text-xs text-gray-300">Symmetry Mirror</label>
-            <select id="preview-symmetry-mirror-select" class="form-input" style="width:auto; min-width:120px; height:30px; font-size:12px;">
-              <option value="none" selected>None</option>
-              <option value="H">H (Top Plane)</option>
-              <option value="V">V (Right Plane)</option>
-            </select>
+        <!-- Panel header -->
+        <div class="mpp-panel-header">
+          <div class="mpp-panel-title">
+            <span class="mpp-panel-title-main">Surface Parameters</span>
+            <span id="surface-summary" class="mpp-panel-title-sub"></span>
           </div>
-          <span class="text-xs text-gray-400">Double-click in 3D to focus a surface</span>
+          <div class="mpp-toolbar">
+            <button id="mirror-options-btn" class="mpp-btn mpp-btn-toggle" type="button" aria-pressed="false">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M8 7l-4 5 4 5"/><path d="M16 7l4 5-4 5"/></svg>
+              <span>Mirror</span>
+            </button>
+            <div id="mirror-options-panel" class="mpp-mirror-panel" style="display:none;">
+              <label for="preview-symmetry-mirror-select" class="mpp-mirror-label">Symmetry plane</label>
+              <select id="preview-symmetry-mirror-select" class="mpp-select">
+                <option value="none" selected>None</option>
+                <option value="H">H (Top Plane)</option>
+                <option value="V">V (Right Plane)</option>
+              </select>
+              <span class="mpp-hint">Double-click a surface in 3D to focus it</span>
+            </div>
+          </div>
         </div>
 
-        <div id="surface-table-container" style="flex:1; min-height:150px; overflow-y:auto; padding:0 8px 6px 8px; background:#0f172a;"></div>
+        <!-- Surface table -->
+        <div id="surface-table-container" class="mpp-table"></div>
 
-        <div style="padding:8px 12px; background:#111827; border-top:1px solid #374151; display:flex; gap:8px; align-items:center;">
-          <button id="reset-btn" class="action-btn btn--secondary" style="height:38px; min-width:100px; font-size:13px; font-weight:600; border:1px solid #475569;">Reset</button>
-          <button id="remesh-btn" class="action-btn btn--secondary" style="height:38px; min-width:140px; font-size:14px; font-weight:700;">Remesh</button>
-          <button id="export-btn" class="action-btn btn--primary" style="height:38px; min-width:140px; font-size:14px; font-weight:700;">Export</button>
-          <span id="export-status" class="text-sm" style="flex:1; text-align:right;"></span>
+        <!-- Footer actions -->
+        <div class="mpp-footer">
+          <div class="mpp-footer-actions">
+            <button id="reset-btn" class="mpp-btn mpp-btn-ghost" type="button">Reset</button>
+            <button id="remesh-btn" class="mpp-btn mpp-btn-secondary" type="button">Remesh</button>
+            <button id="export-btn" class="mpp-btn mpp-btn-primary" type="button">Export</button>
+          </div>
+          <span id="export-status" class="mpp-status"></span>
         </div>
       </div>
     </div>
@@ -63,76 +77,195 @@ export function getMeshPreviewPopupHtml() {
 function getPreviewStyles() {
   return `
     <style>
-      #surface-table-container {
-        display: flex;
-        flex-direction: column;
+      .mpp-shell { font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color:#e5e7eb; }
+      .mpp-shell * { box-sizing: border-box; }
+
+      /* Panel header */
+      .mpp-panel-header {
+        display:flex; align-items:flex-start; justify-content:space-between;
+        gap:20px; padding:18px 28px 14px 28px;
+        border-bottom:1px solid rgba(148,163,184,0.10);
       }
+      .mpp-panel-title { display:flex; flex-direction:column; gap:4px; min-width:0; }
+      .mpp-panel-title-main {
+        font-size:13px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
+        color:#cbd5f5;
+      }
+      .mpp-panel-title-sub { font-size:11px; color:#64748b; letter-spacing:0.04em; }
+
+      .mpp-toolbar {
+        display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:flex-end;
+      }
+
+      /* Buttons */
+      .mpp-btn {
+        display:inline-flex; align-items:center; justify-content:center; gap:8px;
+        height:36px; padding:0 18px;
+        font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
+        border-radius:8px; border:1px solid transparent; cursor:pointer;
+        transition: all 160ms ease;
+        background:transparent; color:#e5e7eb;
+      }
+      .mpp-btn svg { opacity:0.9; }
+      .mpp-btn:disabled { opacity:0.45; cursor:not-allowed; }
+
+      .mpp-btn-toggle {
+        border-color: rgba(148,163,184,0.25);
+        color:#cbd5f5; background:rgba(30,41,59,0.5);
+      }
+      .mpp-btn-toggle:hover { border-color: rgba(236,72,153,0.55); color:#fff; }
+      .mpp-btn-toggle[aria-pressed="true"] {
+        background: linear-gradient(135deg, rgba(236,72,153,0.22), rgba(168,85,247,0.22));
+        border-color: rgba(236,72,153,0.75);
+        color:#fff;
+        box-shadow: 0 0 0 1px rgba(236,72,153,0.35) inset, 0 6px 18px -8px rgba(236,72,153,0.5);
+      }
+
+      .mpp-btn-ghost {
+        border-color: rgba(148,163,184,0.25); color:#cbd5f5;
+      }
+      .mpp-btn-ghost:hover { border-color: rgba(148,163,184,0.55); background:rgba(30,41,59,0.6); }
+
+      .mpp-btn-secondary {
+        border-color: rgba(148,163,184,0.35); color:#e2e8f0; background:rgba(30,41,59,0.6);
+      }
+      .mpp-btn-secondary:hover { background:rgba(51,65,85,0.8); border-color: rgba(148,163,184,0.6); }
+
+      .mpp-btn-primary {
+        background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+        color:#fff; border-color:transparent;
+        box-shadow: 0 10px 30px -12px rgba(236,72,153,0.55);
+      }
+      .mpp-btn-primary:hover { filter:brightness(1.08); box-shadow: 0 14px 34px -12px rgba(236,72,153,0.75); }
+
+      /* Mirror options inline panel */
+      .mpp-mirror-panel {
+        align-items:center; gap:12px;
+        padding:8px 14px; border-radius:8px;
+        background:rgba(15,23,42,0.7); border:1px solid rgba(148,163,184,0.18);
+        animation: mppFadeIn 180ms ease-out;
+      }
+      @keyframes mppFadeIn {
+        from { opacity:0; transform: translateY(-4px); }
+        to { opacity:1; transform: translateY(0); }
+      }
+      .mpp-mirror-label {
+        font-size:11px; font-weight:600; color:#94a3b8; letter-spacing:0.04em;
+      }
+      .mpp-hint { font-size:11px; color:#64748b; font-style:italic; }
+
+      /* Select */
+      .mpp-select {
+        height:32px; padding:0 32px 0 12px;
+        font-size:12px; font-weight:500; letter-spacing:0.02em;
+        background:rgba(15,23,42,0.9);
+        border:1px solid rgba(148,163,184,0.28);
+        border-radius:6px; color:#e5e7eb;
+        appearance:none;
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+        background-repeat:no-repeat; background-position:right 10px center;
+        cursor:pointer; transition: border-color 150ms ease;
+      }
+      .mpp-select:hover, .mpp-select:focus { border-color: rgba(236,72,153,0.55); outline:none; }
+
+      /* Surface table */
+      .mpp-table {
+        flex:1; min-height:180px; overflow-y:auto;
+        padding: 8px 28px 12px 28px;
+        background: transparent;
+      }
+      .mpp-table::-webkit-scrollbar { width:8px; }
+      .mpp-table::-webkit-scrollbar-thumb { background:rgba(148,163,184,0.22); border-radius:4px; }
+      .mpp-table::-webkit-scrollbar-thumb:hover { background:rgba(148,163,184,0.4); }
+
       .surface-table-header {
-        display: grid;
+        display:grid;
         grid-template-columns: var(--surface-grid-template);
-        gap: 8px;
-        padding: 6px 12px;
-        border-bottom: 1px solid #374151;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background: #1f2937;
-        font-size: 11px;
-        color: #9ca3af;
-        font-weight: 600;
+        gap:16px; padding:10px 14px;
+        position:sticky; top:0; z-index:10;
+        background:rgba(11,17,32,0.95); backdrop-filter: blur(6px);
+        border-bottom:1px solid rgba(148,163,184,0.12);
+        font-size:10px; color:#64748b; font-weight:700;
+        letter-spacing:0.12em; text-transform:uppercase;
       }
       .surface-table-header > div {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
       }
+
       .surface-table-row {
-        display: grid;
+        display:grid;
         grid-template-columns: var(--surface-grid-template);
-        gap: 8px;
-        padding: 8px 12px;
-        border-bottom: 1px solid #1f2937;
-        align-items: center;
+        gap:16px; padding:12px 14px; margin:6px 0;
+        align-items:center;
+        background:rgba(15,23,42,0.55);
+        border:1px solid rgba(148,163,184,0.10);
+        border-radius:10px;
+        transition: all 160ms ease;
       }
       .surface-table-row:hover {
-        background: rgba(56, 189, 248, 0.05);
+        background:rgba(30,41,59,0.7);
+        border-color: rgba(56,189,248,0.35);
+        transform: translateX(2px);
       }
       .surface-table-row.selected {
-        background: rgba(236, 72, 153, 0.12);
-        border-left: 2px solid #ec4899;
+        background: linear-gradient(90deg, rgba(236,72,153,0.14), rgba(15,23,42,0.55));
+        border-color: rgba(236,72,153,0.55);
+        box-shadow: inset 3px 0 0 #ec4899;
       }
       .surface-table-row .col-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: #e5e7eb;
-        cursor: pointer;
-        white-space: nowrap;
-        width: 100%;
+        font-size:13px; font-weight:600; color:#e5e7eb;
+        cursor:pointer; white-space:nowrap;
+        display:flex; align-items:center; gap:8px;
+        padding:4px 10px; border-radius:6px;
+        transition: transform 140ms ease;
       }
-      .surface-table-row .col-name:hover {
-        color: #7dd3fc;
-      }
+      .surface-table-row .col-name:hover { transform: scale(1.04); }
+
       .surface-table-row input[type="number"] {
-        height: 28px;
-        font-size: 12px;
-        padding: 4px 6px;
+        height:34px; padding:6px 12px;
+        font-size:13px; font-weight:500;
+        background:rgba(11,17,32,0.7);
+        border:1px solid rgba(148,163,184,0.22);
+        border-radius:7px; color:#e5e7eb;
+        transition: border-color 140ms ease, background 140ms ease;
       }
+      .surface-table-row input[type="number"]:hover { border-color: rgba(148,163,184,0.4); }
+      .surface-table-row input[type="number"]:focus {
+        outline:none; border-color:#ec4899;
+        background:rgba(15,23,42,0.9);
+        box-shadow: 0 0 0 3px rgba(236,72,153,0.15);
+      }
+
       .surface-table-row .col-status {
-        font-size: 11px;
-        padding: 2px 6px;
-        border-radius: 4px;
-        background: rgba(125, 211, 252, 0.12);
-        color: #bae6fd;
-        text-align: center;
-        cursor: pointer;
-        border: 1px solid rgba(125, 211, 252, 0.35);
+        font-size:11px; font-weight:600; letter-spacing:0.05em;
+        padding:6px 12px; border-radius:6px;
+        background:rgba(56,189,248,0.10); color:#7dd3fc;
+        text-align:center; cursor:pointer;
+        border:1px solid rgba(56,189,248,0.30);
+        transition: all 140ms ease;
       }
+      .surface-table-row .col-status:hover {
+        background:rgba(56,189,248,0.18); border-color: rgba(56,189,248,0.5);
+      }
+
+      /* Footer */
+      .mpp-footer {
+        display:flex; align-items:center; justify-content:space-between;
+        gap:20px; padding:16px 28px;
+        border-top:1px solid rgba(148,163,184,0.12);
+        background:rgba(11,17,32,0.6);
+      }
+      .mpp-footer-actions { display:flex; align-items:center; gap:12px; }
+      .mpp-status { font-size:12px; color:#94a3b8; letter-spacing:0.02em; min-height:18px; }
     </style>
   `;
 }
 
-export function initializeMeshPreviewPopup() {
-  initializeWindowControls();
+export function initializeMeshPreviewPopup(options = {}) {
+  const { embedded = false } = options;
+  if (!embedded) {
+    initializeWindowControls();
+  }
 
   const canvasContainer = document.getElementById('preview-canvas-container');
   const loadingEl = document.getElementById('preview-loading');
@@ -254,13 +387,24 @@ export function initializeMeshPreviewPopup() {
     surfaceMeshes.forEach((_, index) => refreshSurfaceVisual(index));
   }
 
+  // Extract the default mesh / curve sizes coming from the main panel while
+  // preserving 0 as a valid value (e.g. "no curvature refinement").
+  function resolvePreviewDefaults() {
+    const dMesh = Number(previewData?.defaultMeshSize);
+    const defaultMeshSize = Number.isFinite(dMesh) ? dMesh : 50;
+    const dCurve = Number(previewData?.defaultCurveMeshSize);
+    const defaultCurveMeshSize = Number.isFinite(dCurve) ? dCurve : defaultMeshSize;
+    return { defaultMeshSize, defaultCurveMeshSize };
+  }
+
   function createInitialGroups(surfaces) {
+    const { defaultMeshSize, defaultCurveMeshSize } = resolvePreviewDefaults();
     return surfaces.map(surface => ({
       id: nextGroupId++,
       name: '',
       isInterface: false,
-      meshSize: Number(previewData.defaultMeshSize) || 50,
-      curveMeshSize: Number(previewData.defaultCurveMeshSize) || Number(previewData.defaultMeshSize) || 50,
+      meshSize: defaultMeshSize,
+      curveMeshSize: defaultCurveMeshSize,
       surfaceTags: [surface.tag],
     }));
   }
@@ -272,8 +416,7 @@ export function initializeMeshPreviewPopup() {
       curveMeshSize: surface.curveMeshSize,
     }]));
 
-    const defaultMeshSize = Number(previewData.defaultMeshSize) || 50;
-    const defaultCurveMeshSize = Number(previewData.defaultCurveMeshSize) || defaultMeshSize;
+    const { defaultMeshSize, defaultCurveMeshSize } = resolvePreviewDefaults();
 
     groups = createInitialGroups(surfaces);
     surfaceMeshes = surfaces.map((surface, index) => {
@@ -328,8 +471,8 @@ export function initializeMeshPreviewPopup() {
       row.dataset.surfaceIndex = String(index);
 
       const colorHex = '#' + getSurfaceBaseColor(index).toString(16).padStart(6, '0');
-      const meshSize = String(surface.meshSize || 50);
-      const curveSize = String(surface.curveMeshSize || 50);
+      const meshSize = String(Number.isFinite(Number(surface.meshSize)) ? Number(surface.meshSize) : 50);
+      const curveSize = String(Number.isFinite(Number(surface.curveMeshSize)) ? Number(surface.curveMeshSize) : 50);
       const mergedLabel = surface.mergeAtSymmetry ? 'Yes' : 'No';
 
       row.innerHTML = `
@@ -368,8 +511,7 @@ export function initializeMeshPreviewPopup() {
   }
 
   function buildPhysicalConfig() {
-    const defaultMeshSize = Number(previewData.defaultMeshSize) || 50;
-    const defaultCurveMeshSize = Number(previewData.defaultCurveMeshSize) || defaultMeshSize;
+    const { defaultMeshSize, defaultCurveMeshSize } = resolvePreviewDefaults();
 
     return {
       gmshPath: previewData.gmshPath,
@@ -393,7 +535,7 @@ export function initializeMeshPreviewPopup() {
           const values = group.surfaceTags
             .map(tag => getSurfaceByTag(tag)?.curveMeshSize)
             .map(Number)
-            .filter(value => Number.isFinite(value) && value > 0);
+            .filter(value => Number.isFinite(value));
           return values.length > 0 ? Math.min(...values) : defaultCurveMeshSize;
         })(),
         shellIndices: group.surfaceTags
@@ -613,7 +755,7 @@ export function initializeMeshPreviewPopup() {
       const surface = surfaceMeshes[surfaceIndex];
       if (!surface) return;
       const value = Number(target.value);
-      if (Number.isFinite(value) && value > 0) {
+      if (Number.isFinite(value) && value >= 0) {
         surface.curveMeshSize = value;
         markPreviewDirty();
       }
@@ -671,8 +813,22 @@ export function initializeMeshPreviewPopup() {
     }
   });
 
+  function setMirrorPanelVisible(visible) {
+    if (visible) {
+      mirrorOptionsPanel.style.display = 'flex';
+      mirrorOptionsPanel.classList.remove('hidden');
+      mirrorOptionsBtn.setAttribute('aria-pressed', 'true');
+    } else {
+      mirrorOptionsPanel.style.display = 'none';
+      mirrorOptionsPanel.classList.add('hidden');
+      mirrorOptionsBtn.setAttribute('aria-pressed', 'false');
+    }
+  }
+
   mirrorOptionsBtn.addEventListener('click', () => {
-    mirrorOptionsPanel.classList.toggle('hidden');
+    const isHidden = mirrorOptionsPanel.classList.contains('hidden')
+      || mirrorOptionsPanel.style.display === 'none';
+    setMirrorPanelVisible(isHidden);
   });
 
   previewSymmetryMirrorSelect.addEventListener('change', () => {
@@ -697,11 +853,10 @@ export function initializeMeshPreviewPopup() {
     selectedSurfaceIndex = -1;
     mirrorAxis = 'none';
     previewSymmetryMirrorSelect.value = 'none';
-    mirrorOptionsPanel.classList.add('hidden');
+    setMirrorPanelVisible(false);
 
     // Rebuild from original STEP source with default parameters
-    const defaultMeshSize = Number(previewData.defaultMeshSize) || 50;
-    const defaultCurveMeshSize = Number(previewData.defaultCurveMeshSize) || defaultMeshSize;
+    const { defaultMeshSize, defaultCurveMeshSize } = resolvePreviewDefaults();
 
     const result = await window.electronAPI.remeshPreview({
       mshPath: previewData.mshPath,
@@ -828,7 +983,7 @@ export function initializeMeshPreviewPopup() {
     mirrorAxis = saved.mirrorAxis || 'none';
     previewSymmetryMirrorSelect.value = mirrorAxis;
     if (mirrorAxis !== 'none') {
-      mirrorOptionsPanel.classList.remove('hidden');
+      setMirrorPanelVisible(true);
     }
 
     if (Array.isArray(saved.surfaceParams)) {
@@ -874,8 +1029,11 @@ export function initializeMeshPreviewPopup() {
   }
 
   async function reloadWithNewData(data) {
-    // Save nothing — we start from the new STEP build but keep old params
-    const savedState = collectState();
+    // A fresh "Mesh Preview" from the main panel: keep only the mirror axis
+    // from the previous session and adopt the new mesh/curve defaults coming
+    // from the panel. Per-surface edits are intentionally discarded so that
+    // changes made in the main window actually take effect here.
+    const prevMirrorAxis = mirrorAxis;
     previewData = data;
     currentPreviewMshPath = data.mshPath;
 
@@ -888,10 +1046,13 @@ export function initializeMeshPreviewPopup() {
       return;
     }
 
-    applyRestoredState(savedState);
-    markPreviewDirty();
-    exportStatus.textContent = 'Reloaded with new source. Remesh to apply.';
-    exportStatus.style.color = '#38bdf8';
+    mirrorAxis = prevMirrorAxis || data.axis || 'none';
+    previewSymmetryMirrorSelect.value = mirrorAxis;
+    setMirrorPanelVisible(mirrorAxis !== 'none');
+    syncMirrorInterfacesFromSurface();
+    renderSurfaceTable();
+
+    markPreviewClean('Preview reloaded with new parameters.');
   }
 
   window.electronAPI.onReloadPreview((data) => {

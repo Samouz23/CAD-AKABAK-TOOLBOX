@@ -46,18 +46,38 @@ function blockLettersInAllInputs(rootElement) {
 
 export function initEventListeners(rootElement, dom, callbacks) {
     rootElement.querySelectorAll('input, select').forEach(el => {
-        if (!['wg-show-points', 'wg-show-surface'].includes(el.id)) el.addEventListener('input', callbacks.handleGenericInputChange);
+        if (el.closest('#directivity-root')) return;
+        if (!['wg-show-points', 'wg-show-mesh', 'wg-show-surface'].includes(el.id)) el.addEventListener('input', callbacks.handleGenericInputChange);
     });
     dom.wgShowPoints.addEventListener('input', callbacks.updateVisibility);
+    dom.wgShowMesh.addEventListener('input', callbacks.updateVisibility);
     dom.wgShowSurface.addEventListener('input', callbacks.updateVisibility);
     dom.wgResetBtn.addEventListener('click', callbacks.resetToDefaults);
     dom.wgExportBtn.addEventListener('click', () => { if (!dom.wgExportBtn.disabled) dom.wgExportModalOverlay.classList.remove('hidden'); });
     dom.wgExportModalCloseBtn.addEventListener('click', callbacks.closeExportModal);
     dom.wgExportModalOverlay.addEventListener('click', (e) => { if (e.target === dom.wgExportModalOverlay) callbacks.closeExportModal(); });
     dom.wgExportStlModalBtn.addEventListener('click', async () => { await callbacks.exportSTL(); setTimeout(callbacks.closeExportModal, 500); });
+    if (dom.wgExportSolverModalBtn) {
+        dom.wgExportSolverModalBtn.addEventListener('click', async () => {
+            const ok = await callbacks.exportToSolver();
+            if (ok) setTimeout(callbacks.closeExportModal, 400);
+        });
+    }
     dom.wgExportCsvFullModalBtn.addEventListener('click', async () => { await callbacks.exportCSV(); setTimeout(callbacks.closeExportModal, 500); });
     dom.wgExportCsvProfileModalBtn.addEventListener('click', async () => { await callbacks.exportProfileCSV(); setTimeout(callbacks.closeExportModal, 500); });
-    dom.wgExportMshModalBtn.addEventListener('click', async () => { await callbacks.exportMSH(); setTimeout(callbacks.closeExportModal, 500); });
+    dom.wgExportDxfModalBtn.addEventListener('click', async () => { await callbacks.exportDXF(); });
+    dom.wgCsvToggleBtn.addEventListener('click', () => {
+        const panel = dom.wgCsvSubPanel;
+        const arrow = dom.wgCsvToggleBtn.querySelector('svg');
+        panel.classList.toggle('hidden');
+        if (arrow) arrow.style.transform = panel.classList.contains('hidden') ? '' : 'rotate(180deg)';
+    });
+    dom.wgExportOnshapeModalBtn.addEventListener('click', async () => { await callbacks.exportOnshapeCSV(); setTimeout(callbacks.closeExportModal, 500); });
+    dom.wgExportStepModalBtn.addEventListener('click', async () => { const ok = await callbacks.exportSTEP(); if (ok) setTimeout(callbacks.closeExportModal, 500); });
+    dom.wgExportMshModalBtn.addEventListener('click', async () => {
+        const ok = await callbacks.exportMSHDelaunay();
+        if (ok) setTimeout(callbacks.closeExportModal, 500);
+    });
     
     rootElement.querySelectorAll('.control-label-toggle').forEach(header => {
         header.addEventListener('click', () => {
@@ -77,6 +97,7 @@ export function initEventListeners(rootElement, dom, callbacks) {
 
 export function addWheelListenersToInputs(rootElement) {
     const sortedConfigKeys = Object.keys(inputConfigs).sort((a, b) => b.length - a.length);
+
     const clamp = (v, min, max) => Math.max(min, Math.min(v, max));
 
     rootElement.querySelectorAll('input[type="text"]').forEach(input => {
@@ -88,44 +109,35 @@ export function addWheelListenersToInputs(rootElement) {
             const currentValue = parseFloat(input.value);
             if (isNaN(currentValue)) return;
             
-            let step = (input.id === 'wg-lines') ? 4 : (config?.step || 1);
+            let step = config?.step || 1;
             if (e.shiftKey) step = config?.shiftStep || step * 10;
             if (e.altKey) step /= 10;
             
             let newValue = currentValue + (e.deltaY < 0 ? 1 : -1) * step;
             if (config?.min !== undefined) newValue = clamp(newValue, config.min, config.max);
-            if (input.id === 'wg-lines') newValue = Math.max(4, Math.round(newValue / 4) * 4);
+
             
             const precision = (config && String(config.step).includes('.')) ? String(config.step).split('.')[1].length : 0;
             input.value = newValue.toFixed(precision);
             input.dispatchEvent(new Event('input', { bubbles: true }));
         });
 
-        // --- GESTION DE LA VALIDATION EN TEMPS RÉEL (INPUT) ---
-        input.addEventListener('input', () => {
-             const configKey = sortedConfigKeys.find(k => input.id.startsWith(k));
-             if (configKey) {
-                const config = inputConfigs[configKey], value = parseFloat(input.value);
-                if (!isNaN(value)) {
-                    const clamped = clamp(value, config.min, config.max);
-                    if (clamped !== value) input.value = clamped;
-                }
-             }
-        });
-
-        // --- NOUVEAU : GESTION DE LA CORRECTION FINALE (CHANGE) ---
-        if (input.id === 'wg-lines') {
-            input.addEventListener('change', () => {
-                const value = parseInt(input.value);
-                if (!isNaN(value)) {
-                    const correctedValue = Math.max(4, Math.round(value / 4) * 4);
-                    if (correctedValue !== value) {
-                        input.value = correctedValue;
-                        input.dispatchEvent(new Event('input', { bubbles: true }));
-                    }
-                }
-            });
-        }
+        // --- VALIDATION DIFFÉRÉE : on n'écrase la saisie qu'à la fin (blur/change),
+        // jamais pendant la frappe — sinon taper "200" depuis "10" est impossible
+        // car "2" est en-dessous du min et serait re-clampé immédiatement.
+        const clampNow = () => {
+            const configKey = sortedConfigKeys.find(k => input.id.startsWith(k));
+            if (!configKey) return;
+            const config = inputConfigs[configKey], value = parseFloat(input.value);
+            if (isNaN(value)) return;
+            const clamped = clamp(value, config.min, config.max);
+            if (clamped !== value) {
+                input.value = clamped;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        };
+        input.addEventListener('change', clampNow);
+        input.addEventListener('blur',   clampNow);
     });
 
     rootElement.querySelectorAll('select').forEach(select => {
@@ -223,7 +235,6 @@ export function update2DChart(state, dom) {
 
 export function applyImportedParams(params, dom, updateUI, generateAndRenderWaveguide) {
     if (!params) return;
-    dom.wgSegmentCount.value = '1';
     
     if (params['os-se-param-k']) {
         const lawEl = dom.root.querySelector('#wg-expansion-law-1');
@@ -268,22 +279,9 @@ export function applyImportedParams(params, dom, updateUI, generateAndRenderWave
                         if (tEl) tEl.value = params['T'];
                     }
                     break;
-                case 'Exponential':
-                case 'Parabolic':
-                    if (params['fc']) {
-                        const fcEl = dom.root.querySelector(`#wg-${law.toLowerCase()}-fc-1`);
-                        if (fcEl) fcEl.value = params['fc'];
-                    }
-                    break;
                 case 'OS':
                     if (params['theta']) {
                         const thetaEl = dom.root.querySelector('#wg-os-theta-1');
-                        if (thetaEl) thetaEl.value = params['theta'];
-                    }
-                    break;
-                case 'Conical':
-                    if (params['theta']) {
-                        const thetaEl = dom.root.querySelector('#wg-conical-theta-1');
                         if (thetaEl) thetaEl.value = params['theta'];
                     }
                     break;

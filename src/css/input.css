@@ -6,22 +6,6 @@
 @tailwind utilities;
 
 /* =========================
-   OVERLAY SCANLINES
-   - Actif par défaut (comme avant).
-   - Désactivable via .no-scanlines sur <body>.
-   ========================= */
-body::after{
-  content:'';
-  position:fixed; inset:0;
-  pointer-events:none;
-  z-index:9999;
-  background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,.28) 50%);
-  background-size:100% 4px;
-  opacity:1;
-}
-body.no-scanlines::after{ display:none; }
-
-/* =========================
    COMPONENTS — STYLES APP
    ========================= */
 @layer components {
@@ -40,6 +24,19 @@ body.no-scanlines::after{ display:none; }
   .panel:hover{ transform: translateZ(0) scale(1.02); }
   body.reduced-motion .panel,
   body.reduced-motion .panel:hover{ transition:none; transform:none; }
+}
+
+/* Kill every transition/animation app-wide (loading spinners excepted) */
+body.reduced-motion *:not(.animate-spin),
+body.reduced-motion *:not(.animate-spin)::before,
+body.reduced-motion *:not(.animate-spin)::after {
+  transition-duration: 0.001ms !important;
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+}
+
+@layer components {
 
   /* ---- INPUTS ---- */
   .form-input{
@@ -254,32 +251,45 @@ body.no-scanlines::after{ display:none; }
    Valeurs par défaut = thème actuel (rose/gray) défini plus haut.
    ========================================================= */
 
-/* Helper : si tu actives "solid skin" depuis les settings */
+/* Helper : si tu actives "solid skin" depuis les settings — remplace le dégradé par un aplat de couleur */
 body.btn-skin-solid .btn,
 body.btn-skin-solid .action-btn,
 body.btn-skin-solid #exportBtn,
 body.btn-skin-solid .export-btn,
-body.btn-skin-solid .btn-export,
-body.btn-skin-solid #clearBtn, 
-body.btn-skin-solid .clear-btn, 
-body.btn-skin-solid .btn-clear,
-body.btn-skin-solid #resetBtn, 
-body.btn-skin-solid .reset-btn, 
-body.btn-skin-solid .btn-reset {
-  background-color: rgba(255,255,255,0.03) !important;
+body.btn-skin-solid .btn-export {
+  background: color-mix(in srgb, var(--btn-primary-border) 55%, #000000) !important;
+  background-image: none !important;
 }
 body.btn-skin-solid .btn:hover,
 body.btn-skin-solid .action-btn:hover,
 body.btn-skin-solid #exportBtn:hover,
 body.btn-skin-solid .export-btn:hover,
-body.btn-skin-solid .btn-export:hover,
-body.btn-skin-solid #clearBtn:hover, 
-body.btn-skin-solid .clear-btn:hover, 
-body.btn-skin-solid .btn-clear:hover,
-body.btn-skin-solid #resetBtn:hover, 
-body.btn-skin-solid .reset-btn:hover, 
+body.btn-skin-solid .btn-export:hover {
+  background: color-mix(in srgb, var(--btn-primary-border) 75%, #000000) !important;
+}
+
+body.btn-skin-solid #clearBtn,
+body.btn-skin-solid .clear-btn,
+body.btn-skin-solid .btn-clear {
+  background: color-mix(in srgb, var(--accent-500) 55%, #000000) !important;
+  background-image: none !important;
+}
+body.btn-skin-solid #clearBtn:hover,
+body.btn-skin-solid .clear-btn:hover,
+body.btn-skin-solid .btn-clear:hover {
+  background: color-mix(in srgb, var(--accent-500) 75%, #000000) !important;
+}
+
+body.btn-skin-solid #resetBtn,
+body.btn-skin-solid .reset-btn,
+body.btn-skin-solid .btn-reset {
+  background: color-mix(in srgb, var(--btn-danger-border) 55%, #000000) !important;
+  background-image: none !important;
+}
+body.btn-skin-solid #resetBtn:hover,
+body.btn-skin-solid .reset-btn:hover,
 body.btn-skin-solid .btn-reset:hover {
-  background-color: rgba(255,255,255,0.06) !important;
+  background: color-mix(in srgb, var(--btn-danger-border) 75%, #000000) !important;
 }
 
 /* ---------- THEME: DARK BLUE ---------- */

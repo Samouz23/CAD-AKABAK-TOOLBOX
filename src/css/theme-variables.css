@@ -213,68 +213,68 @@ body.theme-dark-blue {
   --chart-axis: #94a3b8;
 }
 
-/* =========== THÈME EMBER (Rouge/Orange Pro) =========== */
+/* =========== THÈME COPPER (Cuivre/Charbon Pro) =========== */
 body.theme-amber-matrix {
   --bg-app: #000000;
-  --bg-elevated: #190a05;
-  --bg-panel-dark: #2e1409;
-  --bg-panel-medium: #3d1e0e;
-  --bg-panel-light: #4c2813;
+  --bg-elevated: #110c08;
+  --bg-panel-dark: #1b120c;
+  --bg-panel-medium: #251910;
+  --bg-panel-light: #302117;
   
-  --border-primary: #ef4444;
-  --border-secondary: #f97316;
-  --border-tertiary: #dc2626;
+  --border-primary: #c2410c;
+  --border-secondary: #f59e0b;
+  --border-tertiary: #9a3412;
   --border-hover: #fb923c;
-  --border-subtle: rgba(239, 68, 68, 0.3);
+  --border-subtle: rgba(194, 65, 12, 0.35);
   
   /* Icônes */
-  --icon-primary: #fed7aa;
+  --icon-primary: #fdba74;
   --icon-hover: #fbbf24;
-  --icon-filter-primary: brightness(0) saturate(100%) invert(90%) sepia(19%) saturate(766%) hue-rotate(327deg) brightness(103%) contrast(98%);
+  --icon-filter-primary: brightness(0) saturate(100%) invert(78%) sepia(57%) saturate(675%) hue-rotate(333deg) brightness(102%) contrast(98%);
   --icon-filter-hover: brightness(0) saturate(100%) invert(77%) sepia(72%) saturate(452%) hue-rotate(358deg) brightness(103%) contrast(97%);
   
   --text-title: #ffffff;
-  --text-subtitle: #fef2f2;
-  --text-heading: #fb923c;
+  --text-subtitle: #ffedd5;
+  --text-heading: #fdba74;
   --text-body: #fed7aa;
   --text-muted: #d1d5db;
-  --text-accent: #ef4444;
+  --text-accent: #fb923c;
   --text-link: #fdba74;
   
-  --btn-primary-bg: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  --btn-primary-bg-hover: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-  --btn-primary-border: #ef4444;
+  --btn-primary-bg: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+  --btn-primary-bg-hover: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  --btn-primary-border: #c2410c;
   --btn-primary-text: #ffffff;
-  --btn-primary-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  --btn-primary-shadow: 0 4px 12px rgba(194, 65, 12, 0.3);
   
-  --btn-secondary-bg: rgba(239, 68, 68, 0.08);
-  --btn-secondary-bg-hover: rgba(239, 68, 68, 0.15);
-  --btn-secondary-border: rgba(239, 68, 68, 0.3);
-  --btn-secondary-text: #fca5a5;
+  --btn-secondary-bg: rgba(245, 158, 11, 0.08);
+  --btn-secondary-bg-hover: rgba(245, 158, 11, 0.15);
+  --btn-secondary-border: rgba(245, 158, 11, 0.35);
+  --btn-secondary-text: #fdba74;
   
   --btn-ghost-bg: transparent;
-  --btn-ghost-bg-hover: rgba(239, 68, 68, 0.08);
+  --btn-ghost-bg-hover: rgba(245, 158, 11, 0.08);
   --btn-ghost-border: rgba(161, 161, 170, 0.4);
   --btn-ghost-text: #d1d5db;
   
-  --btn-danger-bg: rgba(249, 115, 22, 0.08);
-  --btn-danger-bg-hover: rgba(249, 115, 22, 0.15);
-  --btn-danger-border: #f97316;
+  --btn-danger-bg: rgba(220, 38, 38, 0.08);
+  --btn-danger-bg-hover: rgba(220, 38, 38, 0.15);
+  --btn-danger-border: #dc2626;
   --btn-danger-text: #fdba74;
   
-  --bg-panel: #2e1409;
-  --bg-panel-solid: #190a05;
-  --bg-control-group: #281409;
-  --bg-input: #190a05;
-  --bg-input-focus: #381814;
-  --bg-hover: rgba(239, 68, 68, 0.15);
-  --bg-active: rgba(239, 68, 68, 0.25);
+  --bg-panel: #1b120c;
+  --bg-panel-solid: #110c08;
+  --bg-control-group: #21150e;
+  --bg-input: #110c08;
+  --bg-input-focus: #2b1a10;
+  --bg-hover: rgba(245, 158, 11, 0.15);
+  --bg-active: rgba(194, 65, 12, 0.25);
   
-  --card-bg: #2e1409;
-  --card-bg-elevated: #3d1e0e;
-  --card-border: rgba(239, 68, 68, 0.5);
-  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 40px rgba(239, 68, 68, 0.15);
-  --card-hover-shadow: 0 12px 32px rgba(239, 68, 68, 0.4), 0 0 60px rgba(239, 68, 68, 0.2);
+  --card-bg: #1b120c;
+  --card-bg-elevated: #251910;
+  --card-border: rgba(194, 65, 12, 0.5);
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 40px rgba(194, 65, 12, 0.15);
+  --card-hover-shadow: 0 12px 32px rgba(194, 65, 12, 0.35), 0 0 60px rgba(245, 158, 11, 0.15);
   
   --state-success: #10b981;
   --state-warning: #f59e0b;
@@ -282,11 +282,11 @@ body.theme-amber-matrix {
   --state-info: #3b82f6;
   
   /* Graphiques - Variables dynamiques */
-  --chart-primary: #ef4444;
-  --chart-primary-glow: rgba(239, 68, 68, 0.2);
-  --chart-secondary: #f97316;
-  --chart-bg: #1a0f0a;
-  --chart-grid: rgba(239, 68, 68, 0.15);
+  --chart-primary: #ea580c;
+  --chart-primary-glow: rgba(234, 88, 12, 0.2);
+  --chart-secondary: #f59e0b;
+  --chart-bg: #17100b;
+  --chart-grid: rgba(234, 88, 12, 0.15);
   --chart-text: #fdba74;
   --chart-axis: #a8a29e;
 }
@@ -295,6 +295,9 @@ body.theme-amber-matrix {
 body.theme-high-contrast {
   --bg-app: #000000;
   --bg-elevated: #000000;
+  --bg-panel-dark: #000000;
+  --bg-panel-medium: #000000;
+  --bg-panel-light: #000000;
   
   --border-primary: #ffffff;
   --border-secondary: #d4d4d8;
@@ -318,7 +321,7 @@ body.theme-high-contrast {
   --btn-primary-bg: linear-gradient(135deg, #ffffff 0%, #f4f4f5 100%);
   --btn-primary-bg-hover: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
   --btn-primary-border: #ffffff;
-  --btn-primary-text: #ffffff;
+  --btn-primary-text: #111827;
   --btn-primary-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
   
   --btn-secondary-bg: rgba(255, 255, 255, 0.08);
@@ -364,80 +367,80 @@ body.theme-high-contrast {
   --chart-axis: #e5e7eb;
 }
 
-/* =========== THÈME MATRIX (Vert Classique) =========== */
+/* =========== THÈME FOREST (Forêt/Teal Pro) =========== */
 body.theme-arcade-purple {
   --bg-app: #000000;
-  --bg-elevated: #051409;
-  --bg-panel-dark: #0a1f0a;
-  --bg-panel-medium: #0f2a0f;
-  --bg-panel-light: #143514;
+  --bg-elevated: #061411;
+  --bg-panel-dark: #0a201b;
+  --bg-panel-medium: #0e2b24;
+  --bg-panel-light: #12382e;
   
-  --border-primary: #00ff41;
-  --border-secondary: #39ff14;
-  --border-tertiary: #00cc33;
-  --border-hover: #6bff6b;
-  --border-subtle: rgba(0, 255, 65, 0.3);
+  --border-primary: #0f766e;
+  --border-secondary: #2dd4bf;
+  --border-tertiary: #115e59;
+  --border-hover: #5eead4;
+  --border-subtle: rgba(45, 212, 191, 0.3);
   
   /* Icônes */
-  --icon-primary: #39ff14;
-  --icon-hover: #00ff41;
-  --icon-filter-primary: brightness(0) saturate(100%) invert(88%) sepia(58%) saturate(2395%) hue-rotate(45deg) brightness(104%) contrast(101%);
-  --icon-filter-hover: brightness(0) saturate(100%) invert(85%) sepia(100%) saturate(2000%) hue-rotate(60deg) brightness(105%) contrast(105%);
+  --icon-primary: #5eead4;
+  --icon-hover: #99f6e4;
+  --icon-filter-primary: brightness(0) saturate(100%) invert(86%) sepia(24%) saturate(1126%) hue-rotate(124deg) brightness(96%) contrast(91%);
+  --icon-filter-hover: brightness(0) saturate(100%) invert(91%) sepia(16%) saturate(1190%) hue-rotate(121deg) brightness(103%) contrast(98%);
   
   --text-title: #ffffff;
-  --text-subtitle: #d4ffd4;
-  --text-heading: #39ff14;
-  --text-body: #9fff9f;
-  --text-muted: #5fb55f;
-  --text-accent: #00ff41;
-  --text-link: #6bff6b;
+  --text-subtitle: #ccfbf1;
+  --text-heading: #5eead4;
+  --text-body: #ccfbf1;
+  --text-muted: #99c8c0;
+  --text-accent: #2dd4bf;
+  --text-link: #5eead4;
   
-  --btn-primary-bg: linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
-  --btn-primary-bg-hover: linear-gradient(135deg, #39ff14 0%, #00ff41 100%);
-  --btn-primary-border: #00ff41;
+  --btn-primary-bg: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  --btn-primary-bg-hover: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+  --btn-primary-border: #0f766e;
   --btn-primary-text: #ffffff;
-  --btn-primary-shadow: 0 4px 12px rgba(0, 255, 65, 0.4);
+  --btn-primary-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
   
-  --btn-secondary-bg: rgba(0, 255, 65, 0.08);
-  --btn-secondary-bg-hover: rgba(0, 255, 65, 0.15);
-  --btn-secondary-border: rgba(0, 255, 65, 0.3);
-  --btn-secondary-text: #39ff14;
+  --btn-secondary-bg: rgba(45, 212, 191, 0.08);
+  --btn-secondary-bg-hover: rgba(45, 212, 191, 0.15);
+  --btn-secondary-border: rgba(45, 212, 191, 0.3);
+  --btn-secondary-text: #99f6e4;
   
   --btn-ghost-bg: transparent;
-  --btn-ghost-bg-hover: rgba(0, 255, 65, 0.08);
-  --btn-ghost-border: rgba(95, 181, 95, 0.4);
-  --btn-ghost-text: #9fff9f;
+  --btn-ghost-bg-hover: rgba(45, 212, 191, 0.08);
+  --btn-ghost-border: rgba(94, 234, 212, 0.35);
+  --btn-ghost-text: #ccfbf1;
   
-  --btn-danger-bg: rgba(255, 65, 65, 0.08);
-  --btn-danger-bg-hover: rgba(255, 65, 65, 0.15);
-  --btn-danger-border: #ff4141;
-  --btn-danger-text: #ffb3b3;
+  --btn-danger-bg: rgba(248, 113, 113, 0.08);
+  --btn-danger-bg-hover: rgba(248, 113, 113, 0.15);
+  --btn-danger-border: #f87171;
+  --btn-danger-text: #fecaca;
   
-  --bg-panel: #0a1f0a;
-  --bg-panel-solid: #051409;
-  --bg-control-group: #0a1a0a;
-  --bg-input: #051409;
-  --bg-input-focus: #0a2814;
-  --bg-hover: rgba(0, 255, 65, 0.15);
-  --bg-active: rgba(0, 255, 65, 0.25);
+  --bg-panel: #0a201b;
+  --bg-panel-solid: #061411;
+  --bg-control-group: #091c18;
+  --bg-input: #061411;
+  --bg-input-focus: #0d2b24;
+  --bg-hover: rgba(45, 212, 191, 0.15);
+  --bg-active: rgba(15, 118, 110, 0.25);
   
-  --card-bg: #0a1f0a;
-  --card-bg-elevated: #0f2a0f;
-  --card-border: rgba(0, 255, 65, 0.5);
-  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 255, 65, 0.15);
-  --card-hover-shadow: 0 12px 32px rgba(0, 255, 65, 0.4), 0 0 60px rgba(0, 255, 65, 0.2);
+  --card-bg: #0a201b;
+  --card-bg-elevated: #0e2b24;
+  --card-border: rgba(15, 118, 110, 0.5);
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 40px rgba(15, 118, 110, 0.15);
+  --card-hover-shadow: 0 12px 32px rgba(15, 118, 110, 0.35), 0 0 60px rgba(45, 212, 191, 0.15);
   
-  --state-success: #00ff41;
-  --state-warning: #ffff00;
-  --state-error: #ff4141;
-  --state-info: #00ffff;
+  --state-success: #34d399;
+  --state-warning: #fbbf24;
+  --state-error: #f87171;
+  --state-info: #22d3ee;
   
   /* Graphiques - Variables dynamiques */
-  --chart-primary: #00ff41;
-  --chart-primary-glow: rgba(0, 255, 65, 0.3);
-  --chart-secondary: #39ff14;
-  --chart-bg: #0a1a0a;
-  --chart-grid: rgba(0, 255, 65, 0.2);
-  --chart-text: #9fff9f;
-  --chart-axis: #5fb55f;
+  --chart-primary: #14b8a6;
+  --chart-primary-glow: rgba(20, 184, 166, 0.25);
+  --chart-secondary: #5eead4;
+  --chart-bg: #091c18;
+  --chart-grid: rgba(45, 212, 191, 0.18);
+  --chart-text: #99f6e4;
+  --chart-axis: #76a9a1;
 }

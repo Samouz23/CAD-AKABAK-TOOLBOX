@@ -25,8 +25,20 @@ module.exports.registerFileSystemHandlers = () => {
         return path.join(dbDir, 'waveguidePresets.json');
     }
 
+    function getHornPresetsPath() {
+        const dbDir = path.join(__dirname, '../js/panels/hornstudio/database');
+        if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+        return path.join(dbDir, 'hornPresets.json');
+    }
+
     function getBundledDbPath() {
         return path.join(__dirname, '../js/panels/driver_db/database/driverDB.json');
+    }
+
+    function getCrossoverPresetsPath() {
+        const dbDir = path.join(__dirname, '../js/panels/physics/database');
+        if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+        return path.join(dbDir, 'crossoverPresets.json');
     }
 
     function ensureUserDbInitialized() {
@@ -74,6 +86,16 @@ module.exports.registerFileSystemHandlers = () => {
         }
     });
 
+    ipcMain.handle('fs:list-directory', async (event, dirPath) => {
+        try {
+            await fs.promises.mkdir(dirPath, { recursive: true });
+            const entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
+            return { success: true, entries: entries.map(e => ({ name: e.name, isDirectory: e.isDirectory() })) };
+        } catch (error) {
+            return { success: true, entries: [] };
+        }
+    });
+
     ipcMain.handle('save-file-in-directory', async (event, { directory, fileName, content }) => {
         if (!directory || !fileName || content === undefined) {
             return { success: false, error: 'Arguments manquants.' };
@@ -115,6 +137,21 @@ module.exports.registerFileSystemHandlers = () => {
         };
         const { canceled, filePaths } = await dialog.showOpenDialog(dialogOptions);
         return canceled ? null : filePaths[0];
+    });
+
+    ipcMain.handle('dialog:save-file', async (event, { defaultPath, filters, content } = {}) => {
+        try {
+            const { canceled, filePath } = await dialog.showSaveDialog({
+                defaultPath,
+                filters: filters || [{ name: 'Tous les fichiers', extensions: ['*'] }]
+            });
+            if (canceled || !filePath) return { success: false, canceled: true };
+            fs.mkdirSync(path.dirname(filePath), { recursive: true });
+            fs.writeFileSync(filePath, content ?? '', 'utf8');
+            return { success: true, filePath };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
     });
 
     ipcMain.handle('dialog:select-directory', async () => {
@@ -244,6 +281,92 @@ module.exports.registerFileSystemHandlers = () => {
     ipcMain.handle('waveguide-presets:delete', (event, presetName) => {
         try {
             const presetsPath = getWaveguidePresetsPath();
+            if (!fs.existsSync(presetsPath)) return { success: false, error: 'No presets file' };
+            let presets = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+            const filtered = presets.filter(p => p.name !== presetName);
+            if (filtered.length === presets.length) return { success: false, error: 'Preset not found' };
+            fs.writeFileSync(presetsPath, JSON.stringify(filtered, null, 2), 'utf8');
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
+
+    // --- Horn Studio Presets ---
+    ipcMain.handle('horn-presets:get-all', () => {
+        const presetsPath = getHornPresetsPath();
+        if (!fs.existsSync(presetsPath)) return [];
+        try {
+            return JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+        } catch { return []; }
+    });
+
+    ipcMain.handle('horn-presets:save', (event, preset) => {
+        try {
+            const presetsPath = getHornPresetsPath();
+            let presets = [];
+            if (fs.existsSync(presetsPath)) {
+                presets = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+            }
+            const existingIndex = presets.findIndex(p => p.name === preset.name);
+            if (existingIndex >= 0) {
+                presets[existingIndex] = preset;
+            } else {
+                presets.push(preset);
+            }
+            fs.writeFileSync(presetsPath, JSON.stringify(presets, null, 2), 'utf8');
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
+
+    ipcMain.handle('horn-presets:delete', (event, presetName) => {
+        try {
+            const presetsPath = getHornPresetsPath();
+            if (!fs.existsSync(presetsPath)) return { success: false, error: 'No presets file' };
+            let presets = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+            const filtered = presets.filter(p => p.name !== presetName);
+            if (filtered.length === presets.length) return { success: false, error: 'Preset not found' };
+            fs.writeFileSync(presetsPath, JSON.stringify(filtered, null, 2), 'utf8');
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
+
+    // --- Crossover Presets ---
+    ipcMain.handle('crossover-presets:get-all', () => {
+        const presetsPath = getCrossoverPresetsPath();
+        if (!fs.existsSync(presetsPath)) return [];
+        try {
+            return JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+        } catch { return []; }
+    });
+
+    ipcMain.handle('crossover-presets:save', (event, preset) => {
+        try {
+            const presetsPath = getCrossoverPresetsPath();
+            let presets = [];
+            if (fs.existsSync(presetsPath)) {
+                presets = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
+            }
+            const existingIndex = presets.findIndex(p => p.name === preset.name);
+            if (existingIndex >= 0) {
+                presets[existingIndex] = preset;
+            } else {
+                presets.push(preset);
+            }
+            fs.writeFileSync(presetsPath, JSON.stringify(presets, null, 2), 'utf8');
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
+
+    ipcMain.handle('crossover-presets:delete', (event, presetName) => {
+        try {
+            const presetsPath = getCrossoverPresetsPath();
             if (!fs.existsSync(presetsPath)) return { success: false, error: 'No presets file' };
             let presets = JSON.parse(fs.readFileSync(presetsPath, 'utf8'));
             const filtered = presets.filter(p => p.name !== presetName);

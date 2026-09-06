@@ -9,7 +9,6 @@ import { getBasicCalculatorsHtml, initializeBasicCalculators } from './basicCalc
 import { getSplCalculatorHtml, initializeSplCalculator } from './splCalculator.js';
 import { getCrossoverCalculatorHtml, initializeCrossoverCalculator } from './crossoverCalculator.js';
 import { getEnclosureCalculatorHtml, initializeEnclosureCalculator } from './enclosureCalculator.js';
-import { getHistoryHtml, initializeHistory, addToHistory } from './history.js';
 import { showBasicCalculatorSelector } from '../../popup/basics/basicCalculators.js';
 
 export function getPowerPanelHtml() {
@@ -18,7 +17,7 @@ export function getPowerPanelHtml() {
   return `
     <div class="p-6 text-green-400 h-full flex flex-col">
       <div class="flex justify-between items-center mb-6 flex-shrink-0">
-        <h1 class="text-4xl font-bold text-white">Physics</h1>
+        <h1 class="text-4xl font-bold text-white">Calculator</h1>
         <button id="pop-out-btn" data-tool="power" title="Open in a new window" class="btn btn--ghost p-2 ml-4">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -44,9 +43,6 @@ export function getPowerPanelHtml() {
           Enclosure
         </button>
         ` : ''}
-        <button class="physics-tab px-4 py-2 font-semibold transition-all border-b-2 border-transparent hover:border-pink-600" data-tab="history">
-          History
-        </button>
       </div>
 
       <!-- Tab Contents -->
@@ -65,9 +61,6 @@ export function getPowerPanelHtml() {
           ${getEnclosureCalculatorHtml()}
         </div>
         ` : ''}
-        <div id="tab-history" class="physics-tab-content hidden">
-          ${getHistoryHtml()}
-        </div>
       </div>
     </div>
   `;
@@ -109,8 +102,4 @@ export function initializePowerPanel() {
   if (isEnclosureCalculatorEnabled) {
     initializeEnclosureCalculator();
   }
-  initializeHistory();
-
-  // Export addToHistory for use by other calculators
-  window.physicsAddToHistory = addToHistory;
 }

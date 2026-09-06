@@ -44,11 +44,6 @@ export function getSplCalculatorHtml() {
                 <div class="text-sm mt-1" style="color: var(--text-muted);">dB SPL</div>
               </div>
             </div>
-
-            <button id="save-spl-calc" class="action-btn w-full mt-4 flex items-center justify-center space-x-2">
-              ${PhysicsIcons.save}
-              <span>Save to History</span>
-            </button>
           </div>
 
           <!-- Graph Section -->
@@ -247,15 +242,6 @@ export function initializeSplCalculator() {
         }
       }
     });
-  });
-
-  // Save to history
-  document.getElementById('save-spl-calc')?.addEventListener('click', () => {
-    const spl = resultDisplay.textContent;
-    const info = infoDisplay.textContent;
-    if (window.physicsAddToHistory) {
-      window.physicsAddToHistory('SPL Calculator', `${spl} dB - ${info}`);
-    }
   });
 
   // Initial calculation

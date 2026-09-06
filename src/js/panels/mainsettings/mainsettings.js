@@ -76,17 +76,8 @@ export function getSettingsPanelHtml() {
                 <select id="setting-ui-theme" class="form-input w-48">
                   <option value="default">(Default)</option>
                   <option value="theme-dark-blue">Blue</option>
-                  <option value="theme-amber-matrix">Fire</option>
                   <option value="theme-high-contrast">White</option>
-                  <option value="theme-arcade-purple">Green</option>
                 </select>
-              </div>
-              <div class="flex items-center justify-between">
-                <label for="setting-ui-scanlines">Scanlines overlay</label>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="setting-ui-scanlines" class="form-toggle">
-                  <div class="toggle-switch-bg"></div>
-                </label>
               </div>
               <div class="flex items-center justify-between">
                 <label for="setting-ui-reduced-motion">Reduce animations</label>
@@ -101,6 +92,17 @@ export function getSettingsPanelHtml() {
                   <option value="striped">Striped (default)</option>
                   <option value="solid">Solid</option>
                 </select>
+              </div>
+              <div class="space-y-3">
+                <h3 class="text-lg font-semibold text-white">Sidebar module order</h3>
+                <p class="text-xs text-gray-400">Select a module and move it up or down.</p>
+                <div class="flex items-center gap-3">
+                  <select id="setting-module-order" class="form-input flex-grow" size="8" style="height: 240px; min-height: 240px; line-height: 1.8;" aria-label="Module order"></select>
+                  <div class="flex flex-col gap-2">
+                    <button type="button" id="module-order-up" class="action-btn" title="Move up">Up</button>
+                    <button type="button" id="module-order-down" class="action-btn" title="Move down">Down</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -139,10 +141,23 @@ export function getSettingsPanelHtml() {
               <div class="p-4 pb-6 overflow-hidden">
                 <p class="text-xs text-gray-400 mb-3">Shortcuts for Horn Studio operations.</p>
                 <div class="grid grid-cols-2 gap-x-8 gap-y-3 mb-4">
+                  <div><label>Split Horizontal/Vertical</label><input type="text" id="setting-hotkey-hsSplit" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
+                  <div><label>Show Interface</label><input type="text" id="setting-hotkey-hsInterface" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                   <div><label>Open/Close Panels</label><input type="text" id="setting-hotkey-hsTogglePanels" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                   <div><label>Export Menu</label><input type="text" id="setting-hotkey-hsExport" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                   <div><label>Reset Parameters</label><input type="text" id="setting-hotkey-hsReset" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
-                  <div><label>Generate</label><input type="text" id="setting-hotkey-hsGenerate" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- BEM Solver Shortcuts Sub-Panel -->
+            <div class="control-group mb-4">
+              <div class="control-label-toggle bg-gray-800 p-2 rounded"><span>BEM Solver</span>${arrowSVG}</div>
+              <div class="p-4 pb-6 overflow-hidden">
+                <p class="text-xs text-gray-400 mb-3">Shortcuts for BEM Solver visibility.</p>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-3 mb-4">
+                  <div><label>Show/Hide All Elements</label><input type="text" id="setting-hotkey-bemToggleElements" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
+                  <div><label>Show/Hide All Observation Fields</label><input type="text" id="setting-hotkey-bemToggleFields" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                 </div>
               </div>
             </div>
@@ -155,6 +170,7 @@ export function getSettingsPanelHtml() {
                 <div class="grid grid-cols-2 gap-x-8 gap-y-3 mb-4">
                   <div><label>Close Window/Panel</label><input type="text" id="setting-hotkey-escape" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                   <div><label>Minimize Window</label><input type="text" id="setting-hotkey-minimize" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
+                  <div><label>Save Module Page</label><input type="text" id="setting-hotkey-saveModule" class="form-input w-full hotkey-input" placeholder="Press keys" autocomplete="off"></div>
                 </div>
               </div>
             </div>
@@ -233,7 +249,7 @@ export function initializeSettingsPanel(rootElement) {
     downloads: get('#setting-downloads'),
     dataRoot: get('#setting-dataRoot')
   };
-  const hotkeyInputs = { split: get('#setting-hotkey-split'), surface: get('#setting-hotkey-surface'), points: get('#setting-hotkey-points'), export: get('#setting-hotkey-export'), togglePanels: get('#setting-hotkey-togglePanels'), buildInterface: get('#setting-hotkey-buildInterface'), hsTogglePanels: get('#setting-hotkey-hsTogglePanels'), hsExport: get('#setting-hotkey-hsExport'), hsReset: get('#setting-hotkey-hsReset'), hsGenerate: get('#setting-hotkey-hsGenerate'), escape: get('#setting-hotkey-escape'), minimize: get('#setting-hotkey-minimize') };
+  const hotkeyInputs = { split: get('#setting-hotkey-split'), surface: get('#setting-hotkey-surface'), points: get('#setting-hotkey-points'), export: get('#setting-hotkey-export'), togglePanels: get('#setting-hotkey-togglePanels'), buildInterface: get('#setting-hotkey-buildInterface'), hsTogglePanels: get('#setting-hotkey-hsTogglePanels'), hsSplit: get('#setting-hotkey-hsSplit'), hsInterface: get('#setting-hotkey-hsInterface'), hsExport: get('#setting-hotkey-hsExport'), hsReset: get('#setting-hotkey-hsReset'), bemToggleElements: get('#setting-hotkey-bemToggleElements'), bemToggleFields: get('#setting-hotkey-bemToggleFields'), escape: get('#setting-hotkey-escape'), minimize: get('#setting-hotkey-minimize'), saveModule: get('#setting-hotkey-saveModule') };
   const saveBtn = get('#save-settings-btn');
   const resetBtn = get('#reset-settings-btn');
   const helpBtn = get('#show-help-btn');
@@ -241,9 +257,42 @@ export function initializeSettingsPanel(rootElement) {
   const alwaysOnTopToggle = get('#setting-always-on-top');
   const showStartupInfoToggle = get('#setting-show-startup-info');
   const themeSelect = get('#setting-ui-theme');
-  const scanlinesToggle = get('#setting-ui-scanlines');
   const reducedMotionToggle = get('#setting-ui-reduced-motion');
   const buttonSkinSelect = get('#setting-ui-button-skin');
+  const moduleOrderSelect = get('#setting-module-order');
+  const moduleOrderUpBtn = get('#module-order-up');
+  const moduleOrderDownBtn = get('#module-order-down');
+  const moduleLabels = {
+    geometry: 'Geometry', power: 'Calculator', mesh: 'Mesh & Frequency', drivers: 'Driver DB',
+    notes: 'Notes', horn: 'Horn Expansion', akabak_lem: 'Akabak LEM', hornstudio: 'Horn Studio',
+    directivity: 'BEM Solver', waveguide: 'Waveguide Studio', settings: 'Configuration'
+  };
+  const defaultModuleOrder = Object.keys(moduleLabels);
+  let moduleOrder = [...defaultModuleOrder];
+
+  function renderModuleOrder() {
+    if (!moduleOrderSelect) return;
+    moduleOrderSelect.innerHTML = '';
+    moduleOrder.forEach(moduleName => {
+      const option = document.createElement('option');
+      option.value = moduleName;
+      option.textContent = moduleLabels[moduleName] || moduleName;
+      moduleOrderSelect.appendChild(option);
+    });
+    moduleOrderSelect.selectedIndex = Math.min(moduleOrderSelect.selectedIndex, moduleOrder.length - 1);
+  }
+
+  function moveModule(delta) {
+    const index = moduleOrderSelect?.selectedIndex ?? -1;
+    const targetIndex = index + delta;
+    if (index < 0 || targetIndex < 0 || targetIndex >= moduleOrder.length) return;
+    [moduleOrder[index], moduleOrder[targetIndex]] = [moduleOrder[targetIndex], moduleOrder[index]];
+    renderModuleOrder();
+    moduleOrderSelect.selectedIndex = targetIndex;
+  }
+
+  moduleOrderUpBtn?.addEventListener('click', () => moveModule(-1));
+  moduleOrderDownBtn?.addEventListener('click', () => moveModule(1));
   // --- Template Editor System ---
   function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -469,11 +518,13 @@ export function initializeSettingsPanel(rootElement) {
     });
     if (alwaysOnTopToggle) alwaysOnTopToggle.checked = !!currentSettings.popupsAlwaysOnTop;
     if (showStartupInfoToggle) showStartupInfoToggle.checked = currentSettings.showStartupInfo !== false;
-    const ui = currentSettings.ui || { theme: 'default', scanlines: false, reducedMotion: false, buttonSkin: 'striped' };
-    if (themeSelect) themeSelect.value = ui.theme || 'default';
-    if (scanlinesToggle) scanlinesToggle.checked = ui.scanlines === true;
+    const ui = currentSettings.ui || { theme: 'default', reducedMotion: false, buttonSkin: 'striped', moduleOrder: defaultModuleOrder };
+    if (themeSelect) themeSelect.value = ['default', 'theme-dark-blue', 'theme-high-contrast'].includes(ui.theme) ? ui.theme : 'default';
     if (reducedMotionToggle) reducedMotionToggle.checked = !!ui.reducedMotion;
     if (buttonSkinSelect) buttonSkinSelect.value = ui.buttonSkin || 'striped';
+    moduleOrder = (ui.moduleOrder || []).filter(name => moduleLabels[name]);
+    defaultModuleOrder.forEach(name => { if (!moduleOrder.includes(name)) moduleOrder.push(name); });
+    renderModuleOrder();
     loadTemplateValues(currentSettings.templates);
     applyUiSettings(ui);
   }
@@ -483,20 +534,6 @@ export function initializeSettingsPanel(rootElement) {
     themeSelect.addEventListener('change', () => {
       const ui = {
         theme: themeSelect.value || 'default',
-        scanlines: scanlinesToggle?.checked !== false,
-        reducedMotion: reducedMotionToggle?.checked || false,
-        buttonSkin: buttonSkinSelect?.value || 'striped'
-      };
-      applyUiSettings(ui);
-    });
-  }
-
-  // Appliquer les autres options UI en temps réel aussi
-  if (scanlinesToggle) {
-    scanlinesToggle.addEventListener('change', () => {
-      const ui = {
-        theme: themeSelect?.value || 'default',
-        scanlines: scanlinesToggle.checked !== false,
         reducedMotion: reducedMotionToggle?.checked || false,
         buttonSkin: buttonSkinSelect?.value || 'striped'
       };
@@ -508,7 +545,6 @@ export function initializeSettingsPanel(rootElement) {
     buttonSkinSelect.addEventListener('change', () => {
       const ui = {
         theme: themeSelect?.value || 'default',
-        scanlines: scanlinesToggle?.checked !== false,
         reducedMotion: reducedMotionToggle?.checked || false,
         buttonSkin: buttonSkinSelect.value || 'striped'
       };
@@ -526,9 +562,9 @@ export function initializeSettingsPanel(rootElement) {
     }));
     currentSettings.popupsAlwaysOnTop = !!alwaysOnTopToggle?.checked;
     currentSettings.showStartupInfo = !!showStartupInfoToggle?.checked;
-    currentSettings.ui = { theme: themeSelect?.value || 'default', scanlines: !!scanlinesToggle?.checked, reducedMotion: !!reducedMotionToggle?.checked, buttonSkin: buttonSkinSelect?.value || 'striped' };
+    currentSettings.ui = { theme: themeSelect?.value || 'default', reducedMotion: !!reducedMotionToggle?.checked, buttonSkin: buttonSkinSelect?.value || 'striped', moduleOrder: [...moduleOrder] };
     currentSettings.templates = collectTemplateValues();
-    
+
     applyUiSettings(currentSettings.ui);
     await window.electronAPI.setSettings(currentSettings);
     
@@ -557,7 +593,14 @@ export function initializeSettingsPanel(rootElement) {
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   });
 
-  zoomButtons.forEach(btn => btn.addEventListener('click', () => { window.electronAPI.setZoom(parseFloat(btn.dataset.zoom)); }));
+  zoomButtons.forEach(btn => btn.addEventListener('click', async () => {
+    const zoomLevel = parseFloat(btn.dataset.zoom);
+    window.electronAPI.setZoom(zoomLevel);
+    const settings = await getSettings();
+    settings.enableScaling = true;
+    settings.zoomLevel = zoomLevel;
+    await window.electronAPI.setSettings(settings);
+  }));
   
   rootElement.querySelectorAll('.path-select-btn').forEach(button => {
     button.addEventListener('click', async () => {

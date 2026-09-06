@@ -5,40 +5,18 @@
 
 import { expansionFormulas, getFcFromHornLength } from '../horn/formulas.js';
 
-// --- Helpers pour obtenir les données throat/mouth depuis n'importe quel mode de forme ---
+// --- Helpers pour obtenir les données throat/mouth (rectangulaire uniquement) ---
 
 export function getThroatData(genDom) {
-    const mode = genDom.genThroatShape.value;
-    if (mode === 'rectangular') {
-        const w = parseFloat(genDom.genThroatWidth.value) || 100;
-        const h = parseFloat(genDom.genThroatHeight.value) || 56;
-        return { w, h, s: w * h };
-    } else if (mode === 'circular') {
-        const d = parseFloat(genDom.genThroatDiameter.value) || 84;
-        const s = Math.PI * (d / 2) * (d / 2);
-        return { w: d, h: d, s };
-    } else {
-        const s = parseFloat(genDom.genThroatArea.value) || 5600;
-        const side = Math.sqrt(s);
-        return { w: side, h: side, s };
-    }
+    const w = parseFloat(genDom.genThroatWidth.value) || 100;
+    const h = parseFloat(genDom.genThroatHeight.value) || 56;
+    return { w, h, s: w * h };
 }
 
 export function getMouthData(genDom) {
-    const mode = genDom.genMouthShape.value;
-    if (mode === 'rectangular') {
-        const w = parseFloat(genDom.genMouthWidth.value) || 400;
-        const h = parseFloat(genDom.genMouthHeight.value) || 226;
-        return { w, h, s: w * h };
-    } else if (mode === 'circular') {
-        const d = parseFloat(genDom.genMouthDiameter.value) || 340;
-        const s = Math.PI * (d / 2) * (d / 2);
-        return { w: d, h: d, s };
-    } else {
-        const s = parseFloat(genDom.genMouthArea.value) || 90400;
-        const side = Math.sqrt(s);
-        return { w: side, h: side, s };
-    }
+    const w = parseFloat(genDom.genMouthWidth.value) || 400;
+    const h = parseFloat(genDom.genMouthHeight.value) || 226;
+    return { w, h, s: w * h };
 }
 
 // --- Génération des segments ---
@@ -159,6 +137,9 @@ export function generateIdealExpansionCurve(genDom, rootElement) {
 // Les longueurs de segment sont NON-UNIFORMES : plus courtes là où l'expansion
 // est rapide, pour que l'angle local de chaque planche se rapproche de la
 // directivité cible H et V.
+// Target H/V coverage angles are no longer user-facing; fixed at typical horn defaults.
+const DEFAULT_TARGET_H_DEG = 90;
+const DEFAULT_TARGET_V_DEG = 40;
 
 export function generateHornSegmentsHV(genDom, rootElement) {
     const type = genDom.genExpansionType.value;
@@ -167,8 +148,8 @@ export function generateHornSegmentsHV(genDom, rootElement) {
     const mouth = getMouthData(genDom);
     const numSegs = Math.max(2, Math.min(20, parseInt(genDom.genSegmentCount.value) || 6));
 
-    const targetH_deg = parseFloat(genDom.genDirectivityH.value) || 90;
-    const targetV_deg = parseFloat(genDom.genDirectivityV.value) || 40;
+    const targetH_deg = DEFAULT_TARGET_H_DEG;
+    const targetV_deg = DEFAULT_TARGET_V_DEG;
     const tanH = Math.tan((targetH_deg / 2) * (Math.PI / 180));
     const tanV = Math.tan((targetV_deg / 2) * (Math.PI / 180));
 

@@ -9,14 +9,16 @@ import { getSettings } from '../mainsettings/mainsettings.js';
 
 // --- Export vers les autres panneaux ---
 
-export function handleExport(targetPanel, state, dom) {
+export async function handleExport(targetPanel, state, dom) {
     const { rootElement } = dom;
     const { currentUnit, yAxisMode } = state;
 
     if (targetPanel === 'akabak_lem') {
         const segments = state.getTableData(true);
         if (segments.length === 0) return;
-        const payload = { segments, count: state.segmentCount, unit: currentUnit };
+        const wave = await askWaveSelection(dom);
+        if (!wave) return;
+        const payload = { segments, count: state.segmentCount, unit: currentUnit, wave };
         window.showTool('akabak_lem', 'Akabak LEM');
         setTimeout(() => {
             window.panelEvents.dispatchEvent(new CustomEvent('export-to-hornscript', { detail: payload }));
@@ -74,69 +76,51 @@ export function handleExport(targetPanel, state, dom) {
             window.panelEvents.dispatchEvent(new CustomEvent('export-to-waveguide', { detail: params }));
         }, 200);
     }
-    else if (targetPanel === 'directivity') {
-        handleExportDirectivity(state, dom);
+    else if (targetPanel === 'hornstudio') {
+        const segments = state.getTableData(true);
+        if (segments.length < 2) return;
+        const throat = segments[0];
+        const mouth = segments[segments.length - 1];
+        const totalLength = segments.slice(0, -1).reduce((acc, s) => acc + (Number(s.l) || 0), 0);
+        const payload = {
+            throatW: throat.w, throatH: throat.h,
+            mouthW: mouth.w, mouthH: mouth.h,
+            length: totalLength,
+            segmentCount: segments.length - 1,
+        };
+        window.showTool('hornstudio', 'Horn Studio');
+        setTimeout(() => {
+            window.panelEvents.dispatchEvent(new CustomEvent('export-to-hornstudio', { detail: payload }));
+        }, 100);
     }
 }
 
-function handleExportDirectivity(state, dom) {
-    const raw = state.getTableData(true);
-    if (raw.length < 2) {
-        alert('Please define at least 2 segments before exporting to Directivity.');
-        return;
-    }
+// --- Wave selection modal (Onde Avant / Onde Arrière) for Akabak LEM export ---
 
-    const lastSegment = raw[raw.length - 1];
-    const secondLastSegment = raw[raw.length - 2];
-    const deltaWidth = lastSegment.w - secondLastSegment.w;
-    const deltaHeight = lastSegment.h - secondLastSegment.h;
-    const length = secondLastSegment.l;
+function askWaveSelection(dom) {
+    return new Promise((resolve) => {
+        const modal = dom.rootElement.querySelector('#wave-select-modal-overlay');
+        const frontBtn = dom.rootElement.querySelector('#wave-select-front-btn');
+        const backBtn = dom.rootElement.querySelector('#wave-select-back-btn');
+        const cancelBtn = dom.rootElement.querySelector('#wave-select-cancel-btn');
 
-    const halfAngleRadH = Math.atan((deltaWidth / 2) / length);
-    const calculatedWallAngleH = (halfAngleRadH * 180 / Math.PI) * 2;
-    const halfAngleRadV = Math.atan((deltaHeight / 2) / length);
-    const calculatedWallAngleV = (halfAngleRadV * 180 / Math.PI) * 2;
+        modal.classList.remove('hidden');
 
-    let expansionType = 'Conical';
-    const bestFitText = dom.bestFitResults.textContent;
-    if (bestFitText && bestFitText.trim()) {
-        const expansionMap = { 'EXPO': 'Exponential', 'HYPE': 'Hypex', 'PARA': 'Parabolic', 'CONI': 'Conical' };
-        let maxPercentage = -1;
-        let bestExpansion = 'Conical';
-        const matches = bestFitText.matchAll(/(EXPO|HYPE|PARA|CONI):\s*(\d+)%/gi);
-        for (const match of matches) {
-            const type = match[1].toUpperCase();
-            const percentage = parseInt(match[2]);
-            if (percentage > maxPercentage) {
-                maxPercentage = percentage;
-                bestExpansion = expansionMap[type] || 'Conical';
-            }
-        }
-        if (maxPercentage >= 0) expansionType = bestExpansion;
-    }
-    if (!bestFitText || !bestFitText.trim()) {
-        const lawSelect = dom.rootElement.querySelector('.graph-expansion-select[data-param="s"]');
-        expansionType = lawSelect ? lawSelect.value : 'Conical';
-    }
+        const cleanup = () => {
+            modal.classList.add('hidden');
+            frontBtn.removeEventListener('click', handleFront);
+            backBtn.removeEventListener('click', handleBack);
+            cancelBtn.removeEventListener('click', handleCancel);
+        };
 
-    const s0 = raw[0].w * raw[0].h;
-    const s0M = s0 / 1000000;
-    const cutoffFrequency = 344 / (4 * Math.sqrt(s0M));
+        const handleFront = () => { cleanup(); resolve('front'); };
+        const handleBack = () => { cleanup(); resolve('back'); };
+        const handleCancel = () => { cleanup(); resolve(null); };
 
-    const payload = {
-        lastSegmentWidth: lastSegment.w,
-        lastSegmentHeight: lastSegment.h,
-        calculatedWallAngleH,
-        calculatedWallAngleV,
-        expansionType,
-        cutoffFrequency
-    };
-
-    window.showTool('directivity', 'Directivity Calculator');
-    setTimeout(() => {
-        console.log('[Horn→Directivity] exporting data:', payload);
-        window.panelEvents.dispatchEvent(new CustomEvent('export-to-directivity', { detail: payload }));
-    }, 100);
+        frontBtn.addEventListener('click', handleFront);
+        backBtn.addEventListener('click', handleBack);
+        cancelBtn.addEventListener('click', handleCancel);
+    });
 }
 
 // --- Export OS-SE CSV ---

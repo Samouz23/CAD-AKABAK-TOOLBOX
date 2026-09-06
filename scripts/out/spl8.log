@@ -1,0 +1,37 @@
+﻿node : (node:24252) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of 
+file:///C:/Users/Samuel/Desktop/CODE/ToolBox/src/js/bem/bemCore.js is not 
+specified and it doesn't parse as CommonJS.
+Au caractère Ligne:1 : 1
++ node scripts/spl_harness.mjs --runtag spl8 --fmin 100 --fmax 5000 --p ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:24252) [M...se as CommonJS. 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Reparsing as ES module because module syntax was detected. This incurs a 
+performance overhead.
+To eliminate this warning, add "type": "module" to 
+C:\Users\Samuel\Desktop\CODE\ToolBox\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[spl] Driver = Beyma 8MI100
+      Sd=220 cm┬▓  Mms=19.0 g  fs=90 Hz  Qms=7.5
+      Re=6 ╬®  BL=11.5 T┬Àm  Le=0.20 mH
+      Kms=6076 N/m  Rms=1.433 N┬Às/m
+[spl] Mesh: 790 triangles, St = 56.0 cm┬▓, Sd/St = 3.93
+[spl] Sweep 69 freqs from 100 to 5080 Hz
+  f=  100 Hz  SPL=95.8 dB   vcone=0.272 m/s   522 ms
+  f=  141 Hz  SPL=97.6 dB   vcone=0.256 m/s   510 ms
+  f=  200 Hz  SPL=96.9 dB   vcone=0.172 m/s   513 ms
+  f=  283 Hz  SPL=97.3 dB   vcone=0.112 m/s   518 ms
+  f=  400 Hz  SPL=101.9 dB   vcone=0.070 m/s   547 ms
+  f=  566 Hz  SPL=107.4 dB   vcone=0.082 m/s   554 ms
+  f=  800 Hz  SPL=107.1 dB   vcone=0.048 m/s   563 ms
+  f= 1131 Hz  SPL=106.5 dB   vcone=0.038 m/s   573 ms
+  f= 1600 Hz  SPL=106.0 dB   vcone=0.027 m/s   587 ms
+  f= 2263 Hz  SPL=105.0 dB   vcone=0.018 m/s   601 ms
+  f= 3200 Hz  SPL=103.2 dB   vcone=0.012 m/s   596 ms
+  f= 4525 Hz  SPL=93.7 dB   vcone=0.007 m/s   606 ms
+  f= 5080 Hz  SPL=93.2 dB   vcone=0.006 m/s   601 ms
+[spl] Total: 39.1 s
+[spl] SPL range observed: 93.2 .. 108.9 dB
+[spl] Wrote C:\Users\Samuel\Desktop\CODE\ToolBox\scripts\out\spl8_SPL.png

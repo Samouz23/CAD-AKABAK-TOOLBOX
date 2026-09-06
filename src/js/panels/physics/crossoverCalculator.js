@@ -3,15 +3,43 @@
 // RÔLE    : Calculateur de filtres audio passifs (Crossover) selon spécifications techniques
 // =================================================================================
 
-import { PhysicsIcons } from './icons.js';
-
 export function getCrossoverCalculatorHtml() {
   return `
-    <div class="space-y-6">
+    <div id="crossover-root" class="space-y-6 relative">
       
       <!-- Filter Calculator -->
       <section class="calc-section">
-        <h2 class="calc-title">Passive Audio Crossover Filter Calculator</h2>
+        <div class="flex items-center justify-between mb-1">
+          <h2 class="calc-title mb-0">Passive Audio Crossover Filter Calculator</h2>
+          <button id="cross-presets-btn" class="wg-preset-toggle-btn" title="Crossover Presets" style="position: static;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Modal Presets (Toast central avec blur) -->
+        <div id="cross-presets-modal-overlay" class="wg-presets-modal-overlay hidden">
+          <div class="wg-presets-modal">
+            <div class="wg-presets-header">
+              <div>
+                <h2 class="wg-presets-title">Crossover Presets</h2>
+                <p class="wg-presets-subtitle">Save and load crossover configurations</p>
+              </div>
+              <button id="cross-presets-panel-close" class="wg-presets-close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <div id="cross-presets-list" class="wg-presets-list"></div>
+            <div class="wg-presets-save-row">
+              <input id="cross-preset-name-input" type="text" class="wg-preset-name-input" placeholder="Preset name...">
+              <button id="cross-preset-save-btn" class="wg-preset-save-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           
@@ -70,10 +98,6 @@ export function getCrossoverCalculatorHtml() {
               <!-- Results will be populated here -->
             </div>
 
-            <button id="save-crossover-calc" class="action-btn w-full mt-4 flex items-center justify-center space-x-2">
-              ${PhysicsIcons.save}
-              <span>Save to History</span>
-            </button>
           </div>
 
         </div>
@@ -834,17 +858,110 @@ export function initializeCrossoverCalculator() {
 
   orderSelect.addEventListener('change', calculateCrossover);
 
-  // Save to history
-  document.getElementById('save-crossover-calc')?.addEventListener('click', () => {
-    const freq = freqInput.value;
-    const impedance = impedanceInput.value;
-    const order = orderSelect.options[orderSelect.selectedIndex].text;
-    const filterType = filterTypeSelect.value;
-    if (window.physicsAddToHistory) {
-      window.physicsAddToHistory('Crossover Filter', `${filterType.toUpperCase()} @ ${freq}Hz, ${impedance}Ω, ${order}`);
-    }
-  });
+  initCrossoverPresetListeners();
 
   // Initial calculation
   calculateCrossover();
+}
+
+// ====================================================================================================
+// PRESETS : Save / Load / Delete crossover configurations
+// ====================================================================================================
+
+function collectCrossoverFormValues(root) {
+  const values = {};
+  root.querySelectorAll('input[type="text"], select').forEach(el => {
+    if (!el.id) return;
+    values[el.id] = el.value;
+  });
+  return values;
+}
+
+function applyCrossoverFormValues(root, values) {
+  if (!values) return;
+  for (const [id, val] of Object.entries(values)) {
+    const el = root.querySelector(`#${CSS.escape(id)}`);
+    if (!el) continue;
+    el.value = val;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+}
+
+function initCrossoverPresetListeners() {
+  const root = document.getElementById('crossover-root');
+  if (!root) return;
+  const presetsBtn = root.querySelector('#cross-presets-btn');
+  const modalOverlay = root.querySelector('#cross-presets-modal-overlay');
+  const closeBtn = root.querySelector('#cross-presets-panel-close');
+  const saveBtn = root.querySelector('#cross-preset-save-btn');
+  const nameInput = root.querySelector('#cross-preset-name-input');
+
+  presetsBtn?.addEventListener('click', () => {
+    const isHidden = modalOverlay.classList.contains('hidden');
+    modalOverlay.classList.toggle('hidden', !isHidden);
+    if (isHidden) refreshCrossoverPresetList(root);
+  });
+
+  closeBtn?.addEventListener('click', () => modalOverlay.classList.add('hidden'));
+  modalOverlay?.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.add('hidden'); });
+
+  saveBtn?.addEventListener('click', async () => {
+    const name = nameInput.value.trim();
+    if (!name) return;
+    const values = collectCrossoverFormValues(root);
+    const preset = { name, values, savedAt: new Date().toISOString() };
+    const result = await window.electronAPI.saveCrossoverPreset(preset);
+    if (result.success) {
+      nameInput.value = '';
+      refreshCrossoverPresetList(root);
+    }
+  });
+
+  nameInput?.addEventListener('keydown', (e) => {
+    e.stopPropagation();
+    if (e.key === 'Enter') saveBtn.click();
+  });
+}
+
+async function refreshCrossoverPresetList(root) {
+  const listEl = root.querySelector('#cross-presets-list');
+  const presets = await window.electronAPI.getCrossoverPresets();
+
+  if (!presets || presets.length === 0) {
+    listEl.innerHTML = '<div class="wg-presets-empty">No saved presets</div>';
+    return;
+  }
+
+  listEl.innerHTML = presets.map(p => `
+    <div class="wg-preset-item" data-preset-name="${p.name.replace(/"/g, '&quot;')}">
+      <span class="wg-preset-item-name" title="${p.name.replace(/"/g, '&quot;')}">${p.name}</span>
+      <button class="wg-preset-load-btn" data-load-name="${p.name.replace(/"/g, '&quot;')}" title="Load preset">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Load
+      </button>
+      <button class="wg-preset-delete-btn" data-delete-name="${p.name.replace(/"/g, '&quot;')}" title="Delete">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
+    </div>
+  `).join('');
+
+  listEl.querySelectorAll('.wg-preset-load-btn').forEach(loadBtn => {
+    loadBtn.addEventListener('click', () => {
+      const presetName = loadBtn.dataset.loadName;
+      const preset = presets.find(p => p.name === presetName);
+      if (!preset) return;
+      applyCrossoverFormValues(root, preset.values);
+      root.querySelector('#cross-presets-modal-overlay').classList.add('hidden');
+    });
+  });
+
+  listEl.querySelectorAll('.wg-preset-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const name = btn.dataset.deleteName;
+      await window.electronAPI.deleteCrossoverPreset(name);
+      refreshCrossoverPresetList(root);
+    });
+  });
 }

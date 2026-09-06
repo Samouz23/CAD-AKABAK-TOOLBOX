@@ -7,6 +7,9 @@ package-lock.json
 .env
 .vscode
 build
+.claude
+.foam-work
+.github
 
       # Données sensibles et confidentielles - Dossier centralisé
 private/
@@ -17,3 +20,7 @@ docs/
 Ignore.txt
 bak
 repository
+bempp-cl-main
+boundary-lab-main
+DEV-BEM
+US5163167.pdf

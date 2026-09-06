@@ -8,6 +8,32 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
+function buildDiscreteStepGeo(stlPath) {
+    const escaped = stlPath.replace(/\\/g, '/');
+    return [
+        `Merge "${escaped}";`,
+        'ClassifySurfaces{40 * Pi / 180, 1, 1, 180 * Pi / 180};',
+        'CreateGeometry;',
+        'Coherence;'
+    ].join('\n');
+}
+
+function buildDiscreteMeshGeo(stlPath, meshConfig = {}) {
+    const escaped = stlPath.replace(/\\/g, '/');
+    const clmax = Number.isFinite(meshConfig.clmax) ? meshConfig.clmax : 10;
+    const curvature = Number.isFinite(meshConfig.curvature) ? meshConfig.curvature : 5;
+    return [
+        `Merge "${escaped}";`,
+        'ClassifySurfaces{40 * Pi / 180, 1, 1, 180 * Pi / 180};',
+        'CreateGeometry;',
+        'surfs() = Surface{:};',
+        'Physical Surface("waveguide_surface") = {surfs()};',
+        `Mesh.CharacteristicLengthMax = ${clmax};`,
+        `Mesh.MeshSizeFromCurvature = ${curvature};`,
+        'Mesh.Algorithm = 6;'
+    ].join('\n');
+}
+
 function parseStepShellGroups(stepContent) {
     const dataStart = stepContent.indexOf('DATA;');
     if (dataStart === -1) throw new Error('Invalid STEP file: no DATA section found');
@@ -70,6 +96,11 @@ function sanitizePositiveNumber(value, fallback) {
     return Number.isFinite(numeric) && numeric > 0 ? numeric : fallback;
 }
 
+function sanitizeNonNegativeNumber(value, fallback) {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) && numeric >= 0 ? numeric : fallback;
+}
+
 function buildNamedPhysicalGroups(groups) {
     let surfaceIndex = 1;
 
@@ -90,12 +121,12 @@ function createDefaultPhysicalGroups(shellGroups, defaultMeshSize, defaultCurveM
 
 function buildPhysicalGeo(inputFile, shellGroups, config) {
     const defaultMeshSize = sanitizePositiveNumber(config.defaultMeshSize, 50);
-    const defaultCurveMeshSize = sanitizePositiveNumber(config.defaultCurveMeshSize, defaultMeshSize);
+    const defaultCurveMeshSize = sanitizeNonNegativeNumber(config.defaultCurveMeshSize, defaultMeshSize);
     const groups = Array.isArray(config.groups) && config.groups.length > 0
         ? buildNamedPhysicalGroups(config.groups.map(group => ({
             shellIndices: Array.from(new Set((group.shellIndices || []).map(Number).filter(Number.isInteger))).sort((a, b) => a - b),
             meshSize: sanitizePositiveNumber(group.meshSize, defaultMeshSize),
-            curveMeshSize: sanitizePositiveNumber(group.curveMeshSize, defaultCurveMeshSize),
+            curveMeshSize: sanitizeNonNegativeNumber(group.curveMeshSize, defaultCurveMeshSize),
             isInterface: Boolean(group.isInterface),
         })))
         : createDefaultPhysicalGroups(shellGroups, defaultMeshSize, defaultCurveMeshSize);
@@ -146,26 +177,41 @@ function buildPhysicalGeo(inputFile, shellGroups, config) {
         geoLines.push(`Physical Surface("${group.name}") = {${groupSurfaceRefs[gi].join(', ')}};`);
     });
 
-    // Per-group mesh sizes via Background Field (Restrict per surface list)
-    // This is the only reliable way to achieve different mesh sizes per surface in Gmsh.
+    // Per-group mesh sizes via Background Field:
+    //   - one MathEval + Restrict on Surfaces -> controls interior size (meshSize)
+    // 2 field ids per group: surfSizeId, surfRestId.
+    // Curvature refinement is handled globally via Mesh.MeshSizeFromCurvature.
+    const restrictIds = [];
     groups.forEach((group, gi) => {
-        const sizeId   = gi * 2 + 1;
-        const restId   = gi * 2 + 2;
-        const refs     = groupSurfaceRefs[gi].join(', ');
-        geoLines.push(`Field[${sizeId}] = MathEval;`);
-        geoLines.push(`Field[${sizeId}].F = "${group.meshSize}";`);
-        geoLines.push(`Field[${restId}] = Restrict;`);
-        geoLines.push(`Field[${restId}].InField = ${sizeId};`);
-        geoLines.push(`Field[${restId}].SurfacesList = {${refs}};`);
+        const surfSizeId  = gi * 2 + 1;
+        const surfRestId  = gi * 2 + 2;
+        const refs = groupSurfaceRefs[gi].join(', ');
+
+        // Surface (interior) size
+        geoLines.push(`Field[${surfSizeId}] = MathEval;`);
+        geoLines.push(`Field[${surfSizeId}].F = "${group.meshSize}";`);
+        geoLines.push(`Field[${surfRestId}] = Restrict;`);
+        geoLines.push(`Field[${surfRestId}].InField = ${surfSizeId};`);
+        geoLines.push(`Field[${surfRestId}].SurfacesList = {${refs}};`);
+        restrictIds.push(surfRestId);
     });
 
     const minId = groups.length * 2 + 1;
-    const restrictIds = groups.map((_, gi) => gi * 2 + 2).join(', ');
     geoLines.push(`Field[${minId}] = Min;`);
-    geoLines.push(`Field[${minId}].FieldsList = {${restrictIds}};`);
+    geoLines.push(`Field[${minId}].FieldsList = {${restrictIds.join(', ')}};`);
     geoLines.push(`Background Field = ${minId};`);
-    geoLines.push(`Mesh.CharacteristicLengthMax = ${defaultMeshSize};`);
-    geoLines.push('Mesh.MeshSizeFromCurvature = 0;');
+    const effectiveMaxSize = Math.max(defaultMeshSize, ...groups.map(g => g.meshSize));
+    geoLines.push(`Mesh.CharacteristicLengthMax = ${effectiveMaxSize};`);
+    // Use the max curveMeshSize across all groups (0 = disabled, higher = more refined).
+    // Do NOT seed with defaultCurveMeshSize to avoid 0 overriding user-set values.
+    const groupCurvValues = groups.map(g =>
+        Number.isFinite(g.curveMeshSize) && g.curveMeshSize >= 0 ? g.curveMeshSize : defaultCurveMeshSize
+    );
+    const effectiveCurvature = groupCurvValues.length > 0 ? Math.max(...groupCurvValues) : defaultCurveMeshSize;
+    geoLines.push(`Mesh.MeshSizeFromCurvature = ${effectiveCurvature};`);
+    // Make sure the background field wins over any CAD-derived sizing
+    geoLines.push('Mesh.MeshSizeExtendFromBoundary = 0;');
+    geoLines.push('Mesh.MeshSizeFromPoints = 0;');
 
     return { geoContent: geoLines.join('\n'), groups };
 }
@@ -430,7 +476,7 @@ module.exports.registerMeshHandlers = () => {
                     outputFileName,
                     config: {
                         defaultMeshSize: clmax,
-                        defaultCurveMeshSize: clmax,
+                        defaultCurveMeshSize: curv,
                     },
                 });
 
@@ -445,7 +491,7 @@ module.exports.registerMeshHandlers = () => {
                     sourceFilePath: inputFile,
                     shellTagMap: buildResult.shellTagMap,
                     defaultMeshSize: Number(clmax),
-                    defaultCurveMeshSize: Number(clmax),
+                    defaultCurveMeshSize: Number(curv),
                 };
             }
             
@@ -625,6 +671,106 @@ module.exports.registerMeshHandlers = () => {
             }
             return { success: true, message: `Exported ${fileName}`, outputPath: finalPath };
         } catch (e) {
+            return { success: false, error: e.message };
+        }
+    });
+
+    // --- Export waveguide as STEP via GMSH ---
+    // mode: 'step' (default) → .geo loft → geometry only (-0 → .step)
+    // mode: 'mesh' → .geo loft → surface mesh (-2 → .msh)
+    // mode: 'discrete-step' → STL mesh → discrete geometry → STEP
+    // mode: 'discrete-mesh' → STL mesh → Gmsh remeshed .msh with clmax/curvature
+    // returnContent: true → also read the produced file back and return it as
+    //   `content`, and mesh into a throwaway folder when outputDir is omitted.
+    //   Used by the Directivity Pro BEM preview, which needs the mesh in memory
+    //   and must not overwrite the user's manual export. gmshArgs are unchanged
+    //   so the mesh is identical to what the export button writes.
+    ipcMain.handle('waveguide:export-step', async (event, { gmshPath, geoContent, stlContent, outputDir, fileName, mode, meshConfig, returnContent, debugLabel }) => {
+        let scratchOutputDir = null;
+        try {
+            if (!gmshPath || !fs.existsSync(gmshPath)) {
+                return { success: false, error: 'GMSH path not configured or not found.' };
+            }
+
+            if (!outputDir) {
+                scratchOutputDir = path.join(os.tmpdir(), `toolbox-mesh-out-${Date.now()}`);
+                outputDir = scratchOutputDir;
+            }
+            fs.mkdirSync(outputDir, { recursive: true });
+            const outputPath = path.join(outputDir, fileName);
+
+            const tempDir = path.join(os.tmpdir(), `toolbox-step-${Date.now()}`);
+            fs.mkdirSync(tempDir, { recursive: true });
+            const geoPath = path.join(tempDir, 'waveguide_loft.geo');
+            if (mode === 'discrete-step' || mode === 'discrete-mesh') {
+                if (!stlContent) {
+                    return { success: false, error: 'Missing STL content for discrete export.' };
+                }
+                const stlPath = path.join(tempDir, 'waveguide_exact.stl');
+                fs.writeFileSync(stlPath, stlContent, 'utf-8');
+                const geoContentExact = mode === 'discrete-step'
+                    ? buildDiscreteStepGeo(stlPath)
+                    : buildDiscreteMeshGeo(stlPath, meshConfig);
+                fs.writeFileSync(geoPath, geoContentExact, 'utf-8');
+            } else {
+                fs.writeFileSync(geoPath, geoContent, 'utf-8');
+            }
+
+            const gmshArgs = mode === 'mesh' || mode === 'discrete-mesh'
+                ? [geoPath, '-2', '-format', 'msh2', '-o', outputPath]
+                : [geoPath, '-0', '-o', outputPath];
+
+            return new Promise(resolve => {
+                // Suffixed per candidate: the fallback run used to overwrite the
+                // artefacts of the candidate that actually failed first.
+                const dbg = debugLabel ? `_${String(debugLabel).replace(/[^\w.-]+/g, '_')}` : '';
+                execFile(gmshPath, gmshArgs, { timeout: 120000 }, (error, stdout, stderr) => {
+                    // Copy .geo to output dir for debugging
+                    try { fs.copyFileSync(geoPath, path.join(outputDir, `debug_loft${dbg}.geo`)); } catch (_) {}
+                    // Also save GMSH output for debugging
+                    try {
+                        const logContent = `=== stdout ===\n${stdout || ''}\n=== stderr ===\n${stderr || ''}`;
+                        fs.writeFileSync(path.join(outputDir, `debug_gmsh${dbg}.log`), logContent, 'utf-8');
+                    } catch (_) {}
+                    // Clean up temp
+                    try { fs.rmSync(tempDir, { recursive: true, force: true }); } catch (_) {}
+
+                    if (error) {
+                        // Include both stdout and stderr — GMSH sometimes writes errors to stdout
+                        const details = [stderr, stdout].filter(s => s && s.trim()).join('\n---stdout---\n') || error.message;
+                        try { if (scratchOutputDir) fs.rmSync(scratchOutputDir, { recursive: true, force: true }); } catch (_) {}
+                        resolve({ success: false, error: details });
+                        return;
+                    }
+
+                    if (returnContent) {
+                        let content = null;
+                        let readError = null;
+                        try {
+                            content = fs.readFileSync(outputPath, 'utf-8');
+                        } catch (e) {
+                            readError = e.message;
+                        }
+                        try { if (scratchOutputDir) fs.rmSync(scratchOutputDir, { recursive: true, force: true }); } catch (_) {}
+                        if (content == null) {
+                            resolve({ success: false, error: `Mesh written but unreadable: ${readError}` });
+                            return;
+                        }
+                        resolve({
+                            success: true,
+                            message: `Exported: ${fileName}`,
+                            outputPath,
+                            content,
+                            log: `=== stdout ===\n${stdout || ''}\n=== stderr ===\n${stderr || ''}`,
+                        });
+                        return;
+                    }
+
+                    resolve({ success: true, message: `Exported: ${fileName}`, outputPath });
+                });
+            });
+        } catch (e) {
+            try { if (scratchOutputDir) fs.rmSync(scratchOutputDir, { recursive: true, force: true }); } catch (_) {}
             return { success: false, error: e.message };
         }
     });

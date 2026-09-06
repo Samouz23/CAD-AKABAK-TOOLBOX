@@ -7,8 +7,8 @@ import { defaultVisibility } from './horn/config.js';
 import { getHornPanelHtml } from './horn/uiTemplates.js';
 import { safeEvaluateMath } from './horn/formulas.js';
 import { getTableData, getSurfaceFactor, applyDefaultValues } from './horn/tableManager.js';
-import { createChart, updateChart, setYAxisMode, applyInitialGraphState } from './horn/chart.js';
-import { updateExtraParamsUI, generateOsSeParamsUI, enableInlineCalculation, bindAllEvents } from './horn/eventHandlers.js';
+import { createChart, updateChart, setYAxisMode } from './horn/chart.js';
+import { updateExtraParamsUI, generateOsSeParamsUI, enableInlineCalculation, bindAllEvents, initHornTabs } from './horn/eventHandlers.js';
 
 export { getHornPanelHtml, safeEvaluateMath };
 
@@ -20,9 +20,6 @@ export function initializeHornPanel(rootElement) {
     if (!window.hornDatasetVisibilityOsSe) {
         window.hornDatasetVisibilityOsSe = [false, false, false, false, false, false, true];
     }
-    if (window.hornGraphVisible === undefined) {
-        window.hornGraphVisible = true;
-    }
 
     // --- Objet State ---
     const state = {
@@ -30,7 +27,7 @@ export function initializeHornPanel(rootElement) {
         mainChart: null,
         focusedRowIndex: -1,
         currentUnit: 'mm',
-        yAxisMode: 'dim',
+        yAxisMode: 'surf',
         datasetVisibility: [...window.hornDatasetVisibilityNormal],
     };
 
@@ -39,6 +36,7 @@ export function initializeHornPanel(rootElement) {
         rootElement,
         segmentCountInput:             rootElement.querySelector('#segment-count'),
         tableBody:                     rootElement.querySelector('#segments-table-body'),
+        mainContentArea:               rootElement.querySelector('#main-content-area'),
         graphsContainer:               rootElement.querySelector('#graphs-container'),
         clearBtn:                      rootElement.querySelector('#clear-all-btn'),
         bestFitBtn:                    rootElement.querySelector('#best-fit-btn'),
@@ -48,7 +46,6 @@ export function initializeHornPanel(rootElement) {
         extraParamsContainer:          rootElement.querySelector('#extra-params-container'),
         bestFitResults:                rootElement.querySelector('#best-fit-results'),
         unitSwitchBtn:                 rootElement.querySelector('#unit-switch-btn'),
-        importBtn:                     rootElement.querySelector('#import-btn'),
         exportToBtn:                   rootElement.querySelector('#export-to-btn'),
         exportOptions:                 rootElement.querySelector('#export-options'),
         exportOsSeCsvBtn:              rootElement.querySelector('#export-osse-csv-btn'),
@@ -58,8 +55,6 @@ export function initializeHornPanel(rootElement) {
         bestFitContainer:              rootElement.querySelector('#best-fit-container'),
         graphControlsLeft:             rootElement.querySelector('#graph-controls-left'),
         graphControlsRight:            rootElement.querySelector('#graph-controls-right'),
-        toggleGraphBtn:                rootElement.querySelector('#toggle-graph-btn'),
-        toggleGraphArrow:              rootElement.querySelector('#toggle-graph-arrow'),
         segmentControls:               rootElement.querySelector('#segment-controls'),
     };
 
@@ -77,8 +72,8 @@ export function initializeHornPanel(rootElement) {
     applyDefaultValues(state, dom, updateChartFn);
     updateExtraParamsUI(state, dom, updateChartFn);
     generateOsSeParamsUI(dom, updateChartFn);
-    setYAxisMode('dim', state, dom);
-    applyInitialGraphState(dom);
+    setYAxisMode('surf', state, dom);
+    initHornTabs(state, dom);
 
     // --- Liaison de tous les evenements ---
     bindAllEvents(state, dom, updateChartFn);

@@ -177,8 +177,8 @@ export function findBestFit(state, dom) {
 
 export function bindAllEvents(state, dom, updateChartFn) {
     const { rootElement, tableBody, segmentCountInput, clearBtn, bestFitBtn,
-            toggleGraphBtn, exportOsSeCsvBtn, exportToBtn, exportOptions,
-            importBtn, unitSwitchBtn, deleteSegmentBtn, insertBeforeBtn,
+            exportOsSeCsvBtn, exportToBtn, exportOptions,
+            unitSwitchBtn, deleteSegmentBtn, insertBeforeBtn,
             insertAfterBtn, graphsContainer } = dom;
 
     // Segment count
@@ -188,10 +188,9 @@ export function bindAllEvents(state, dom, updateChartFn) {
         TableManager.updateVisibleSegments(state, dom, updateChartFn);
     });
 
-    // Clear, Best-Fit, Toggle Graph
+    // Clear and Best-Fit
     clearBtn.addEventListener('click', () => TableManager.clearValues(state, dom, updateChartFn));
     bestFitBtn.addEventListener('click', () => findBestFit(state, dom));
-    toggleGraphBtn.addEventListener('click', () => Chart.toggleGraphVisibility(state, dom));
     if (exportOsSeCsvBtn) exportOsSeCsvBtn.addEventListener('click', () => Exporters.exportOsSeCsv(dom));
 
     // Export menu
@@ -203,21 +202,6 @@ export function bindAllEvents(state, dom, updateChartFn) {
     });
     document.addEventListener('click', (e) => {
         if (!exportToBtn.contains(e.target)) exportOptions.classList.add('hidden');
-    });
-
-    // Import
-    importBtn.addEventListener('click', () => {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.csv,.txt';
-        fileInput.onchange = e => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = event => TableManager.parseAndLoadCsv(event.target.result, state, dom, updateChartFn);
-            reader.readAsText(file);
-        };
-        fileInput.click();
     });
 
     // Table input (W/H → S, S → W/H)
@@ -326,3 +310,51 @@ export function bindAllEvents(state, dom, updateChartFn) {
         if (nextInput && !nextInput.disabled) { nextInput.focus(); nextInput.select(); }
     });
 }
+
+// --- Onglets Value / Graph / Both ---
+
+export function initHornTabs(state, dom) {
+    const { rootElement, mainContentArea, graphsContainer, tableContainer } = dom;
+    const tabBtns = rootElement.querySelectorAll('.horn-tab-btn');
+
+    function applyTab(tabName) {
+        state.activeHornTab = tabName;
+        tabBtns.forEach(b => b.classList.toggle('bg-green-700', b.dataset.hornTab === tabName));
+
+        const showValue = tabName === 'value' || tabName === 'both';
+        const showGraph = tabName === 'graph' || tabName === 'both';
+        mainContentArea.classList.toggle('hidden', !showValue);
+        graphsContainer.classList.toggle('hidden', !showGraph);
+
+        // In "Both" mode the table keeps a fixed height to leave room for the graph below it.
+        // In "Value" mode the table grows to fill the available space (≈12 rows visible).
+        if (tabName === 'both') {
+            tableContainer.classList.remove('flex-grow');
+            tableContainer.classList.add('flex-shrink-0');
+            tableContainer.style.height = '280px';
+        } else {
+            tableContainer.classList.add('flex-grow');
+            tableContainer.classList.remove('flex-shrink-0');
+            tableContainer.style.height = '';
+        }
+
+        if (state.mainChart) {
+            // Chart.js measures the canvas' parent while it's still display:none right after
+            // un-hiding, producing a broken layout. Recreating the chart next frame (once the
+            // container has its real size) fixes it, same as what happens when the y-axis
+            // buttons (which call createChart/updateChart) are clicked.
+            if (showGraph) {
+                requestAnimationFrame(() => {
+                    Chart.createChart(state, dom);
+                    Chart.updateChart(state, dom);
+                });
+            } else {
+                requestAnimationFrame(() => state.mainChart.resize());
+            }
+        }
+    }
+
+    tabBtns.forEach(btn => btn.addEventListener('click', () => applyTab(btn.dataset.hornTab)));
+    applyTab('value');
+}
+

@@ -13,6 +13,31 @@ body {
   background-color: #000000 !important;
 }
 
+/* Keep legacy pink module states readable in the White theme. */
+body.theme-high-contrast .bg-pink-600,
+body.theme-high-contrast .bg-pink-700,
+body.theme-high-contrast .bg-pink-800,
+body.theme-high-contrast .bg-pink-900,
+body.theme-high-contrast [class*="bg-pink-"] {
+  background-color: #000000 !important;
+  background-image: none !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+body.theme-high-contrast .text-pink-300,
+body.theme-high-contrast .text-pink-400,
+body.theme-high-contrast .text-pink-500,
+body.theme-high-contrast .text-pink-600,
+body.theme-high-contrast .text-pink-700 {
+  color: #ffffff !important;
+}
+
+body.theme-high-contrast .peer:checked + [class*="peer-checked:bg-pink-"] {
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
 /* Scrollbars modernes et élégants */
 ::-webkit-scrollbar {
   width: 10px;

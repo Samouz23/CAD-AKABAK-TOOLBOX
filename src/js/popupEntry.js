@@ -12,6 +12,7 @@ import {
 import {
   getGeometryRectangularHtml,
   getGeometryPrismHtml,
+  getGeometryTrapezoidalHtml,
   getGeometryDiameterHtml,
   getGeometryConversionHtml,
   initializeGeometryCalculator
@@ -62,6 +63,11 @@ const popupModules = {
   'geometry-prism': {
     title: 'Triangular Prism',
     getHtml: getGeometryPrismHtml,
+    initialize: initializeGeometryCalculator
+  },
+  'geometry-trapezoidal': {
+    title: 'Trapezoidal Prism',
+    getHtml: getGeometryTrapezoidalHtml,
     initialize: initializeGeometryCalculator
   },
   'geometry-diameter': {
@@ -153,9 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (settings && settings.ui) {
       const KNOWN_THEMES = [
         'theme-dark-blue',
-        'theme-amber-matrix',
-        'theme-high-contrast',
-        'theme-arcade-purple'
+        'theme-high-contrast'
       ];
 
       // Appliquer le thème sur le body (comme dans l'application principale)
@@ -165,7 +169,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       // Appliquer les effets visuels
-      document.body.classList.toggle('no-scanlines', settings.ui.scanlines === false);
       document.body.classList.toggle('reduced-motion', settings.ui.reducedMotion === true);
       document.body.classList.toggle('btn-skin-solid', settings.ui.buttonSkin === 'solid');
       

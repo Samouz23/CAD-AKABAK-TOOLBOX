@@ -9,14 +9,15 @@ const MANUAL_CONTENT = {
       {
         title: 'Global',
         content: `
-          <p><strong>This application is an assistant for speaker enclosure design.</strong> It was created to work with CAD software, AKABAK, as well as with the GMSH meshing application.</p>
+          <p><strong>This application is an assistant for speaker enclosure design.</strong> It connects geometry, acoustic calculations, AKABAK and Gmsh in one workspace.</p>
           <h4 class="text-lg font-semibold text-white">Global Features</h4>
           <ul class="list-disc list-inside space-y-2">
-            <li><strong>Field Calculations:</strong> In the <strong>Geometry</strong>, <strong>Physics</strong> and <strong>Horn Expansion</strong> tools, you can enter calculations (e.g. <code>550*2-(8/11)</code>) in most fields. Press <strong>Enter</strong> to display the result.</li>
+            <li><strong>Field Calculations:</strong> In the <strong>Geometry</strong>, <strong>Calculator</strong> and <strong>Horn Expansion</strong> tools, you can enter calculations (e.g. <code>550*2-(8/11)</code>) in most fields. Press <strong>Enter</strong> to display the result.</li>
             <li><strong>Pop-out Windows:</strong> All tools have a button to open in a separate window. An option in the settings allows you to keep these windows "always on top".</li>
             <li><strong>Simplified Popups:</strong> Many tools (Driver Database, Mesh, Geometry, Notes) feature streamlined popup windows with optimized layouts for quick access to essential functions.</li>
             <li><strong>Escape Key:</strong> The Escape (Esc) key generally closes menus or modal windows.</li>
             <li><strong>Shift+Scroll:</strong> The Shift+Scroll key combination allows you to move faster in supported fields.</li>
+            <li><strong>Shortcuts:</strong> Open Settings to assign keys for panels, exports, splits, 3D display, points, interfaces, BEM elements and observation fields. Press Esc to close the current popup or menu.</li>
           </ul>
         `
       },
@@ -28,7 +29,7 @@ const MANUAL_CONTENT = {
             <li><strong>Updates:</strong> Displays a log of the latest application changes.</li>
             <li><strong>Access Paths:</strong> Crucial section to link the Toolbox to your other software (Gmsh, working folders for imports/exports).</li>
             <li><strong>Display & Windows:</strong> Allows you to change the interface size (Small/Normal/Large) and manage the "always on top" option for pop-out windows.</li>
-            <li><strong>UI Options:</strong> Customize the appearance with multiple color themes (Blue, Fire, White, Green), enable/disable scanlines effect, reduce animations, and choose button style (Striped or Solid).</li>
+            <li><strong>UI Options:</strong> Customize the appearance with Default, Blue, or White themes, reduce animations, and choose button style (Striped or Solid).</li>
             <li><strong>Formula Templates:</strong> Modify LEM formula templates for Duct-Script and Horn-Script according to your preferences.</li>
             <li><strong>Shortcuts:</strong> Customize keyboard shortcuts for Waveguide Studio and main application functions.</li>
           </ul>
@@ -45,7 +46,7 @@ const MANUAL_CONTENT = {
         `
       },
       {
-        title: 'Physics',
+        title: 'Calculator',
         content: `
           <p>Calculators dedicated to acoustic and electrical physics.</p>
           <h4 class="text-lg font-semibold text-white">Basic Calculators</h4>
@@ -150,30 +151,63 @@ const MANUAL_CONTENT = {
           <ul class="list-disc list-inside">
             <li><strong>Interactive graph:</strong> Visualizes your segments (solid lines) and the ideal curves (dotted lines) you select (Conical, Hypex, etc.).</li>
             <li><strong>Best-Fit:</strong> Analyzes your profile and calculates a similarity score (in %) for each mathematical law, helping you identify the closest theoretical profile.</li>
-            <li><strong>Export To:</strong> Sends data to "Horn-Script", "Waveguide Studio", or "Directivity". When exporting to Directivity, the tool automatically calculates wall angles, expansion type, and cutoff frequency for advanced horn analysis.</li>
+            <li><strong>Export To:</strong> Sends the current segment profile to Akabak LEM, Waveguide Studio or BEM Solver. Waveguide export includes throat/mouth dimensions, length and expansion-law parameters; BEM export includes the equivalent horn geometry for directivity analysis.</li>
+            <li><strong>Graph synchronization:</strong> Segment edits and expansion-law changes update the graph immediately. The graph tab can show the imported BEM result when the solver is connected.</li>
           </ul>
         `
       },
       {
-        title: 'Directivity',
+        title: 'BEM Solver',
         content: `
-          <p>Advanced directivity calculator for horns and waveguides with two operating modes.</p>
-          <h4 class="text-lg font-semibold text-white">Simple Mode (Piston)</h4>
+          <p>Acoustic simulation tool for horns, waveguides and connected air volumes. The former Directivity calculator is now the BEM Solver panel.</p>
+          <h4 class="text-lg font-semibold text-white">Study Configuration</h4>
           <ul class="list-disc list-inside space-y-2">
-            <li><strong>Rectangular piston model:</strong> Calculates directivity based on mouth dimensions only (width × height).</li>
-            <li><strong>Quick analysis:</strong> Provides beamwidth angles and Q-factor across frequency range (100 Hz - 16 kHz).</li>
+            <li><strong>Mesh import:</strong> Load a Gmsh <code>.msh</code> surface mesh and inspect its physical groups in the 3D viewer.</li>
+            <li><strong>Model tree:</strong> Organize surfaces into interior or exterior subdomains and assign interfaces between domains.</li>
+            <li><strong>Components:</strong> Add an infinite baffle and a real meshed diaphragm to a subdomain. The diaphragm uses its dimensions, profile, axis, offsets and driver parameters.</li>
+            <li><strong>Symmetry:</strong> Use none, horizontal, vertical or combined mirror symmetry to reduce the model while keeping the solver orientation-aware.</li>
           </ul>
-          <h4 class="text-lg font-semibold text-white mt-4">Pro Mode (Hybrid Horn)</h4>
+          <h4 class="text-lg font-semibold text-white mt-4">Solvers and Results</h4>
           <ul class="list-disc list-inside space-y-2">
-            <li><strong>Import from Horn Expansion:</strong> Click "Export To → Directivity" in Horn Expansion to automatically import horn geometry, wall angles, expansion type, and cutoff frequency.</li>
-            <li><strong>Advanced modeling:</strong> Combines diffraction (low frequency) and geometric control (high frequency) for realistic horn behavior.</li>
-            <li><strong>Expansion-aware:</strong> Takes into account expansion type (Conical, Exponential, Hypex, Parabolic, OS) for accurate predictions.</li>
+            <li><strong>Start Simulation:</strong> Calculates the acoustic response of all assigned subdomains and interfaces, then fills the result graphs.</li>
+            <li><strong>Automatic preparation:</strong> Checks surface connections and directions, joins touching mesh points and reports problems before the calculation.</li>
+            <li><strong>Directivity:</strong> Computes horizontal and vertical polar responses from the aperture, with far-field distance and angular sampling controls.</li>
+            <li><strong>SPL coupling:</strong> Converts the BEM pressure and driven load into an on-axis SPL result and can use the selected driver's T&amp;S parameters.</li>
+            <li><strong>Output filters:</strong> Add high-pass, low-pass, shelving or bell bands with Butterworth, Linkwitz-Riley or free-Q alignment. Each band can be bypassed. Filters are applied to the drive voltage, so no new simulation is needed.</li>
+            <li><strong>Frozen curves:</strong> Press <strong>Freeze curve</strong> to keep the current SPL and excursion on screen, then change the voltage, the filters or the geometry and compare. Frozen curves can be renamed, recoloured, hidden and are saved in the study file.</li>
+            <li><strong>Excursion:</strong> The Excursion tab shows the one-way peak cone travel in mm for the same operating point as the SPL tab. Enter the driver Xmax to draw the limit line; the cursor then reads how many dB of level remain before the limit.</li>
+            <li><strong>Diagnostics:</strong> Read the messages below the viewer. They identify missing surfaces, incorrect connections, mesh problems and unreliable results.</li>
           </ul>
-          <h4 class="text-lg font-semibold text-white mt-4">Visualization</h4>
+          <h4 class="text-lg font-semibold text-white mt-4">Tree and Viewer Actions</h4>
           <ul class="list-disc list-inside space-y-2">
-            <li><strong>Results table:</strong> Displays horizontal/vertical beamwidth and Q-factor for each frequency.</li>
-            <li><strong>Polar plot:</strong> Interactive polar diagram showing radiation pattern at selected frequency.</li>
-            <li><strong>Heatmap:</strong> Frequency vs. angle visualization with color-coded directivity response.</li>
+            <li><strong>Double-click:</strong> Double-click a subdomain, interface, surface or component to open its properties.</li>
+            <li><strong>Right-click a subdomain:</strong> Add an infinite baffle or a diaphragm. Right-click a component to remove it.</li>
+            <li><strong>Right-click other items:</strong> Rename or remove an interface or surface. Right-click a surface in the 3D viewer to assign it to a subdomain, interface or the unused Repository.</li>
+            <li><strong>Drag and drop:</strong> Move items within the tree to organize the study. A surface can be dropped onto another subdomain or interface.</li>
+            <li><strong>Visibility:</strong> Use the eye checkbox to show or hide an item in the viewer. For a field, it also decides whether the field is calculated.</li>
+            <li><strong>Expand/collapse:</strong> Click the arrow beside an item to show or hide its children. Press <strong>Esc</strong> to close menus and popups.</li>
+          </ul>
+          <h4 class="text-lg font-semibold text-white mt-4">Observation Fields</h4>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>Plane:</strong> Add a rectangular observation surface with configurable width, height, spacing and position.</li>
+            <li><strong>Balloon:</strong> Add a spherical angular grid to inspect the full radiation field and optionally deform it into a 3D directivity balloon.</li>
+            <li><strong>Level/phase:</strong> Display field magnitude in dB or phase using a cyclic ±180° color scale. Only checked fields are calculated.</li>
+            <li><strong>Start field:</strong> Recalculate checked fields from the last simulation. If the mesh or model changed, run Start Simulation again first.</li>
+          </ul>
+          <h4 class="text-lg font-semibold text-white mt-4">Air Flow and CFD</h4>
+          <p>The BEM describes air as a linear acoustic wave. That holds everywhere except inside a port, where the flow separates from the walls, sheds vortices and loses energy to viscosity. To see the real air velocity and the turbulence in a vent, the port has to be solved with the Navier-Stokes equations.</p>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>Air flow display:</strong> In a field's properties, the Air Flow section shows particle velocity instead of pressure. Use the logarithmic colour scale when a cabinet and a port are on the same map, as they differ by a factor of a thousand.</li>
+            <li><strong>Navier-Stokes coupling:</strong> Tick <strong>Solve the port with CFD</strong>, choose the vent subdomain, then press <strong>Start CFD</strong>. OpenFOAM solves the duct at the flow rate the BEM computed for your voltage and frequency, and the result replaces the field wherever the CFD mesh reaches. Outside the duct the BEM result is kept.</li>
+            <li><strong>Cost:</strong> Draft uses a coarse mesh with no boundary layer and finishes in seconds. Normal uses a fine mesh with wall layers and takes minutes to hours. Halving the base cell multiplies the cell count by eight.</li>
+            <li><strong>Validity:</strong> Turbulence does not scale with level. If the drive voltage, a filter or the frequency changes, the CFD result is dropped and must be recomputed. The SPL, being linear, does not need a new simulation.</li>
+            <li><strong>Backend:</strong> OpenFOAM runs inside WSL, the Linux subsystem of Windows. The <strong>CFD backend</strong> window reports exactly what is missing and can install OpenFOAM for you. Only creating the Linux distribution itself needs administrator rights, and the window gives the exact command to run.</li>
+          </ul>
+          <h4 class="text-lg font-semibold text-white mt-4">Projects and Limits</h4>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>TBBS:</strong> Save and restore the mesh, model tree, components, observation settings, frequency range and completed results in a <code>.TBBS</code> study file.</li>
+            <li><strong>Mesh quality:</strong> Refine the mesh until the largest element is suitable for the highest frequency. Above the reported valid frequency, errors are dominated by spatial resolution.</li>
+            <li><strong>Current limitation:</strong> An unbaffled exterior can show irregular frequencies because Burton-Miller/CHIEF stabilization is not implemented.</li>
           </ul>
         `
       },
@@ -182,31 +216,52 @@ const MANUAL_CONTENT = {
         content: `
           <p>Advanced parametric 3D design studio for waveguides and horns.</p>
           <ul class="list-disc list-inside">
-            <li><strong>Profile and section design:</strong> The guide is generated from an expansion law (profile) and a section shape (defined by the "superformula").</li>
-            <li><strong>3D/2D Visualization:</strong> An interactive 3D view allows you to visualize the waveguide, and a 2D view shows the section shape.</li>
-            <li><strong>Export:</strong> Export geometry in <code>.STL</code> (3D printing), <code>.CSV</code> (coordinates) or <code>.MSH</code> (simulation).</li>
+            <li><strong>Profile and section design:</strong> Generate a guide from Conical, Exponential, Hypex, Parabolic, OS and DOSC laws, with rectangular, circular or superformula sections.</li>
+            <li><strong>Adapters and splits:</strong> Configure throat adapters, input/output shapes, horizontal/vertical splits and optional interfaces for simulation-ready geometry.</li>
+            <li><strong>3D/2D visualization:</strong> The 3D viewer and profile/section graphs update together whenever a parameter changes.</li>
+            <li><strong>Export:</strong> Export STL, full or profile CSV, DXF sections, Onshape CSV and Gmsh <code>.MSH</code> with physical surface groups.</li>
+            <li><strong>Export To BEM:</strong> Send the generated profile to BEM Solver for directivity. The profile and mouth dimensions are transferred automatically.</li>
+            <li><strong>Solver Sync:</strong> After an initial BEM run, enable Sync to rebuild the simulation mesh and recalculate the results after geometry changes. The status shows each step and refreshes the Graph tab.</li>
+            <li><strong>Sync protection:</strong> Changing Interface or Split while Sync is active requires confirmation because the current simulation would no longer match the geometry. Disable Sync first when changing these settings manually.</li>
           </ul>
         `
       },
       {
-        title: 'Script LEM Horn',
+        title: 'Horn Studio',
         content: `
-          <p>LEM script generator for Akabak software, specialized in horn modeling.</p>
-          <ul class="list-disc list-inside">
-            <li><strong>Segment-based:</strong> Script is generated from a segment table.</li>
-            <li><strong>Modules:</strong> Add pre-configured script blocks for rear load (Enclosure), bass-reflex (Vented Enclosure) or transmission line starter (Amorce TL).</li>
-            <li><strong>Global copy:</strong> The "Copy formula" button assembles the complete script (driver + segments + modules) and copies it.</li>
+          <p>Standalone horn design workbench with a live geometry preview, segment editor and BEM results graph.</p>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>Segment editor:</strong> Create and edit the throat-to-mouth profile, reorder or split sections and inspect the generated geometry in 2D/3D.</li>
+            <li><strong>Graph:</strong> Compare the measured segment profile with selectable ideal expansion laws and view the BEM result in the Graph tab.</li>
+            <li><strong>Import from Horn Expansion:</strong> The Export To action transfers the current segments directly into Horn Studio.</li>
+            <li><strong>BEM Sync:</strong> With Sync enabled, a geometry edit is debounced, a new Gmsh mesh is generated, the mesh is imported into the embedded BEM Solver and the simulation is rerun.</li>
+            <li><strong>Result refresh:</strong> After a successful synchronized run, the BEM curves are refreshed in the Horn Studio Graph tab without changing the active design tab.</li>
+            <li><strong>Configuration protection:</strong> Interface and horizontal/vertical split changes are confirmed because they require a new simulation setup and invalidate the previous result.</li>
           </ul>
         `
       },
       {
-        title: 'Script LEM Duct',
+        title: 'Akabak LEM',
         content: `
-          <p>LEM script generator for Akabak, specialized in ducts and vents with variable section.</p>
+          <p>Unified Akabak LEM editor for front-wave and back-wave acoustic chains.</p>
           <ul class="list-disc list-inside">
-            <li><strong>Ducts/Transitions structure:</strong> Define a succession of rectangular sections (Ducts) and the type of connection between them (Waveguide or Mass).</li>
-            <li><strong>Copy by element:</strong> Click on the number of a duct or transition to copy only the LEM formula for that element.</li>
-            <li><strong>Global copy:</strong> The "Copy Complete Script" button generates and copies the LEM script for the entire structure.</li>
+            <li><strong>Two independent waves:</strong> Build the front and rear acoustic paths of the selected driver separately.</li>
+            <li><strong>Segment types:</strong> Combine Duct, Waveguide and sealed or vented Enclosure elements in each chain.</li>
+            <li><strong>Transitions:</strong> Connect consecutive ducts with a Waveguide transition or an acoustic Mass transition, with automatic T-factor calculations for waveguides.</li>
+            <li><strong>Driver picker:</strong> Search the Driver Database and use the selected driver's parameters in the generated project.</li>
+            <li><strong>Units and editing:</strong> Switch between mm and inch, insert/delete/reorder segments, clear a wave and edit global constants such as wood thickness and damping.</li>
+            <li><strong>Export:</strong> Copy the complete LEM formulas or generate a binary <code>.AKP</code> project through the Python Akabak toolchain.</li>
+          </ul>
+        `
+      },
+      {
+        title: 'Akabak LEM Templates',
+        content: `
+          <p>Formula templates shared by the Akabak LEM editor and the settings panel.</p>
+          <ul class="list-disc list-inside">
+            <li><strong>Available templates:</strong> Duct, Waveguide Transition, Mass Transition, constant-height Waveguide, sealed Enclosure and vented Enclosure.</li>
+            <li><strong>Grid and code modes:</strong> Edit assignment lines in the grid or inspect the complete formula in the code editor.</li>
+            <li><strong>Per-element copy:</strong> Copy an individual segment formula or the complete generated chain for use in Akabak.</li>
           </ul>
         `
       }
@@ -218,14 +273,15 @@ const MANUAL_CONTENT = {
       {
         title: 'Global',
         content: `
-          <p><strong>Cette application est un assistant pour la conception d'enceintes.</strong> Elle a été créée pour fonctionner avec un logiciel de CAO, AKABAK, ainsi qu'avec l'application de maillage GMSH.</p>
+          <p><strong>Cette application est un assistant pour la conception d'enceintes.</strong> Elle relie la géométrie, les calculs acoustiques, AKABAK et Gmsh dans un seul espace de travail.</p>
           <h4 class="text-lg font-semibold text-white">Fonctionnalités Globales</h4>
           <ul class="list-disc list-inside space-y-2">
-            <li><strong>Calcul dans les champs :</strong> Dans les outils <strong>Geometry</strong>, <strong>Physics</strong> et <strong>Horn Expansion</strong>, vous pouvez saisir des calculs (ex: <code>550*2-(8/11)</code>) dans la plupart des cases. Appuyez sur <strong>Entrée</strong> pour que le résultat s'affiche.</li>
+            <li><strong>Calcul dans les champs :</strong> Dans les outils <strong>Geometry</strong>, <strong>Calculator</strong> et <strong>Horn Expansion</strong>, vous pouvez saisir des calculs (ex: <code>550*2-(8/11)</code>) dans la plupart des cases. Appuyez sur <strong>Entrée</strong> pour que le résultat s'affiche.</li>
             <li><strong>Fenêtres Pop-out :</strong> Tous les outils disposent d'un bouton pour s'ouvrir dans une fenêtre séparée. Une option dans les réglages permet de garder ces fenêtres "toujours au premier plan".</li>
             <li><strong>Popups Simplifiés :</strong> De nombreux outils (Driver Database, Mesh, Geometry, Notes) disposent de fenêtres popup optimisées avec des interfaces épurées pour un accès rapide aux fonctions essentielles.</li>
             <li><strong>Touche Échap :</strong> La touche Échap (Esc) permet généralement de fermer les menus ou les fenêtres modales.</li>
-            <li><strong>Touche Shift+Scroll :</strong> La combinaison de touche Shift+Scroll permet, dans les cases qui le permettent de se déplacer plus rapidement.</li>
+            <li><strong>Touche Shift+Scroll :</strong> La combinaison Shift+Scroll permet, dans les cases qui le permettent, de se déplacer plus rapidement.</li>
+            <li><strong>Raccourcis :</strong> Ouvrez Settings pour attribuer des touches aux panneaux, exports, séparations, affichage 3D, points, interfaces, éléments BEM et champs d'observation. Appuyez sur Échap pour fermer la fenêtre ou le menu courant.</li>
           </ul>
         `
       },
@@ -237,7 +293,7 @@ const MANUAL_CONTENT = {
             <li><strong>Mises à jour :</strong> Affiche un journal des dernières modifications de l'application.</li>
             <li><strong>Chemins d'Accès :</strong> Section cruciale pour lier la Toolbox à vos autres logiciels (Gmsh, dossiers de travail pour les imports/exports).</li>
             <li><strong>Affichage & Fenêtres :</strong> Permet de changer la taille de l'interface (Small/Normal/Large) et de gérer l'option "toujours au premier plan" des fenêtres pop-out.</li>
-            <li><strong>Options UI :</strong> Personnalisez l'apparence avec plusieurs thèmes de couleur (Blue, Fire, White, Green), activez/désactivez l'effet scanlines, réduisez les animations et choisissez le style des boutons (Striped ou Solid).</li>
+            <li><strong>Options UI :</strong> Personnalisez l'apparence avec plusieurs thèmes de couleur (Blue, Fire, White, Green), réduisez les animations et choisissez le style des boutons (Striped ou Solid).</li>
             <li><strong>Formula Templates :</strong> Modifiez les modèles de formules LEM pour Duct-Script et Horn-Script selon vos préférences.</li>
             <li><strong>Raccourcis :</strong> Personnalisez les raccourcis clavier pour Waveguide Studio et les fonctions principales de l'application.</li>
           </ul>
@@ -254,7 +310,7 @@ const MANUAL_CONTENT = {
         `
       },
       {
-        title: 'Physics',
+        title: 'Calculator',
         content: `
           <p>Des calculateurs dédiés à la physique acoustique et électrique.</p>
           <h4 class="text-lg font-semibold text-white">Calculateurs de Base</h4>
@@ -359,30 +415,51 @@ const MANUAL_CONTENT = {
           <ul class="list-disc list-inside">
             <li><strong>Graphique interactif :</strong> Visualise vos segments (lignes pleines) et les courbes idéales (lignes pointillées) que vous sélectionnez (Conique, Hypex, etc.).</li>
             <li><strong>Best-Fit :</strong> Analyse votre profil et calcule un score de similarité (en %) pour chaque loi mathématique, vous aidant à identifier le profil théorique le plus proche.</li>
-            <li><strong>Export To :</strong> Envoie les données vers "Horn-Script", "Waveguide Studio" ou "Directivity". Lors de l'export vers Directivity, l'outil calcule automatiquement les angles de paroi, le type d'expansion et la fréquence de coupure pour une analyse avancée du pavillon.</li>
+            <li><strong>Export To :</strong> Envoie le profil courant vers Akabak LEM, Waveguide Studio ou BEM Solver. L'export Waveguide contient les dimensions gorge/bouche, la longueur et la loi d'expansion ; l'export BEM prépare la géométrie équivalente pour l'analyse de directivité.</li>
+            <li><strong>Synchronisation du graphique :</strong> Les modifications de segments et de loi d'expansion mettent immédiatement à jour le graphique. L'onglet Graph peut afficher le résultat BEM importé lorsque le solveur est connecté.</li>
           </ul>
         `
       },
       {
-        title: 'Directivité',
+        title: 'BEM Solver',
         content: `
-          <p>Calculateur de directivité avancé pour pavillons et guides d'ondes avec deux modes de fonctionnement.</p>
-          <h4 class="text-lg font-semibold text-white">Mode Simple (Piston)</h4>
+          <p>Outil de simulation acoustique pour pavillons, guides d'ondes et volumes d'air reliés. L'ancien calculateur de directivité est devenu le panneau BEM Solver.</p>
+          <h4 class="text-lg font-semibold text-white">Configuration de l'étude</h4>
           <ul class="list-disc list-inside space-y-2">
-            <li><strong>Modèle de piston rectangulaire :</strong> Calcule la directivité basée uniquement sur les dimensions de la bouche (largeur × hauteur).</li>
-            <li><strong>Analyse rapide :</strong> Fournit les angles d'ouverture et le facteur Q sur toute la plage de fréquences (100 Hz - 16 kHz).</li>
+            <li><strong>Import du maillage :</strong> Chargez un maillage de surface Gmsh <code>.msh</code> et inspectez ses groupes physiques dans le viewer 3D.</li>
+            <li><strong>Arbre du modèle :</strong> Organisez les surfaces dans des sous-domaines intérieurs ou extérieurs et affectez les interfaces entre domaines.</li>
+            <li><strong>Composants :</strong> Ajoutez un baffle infini et un diaphragme réellement maillé à un sous-domaine. Le diaphragme utilise ses dimensions, son profil, son axe, ses décalages et les paramètres du driver.</li>
+            <li><strong>Symétrie :</strong> Utilisez aucune symétrie, une symétrie horizontale, verticale ou combinée pour réduire le modèle, avec orientation automatique des surfaces.</li>
           </ul>
-          <h4 class="text-lg font-semibold text-white mt-4">Mode Pro (Pavillon Hybride)</h4>
+          <h4 class="text-lg font-semibold text-white mt-4">Solveurs et résultats</h4>
           <ul class="list-disc list-inside space-y-2">
-            <li><strong>Import depuis Horn Expansion :</strong> Cliquez sur "Export To → Directivity" dans Horn Expansion pour importer automatiquement la géométrie du pavillon, les angles de paroi, le type d'expansion et la fréquence de coupure.</li>
-            <li><strong>Modélisation avancée :</strong> Combine la diffraction (basses fréquences) et le contrôle géométrique (hautes fréquences) pour un comportement réaliste du pavillon.</li>
-            <li><strong>Adaptation au type d'expansion :</strong> Prend en compte le type d'expansion (Conical, Exponential, Hypex, Parabolic, OS) pour des prédictions précises.</li>
+            <li><strong>Start Simulation :</strong> Calcule la réponse acoustique de tous les sous-domaines et interfaces affectés, puis remplit les graphiques de résultats.</li>
+            <li><strong>Préparation automatique :</strong> Vérifie les connexions et le sens des surfaces, raccorde les points de maillage qui se touchent et signale les problèmes avant le calcul.</li>
+            <li><strong>Directivité :</strong> Calcule les réponses polaires horizontale et verticale depuis l'ouverture, avec réglage de la distance de champ lointain et du pas angulaire.</li>
+            <li><strong>Couplage SPL :</strong> Convertit la pression BEM et la charge pilotée en résultat SPL sur l'axe, avec utilisation possible des paramètres T&amp;S du driver sélectionné.</li>
+            <li><strong>Diagnostics :</strong> Lisez les messages affichés sous le viewer. Ils signalent les surfaces manquantes, les mauvaises connexions, les problèmes de maillage et les résultats peu fiables.</li>
           </ul>
-          <h4 class="text-lg font-semibold text-white mt-4">Visualisation</h4>
+          <h4 class="text-lg font-semibold text-white mt-4">Actions dans l'arbre et le viewer</h4>
           <ul class="list-disc list-inside space-y-2">
-            <li><strong>Tableau de résultats :</strong> Affiche l'ouverture horizontale/verticale et le facteur Q pour chaque fréquence.</li>
-            <li><strong>Diagramme polaire :</strong> Diagramme polaire interactif montrant le pattern de rayonnement à la fréquence sélectionnée.</li>
-            <li><strong>Heatmap :</strong> Visualisation fréquence vs. angle avec réponse de directivité en code couleur.</li>
+            <li><strong>Double-clic :</strong> Double-cliquez sur un sous-domaine, une interface, une surface ou un composant pour ouvrir ses propriétés.</li>
+            <li><strong>Clic droit sur un sous-domaine :</strong> Ajoutez un baffle infini ou un diaphragme. Faites un clic droit sur un composant pour le supprimer.</li>
+            <li><strong>Clic droit sur les autres éléments :</strong> Renommez ou supprimez une interface ou une surface. Dans le viewer 3D, faites un clic droit sur une surface pour l'affecter à un sous-domaine, une interface ou au Repository inutilisé.</li>
+            <li><strong>Glisser-déposer :</strong> Déplacez les éléments dans l'arbre pour organiser l'étude. Une surface peut être déposée sur un autre sous-domaine ou une interface.</li>
+            <li><strong>Visibilité :</strong> La case avec l'œil affiche ou masque un élément dans le viewer. Pour un champ, elle décide aussi s'il sera calculé.</li>
+            <li><strong>Ouvrir/fermer :</strong> Cliquez sur la flèche d'un élément pour afficher ou masquer ses enfants. Appuyez sur <strong>Échap</strong> pour fermer les menus et fenêtres.</li>
+          </ul>
+          <h4 class="text-lg font-semibold text-white mt-4">Champs d'observation</h4>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>Plan :</strong> Ajoutez une surface d'observation rectangulaire avec largeur, hauteur, espacement et position réglables.</li>
+            <li><strong>Ballon :</strong> Ajoutez une grille angulaire sphérique pour inspecter le champ rayonné et la déformer en ballon de directivité 3D.</li>
+            <li><strong>Niveau/phase :</strong> Affichez le niveau en dB ou la phase avec une échelle cyclique ±180°. Seuls les champs cochés sont calculés.</li>
+            <li><strong>Start field :</strong> Recalculez les champs cochés à partir de la dernière simulation. Si le maillage ou le modèle a changé, relancez d'abord Start Simulation.</li>
+          </ul>
+          <h4 class="text-lg font-semibold text-white mt-4">Projets et limites</h4>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>TBBS :</strong> Sauvegardez et restaurez le maillage, l'arbre, les composants, les réglages d'observation, la plage de fréquences et les résultats dans un fichier d'étude <code>.TBBS</code>.</li>
+            <li><strong>Qualité du maillage :</strong> Raffinez le maillage pour que le plus grand élément soit adapté à la fréquence maximale. Au-delà de la fréquence valide indiquée, l'erreur vient surtout de la résolution spatiale.</li>
+            <li><strong>Limite actuelle :</strong> Un domaine extérieur non bafflé peut présenter des fréquences irrégulières, car la stabilisation Burton-Miller/CHIEF n'est pas implémentée.</li>
           </ul>
         `
       },
@@ -391,31 +468,52 @@ const MANUAL_CONTENT = {
         content: `
           <p>Studio de conception 3D paramétrique avancé pour les guides d'ondes et pavillons.</p>
           <ul class="list-disc list-inside">
-            <li><strong>Conception par profil et section :</strong> Le guide est généré à partir d'une loi d'expansion (profil) et d'une forme de section (définie par la "superformule").</li>
-            <li><strong>Visualisation 3D/2D :</strong> Une vue 3D interactive permet de visualiser le guide d'onde, et une vue 2D montre la forme de la section.</li>
-            <li><strong>Export :</strong> Exportez la géométrie en <code>.STL</code> (impression 3D), <code>.CSV</code> (coordonnées) ou <code>.MSH</code> (simulation).</li>
+            <li><strong>Conception du profil et de la section :</strong> Générez un guide avec les lois Conique, Exponentielle, Hypex, Parabolique, OS et DOSC, et des sections rectangulaires, circulaires ou à superformule.</li>
+            <li><strong>Adaptateurs et séparations :</strong> Configurez les adaptateurs de gorge, les formes d'entrée/sortie, les séparations horizontale/verticale et les interfaces optionnelles de simulation.</li>
+            <li><strong>Visualisation 3D/2D :</strong> Le viewer 3D et les graphiques de profil/section se mettent à jour ensemble à chaque changement de paramètre.</li>
+            <li><strong>Exports :</strong> Exportez en STL, CSV complet ou de profil, sections DXF, CSV Onshape et Gmsh <code>.MSH</code> avec groupes de surfaces physiques.</li>
+            <li><strong>Export vers BEM :</strong> Envoyez le profil généré au BEM Solver pour la directivité. Le profil et les dimensions de bouche sont transférés automatiquement.</li>
+            <li><strong>Sync Solver :</strong> Après un premier calcul BEM, activez Sync pour reconstruire le maillage de simulation et recalculer les résultats après chaque modification de géométrie. Le statut indique chaque étape et actualise l'onglet Graph.</li>
+            <li><strong>Protection Sync :</strong> Modifier Interface ou Split avec Sync actif demande confirmation, car la simulation ne correspondrait plus à la géométrie. Désactivez Sync avant de modifier ces réglages manuellement.</li>
           </ul>
         `
       },
       {
-        title: 'Script LEM Horn',
+        title: 'Horn Studio',
         content: `
-          <p>Générateur de script LEM pour le logiciel Akabak, spécialisé dans la modélisation de pavillons (Horn).</p>
-          <ul class="list-disc list-inside">
-            <li><strong>Basé sur les segments :</strong> Le script est généré à partir d'un tableau de segments.</li>
-            <li><strong>Modules :</strong> Ajoutez des blocs de script pré-configurés pour une charge arrière (Enclosure), bass-reflex (Vented Enclosure) ou une amorce de ligne de transmission (Amorce TL).</li>
-            <li><strong>Copie globale :</strong> Le bouton "Copie formula" assemble le script complet (driver + segments + modules) et le copie.</li>
+          <p>Atelier autonome de conception de pavillons avec aperçu géométrique en direct, éditeur de segments et graphique des résultats BEM.</p>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong>Éditeur de segments :</strong> Créez et modifiez le profil gorge-bouche, réordonnez ou divisez les sections et inspectez la géométrie en 2D/3D.</li>
+            <li><strong>Graphique :</strong> Comparez le profil des segments aux lois d'expansion idéales et affichez le résultat BEM dans l'onglet Graph.</li>
+            <li><strong>Import depuis Horn Expansion :</strong> Export To transfère directement les segments courants vers Horn Studio.</li>
+            <li><strong>Sync BEM :</strong> Avec Sync activé, une modification de géométrie est regroupée après un court délai, un nouveau maillage Gmsh est généré, importé dans le BEM intégré puis recalculé.</li>
+            <li><strong>Mise à jour du résultat :</strong> Après un calcul synchronisé réussi, les courbes BEM sont rafraîchies dans l'onglet Graph sans changer l'onglet de conception actif.</li>
+            <li><strong>Protection de configuration :</strong> Les changements d'Interface et de séparation horizontale/verticale sont confirmés, car ils nécessitent une nouvelle configuration de simulation et invalident le résultat précédent.</li>
           </ul>
         `
       },
       {
-        title: 'Script LEM Duct',
+        title: 'Akabak LEM',
         content: `
-          <p>Générateur de script LEM pour Akabak, spécialisé dans les conduits et évents à section variable.</p>
+          <p>Éditeur Akabak LEM unifié pour construire séparément les chaînes acoustiques avant et arrière.</p>
           <ul class="list-disc list-inside">
-            <li><strong>Structure en Ducts/Transitions :</strong> Définissez une succession de sections rectangulaires (Ducts) et le type de liaison entre elles (Waveguide ou Mass).</li>
-            <li><strong>Copie par élément :</strong> Cliquez sur le numéro d'un duct ou d'une transition pour copier uniquement la formule LEM de cet élément.</li>
-            <li><strong>Copie globale :</strong> Le bouton "Copie Script Complet" génère et copie le script LEM pour l'ensemble de la structure.</li>
+            <li><strong>Deux ondes indépendantes :</strong> Construisez séparément le chemin acoustique avant et arrière du driver sélectionné.</li>
+            <li><strong>Types de segments :</strong> Combinez des éléments Duct, Waveguide et Enclosure close ou bass-reflex dans chaque chaîne.</li>
+            <li><strong>Transitions :</strong> Reliez deux ducts consécutifs par une transition Waveguide ou une masse acoustique, avec calcul automatique des facteurs T des waveguides.</li>
+            <li><strong>Sélecteur de driver :</strong> Recherchez un driver dans Driver Database et utilisez ses paramètres pour le projet généré.</li>
+            <li><strong>Unités et édition :</strong> Basculez entre mm et pouces, insérez/supprimez/réordonnez des segments, effacez une onde et modifiez les constantes globales.</li>
+            <li><strong>Export :</strong> Copiez les formules LEM complètes ou générez un projet binaire <code>.AKP</code> avec la chaîne d'outils Python Akabak.</li>
+          </ul>
+        `
+      },
+      {
+        title: 'Templates Akabak LEM',
+        content: `
+          <p>Templates de formules partagés par l'éditeur Akabak LEM et le panneau Settings.</p>
+          <ul class="list-disc list-inside">
+            <li><strong>Templates disponibles :</strong> Duct, transition Waveguide, transition Mass, Waveguide à hauteur constante, Enclosure close et Enclosure bass-reflex.</li>
+            <li><strong>Modes grille et code :</strong> Modifiez les lignes d'affectation dans la grille ou inspectez la formule complète dans l'éditeur de code.</li>
+            <li><strong>Copie par élément :</strong> Copiez la formule d'un segment ou toute la chaîne générée pour l'utiliser dans Akabak.</li>
           </ul>
         `
       }

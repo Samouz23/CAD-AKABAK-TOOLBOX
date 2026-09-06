@@ -45,6 +45,7 @@ export function showGeometryCalculatorSelector() {
   const calculators = [
     { id: 'rectangular', label: 'Rectangular Volume Calculator' },
     { id: 'prism', label: 'Triangular Prism Volume Calculator' },
+    { id: 'trapezoidal', label: 'Trapezoidal Prism Volume Calculator' },
     { id: 'diameter', label: 'Diameter ⇄ Area' },
     { id: 'conversion', label: 'Metric ⇄ Inch' }
   ];
@@ -140,6 +141,7 @@ export function showGeometryCalculatorSelector() {
       const calculatorNames = {
         'rectangular': 'Rectangular Volume',
         'prism': 'Triangular Prism',
+        'trapezoidal': 'Trapezoidal Prism',
         'diameter': 'Diameter ⇄ Area',
         'conversion': 'Metric ⇄ Inch'
       };

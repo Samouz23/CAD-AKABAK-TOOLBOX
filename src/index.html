@@ -13,9 +13,187 @@
   <link rel="stylesheet" href="./css/icons.css">
   <link rel="stylesheet" href="./css/notifications.css">
   <style>
-    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; position: relative; }
+    :root { --module-sidebar-width: 220px; }
     .drag-region { -webkit-app-region: drag; user-select: none; }
     .no-drag { -webkit-app-region: no-drag; }
+    #app-logo { display: none; width: 22px; height: 22px; object-fit: contain; }
+
+    #module-sidebar {
+      position: absolute;
+      top: 40px;
+      bottom: 0;
+      left: 0;
+      z-index: 45;
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      padding: 1rem 0.75rem;
+      box-sizing: border-box;
+      overflow: hidden;
+      background: var(--bg-elevated, #12121a);
+      border-right: 1px solid var(--border-subtle, rgba(233, 30, 140, 0.2));
+      transition: width 180ms ease;
+    }
+
+    #module-sidebar.collapsed {
+      width: 52px;
+      padding-left: 0.4rem;
+      padding-right: 0.4rem;
+      overflow: visible;
+    }
+    #module-sidebar.collapsed .module-sidebar-heading,
+    #module-sidebar.collapsed .module-nav-btn span { display: none; }
+    #module-sidebar.collapsed .module-nav-btn { justify-content: center; padding-left: 0; padding-right: 0; }
+    #module-sidebar-toggle {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      width: 26px;
+      height: 42px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      line-height: 1;
+      color: var(--text-primary, #fff);
+      border: 1px solid var(--border-primary, #ec4899);
+      border-radius: 999px;
+      background: var(--bg-elevated, #12121a);
+      cursor: pointer;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+    #module-sidebar.collapsed #module-sidebar-toggle { right: -32px; }
+
+    .module-sidebar-heading {
+      margin: 0.5rem 0 0.25rem;
+      color: var(--text-muted, #999);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-history-controls {
+      display: flex;
+      gap: 0.35rem;
+      order: 999;
+      margin: auto 0 0;
+    }
+    .sidebar-history-btn {
+      flex: 1;
+      height: 32px;
+      border: 1px solid var(--border-subtle, rgba(233, 30, 140, 0.25));
+      border-radius: var(--radius-md, 6px);
+      background: transparent;
+      color: var(--text-muted, #999);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .sidebar-history-btn:hover:not(:disabled) {
+      color: var(--text-primary, #fff);
+      border-color: var(--border-primary, #ec4899);
+      background: var(--bg-hover, rgba(233, 30, 140, 0.12));
+    }
+    .sidebar-history-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    #module-sidebar.collapsed .sidebar-history-controls { flex-direction: column; }
+
+    .module-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      width: 100%;
+      min-height: 38px;
+      padding: 0.55rem 0.7rem;
+      color: var(--text-body, #e5e7eb);
+      text-align: left;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md, 6px);
+      background: transparent;
+      cursor: pointer;
+      font: inherit;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+
+    .module-nav-btn img { width: 20px; height: 20px; flex: 0 0 auto; }
+    .module-nav-btn:hover,
+    .module-nav-btn.active {
+      color: var(--text-primary, #fff);
+      border-color: var(--border-primary, #ec4899);
+      background: var(--bg-hover, rgba(233, 30, 140, 0.12));
+    }
+
+    #app-container { margin-left: var(--module-sidebar-width); }
+    #tool-view { left: var(--module-sidebar-width); }
+    #dashboard,
+    #dashboard-actions { display: none; }
+
+    #home-wallpaper {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--bg-app, #000);
+      pointer-events: none;
+      display: block;
+      filter: saturate(1.2);
+      /* Accent lumineux du thème courant : --border-secondary est la variante
+         claire dans les 5 thèmes (rose, cyan, ambre, gris, teal). */
+      --wallpaper-accent: var(--border-secondary, var(--border-primary, #67e8f9));
+    }
+    .wallpaper-item {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
+      opacity: 0.9;
+      color: var(--wallpaper-accent);
+      filter: drop-shadow(0 0 14px color-mix(in srgb, var(--wallpaper-accent) 90%, transparent));
+      animation: wallpaperDrift 18s ease-in-out infinite alternate;
+    }
+    .wallpaper-item img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      /* Même recoloration que les icônes de la sidebar (--icon-filter-primary),
+         puis halo dans la couleur d'accent du thème. */
+      filter: var(--icon-filter-primary) brightness(1.35) drop-shadow(0 0 10px color-mix(in srgb, var(--wallpaper-accent) 80%, transparent));
+      opacity: 0.95;
+    }
+    .wallpaper-label {
+      color: color-mix(in srgb, var(--wallpaper-accent) 80%, transparent);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: labelBounce 4s ease-in-out infinite;
+      white-space: nowrap;
+      text-shadow: 0 0 8px color-mix(in srgb, var(--wallpaper-accent) 75%, transparent);
+    }
+    @keyframes wallpaperDrift {
+      0% { transform: translate3d(0, 0, 0) scale(0.9); }
+      25% { transform: translate3d(var(--dx1, 10vw), var(--dy1, -12vh), 0) scale(1.05); }
+      50% { transform: translate3d(var(--dx2, 30vw), var(--dy2, 15vh), 0) scale(1.12); }
+      75% { transform: translate3d(var(--dx3, 55vw), var(--dy3, -8vh), 0) scale(0.95); }
+      100% { transform: translate3d(var(--dx4, 70vw), var(--dy4, 18vh), 0) scale(1.08); }
+    }
+    @keyframes labelBounce {
+      0%, 100% { transform: translateY(0px); opacity: 0.7; }
+      50% { transform: translateY(-8px); opacity: 1; }
+    }
+
+    @media (max-width: 700px) {
+      #module-sidebar { width: 168px; padding-left: 0.5rem; padding-right: 0.5rem; }
+      #module-sidebar.collapsed { width: 52px; }
+      #app-container { margin-left: var(--module-sidebar-width); }
+      #tool-view { left: var(--module-sidebar-width); }
+      .module-nav-btn { font-size: 0.78rem; }
+      .module-nav-btn img { display: block; }
+    }
     
     /* Force l'affichage des icônes des boutons d'action */
     /* Dashboard utilise le CSS de style.css - ne pas redéfinir ici */
@@ -103,12 +281,13 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   ">
-    <div style="
+    <div id="app-title" style="
       color: var(--text-subtitle, #fae8ff); 
       font-size: 0.875rem; 
       font-weight: 600;
       letter-spacing: 0.05em;
     ">CAD-AKABAK Toolbox</div>
+    <img id="app-logo" src="./assets/Splash/SZSB.svg" alt="CAD-AKABAK Toolbox">
     <div id="window-controls" class="no-drag" style="display: flex; gap: var(--spacing-sm, 8px);">
       <button id="min-btn" title="Minimize" class="no-drag" style="
         width: 32px;
@@ -155,13 +334,33 @@
     </div>
   </div>
 
+  <nav id="module-sidebar" aria-label="Modules">
+    <button id="module-sidebar-toggle" type="button" aria-label="Réduire la barre">&#x2039;</button>
+    <div class="module-sidebar-heading">Modules</div>
+    <div class="sidebar-history-controls" aria-label="Navigation history">
+      <button id="history-back-btn" class="sidebar-history-btn" type="button" title="Back" aria-label="Back">&#x2190;</button>
+      <button id="history-forward-btn" class="sidebar-history-btn" type="button" title="Forward" aria-label="Forward">&#x2192;</button>
+    </div>
+    <button class="module-nav-btn" data-tool="geometry" data-title="Geometry"><img src="./assets/icon/geometry.svg" alt=""><span>Geometry</span></button>
+    <button class="module-nav-btn" data-tool="power" data-title="Calculator"><img src="./assets/icon/calculator.svg" alt=""><span>Calculator</span></button>
+    <button class="module-nav-btn" data-tool="mesh" data-title="Mesh & Frequency"><img src="./assets/icon/mesh.svg" alt=""><span>Mesh & Frequency</span></button>
+    <button class="module-nav-btn" data-tool="drivers" data-title="Driver DB"><img src="./assets/icon/speaker.svg" alt=""><span>Driver DB</span></button>
+    <button class="module-nav-btn" data-tool="notes" data-title="Notes"><img src="./assets/icon/pencil.svg" alt=""><span>Notes</span></button>
+    <button class="module-nav-btn" data-tool="horn" data-title="Horn Expansion"><img src="./assets/icon/HEXP.svg" alt=""><span>Horn Expansion</span></button>
+    <button class="module-nav-btn" data-tool="akabak_lem" data-title="Akabak LEM"><img src="./assets/icon/AKALEM.svg" alt=""><span>Akabak LEM</span></button>
+    <button class="module-nav-btn" data-tool="hornstudio" data-title="Horn Studio"><img src="./assets/icon/horn.svg" alt=""><span>Horn Studio</span></button>
+    <button class="module-nav-btn" data-tool="directivity" data-title="BEM Solver"><img src="./assets/icon/BEM.svg" alt=""><span>BEM Solver</span></button>
+    <button class="module-nav-btn" data-tool="waveguide" data-title="Waveguide Studio"><img src="./assets/icon/waveguide.svg" alt=""><span>Waveguide Studio</span></button>
+    <button class="module-nav-btn" data-tool="settings" data-title="Configuration"><img src="./assets/icon/settings.svg" alt=""><span>Configuration</span></button>
+  </nav>
+
   <!-- Conteneur principal qui inclut le dashboard ET les boutons -->
   <div id="app-container" style="position: relative; height: calc(100vh - 40px);">
 
     <!-- Contenu principal du tableau de bord -->
     <main id="dashboard">
       <div class="panel" data-panel="geometry"><img src="./assets/icon/geometry.svg" alt="Geometry" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Geometry</h2></div>
-      <div class="panel" data-panel="power"><img src="./assets/icon/physics.svg" alt="Physics" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Physics</h2></div>
+      <div class="panel" data-panel="power"><img src="./assets/icon/physics.svg" alt="Calculator" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Calculator</h2></div>
       <div class="panel" data-panel="mesh"><img src="./assets/icon/mesh.svg" alt="Mesh" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Mesh & Frequency</h2></div>
       <div class="panel" data-panel="drivers"><img src="./assets/icon/speaker.svg" alt="Speaker" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Driver DB</h2></div>
       <div class="panel" data-panel="horn-submenu-trigger"><img src="./assets/icon/goggles.svg" alt="Advanced" class="w-16 h-16 mb-4"><h2 class="text-2xl font-bold">Advanced sim</h2></div>
@@ -174,6 +373,8 @@
         <img src="./assets/icon/settings.svg" alt="Settings" class="w-6 h-6">
       </button>
     </div>
+    <!-- Peuplé dynamiquement par renderHomeWallpaper() dans renderer.js -->
+    <div id="home-wallpaper" aria-hidden="true"></div>
   </div>
 
   <!-- Conteneur pour le sous-menu -->
@@ -183,7 +384,7 @@
       <div class="col-start-2 row-start-1 panel sub-panel" data-panel="horn" style="width: 300px;"><h2 class="text-2xl font-bold">Horn Expansion</h2></div>              
       <div class="col-start-1 row-start-2 panel sub-panel" data-panel="akabak_lem" style="width: 300px;"><h2 class="text-2xl font-bold">Akabak LEM</h2></div>
       <div class="col-start-2 row-start-2 panel sub-panel" data-panel="hornstudio" style="width: 300px;"><h2 class="text-2xl font-bold">Horn Studio</h2></div>
-      <div class="col-start-3 row-start-2 panel sub-panel" data-panel="directivity" style="width: 300px;"><h2 class="text-2xl font-bold">Directivity</h2></div>
+      <div class="col-start-3 row-start-2 panel sub-panel" data-panel="directivity" style="width: 300px;"><h2 class="text-2xl font-bold">BEM Solver</h2></div>
       <div class="col-start-2 row-start-3 panel sub-panel" data-panel="waveguide" style="width: 300px;"><h2 class="text-2xl font-bold">Waveguide Studio</h2></div>
     </div>
   </div>

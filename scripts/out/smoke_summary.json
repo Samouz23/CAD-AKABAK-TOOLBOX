@@ -1,0 +1,46 @@
+{
+  "runtag": "smoke",
+  "fMin": 200,
+  "fMax": 1500,
+  "freqsCount": 13,
+  "rankings": [
+    {
+      "tag": "smoke_smoketest",
+      "score": 78.28192030754997,
+      "isophaseStdMm": 16.357315151802805,
+      "hBeamMean": 180,
+      "hBeamStd": 0,
+      "vBeamMean": 155.38734923594237,
+      "vBeamStd": 40.608822451082325,
+      "hfFlatness": 1,
+      "elapsed_s": 0.9579902,
+      "dims": {
+        "length": 100,
+        "slotW": 8.751095598939964,
+        "slotH": 218.77738997349908,
+        "throatDia": 35.6,
+        "throatArea": 995.3822163633902,
+        "mouthArea": 1600,
+        "isophaseStdMm": 16.357315151802805,
+        "aspectRatio": 25
+      },
+      "cfg": {
+        "name": "smoketest",
+        "throatDia": 35.6,
+        "slotWidth": 8,
+        "slotHeight": 200,
+        "length": 100,
+        "splayAngle": 0,
+        "expansionLaw": "Conical",
+        "fc": 700,
+        "theta": 22,
+        "hypexT": 1,
+        "besselB": 0.7,
+        "morphPower": 2.5,
+        "slotBlendStart": 40,
+        "axialSections": 12,
+        "angularPoints": 24
+      }
+    }
+  ]
+}
