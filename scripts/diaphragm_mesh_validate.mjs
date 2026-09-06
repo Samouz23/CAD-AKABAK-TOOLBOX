@@ -136,6 +136,13 @@ check('offset Z appliqué', Math.abs(dz - 10) < 1e-9, `${dz.toFixed(3)} mm`);
 const maxX = (mesh) => mesh.nodes.reduce((mx, n) => Math.max(mx, n[0]), -Infinity);
 const scaled = buildDiaphragmMesh({ ...base, scaleX: 2 });
 check('scale X appliqué', Math.abs(maxX(scaled) / maxX(m) - 2) < 1e-9, `×${(maxX(scaled) / maxX(m)).toFixed(4)}`);
+const rotatedX = buildDiaphragmMesh({ ...base, rotationX_deg: 90 });
+const sourcePoint = m.nodes[100], rotatedPoint = rotatedX.nodes[100];
+check('rotation X appliquée',
+  Math.abs(rotatedPoint[0] - sourcePoint[0]) < 1e-9
+    && Math.abs(rotatedPoint[1] + sourcePoint[2]) < 1e-9
+    && Math.abs(rotatedPoint[2] - sourcePoint[1]) < 1e-9,
+  `(${sourcePoint.map(v => v.toFixed(2)).join(', ')}) -> (${rotatedPoint.map(v => v.toFixed(2)).join(', ')})`);
 
 console.log('\n=== 5. Conformité au maillage hôte ===');
 // Anneau de sommets hôtes légèrement décalés du bord théorique, DANS le plan de

@@ -62,10 +62,10 @@ export function buildDiaphragmMesh(component, options = {}) {
   // Sur un maillage hôte réduit par symétrie, le diaphragme doit l'être aussi :
   // laissé entier, il est démultiplié par les images miroir, son sous-domaine ne
   // se referme plus et la source rayonne en champ libre — d'où un ballon inversé.
-  const sector = symmetrySector(options.symmetry, basis, scale, offset, options.hostVertices);
+  const sector = symmetrySector(options.symmetry, basis, scale, offset, options.hostVertices, component);
   const conform = component.meshConform !== false;
   const hostRim = conform
-    ? hostRimPoints(options.hostVertices, basis, scale, offset, rOuter, target, sector)
+    ? hostRimPoints(options.hostVertices, basis, scale, offset, rOuter, target, sector, component)
     : null;
 
   const rings = buildRings(profile, target, component.meshBifurcation !== false, sector, hostRim);
@@ -85,7 +85,7 @@ export function buildDiaphragmMesh(component, options = {}) {
     for (let k = 0; k < 3; k++) {
       world[k] = basis.e1[k] * p.x + basis.e2[k] * p.y + basis.e3[k] * p.u;
     }
-    return [world[0] * scale[0] + offset[0], world[1] * scale[1] + offset[1], world[2] * scale[2] + offset[2]];
+    return worldFromLocal(world, scale, offset, component);
   });
 
   const snapped = (!conform || hostRim)
@@ -110,7 +110,7 @@ export function buildDiaphragmMesh(component, options = {}) {
   // monde, ce qui reste exact quel que soit l'historique du nœud.
   let coneTris, capTris;
   if (isBack && rInner > 0) {
-    const split = classifyCapTriangles(clip.nodes, clip.tris, rInner, basis, scale, offset);
+    const split = classifyCapTriangles(clip.nodes, clip.tris, rInner, basis, scale, offset, component);
     coneTris = split.coneTris;
     capTris = split.capTris;
   }
@@ -141,12 +141,10 @@ export function buildDiaphragmMesh(component, options = {}) {
  * paramétrique — exact même pour les nœuds ajoutés par l'accrochage au
  * maillage hôte ou par la découpe de symétrie.
  */
-function classifyCapTriangles(nodes, tris, rInner, basis, scale, offset) {
+function classifyCapTriangles(nodes, tris, rInner, basis, scale, offset, component) {
   const eps = Math.max(rInner * 1e-3, 1e-6);
   const nodeR = nodes.map(p => {
-    const lx = (p[0] - offset[0]) / (scale[0] || 1);
-    const ly = (p[1] - offset[1]) / (scale[1] || 1);
-    const lz = (p[2] - offset[2]) / (scale[2] || 1);
+    const [lx, ly, lz] = localFromWorld(p, scale, offset, component);
     const x = lx * basis.e1[0] + ly * basis.e1[1] + lz * basis.e1[2];
     const y = lx * basis.e2[0] + ly * basis.e2[1] + lz * basis.e2[2];
     return Math.hypot(x, y);
@@ -167,12 +165,13 @@ function classifyCapTriangles(nodes, tris, rInner, basis, scale, offset) {
  * sorte que la condition ne passe pas par l'origine (le semis n'est alors plus
  * un secteur et l'appelant découpe les triangles à la place).
  */
-function symmetrySector(symmetry, basis, scale, offset, hostVertices) {
+function symmetrySector(symmetry, basis, scale, offset, hostVertices, component) {
   const sym = String(symmetry || 'none').trim().toLowerCase();
   const axes = [];
   if (sym === 'v' || sym === 'hv') axes.push(0);
   if (sym === 'h' || sym === 'hv') axes.push(1);
   if (!axes.length) return null;
+  if (rotationRadians(component).some(angle => Math.abs(angle) > 1e-12)) return null;
 
   let lo = -Infinity, hi = Infinity;
   for (const a of axes) {
@@ -198,12 +197,12 @@ function symmetrySector(symmetry, basis, scale, offset, hostVertices) {
  * régulier ne tombe pas sur les mêmes points que l'hôte, le soudage laisse des
  * nœuds en T et le sous-domaine du diaphragme reste ouvert.
  */
-function hostRimPoints(hostVertices, basis, scale, offset, rOuter, target, sector) {
+function hostRimPoints(hostVertices, basis, scale, offset, rOuter, target, sector, component) {
   if (!hostVertices || hostVertices.length < 9) return null;
   const tol = Math.max(target * 0.5, rOuter * 0.02);
   const found = [];
   for (let i = 0; i + 2 < hostVertices.length; i += 3) {
-    const w = [0, 1, 2].map(k => (hostVertices[i + k] - offset[k]) / (scale[k] || 1));
+    const w = localFromWorld([hostVertices[i], hostVertices[i + 1], hostVertices[i + 2]], scale, offset, component);
     const x = w[0] * basis.e1[0] + w[1] * basis.e1[1] + w[2] * basis.e1[2];
     const y = w[0] * basis.e2[0] + w[1] * basis.e2[1] + w[2] * basis.e2[2];
     const u = w[0] * basis.e3[0] + w[1] * basis.e3[1] + w[2] * basis.e3[2];
@@ -331,6 +330,45 @@ function emptyMesh(error) {
 function finiteOr(value, fallback) {
   const n = Number(value);
   return Number.isFinite(n) ? n : fallback;
+}
+
+function rotationRadians(component) {
+  const factor = Math.PI / 180;
+  return [
+    finiteOr(component.rotationX_deg, 0) * factor,
+    finiteOr(component.rotationY_deg, 0) * factor,
+    finiteOr(component.rotationZ_deg, 0) * factor,
+  ];
+}
+
+function rotateXYZ([x, y, z], [rx, ry, rz]) {
+  const cx = Math.cos(rx), sx = Math.sin(rx);
+  const cy = Math.cos(ry), sy = Math.sin(ry);
+  const cz = Math.cos(rz), sz = Math.sin(rz);
+  const yx = y * cx - z * sx, zx = y * sx + z * cx;
+  const xy = x * cy + zx * sy, zy = -x * sy + zx * cy;
+  return [xy * cz - yx * sz, xy * sz + yx * cz, zy];
+}
+
+function inverseRotateXYZ([x, y, z], [rx, ry, rz]) {
+  const cx = Math.cos(rx), sx = Math.sin(rx);
+  const cy = Math.cos(ry), sy = Math.sin(ry);
+  const cz = Math.cos(rz), sz = Math.sin(rz);
+  const xz = x * cz + y * sz, yz = -x * sz + y * cz;
+  const xx = xz * cy - z * sy, zz = xz * sy + z * cy;
+  return [xx, yz * cx + zz * sx, -yz * sx + zz * cx];
+}
+
+function worldFromLocal(point, scale, offset, component) {
+  const scaled = point.map((value, index) => value * scale[index]);
+  const rotated = rotateXYZ(scaled, rotationRadians(component));
+  return rotated.map((value, index) => value + offset[index]);
+}
+
+function localFromWorld(point, scale, offset, component) {
+  const translated = point.map((value, index) => value - offset[index]);
+  const unrotated = inverseRotateXYZ(translated, rotationRadians(component));
+  return unrotated.map((value, index) => value / (scale[index] || 1));
 }
 
 /** Taille d'élément cible : explicite, sinon calée sur le maillage hôte. */

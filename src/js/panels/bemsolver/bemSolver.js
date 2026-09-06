@@ -2562,6 +2562,7 @@ function makeBemComponent(type) {
     dVC: 50, hD2: 20,
     offsetX: 0, offsetY: 0, offsetZ: 0,
     scaleX: 1, scaleY: 1, scaleZ: 1,
+    rotationX_deg: 0, rotationY_deg: 0, rotationZ_deg: 0,
     meshSize_mm: 0,          // 0 = calée sur le maillage importé
     meshBifurcation: true,
     meshConform: true,
@@ -4121,6 +4122,10 @@ function openBemPropsPopup(root, target) {
     title.textContent = 'Diaphragm Properties';
     const stats = bemDiaphragmMeshes.get(component.id)?.stats;
     const side = component.side === 'back' ? 'back' : 'front';
+    const diaphragmOptions = bemTreeItems.flatMap(item => (item.components || []))
+      .filter(candidate => candidate.type === 'diaphragm' && candidate.id !== component.id)
+      .map(candidate => `<option value="${candidate.id}">${escapeHtml(candidate.name)}</option>`)
+      .join('');
 
     // Corps réduit : nom, trois boutons qui ouvrent chacun une popup dédiée
     // (Position / Shape / Mesh), et le driver — laissé ici comme demandé.
@@ -4133,6 +4138,15 @@ function openBemPropsPopup(root, target) {
           <button type="button" id="bem-props-open-mesh" class="bem-tool-btn">Mesh</button>
         </span>
       </div>
+      <div class="bem-popup-row">
+        <label class="dir-label" style="margin:0;">Copy diaphragm</label>
+        <span style="display:flex;gap:6px;">
+          <select id="bem-props-copy-source" class="dir-input" style="width:132px;">
+            <option value="">Select...</option>${diaphragmOptions}
+          </select>
+          <button type="button" id="bem-props-copy-diaphragm" class="bem-tool-btn">Copy</button>
+        </span>
+      </div>
       <div id="bem-props-mesh-stats" style="font-size:11px;color:var(--dir-muted);font-family:ui-monospace,monospace;">${formatDiaphragmMeshStats(stats)}</div>
 
       <div class="bem-driver-picker">
@@ -4143,6 +4157,18 @@ function openBemPropsPopup(root, target) {
         <div id="bem-props-driver-info" style="font-size:11px;color:var(--dir-muted);font-family:ui-monospace,monospace;margin-top:6px;"></div>
       </div>`;
     initBemDriverPicker(body, component);
+    body.querySelector('#bem-props-copy-diaphragm').addEventListener('click', () => {
+      const sourceId = body.querySelector('#bem-props-copy-source').value;
+      const source = bemTreeItems.flatMap(item => item.components || [])
+        .find(candidate => candidate.type === 'diaphragm' && candidate.id === sourceId);
+      if (!source) return;
+      const { id, type, name, ...parameters } = source;
+      Object.assign(component, parameters);
+      delete component.geometrySourceId;
+      syncBemComponent(root, item, component);
+      renderBemTree(root);
+      openBemPropsPopup(root, target);
+    });
 
     // Popup "Position" : axe, offset, échelle.
     const positionBody = root.querySelector('#bem-props-position-body');
@@ -4161,6 +4187,14 @@ function openBemPropsPopup(root, target) {
           <input type="number" id="bem-props-sclx" class="dir-input" value="${component.scaleX ?? 1}" step="0.05" min="0.01" style="width:62px;">
           <input type="number" id="bem-props-scly" class="dir-input" value="${component.scaleY ?? 1}" step="0.05" min="0.01" style="width:62px;">
           <input type="number" id="bem-props-sclz" class="dir-input" value="${component.scaleZ ?? 1}" step="0.05" min="0.01" style="width:62px;">
+        </span>
+      </div>`;
+    positionBody.innerHTML += `<div class="bem-popup-row">
+        <label class="dir-label" style="margin:0;">Rotation X / Y / Z (deg)</label>
+        <span style="display:flex;gap:6px;">
+          <input type="number" id="bem-props-rotx" class="dir-input" value="${component.rotationX_deg ?? 0}" step="1" style="width:62px;">
+          <input type="number" id="bem-props-roty" class="dir-input" value="${component.rotationY_deg ?? 0}" step="1" style="width:62px;">
+          <input type="number" id="bem-props-rotz" class="dir-input" value="${component.rotationZ_deg ?? 0}" step="1" style="width:62px;">
         </span>
       </div>`;
 
@@ -4541,6 +4575,9 @@ function openBemPropsPopup(root, target) {
         component.scaleX = num('#bem-props-sclx', 1) || 1;
         component.scaleY = num('#bem-props-scly', 1) || 1;
         component.scaleZ = num('#bem-props-sclz', 1) || 1;
+        component.rotationX_deg = num('#bem-props-rotx', 0);
+        component.rotationY_deg = num('#bem-props-roty', 0);
+        component.rotationZ_deg = num('#bem-props-rotz', 0);
         component.meshSize_mm = Math.max(0, num('#bem-props-mesh-size', 0));
         component.meshBifurcation = root.querySelector('#bem-props-mesh-bifurcation').checked;
         component.meshConform = root.querySelector('#bem-props-mesh-conform').checked;
